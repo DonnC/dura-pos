@@ -129,7 +129,7 @@ It's built on the phone from synced data, with no server.
   - cash-up differences.
 - **`My Shop` → Summary:** stock and stock value per location, money owed,
   and the year month by month, with charts.
-- **`Customer Balances`:** who owes what.
+- **`Balances`:** who owes what.
 - **`Activity`:** who did what, and where.
 
 **Currencies are never added together** in any report: USD, ZWG and ZAR are

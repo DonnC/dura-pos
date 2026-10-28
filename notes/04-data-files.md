@@ -68,57 +68,103 @@ On each phone only: PINs, payment keys, the ZIMRA device key and fiscal state
 
 | Tab | Written by | One row per | What it's for |
 |---|---|---|---|
-| Read Me | — | — | What each tab is, in plain words |
+| Read Me | — | — | What each tab is, in plain words, with a colour key and "where to look" |
 | Products | Owner | product | The price list and product master: name, barcode, one price in the pricing currency (USD), cost, tax, HS code, low-stock level, active. Other currencies' prices come from the day's rates |
-| Stock | Formulas | product per location | Stock on hand, low-stock level, status (OK / Low / Out, coloured), value at cost, last received. Worked out from this year's Ledger tab |
-| Locations | Owner | location | Main shop, stalls. Usually just one |
+| Lists | Owner (green columns) and Dura (grey columns) | choice | The choices behind every dropdown (see "Dropdowns and dates") |
+| Stock | Formulas | product per location | Stock on hand, low-stock level, status (🟢 OK / 🟡 Low / 🔴 Out), value at cost, last received. Worked out from this year's Stock Ledger |
+| Locations | Owner | location | Shops, branches, stalls or storerooms, each Selling or Storage only (`09`). Usually just one |
 | Phones | Phones | phone | Each phone's location, status (Active / Retired), ZIMRA device ID and serial, certificate expiry, current fiscal day, last synced time, app version |
-| Customers | Owner and phones | customer | Optional regulars and business buyers: name, phone no, email, type, TIN, VAT number, address, usual location, which phone added them, active, merged into. A phone adds a customer at checkout; the owner edits in the sheet or the app. A business buyer's details go on its fiscal invoices |
-| Staff | Owner | person | Role (Owner / Seller), app access, which phones, discount limit, refunds, active dates. PINs are never stored here |
-| Suppliers | Owner | supplier | Name, phone, TIN and VAT number, what they supply, payment terms |
+| Staff | Owner | person | Role (Owner / Manager / Seller), app access, which phones, discount limit, refunds, active dates. PINs are never stored here |
+| Contacts | Owner and phones | customer or supplier | **Everyone the shop deals with, in one list**, with `Type` Customer, Supplier, or Customer and supplier. Name, phone no, email, TIN, VAT number, address; for customers: usual location, on account, credit limit, payment days; for suppliers: what they supply and their terms. A phone adds a customer at checkout; the owner adds suppliers. A business buyer's details go on its fiscal invoices |
 | HS Codes | Dura | HS code in use | The ZIMRA HS codes this shop's products use, with ZIMRA's official wording and how many products use each. The app carries ZIMRA's full list (about 6,600 eight-digit codes, in `../reference/zimra_hs_codes.csv`) and offers a search when a product is added; only the codes in use are written here |
 | Taxes | Phones | tax | Copied from ZIMRA's configuration when fiscalisation is on: tax ID, name, percent, code |
 | Currencies | Owner | currency | USD, ZWG and ZAR: whether accepted, what each is used for, price rounding |
-| Payment Methods | Owner | method | Cash per currency, EcoCash, InnBucks, card, bank transfer. Each has its ZIMRA money type, provider (e.g. Paynow), sandbox or live, and how payment is confirmed. The keys themselves are never stored here |
-| Settings | Owner | setting | Business details, TIN and VAT number, the shop's Google account, discount limit, day close times, sync, backups, receipt footer |
+| Payment Methods | Owner | method | Cash per currency, EcoCash, InnBucks, card, bank transfer, kept change, on account. Each has its ZIMRA money type, provider (e.g. Paynow), sandbox or live, and how payment is confirmed. The keys themselves are never stored here |
+| Settings | Owner | setting | Business details, TIN and VAT number, the shop's Google account, the word for a location, discount limit, day close times, kept change, invoices, quotes, sync, backups, receipt footer |
 | Exchange Rates | Owner | day | ZWG and ZAR per 1 USD, set each morning |
-| Ledger 2026 | Phones | stock or cash movement | **The single ledger.** Every movement of stock or cash from every phone and location (see below) |
-| Purchases 2026 | Phones | supplier invoice | Supplier, their invoice number, total and VAT (input tax for the VAT return), how it was paid, payment status, a photo of the invoice. The items are `Stock in` rows in the Ledger with the same Purchase ID |
-| Customer Balances | Dura | customer or supplier, per currency | What the shop owes and is owed: kept change, invoices on account, and supplier invoices. Status Open, Settled or Over limit (red) |
-| Stock Counts 2026 | Phones | product per count | Each stock take: expected, counted, difference, value of the difference, who counted, who approved |
+| Stock Ledger 2026 | Phones | stock movement | **The stock ledger.** Every movement of stock, from every phone and location (see below) |
+| Money Ledger 2026 | Phones | money movement | Every movement of money that isn't a sale: expenses, takings, banking, supplier invoices and payments, kept change, invoices on account (see below). Sales and their payments are in the monthly files |
+| Stock Counts 2026 | Phones | product per count | Each stock take: expected, counted, difference (missing is red, extra is yellow), value of the difference, who counted, who approved |
+| Purchases 2026 | Phones | supplier invoice | Supplier, their invoice number, total and VAT (input tax for the VAT return), how it was paid, payment status (Paid green, Unpaid orange), a photo of the invoice. The items are `Stock in` rows in the Stock Ledger with the same Purchase ID |
 | Payment Callbacks 2026 | The optional Apps Script receiver | callback | Payment confirmations sent by Paynow: signature valid or not, matched sale, result. Optional: tills always confirm by polling |
-| Summary | Formulas | — | Products OK / Low / Out and stock value per location. Year to date: stock received, cost of goods sold, write-offs, count differences, and expenses, takings and banking per currency |
+| Balances | Dura | contact, per currency | What the shop owes and is owed: kept change, invoices on account, and supplier invoices. Status 🔴 Over limit, 🟠 Owes the shop, 🔵 Shop owes them, ⚪ Settled |
+| Summary | Formulas | — | Products OK / Low / Out and stock value per location; money owed; year to date: stock received, cost of goods sold, write-offs, count differences, and expenses, supplier payments, takings and banking per currency; month by month. With charts |
 
-### The Ledger
+**Why customers and suppliers share one Contacts tab.**
+- It's one place to find anyone's number.
+- A business that both buys from and sells to the shop is one row.
+- The money owed either way adds up in one Balances tab.
+- The columns that apply to only one type are left blank for the other.
+- The app shows customers or suppliers on their own screens; in the sheet,
+  filter `Type`.
 
-| Type | Qty | Cash | Example |
-|---|---|---|---|
-| Opening | + | | Stock carried over on 1 January (or the first count when the shop started) |
-| Stock in | + | | A delivery: the bakery van, the wholesaler |
-| Sold | − | | Items sold, one row per product per phone per sync batch |
-| Returned | + | | A customer return back into stock |
-| Written off | − | | Damaged or expired stock, a stopped seasonal item |
-| Moved out / Moved in | − / + | | Stock taken from the main shop to the Mbare stall, matched by Reference |
-| Counted | ± | | The difference found by a stock count |
-| Expense | | − | A market levy, or transport for stock. `From drawer` says whether it left a till |
-| Purchase | | | A supplier invoice: `Balance change` + (the shop owes the supplier) |
-| Supplier paid | | − | Paying a supplier: `Balance change` −, and cash out (`From drawer` Yes if paid from a till) |
-| Change kept | | | Change the shop kept for a customer: `Balance change` +. The cash stays in the till |
-| Change used | | | Kept change spent on a sale: `Balance change` − |
-| Change paid out | | − | Kept change given back in cash, from a till |
-| Invoiced on account | | | An invoice the customer pays later: `Balance change` − (they owe the shop) |
-| Account paid | | | The customer paid an invoice: `Balance change` + |
-| Takings collected | | − | Cash handed to the owner after the cash-up |
-| Banked | | − | Cash deposited at the bank |
+### The Stock Ledger
 
-Every row names the location. Money rows for a customer or supplier also
-carry their ID and a `Balance change`: positive when the shop owes them more,
-negative when they owe the shop more. Adding up `Balance change` per customer
-or supplier and currency gives the `Customer Balances` tab.
+| Type | Qty | Example |
+|---|---|---|
+| Opening | + | Stock carried over on 1 January (or the first count when the shop started) |
+| Stock in | + | A delivery from a supplier (with the supplier and the Purchase ID) |
+| Sold | − | Items sold, one row per product per phone per sync batch |
+| Returned | + | A customer return back into stock |
+| Written off | − | Damaged or expired stock, a stopped seasonal item |
+| Moved out / Moved in | − / + | Stock taken from the main shop to the Mbare stall, matched by Reference |
+| Counted | ± | The difference found by a stock count |
 
 Stock in hand is the sum of `Qty` per product and location. `Stock value
 (USD)` is `Qty × Unit cost`, so the ledger also gives the cost of goods sold.
-Profit is the sales totals (in the monthly files) minus that cost.
+Profit is the sales totals (in the monthly files) minus that cost. To follow
+one product, filter `Product ID` (and `Location`): that's its stock card. In
+Google Sheets, Dura can add a **Stock Card** tab, where you pick a product from
+a dropdown and see its movements with a running balance. It uses a formula
+only Google Sheets runs reliably, so it isn't in the `.xlsx` sample.
+
+### The Money Ledger
+
+| Type | Cash | Balance change | Example |
+|---|---|---|---|
+| Expense | − | | A market levy, or transport for stock. `From till` says whether it left a till |
+| Purchase | | + | A supplier invoice: the shop owes the supplier |
+| Supplier paid | − | − | Paying a supplier (`From till` Yes if paid from a till) |
+| Change kept | | + | Change the shop kept for a customer. The cash stays in the till |
+| Change used | | − | Kept change spent on a sale |
+| Change paid out | − | − | Kept change given back in cash, from a till |
+| Invoiced on account | | − | An invoice the customer pays later: they owe the shop |
+| Account paid | | + | The customer paid an invoice |
+| Takings collected | − | | Cash handed to the owner after the cash-up |
+| Banked | − | | Cash deposited at the bank |
+
+`Balance change` is positive when the shop owes the contact more, and negative
+when they owe the shop more. Adding it up per contact and currency gives the
+`Balances` tab.
+
+## Dropdowns and dates
+
+**Nobody should type what can be picked.** In the green (owner) tabs:
+
+- **Every repeated choice is a dropdown.** Yes/No, category, unit, tax, contact
+  type, person or business, location, location type, role, app access,
+  refunds, discount limit, supplier terms, currency, ZIMRA money type, mode,
+  "merged into" (a contact), "set by" (a person).
+- **The choices live in the `Lists` tab.**
+  - The owner can add to the green columns: categories, units, discount
+    limits, supplier terms.
+  - The grey columns are fixed by Dura or ZIMRA: Yes/No, tax, roles, money
+    types.
+  - Locations, currencies, staff and contacts come straight from their own
+    tabs, so a new location shows up in every location dropdown.
+- **Strict or not:** most dropdowns refuse anything else. Category, unit, HS
+  code and supplier terms suggest from the list but accept something new,
+  with a warning.
+- **Dates have a calendar.**
+  - Date columns are validated as dates, and Google Sheets shows a date
+    picker for them.
+  - Dates display as `28 Oct 2026`, which can't be misread as month-first or
+    day-first.
+- **In the sheets Dura creates itself,** Yes/No columns are real Google
+  Sheets checkboxes. The `.xlsx` sample uses a Yes/No dropdown, because Excel
+  files have no checkbox cells.
+
+The phones' tabs (blue) have no dropdowns, because nobody types there.
 
 ## `<year>-<month> Sales`, one per month
 
@@ -178,12 +224,13 @@ offline:
 | ID | Format | Example |
 |---|---|---|
 | Sale | `<phone>-S<yymmdd>-<seq>` | `P4-S261013-0014` |
-| Customer | `<phone>-C<seq>` | `P3-C0002` |
+| Contact (customer or supplier) | `<phone>-C<seq>` | `P3-C0002` |
 | Payment | `<sale id>-<n>` | `P4-S261013-0014-1` |
-| Ledger row | `<phone>-L<yymmdd>-<seq>` | `P1-L261028-0003` |
+| Stock Ledger row | `<phone>-L<yymmdd>-<seq>` | `P1-L261028-0003` |
 | Purchase | `<phone>-B<yymmdd>-<seq>` | `P3-B261027-0001` |
+| Money Ledger row | `<phone>-M<yymmdd>-<seq>` | `P1-M261024-0001` |
 | Quote | `<phone>-Q<yymmdd>-<seq>` | `P1-Q261005-0001` |
-| Supplier | `<phone>-V<seq>` | `P1-V0002` |
+
 | Activity row | `<phone>-A<yymmdd>-<seq>` | `P3-A261028-0012` |
 | Receipt no (the shop's own) | `<phone>-<running number>` | `P4-0002972` |
 | ZIMRA receipt no | the fiscal device's global number | `2972` |
@@ -227,15 +274,24 @@ Every file makes sense on its own, in Google Sheets or Excel:
   - what the file is;
   - a colour key;
   - every tab with what it's for;
-  - a "Where to look" list ("Who owes me?" → Customer Balances).
+  - a "Where to look" list ("Who owes me?" → Balances).
 - **The tabs are colour-coded by who writes them:**
   - **green**: the owner edits it;
   - **blue**: the phones add rows;
   - **grey**: Dura works it out (formulas or lists);
   - the Read Me tab is dark blue.
+- **Red numbers are negative, everywhere:** stock going out, money going out,
+  short, or owed. A glance down a column shows the bad news.
+- **Status dots** in Dura's tabs: 🟢 good, 🟡 needs a look soon, 🟠 someone
+  owes the shop, 🔵 the shop owes someone, 🔴 act now, ⚪ settled. The dots
+  survive printing and colour blindness better than fill colour alone.
 - **Rows are coloured by meaning:**
   - returns are pink and invoices are blue;
-  - unpaid is orange;
+  - paid is green, unpaid is orange, and overdue is red;
+  - ZIMRA-accepted receipts are green, queued ones blue, flagged ones yellow;
+  - stock in is green and stock lost is pink; money out is pink, owed is
+    yellow, and banked is blue;
+  - in a stock count, missing is red and extra is yellow;
   - a cash-up that's short is red, and one that's over is yellow;
   - stock that's low is yellow, and out of stock is red;
   - a balance over its limit is red;

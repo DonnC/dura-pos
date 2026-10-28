@@ -29,7 +29,7 @@ chunks that stay fast and are easy to find:
 
 ```
 Dura POS/
-  My Shop                  permanent: products, staff, settings, this year's Ledger tab, Stock
+  My Shop                  permanent: products, staff, settings, this year's Stock and Money Ledger tabs, Stock
   2026/
     Activity 2026          yearly: the audit trail
     2026-10 Sales          monthly: sales, items sold and cash-ups for that month
@@ -121,7 +121,7 @@ phones from colliding.
    a file is moved or renamed. So every file works things out from its own
    tabs:
    - each month's Sales file summarises that month;
-   - `My Shop` works out stock from its own Ledger tab.
+   - `My Shop` works out stock from its own Stock Ledger tab.
 3. **Files and tabs are found by their ID, columns by their heading.** Renaming,
    moving or reordering anything doesn't break the app. If a tab or file is
    deleted, the app rebuilds it from the phone's own copy and records that in
@@ -132,9 +132,9 @@ phones from colliding.
    VAT payer).
 5. **Formula tabs carry a warning-only lock**, and so do the sales tabs.
 6. **At year end**, the app:
-   - moves the year's Ledger tab out of `My Shop` into its own `Ledger <year>`
+   - moves the year's ledger tabs out of `My Shop` into its own `Ledger <year>`
      file in that year's folder;
-   - starts the new year's Ledger tab with opening balances.
+   - starts the new year's ledger tabs with opening balances.
 
    `My Shop` stays small, and there's only ever one live ledger.
 

@@ -30,6 +30,7 @@ from openpyxl.chart import BarChart, LineChart, Reference
 from openpyxl.formatting.rule import ColorScaleRule, FormulaRule
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.datavalidation import DataValidation
 
 OUT = Path(__file__).resolve().parent / "Dura POS"
 HS_CODES_CSV = Path(__file__).resolve().parent.parent / "reference" / "zimra_hs_codes.csv"
@@ -173,22 +174,22 @@ STAFF = [
 # that adds a customer makes the ID, so two offline phones never clash.
 # id, name, phone no, email, type, TIN, VAT no, address, usual location, added on, updated on, merged into, note
 CUSTOMERS = [
-	("P1-C0001", "Glen View Clinic Canteen", "+263 24 200 0101", "canteen@example.com", "Business", "2000876543",
+	("P1-C0008", "Glen View Clinic Canteen", "+263 24 200 0101", "canteen@example.com", "Business", "2000876543",
 	 "220087654", "12 Glen View Rd, Harare", "Main", date(2026, 2, 4), date(2026, 3, 2), "",
 	 "Weekly order on Wednesdays, paid by bank transfer. Buyer details go on its fiscal invoices"),
-	("P1-C0002", "Tsitsi Mutasa", "+263 77 410 2231", "", "Person", "", "", "", "Main", date(2025, 12, 3), None, "", ""),
-	("P1-C0003", "Baba Tanaka", "+263 71 288 9054", "", "Person", "", "", "", "Main", date(2025, 12, 9), None, "", ""),
-	("P1-C0004", "Mai Tafadzwa Gumbo", "+263 77 312 4567", "", "Person", "", "", "", "Both", date(2026, 1, 10),
+	("P1-C0004", "Tsitsi Mutasa", "+263 77 410 2231", "", "Person", "", "", "", "Main", date(2025, 12, 3), None, "", ""),
+	("P1-C0005", "Baba Tanaka", "+263 71 288 9054", "", "Person", "", "", "", "Main", date(2025, 12, 9), None, "", ""),
+	("P1-C0006", "Mai Tafadzwa Gumbo", "+263 77 312 4567", "", "Person", "", "", "", "Any", date(2026, 1, 10),
 	 date(2026, 4, 12), "", "Also buys at Mbare"),
-	("P1-C0005", "Kudzai Sibanda", "+263 78 155 0042", "kudzai.s@example.com", "Person", "", "", "", "Main",
+	("P1-C0007", "Kudzai Sibanda", "+263 78 155 0042", "kudzai.s@example.com", "Person", "", "", "", "Main",
 	 date(2026, 1, 21), None, "", "Wants receipts by WhatsApp"),
-	("P1-C0006", "St Mary's Tuck Shop", "+263 77 900 1188", "", "Business", "", "", "Glen View 3, Harare", "Main",
+	("P1-C0009", "St Mary's Tuck Shop", "+263 77 900 1188", "", "Business", "", "", "Glen View 3, Harare", "Main",
 	 date(2026, 2, 17), None, "", "School tuck shop; no TIN given"),
 	("P2-C0001", "Nyasha Banda", "+263 71 640 7720", "", "Person", "", "", "", "Main", date(2025, 12, 15), None, "", ""),
 	("P2-C0002", "Sekuru Moyo", "+263 77 501 3390", "", "Person", "", "", "", "Main", date(2026, 1, 6), None, "", ""),
 	("P2-C0003", "Rumbi Chikore", "+263 78 770 1265", "", "Person", "", "", "", "Main", date(2026, 3, 18), None, "", ""),
 	("P3-C0001", "Mai Tafadzwa", "+263 77 312 4567", "", "Person", "", "", "", "Mbare", date(2026, 4, 11), None,
-	 "P1-C0004", "Added at Mbare while offline; same phone number as P1-C0004, merged by the owner"),
+	 "P1-C0006", "Added at Mbare while offline; same phone number as P1-C0006, merged by the owner"),
 	("P3-C0002", "Tapiwa Marufu", "+263 71 902 3418", "", "Person", "", "", "", "Mbare", date(2026, 4, 15), None, "", "Vendor next door"),
 	("P3-C0003", "Gogo Ndlovu", "+263 77 233 8801", "", "Person", "", "", "", "Mbare", date(2026, 5, 6), None, "", ""),
 	("P3-C0004", "Blessing Zhou", "+263 78 344 6120", "", "Person", "", "", "", "Mbare", date(2026, 7, 2), None, "", "Pays in rand"),
@@ -209,15 +210,15 @@ QUOTES_FROM = date(2026, 3, 1)
 # Suppliers are added by the owner, so their IDs come from the owner's phone.
 # id, name, phone no, email, TIN, VAT no, supplies, terms, note
 SUPPLIERS = [
-	("P1-V0001", "Glen View Bakery", "+263 24 200 0202", "orders@example.com", "2000555111", "220055511", "Bread",
+	("P1-C0001", "Glen View Bakery", "+263 24 200 0202", "orders@example.com", "2000555111", "220055511", "Bread",
 	 "On account; paid every Saturday and on the last day of the month", "Delivers to both locations by 06:40"),
-	("P1-V0002", "Highfield Dairy Co-op", "+263 77 600 3300", "", "2000555222", "", "Fresh milk",
+	("P1-C0002", "Highfield Dairy Co-op", "+263 77 600 3300", "", "2000555222", "", "Fresh milk",
 	 "Cash on delivery", "Mbare pays the driver from the drawer"),
-	("P1-V0003", "Harare Cash & Carry", "+263 24 277 7000", "sales@example.com", "2000555333", "220055533",
+	("P1-C0003", "Harare Cash & Carry", "+263 24 277 7000", "sales@example.com", "2000555333", "220055533",
 	 "Groceries, drinks, snacks, household", "Cash on purchase", "Owner's Monday and Thursday run"),
 ]
 SUP = {s[0]: s for s in SUPPLIERS}
-SUPPLIER_FOR = {"P001": "P1-V0001", "P002": "P1-V0002"}  # everything else comes from the wholesaler
+SUPPLIER_FOR = {"P001": "P1-C0001", "P002": "P1-C0002"}  # everything else comes from the wholesaler
 
 
 def keeps_change(phone: str, customer: str) -> bool:
@@ -231,10 +232,10 @@ def pick_customer(phone: str, day: date) -> str:
 	if crng.random() >= 0.065:
 		return ""
 	loc = PHONES[phone][1]
-	ids = [c[0] for c in CUSTOMERS if c[4] == "Person" and c[8] in (loc, "Both") and c[9] <= day
+	ids = [c[0] for c in CUSTOMERS if c[4] == "Person" and c[8] in (loc, "Any") and c[9] <= day
 	       and not (c[11] and day >= CUSTOMER_MERGED_ON)]
 	if loc == "Mbare" and day < CUSTOMER_MERGED_ON:
-		ids = [i for i in ids if i != "P1-C0004"]  # Mbare knew her as P3-C0001 until the merge
+		ids = [i for i in ids if i != "P1-C0006"]  # Mbare knew her as P3-C0001 until the merge
 	return crng.choice(ids) if ids else ""
 
 
@@ -287,7 +288,8 @@ items_m = defaultdict(list)
 pays_m = defaultdict(list)
 cashups_m = defaultdict(list)
 fdays_m = defaultdict(list)
-ledger_y = defaultdict(list)  # 2026 -> rows
+stock_ledger_y = defaultdict(list)  # 2026 -> rows
+money_ledger_y = defaultdict(list)
 activity_y = defaultdict(list)
 counts_y = defaultdict(list)
 callbacks_y = defaultdict(list)
@@ -326,15 +328,22 @@ def party_name(party: str) -> str:
 def ledger(day: date, t: time, phone: str, who: str, loc: str, typ: str, pid: str = "", qty: int | None = None,
            cash: D | None = None, cur: str = "", drawer: str = "", ref: str = "", note: str = "",
            party: str = "", balance: D | None = None):
-	"""One Ledger row. `balance` is the change in what the shop owes `party`:
-	positive when the shop owes them more, negative when they owe the shop more."""
+	"""One row in the Stock Ledger (when there's a product) or the Money Ledger.
+	`balance` is the change in what the shop owes `party`: positive when the shop
+	owes them more, negative when they owe the shop more."""
 	if not visible(phone, day, t):
 		return
-	cost = price_cost(pid, day)[1] if pid else None
-	ledger_y[day.year].append([
-		next_id(phone, "L", day), day, t, phone, who, loc, typ, pid, PROD[pid][1] if pid else "",
-		qty, cost, q2(cost * qty) if pid else None, cash, cur, drawer, party, party_name(party), balance, ref, note,
-	])
+	if pid:
+		cost = price_cost(pid, day)[1]
+		stock_ledger_y[day.year].append([
+			next_id(phone, "L", day), day, t, phone, who, loc, typ, pid, PROD[pid][1], qty, cost, q2(cost * qty),
+			party, party_name(party), ref, note,
+		])
+	else:
+		money_ledger_y[day.year].append([
+			next_id(phone, "M", day), day, t, phone, who, loc, typ, cur, cash, drawer, party, party_name(party),
+			balance, ref, note,
+		])
 
 
 # --------------------------------------------------------------------------
@@ -387,7 +396,7 @@ def purchase(day: date, t: time, phone: str, who: str, loc: str, sup: str, lines
 	row = [bid, day, t, phone, loc, sup, SUP[sup][1], inv_no, len(lines), "USD", total, vat,
 	       {"Owner": "Owner's cash", "Drawer": "From the till", "On account": "On account"}[paid],
 	       "Unpaid" if paid == "On account" else "Paid", None if paid == "On account" else day,
-	       f"{day:%Y}/Supplier invoices/{bid}.jpg" if sup == "P1-V0003" else "", who, note]
+	       f"{day:%Y}/Supplier invoices/{bid}.jpg" if sup == "P1-C0003" else "", who, note]
 	if visible(phone, day, t):
 		purchases_y[day.year].append(row)
 	if paid == "On account":
@@ -404,7 +413,7 @@ def pay_bakery(day: date):
 	t = time(18, 0)
 	ref = f"PAY-{day:%y%m%d}-BAKERY"
 	ledger(day, t, "P1", "Chipo Moyo", "Main", "Supplier paid", cash=-total, cur="USD", drawer="No", ref=ref,
-	       note=f"EcoCash to Glen View Bakery for {len(owed)} deliveries", party="P1-V0001", balance=-total)
+	       note=f"EcoCash to Glen View Bakery for {len(owed)} deliveries", party="P1-C0001", balance=-total)
 	log(day, t, "P1", "Chipo Moyo", "Supplier paid", f"Glen View Bakery: USD {total:.2f} for {len(owed)} deliveries", ref)
 	for r in owed:
 		r[13], r[14] = "Paid", day  # the owner's phone updates the payment status cells
@@ -450,7 +459,7 @@ def restock(day: date):
 			qty = target - stock[("Main", pid)]
 			if qty > 0:
 				buy.append((pid, qty))
-		ref = purchase(day, time(7, 30), "P1", "Chipo Moyo", "Main", "P1-V0003", buy, "Owner", "Photo of the invoice saved")
+		ref = purchase(day, time(7, 30), "P1", "Chipo Moyo", "Main", "P1-C0003", buy, "Owner", "Photo of the invoice saved")
 		if ref:
 			log(day, time(7, 45), "P1", "Chipo Moyo", "Stock received", f"{len(buy)} products from Harare Cash & Carry", ref)
 			ledger(day, time(7, 50), "P1", "Chipo Moyo", "Main", "Expense", cash=D("-3.00"), cur="USD",
@@ -820,8 +829,8 @@ def settle_invoices(day: date):
 
 
 QUOTE_LINES = {
-	"P1-C0006": [("P015", 60), ("P016", 48), ("P018", 200), ("P013", 24)],  # school tuck shop, monthly
-	"P1-C0001": [("P001", 20), ("P002", 12), ("P013", 24)],  # the clinic, before it moved to an account
+	"P1-C0009": [("P015", 60), ("P016", 48), ("P018", 200), ("P013", 24)],  # school tuck shop, monthly
+	"P1-C0008": [("P001", 20), ("P002", 12), ("P013", 24)],  # the clinic, before it moved to an account
 }
 quotes_to_fill: dict[date, list[list]] = defaultdict(list)  # day accepted -> quote rows
 
@@ -1020,7 +1029,7 @@ EVENTS = {
 		(time(6, 16), "P1", "Chipo Moyo", "Seller added", "Rudo Chari, app only, PIN set on P2"),
 	],
 	date(2026, 1, 2): [
-		(time(8, 0), "P1", "Dura", "Year-end archive", "Ledger 2025 moved to 2025/Ledger 2025; Ledger 2026 opened with closing stock"),
+		(time(8, 0), "P1", "Dura", "Year-end archive", "Stock and Money Ledgers 2025 moved to 2025/Ledger 2025; Stock Ledger 2026 opened with closing stock"),
 	],
 	date(2026, 2, 16): [(time(9, 0), "P1", "Chipo Moyo", "Fiscalisation", "ZIMRA test device registered on P1 and P2")],
 	date(2026, 2, 20): [(time(18, 0), "P1", "Chipo Moyo", "Fiscalisation", "Test fiscal day closed without errors")],
@@ -1058,9 +1067,9 @@ for day, evs in EVENTS.items():
 for cid, name, *_rest in CUSTOMERS:
 	ph, added = cid[:2], CUST[cid][9]
 	log(added, time(10, 30), ph, seller_for(ph, added), "Customer added", name, cid)
-log(date(2026, 3, 2), time(9, 40), "P1", "Chipo Moyo", "Customer changed", "Glen View Clinic Canteen: VAT number added", "P1-C0001")
+log(date(2026, 3, 2), time(9, 40), "P1", "Chipo Moyo", "Customer changed", "Glen View Clinic Canteen: VAT number added", "P1-C0008")
 log(CUSTOMER_MERGED_ON, time(7, 5), "P1", "Chipo Moyo", "Customers merged",
-    "P3-C0001 'Mai Tafadzwa' merged into P1-C0004 (same phone number); old sales keep P3-C0001", "P1-C0004")
+    "P3-C0001 'Mai Tafadzwa' merged into P1-C0006 (same phone number); old sales keep P3-C0001", "P1-C0006")
 callbacks_y[2026].append([datetime(2026, 9, 14, 13, 12, 5), "Paynow", "PN00000000", D("50.00"), "USD", "Paid", "No",
                           "", "Rejected: bad signature", "Unknown reference; nothing recorded"])
 
@@ -1095,9 +1104,9 @@ while day <= TODAY:
 	restock(day)
 	settle_invoices(day)
 	if day >= QUOTES_FROM and day.weekday() == 0 and day.day <= 7:
-		make_quote(day, "P1-C0006", time(8, 30), accept=crng.random() < 0.75)
+		make_quote(day, "P1-C0009", time(8, 30), accept=crng.random() < 0.75)
 	if day == date(2026, 5, 20):
-		make_quote(day, "P1-C0001", time(11, 0), accept=False, note="The clinic chose an account from June instead")
+		make_quote(day, "P1-C0008", time(11, 0), accept=False, note="The clinic chose an account from June instead")
 	for phone in phones_on(day):
 		_, loc, _, _, mean, sunday, opens, _, _ = PHONES[phone]
 		if day.weekday() == 6 and not sunday:
@@ -1137,7 +1146,7 @@ while day <= TODAY:
 				lines = [(pid, q) for pid, q in (("P001", 10), ("P002", 6)) if stock[("Main", pid)] >= q]
 				if lines:
 					on_account = day >= ON_ACCOUNT_FROM
-					book_sale("P1", day, t, lines, "USD", "Chipo Moyo", customer_id="P1-C0001",
+					book_sale("P1", day, t, lines, "USD", "Chipo Moyo", customer_id="P1-C0008",
 					          bank=not on_account, on_account=on_account)
 				continue
 			if kind == "quote":
@@ -1190,8 +1199,9 @@ for (loc, pid), qty in stock.items():
 
 TITLE_FONT = Font(bold=True, size=13)
 BOLD = Font(bold=True)
-FMT = {"money": "#,##0.00", "date": "yyyy-mm-dd", "time": "hh:mm", "datetime": "yyyy-mm-dd hh:mm",
-       "rate": "0.00", "int": "0", "pct": "0.0"}
+# Negative numbers are red everywhere: money out, stock out, short, owed.
+FMT = {"money": "#,##0.00;[Red]-#,##0.00", "date": "d mmm yyyy", "time": "hh:mm", "datetime": "d mmm yyyy hh:mm",
+       "rate": "0.00", "int": "0;[Red]-0", "pct": "0.0"}
 
 
 def cell_value(v):
@@ -1317,12 +1327,14 @@ H_FDAYS = [("Phone", None, 7), ("ZIMRA device ID", None, 9), ("Fiscal day no", N
            ("Total USD", "money", 10), ("Total ZWG", "money", 11), ("Total ZAR", "money", 10),
            ("VAT USD", "money", 9), ("VAT ZWG", "money", 10), ("VAT ZAR", "money", 9), ("Status", None, 8),
            ("Note", None, 28)]
-H_LEDGER = [("Row ID", None, 18), ("Date", "date", 11), ("Time", "time", 7), ("Phone", None, 7), ("Who", None, 13),
-            ("Location", None, 9), ("Type", None, 16), ("Product ID", None, 9), ("Product", None, 22),
+H_LEDGER = [("Row ID", None, 18), ("Date", "date", 12), ("Time", "time", 7), ("Phone", None, 7), ("Who", None, 13),
+            ("Location", None, 9), ("Type", None, 14), ("Product ID", None, 9), ("Product", None, 22),
             ("Qty", "int", 6), ("Unit cost (USD)", "money", 9), ("Stock value (USD)", "money", 10),
-            ("Cash amount", "money", 10), ("Cash currency", None, 8), ("From drawer", None, 8),
-            ("Customer or supplier ID", None, 10), ("Customer or supplier", None, 22), ("Balance change", "money", 10),
-            ("Reference", None, 18), ("Note", None, 26)]
+            ("Supplier ID", None, 10), ("Supplier", None, 20), ("Reference", None, 18), ("Note", None, 30)]
+H_MONEY = [("Row ID", None, 18), ("Date", "date", 12), ("Time", "time", 7), ("Phone", None, 7), ("Who", None, 13),
+           ("Location", None, 9), ("Type", None, 18), ("Currency", None, 8), ("Cash amount", "money", 10),
+           ("From till", None, 8), ("Contact ID", None, 10), ("Contact", None, 22), ("Balance change", "money", 10),
+           ("Reference", None, 20), ("Note", None, 34)]
 H_ACTIVITY = [("Row ID", None, 18), ("Date", "date", 11), ("Time", "time", 7), ("Phone", None, 7), ("Who", None, 13),
               ("Role", None, 8), ("Action", None, 22), ("Details", None, 60), ("Reference", None, 18),
               ("Approved by", None, 13)]
@@ -1473,8 +1485,10 @@ def write_month(ym: str):
 	last = get_column_letter(len(H_SALES))
 	highlight(ws, f"A2:{last}{n}", f'${S["Type"]}2="Return"', "FCE4D6")
 	highlight(ws, f"A2:{last}{n}", f'${S["Type"]}2="Invoice"', "DDEBF7")
-	highlight(ws, f"{S['Payment status']}2:{S['Payment status']}{n}", f'${S["Payment status"]}2="Unpaid"', "F4B183")
-	highlight(ws, f"{S['Fiscal status']}2:{S['Fiscal status']}{n}", f'ISNUMBER(SEARCH("Yellow",${S["Fiscal status"]}2))', "FFE699")
+	PSL, DUE = S["Payment status"], col(H_SALES, "Due date")
+	highlight(ws, f"{PSL}2:{PSL}{n}", f'AND(${PSL}2="Unpaid",${DUE}2<TODAY())', BAD)  # overdue
+	colour_status(ws, H_SALES, "Payment status", n, {"Unpaid": "F4B183", "Refunded": OFF, "Paid": GOOD})
+	colour_status(ws, H_SALES, "Fiscal status", n, {"Yellow": WARN, "Queued": INFO, "Not fiscalised": OFF, "Submitted": GOOD})
 	add_table(wb, "Items Sold", H_ITEMS, items_m[ym])
 	ws = add_table(wb, "Payments", H_PAYS, pays_m[ym])
 	P = col(H_PAYS, "Status")
@@ -1512,7 +1526,7 @@ def write_month(ym: str):
 		("How much did we sell on a day?", "Summary, the table by day (busy days are greener)"),
 		("Which seller's cash was short?", "Cash-ups: red cells, or the bottom of Summary"),
 		("What did a customer buy?", "Sales: filter Customer, then Items Sold by Sale ID"),
-		("Who still owes us for an invoice?", "Sales: orange 'Unpaid' cells (also My Shop, Customer Balances)"),
+		("Who still owes us for an invoice?", "Sales: orange 'Unpaid' cells (also My Shop, Balances)"),
 		("Was a receipt accepted by ZIMRA?", "Sales: Fiscal status and Verification code"),
 	])
 	path = OUT / y / f"{ym} Sales.xlsx"
@@ -1529,6 +1543,80 @@ def ean13(pid: str) -> str:
 	return base + str((10 - total % 10) % 10)
 
 
+# ---- Lists, dropdowns and date pickers ---------------------------------------
+
+LIST_ROWS = 40  # room for the owner to add categories, units and terms
+
+
+def shop_lists() -> list[tuple[str, list[str], bool]]:
+	"""Every repeated choice in the sheets, as (name, values, owner can add to it)."""
+	return [
+		("Yes/No", ["Yes", "No"], False),
+		("Category", sorted({p[2] for p in PRODUCTS}), True),
+		("Unit", sorted({p[3] for p in PRODUCTS}), True),
+		("Tax", [f"{t['name']} ({t['code']})" for t in TAXES.values()], False),
+		("Contact type", ["Customer", "Supplier", "Customer and supplier"], False),
+		("Person or business", ["Person", "Business"], False),
+		("Usual location", [loc for loc, *_ in LOCATIONS] + ["Any"], False),
+		("Location type", ["Selling", "Storage only"], False),
+		("Role", ["Owner", "Manager", "Seller"], False),
+		("App access", ["App only", "App and sheets (view)", "Full: app, sheets and settings"], False),
+		("Refunds", ["Yes", "With owner PIN", "No"], False),
+		("Discount limit", ["0%", "5%", "10%", "15%", "No limit"], True),
+		("Supplier terms", sorted({s_[7] for s_ in SUPPLIERS} | {"7 days", "14 days", "30 days"}), True),
+		("ZIMRA money type", ["Cash", "Card", "MobileWallet", "Coupon", "Credit", "BankTransfer", "Other",
+		                      "Other (ask ZIMRA)"], False),
+		("Mode", ["Sandbox", "Live"], False),
+		("Phone status", ["Active", "Retired"], False),
+	]
+
+
+def write_lists(wb: Workbook) -> dict[str, str]:
+	ws = wb.create_sheet("Lists")
+	ws.sheet_properties.tabColor = KINDS["owner"][0]
+	ranges = {}
+	for c, (name, values, editable) in enumerate(shop_lists(), start=1):
+		L = get_column_letter(c)
+		cell = ws.cell(row=1, column=c, value=name)
+		cell.font = BOLD
+		cell.fill = fill(KINDS["owner" if editable else "dura"][1])
+		for r, v in enumerate(values, start=2):
+			ws.cell(row=r, column=c, value=v)
+		ws.column_dimensions[L].width = max(14, max(len(v) for v in values + [name]) + 2)
+		ranges[name] = f"Lists!${L}$2:${L}${LIST_ROWS + 1}"
+	ws.freeze_panes = "A2"
+	return ranges
+
+
+def dropdown(ws, headers, column: str, source: str, strict: bool = True, rows: int = 500):
+	"""A dropdown on a column. Not strict: suggests, but takes other values with a warning."""
+	dv = DataValidation(type="list", formula1=source, allow_blank=True)
+	dv.errorStyle = "stop" if strict else "warning"
+	dv.error = "Pick one from the list (the Lists tab holds the choices)."
+	ws.add_data_validation(dv)
+	L = col(headers, column)
+	dv.add(f"{L}2:{L}{rows}")
+
+
+def date_picker(ws, headers, column: str, rows: int = 500):
+	"""Date validation: Google Sheets shows a calendar for these cells."""
+	dv = DataValidation(type="date", operator="greaterThan", formula1="36526", allow_blank=True)  # after 1 Jan 2000
+	dv.errorStyle = "stop"
+	dv.error = "Enter a date, or pick one from the calendar."
+	ws.add_data_validation(dv)
+	L = col(headers, column)
+	dv.add(f"{L}2:{L}{rows}")
+
+
+def colour_status(ws, headers, column: str, n: int, colours: dict[str, str]):
+	L = col(headers, column)
+	for word, colour in colours.items():
+		highlight(ws, f"{L}2:{L}{n}", f'ISNUMBER(SEARCH("{word}",${L}2))', colour)
+
+
+GOOD, WARN, BAD, INFO, OFF = "C6EFCE", "FFE699", "F8CBAD", "DDEBF7", "EDEDED"
+
+
 def write_my_shop():
 	wb = Workbook()
 	product_rows = []
@@ -1536,20 +1624,22 @@ def write_my_shop():
 		p, c = price_cost(pid, TODAY)
 		tx = TAXES[tax]
 		active = "Yes" if active_product(pid, TODAY) else "No"
-		note = {"P027": "Seasonal; stopped for winter", "P011": "Price changed 1 Jun 2026", "P006": "Price changed 10 Aug 2026",
-		        "P003": ""}.get(pid, "")
+		note = {"P027": "Seasonal; stopped for winter", "P011": "Price changed 1 Jun 2026",
+		        "P006": "Price changed 10 Aug 2026"}.get(pid, "")
 		product_rows.append([pid, name, cat, unit, ean13(pid), p, c,
 		                     f"{tx['name']} ({tx['code']})", hs, low, active, ADDED_ON[pid], note])
-	add_table(wb, "Products", H_PRODUCTS, product_rows, first=True, kind="owner")
+	ws_products = add_table(wb, "Products", H_PRODUCTS, product_rows, first=True, kind="owner")
+	highlight(ws_products, f"A2:M{len(product_rows) + 1}", f'${col(H_PRODUCTS, "Active")}2="No"', OFF)
+	lists = write_lists(wb)
 
-	# Stock (formulas over this year's Ledger tab)
+	# Stock (formulas over this year's Stock Ledger)
 	H_STOCK = [("Product ID", None, 9), ("Product", None, 24), ("Location", None, 9), ("In stock", "int", 9),
-	           ("Low-stock level", "int", 9), ("Status", None, 8), ("Stock value (USD)", "money", 11),
+	           ("Low-stock level", "int", 9), ("Status", None, 10), ("Stock value (USD)", "money", 11),
 	           ("Last received", "date", 12)]
 	ws = add_table(wb, "Stock", H_STOCK, [], kind="dura")
 	L = {h: col(H_LEDGER, h) for h in ("Date", "Location", "Type", "Product ID", "Qty")}
 	PR = {h: col(H_PRODUCTS, h) for h in ("Low-stock level", "Cost USD")}
-	led = "'Ledger 2026'"
+	sled, mled = "'Stock Ledger 2026'", "'Money Ledger 2026'"
 	r = 1
 	for loc, *_ in LOCATIONS:
 		for pid in PROD:
@@ -1559,24 +1649,29 @@ def write_my_shop():
 			ws.cell(row=r, column=1, value=pid)
 			ws.cell(row=r, column=2, value=f"=IFERROR(INDEX(Products!$B:$B,MATCH($A{r},Products!$A:$A,0)),\"\")")
 			ws.cell(row=r, column=3, value=loc)
-			ws.cell(row=r, column=4, value=f"=SUMIFS({led}!${L['Qty']}:${L['Qty']},{led}!${L['Product ID']}:${L['Product ID']},$A{r},{led}!${L['Location']}:${L['Location']},$C{r})")
+			ws.cell(row=r, column=4, value=f"=SUMIFS({sled}!${L['Qty']}:${L['Qty']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},{sled}!${L['Location']}:${L['Location']},$C{r})").number_format = FMT["int"]
 			ws.cell(row=r, column=5, value=f"=IFERROR(INDEX(Products!${PR['Low-stock level']}:${PR['Low-stock level']},MATCH($A{r},Products!$A:$A,0)),0)")
-			ws.cell(row=r, column=6, value=f'=IF($D{r}<=0,"Out",IF($D{r}<=$E{r},"Low","OK"))')
+			ws.cell(row=r, column=6, value=f'=IF($D{r}<=0,"🔴 Out",IF($D{r}<=$E{r},"🟡 Low","🟢 OK"))')
 			ws.cell(row=r, column=7, value=f"=IFERROR($D{r}*INDEX(Products!${PR['Cost USD']}:${PR['Cost USD']},MATCH($A{r},Products!$A:$A,0)),0)").number_format = FMT["money"]
-			mx = (f"MAX(_xlfn.MAXIFS({led}!${L['Date']}:${L['Date']},{led}!${L['Product ID']}:${L['Product ID']},$A{r},"
-			      f"{led}!${L['Location']}:${L['Location']},$C{r},{led}!${L['Type']}:${L['Type']},\"Stock in\"),"
-			      f"_xlfn.MAXIFS({led}!${L['Date']}:${L['Date']},{led}!${L['Product ID']}:${L['Product ID']},$A{r},"
-			      f"{led}!${L['Location']}:${L['Location']},$C{r},{led}!${L['Type']}:${L['Type']},\"Moved in\"))")
+			mx = (f"MAX(_xlfn.MAXIFS({sled}!${L['Date']}:${L['Date']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},"
+			      f"{sled}!${L['Location']}:${L['Location']},$C{r},{sled}!${L['Type']}:${L['Type']},\"Stock in\"),"
+			      f"_xlfn.MAXIFS({sled}!${L['Date']}:${L['Date']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},"
+			      f"{sled}!${L['Location']}:${L['Location']},$C{r},{sled}!${L['Type']}:${L['Type']},\"Moved in\"))")
 			ws.cell(row=r, column=8, value=f'=IF({mx}=0,"",{mx})').number_format = FMT["date"]
 	ws.auto_filter.ref = f"A1:H{r}"
-	ws.conditional_formatting.add(f"A2:H{r}", FormulaRule(formula=[f'$F2="Out"'], fill=PatternFill("solid", fgColor="F8CBAD")))
-	ws.conditional_formatting.add(f"A2:H{r}", FormulaRule(formula=[f'$F2="Low"'], fill=PatternFill("solid", fgColor="FFE699")))
+	highlight(ws, f"A2:H{r}", 'ISNUMBER(SEARCH("Out",$F2))', BAD)
+	highlight(ws, f"A2:H{r}", 'ISNUMBER(SEARCH("Low",$F2))', WARN)
 	mark_formula_tab(ws)
 
-	add_table(wb, "Locations", [("Location", None, 9), ("Name", None, 22), ("Address", None, 34), ("Phones", None, 10),
-	                            ("Opened on", "date", 11), ("Active", None, 7)],
-	          [[l, n, a, ", ".join(p for p in phones_on(TODAY) if PHONES[p][1] == l), o, "Yes"] for l, n, a, o in LOCATIONS],
-	          kind="owner")
+	H_LOC = [("Location", None, 9), ("Name", None, 22), ("Type", None, 12), ("Address", None, 34), ("Phones", None, 10),
+	         ("Opened on", "date", 12), ("Active", None, 7)]
+	ws = add_table(wb, "Locations", H_LOC,
+	               [[l, n, "Selling", a, ", ".join(p for p in phones_on(TODAY) if PHONES[p][1] == l), o, "Yes"]
+	                for l, n, a, o in LOCATIONS], kind="owner")
+	dropdown(ws, H_LOC, "Type", lists["Location type"], rows=50)
+	dropdown(ws, H_LOC, "Active", lists["Yes/No"], rows=50)
+	date_picker(ws, H_LOC, "Opened on", rows=50)
+	locations = "Locations!$A$2:$A$50"
 
 	phone_rows = []
 	for ph, (name, loc, frm, to, *_rest) in PHONES.items():
@@ -1589,39 +1684,63 @@ def write_my_shop():
 		                   None if retired else date(2027, 2, 26),
 		                   fd["no"] if fd and not retired else "", last, "1.4.2" if not retired else "1.2.0",
 		                   "Screen broken; replaced by P4. ZIMRA device 21402 retired." if retired else ""])
-	ws = add_table(wb, "Phones", [("Phone", None, 7), ("Name", None, 18), ("Location", None, 9), ("Status", None, 8),
-	                              ("Seller(s)", None, 24), ("Joined on", "date", 11), ("Retired on", "date", 11),
-	                              ("ZIMRA device ID", None, 9), ("Serial no", None, 10), ("Fiscalisation", None, 9),
-	                              ("Certificate valid till", "date", 12), ("Current fiscal day", None, 9),
-	                              ("Last synced", "datetime", 16), ("App version", None, 8), ("Note", None, 40)], phone_rows)
-	highlight(ws, f"A2:O{len(phone_rows) + 1}", '$D2="Retired"', "EDEDED")
+	H_PH = [("Phone", None, 7), ("Name", None, 18), ("Location", None, 9), ("Status", None, 8),
+	        ("Seller(s)", None, 24), ("Joined on", "date", 12), ("Retired on", "date", 12),
+	        ("ZIMRA device ID", None, 9), ("Serial no", None, 10), ("Fiscalisation", None, 9),
+	        ("Certificate valid till", "date", 12), ("Current fiscal day", None, 9),
+	        ("Last synced", "datetime", 16), ("App version", None, 8), ("Note", None, 40)]
+	ws = add_table(wb, "Phones", H_PH, phone_rows)
+	highlight(ws, f"A2:O{len(phone_rows) + 1}", '$D2="Retired"', OFF)
 
-	add_table(wb, "Staff", [("Staff ID", None, 7), ("Name", None, 14), ("Role", None, 8), ("App access", None, 28),
-	                        ("Phones", None, 9), ("Discount limit", None, 9), ("Can refund", None, 14), ("Active", None, 7),
-	                        ("From", "date", 11), ("To", "date", 11), ("Note", None, 24)],
-	          [[s, n, r_, a, p, dl, cr, "No" if to and to < TODAY else "Yes", f, to, note]
-	           for s, n, r_, a, p, dl, cr, f, to, note in STAFF], kind="owner")
+	H_STAFF = [("Staff ID", None, 7), ("Name", None, 14), ("Role", None, 9), ("App access", None, 28),
+	           ("Phones", None, 9), ("Discount limit", None, 9), ("Can refund", None, 14), ("Active", None, 7),
+	           ("From", "date", 12), ("To", "date", 12), ("Note", None, 24)]
+	ws = add_table(wb, "Staff", H_STAFF,
+	               [[s_, n, r_, a, p, dl, cr, "No" if to and to < TODAY else "Yes", f, to, note]
+	                for s_, n, r_, a, p, dl, cr, f, to, note in STAFF], kind="owner")
+	for column, source in (("Role", "Role"), ("App access", "App access"), ("Discount limit", "Discount limit"),
+	                       ("Can refund", "Refunds"), ("Active", "Yes/No")):
+		dropdown(ws, H_STAFF, column, lists[source], rows=100)
+	date_picker(ws, H_STAFF, "From", rows=100)
+	date_picker(ws, H_STAFF, "To", rows=100)
+	highlight(ws, f"A2:K{len(STAFF) + 1}", '$H2="No"', OFF)
 
-	H_CUST = [("Customer ID", None, 10), ("Name", None, 24), ("Phone no", None, 16), ("Email", None, 22),
-	          ("Type", None, 8), ("TIN", None, 11), ("VAT number", None, 11), ("Address", None, 24),
-	          ("Usual location", None, 9), ("On account", None, 9), ("Credit limit USD", "money", 9),
-	          ("Payment days", "int", 8), ("Added by", None, 7), ("Added on", "date", 11),
-	          ("Updated on", "date", 11), ("Active", None, 7), ("Merged into", None, 10), ("Note", None, 50)]
-	account = {"P1-C0001": ("Yes", D(150), ON_ACCOUNT_DAYS)}
-	ws = add_table(wb, "Customers", H_CUST,
-	               [[cid, n, pn, em, ty, tin, vat, addr, loc, *account.get(cid, ("No", None, None)), cid[:2], added, upd,
-	                 "No" if merged else "Yes", merged, note]
-	                for cid, n, pn, em, ty, tin, vat, addr, loc, added, upd, merged, note in CUSTOMERS], kind="owner")
-	highlight(ws, f"A2:R{len(CUSTOMERS) + 1}", f'${col(H_CUST, "Active")}2="No"', "EDEDED")
+	# Contacts: customers and suppliers in one list
+	H_CON = [("Contact ID", None, 10), ("Name", None, 24), ("Type", None, 11), ("Person or business", None, 9),
+	         ("Phone no", None, 16), ("Email", None, 20), ("TIN", None, 11), ("VAT number", None, 11),
+	         ("Address", None, 22), ("Usual location", None, 9), ("On account", None, 9),
+	         ("Credit limit USD", "money", 9), ("Payment days", "int", 8), ("Supplies", None, 22),
+	         ("Supplier terms", None, 34), ("Added by", None, 7), ("Added on", "date", 12), ("Updated on", "date", 12),
+	         ("Active", None, 7), ("Merged into", None, 10), ("Note", None, 44)]
+	account = {"P1-C0008": ("Yes", D(150), ON_ACCOUNT_DAYS)}
+	contacts = [[cid, n, "Customer", ty, pn, em, tin, vat, addr, loc, *account.get(cid, ("No", None, None)), "", "",
+	             cid[:2], added, upd, "No" if merged else "Yes", merged, note]
+	            for cid, n, pn, em, ty, tin, vat, addr, loc, added, upd, merged, note in CUSTOMERS]
+	contacts += [[sid, n, "Supplier", "Business", pn, em, tin, vat, "", "", "No", None, None, what, terms,
+	              sid[:2], START, None, "Yes", "", note] for sid, n, pn, em, tin, vat, what, terms, note in SUPPLIERS]
+	contacts.sort(key=lambda c_: (c_[0][:2], c_[0]))
+	ws = add_table(wb, "Contacts", H_CON, contacts, kind="owner")
+	for column, source in (("Type", "Contact type"), ("Person or business", "Person or business"),
+	                       ("Usual location", "Usual location"), ("On account", "Yes/No"),
+	                       ("Supplier terms", "Supplier terms"), ("Active", "Yes/No")):
+		dropdown(ws, H_CON, column, lists[source], strict=column != "Supplier terms")
+	dropdown(ws, H_CON, "Merged into", "Contacts!$A$2:$A$500")
+	date_picker(ws, H_CON, "Added on")
+	date_picker(ws, H_CON, "Updated on")
+	last = get_column_letter(len(H_CON))
+	TY = col(H_CON, "Type")
+	highlight(ws, f"A2:{last}{len(contacts) + 1}", f'${col(H_CON, "Active")}2="No"', OFF)
+	highlight(ws, f"{TY}2:{TY}{len(contacts) + 1}", f'${TY}2="Supplier"', "FCE4D6")
+	highlight(ws, f"{TY}2:{TY}{len(contacts) + 1}", f'${TY}2="Customer"', INFO)
 
-	add_table(wb, "Suppliers", [("Supplier ID", None, 10), ("Name", None, 22), ("Phone no", None, 16), ("Email", None, 20),
-	                            ("TIN", None, 11), ("VAT number", None, 11), ("Supplies", None, 30), ("Terms", None, 44),
-	                            ("Active", None, 7), ("Note", None, 34)],
-	          [[sid, n, pn, em, tin, vat, what, terms, "Yes", note] for sid, n, pn, em, tin, vat, what, terms, note in SUPPLIERS],
-	          kind="owner")
+	# Products dropdowns, now that the Lists and HS Codes exist
+	for column, source in (("Category", "Category"), ("Unit", "Unit"), ("Tax", "Tax"), ("Active", "Yes/No")):
+		dropdown(ws_products, H_PRODUCTS, column, lists[source], strict=column in ("Tax", "Active"))
+	dropdown(ws_products, H_PRODUCTS, "HS code", "'HS Codes'!$A$2:$A$500", strict=False)
+	date_picker(ws_products, H_PRODUCTS, "Added on")
 
 	add_table(wb, "Taxes", [("ZIMRA tax ID", None, 9), ("Name", None, 16), ("Percent", "pct", 8), ("Code", None, 6),
-	                        ("Valid from", "date", 11), ("Note", None, 60)],
+	                        ("Valid from", "date", 12), ("Note", None, 60)],
 	          [[t["id"], t["name"], t["pct"], t["code"], date(2025, 1, 1),
 	            "Copied from ZIMRA's configuration when fiscalisation is on. Sample values: confirm each product's VAT treatment."]
 	           for t in TAXES.values()])
@@ -1637,19 +1756,23 @@ def write_my_shop():
 		ws.cell(row=r, column=2).alignment = Alignment(wrap_text=True, vertical="top")
 	mark_formula_tab(ws)
 
-	add_table(wb, "Currencies", [("Currency", None, 9), ("Name", None, 20), ("Accepted", None, 9), ("Used for", None, 30),
-	                             ("Cash", None, 6), ("Mobile money", None, 9), ("Price rounding", None, 10), ("Note", None, 50)],
-	          [["USD", "US dollar", "Yes", "Prices, most sales, card, InnBucks, EcoCash USD", "Yes", "Yes", "0.01",
-	            "The pricing currency: every product has one USD price. Cents of USD change are often given in ZWG, or kept."],
-	           ["ZWG", "Zimbabwe Gold (ZiG)", "Yes", "Sales and change; EcoCash ZWG", "Yes", "Yes", "0.50",
-	            "ZWG price = USD price x today's rate (Exchange Rates), rounded to 0.50."],
-	           ["ZAR", "South African rand", "Yes", "Cash sales, mostly at the Mbare stall", "Yes", "No", "0.50",
-	            "ZAR price = USD price x today's rate, rounded to 0.50. Cash only."]], kind="owner")
+	H_CUR = [("Currency", None, 9), ("Name", None, 20), ("Accepted", None, 9), ("Used for", None, 30),
+	         ("Cash", None, 6), ("Mobile money", None, 9), ("Price rounding", None, 10), ("Note", None, 50)]
+	ws = add_table(wb, "Currencies", H_CUR,
+	               [["USD", "US dollar", "Yes", "Prices, most sales, card, InnBucks, EcoCash USD", "Yes", "Yes", "0.01",
+	                 "The pricing currency: every product has one USD price. Cents of USD change are often given in ZWG, or kept."],
+	                ["ZWG", "Zimbabwe Gold (ZiG)", "Yes", "Sales and change; EcoCash ZWG", "Yes", "Yes", "0.50",
+	                 "ZWG price = USD price x today's rate (Exchange Rates), rounded to 0.50."],
+	                ["ZAR", "South African rand", "Yes", "Cash sales, mostly at the Mbare stall", "Yes", "No", "0.50",
+	                 "ZAR price = USD price x today's rate, rounded to 0.50. Cash only."]], kind="owner")
+	for column in ("Accepted", "Cash", "Mobile money"):
+		dropdown(ws, H_CUR, column, lists["Yes/No"], rows=20)
+	currencies = "Currencies!$A$2:$A$20"
 
-	add_table(wb, "Payment Methods", [("Method", None, 18), ("Currency", None, 8), ("ZIMRA money type", None, 16),
-	                                  ("Provider", None, 16), ("Mode", None, 8), ("Confirmed by", None, 24),
-	                                  ("Keys kept", None, 26), ("Active", None, 7), ("Note", None, 44)],
-	          [["Cash USD", "USD", "Cash", "", "", "Cash count", "", "Yes", ""],
+	H_PM = [("Method", None, 18), ("Currency", None, 8), ("ZIMRA money type", None, 16),
+	        ("Provider", None, 16), ("Mode", None, 8), ("Confirmed by", None, 24),
+	        ("Keys kept", None, 26), ("Active", None, 7), ("Note", None, 44)]
+	pm_rows = [["Cash USD", "USD", "Cash", "", "", "Cash count", "", "Yes", ""],
 	           ["Cash ZWG", "ZWG", "Cash", "", "", "Cash count", "", "Yes", ""],
 	           ["Cash ZAR", "ZAR", "Cash", "", "", "Cash count", "", "Yes", ""],
 	           ["EcoCash USD", "USD", "MobileWallet", "Paynow", "Live", "Paynow (poll)", "On each phone, encrypted", "Yes", "Manual (SMS) before 4 May 2026"],
@@ -1660,13 +1783,19 @@ def write_my_shop():
 	           ["Kept change USD", "USD", "Other (ask ZIMRA)", "", "", "Customer's balance", "", "Yes",
 	            "Change the shop kept for a customer, used to pay. Money type to confirm with ZIMRA"],
 	           ["On account USD", "USD", "Credit", "", "", "Customer's account", "", "Yes",
-	            "Invoices for customers allowed an account (Customers tab)"]], kind="owner")
+	            "Invoices for contacts allowed an account"]]
+	ws = add_table(wb, "Payment Methods", H_PM, pm_rows, kind="owner")
+	dropdown(ws, H_PM, "Currency", currencies, rows=50)
+	dropdown(ws, H_PM, "ZIMRA money type", lists["ZIMRA money type"], rows=50)
+	dropdown(ws, H_PM, "Mode", lists["Mode"], rows=50)
+	dropdown(ws, H_PM, "Active", lists["Yes/No"], rows=50)
 
 	settings = [
 		("Business name", BUSINESS["Business name"], ""), ("Legal name", BUSINESS["Legal name"], "Printed on receipts"),
 		("Owner", BUSINESS["Owner"], ""), ("TIN", BUSINESS["TIN"], "Sample"), ("VAT number", BUSINESS["VAT number"], "Sample"),
 		("Address", BUSINESS["Address"], ""), ("Phone", BUSINESS["Phone"], ""),
 		("Shop Google account", BUSINESS["Shop Google account"], "A Google account used only for the shop; every phone signs in to Dura with it"),
+		("Word for a location", "Shop", "Shop, branch, store, stall or outlet: the app uses this word"),
 		("Pricing currency", "USD", "Every product has one price, in this currency"),
 		("Accepted currencies", "USD, ZWG, ZAR", "Other currencies use the day's rate"),
 		("Exchange rate", "Set daily by the owner", "See the Exchange Rates tab"),
@@ -1676,61 +1805,74 @@ def write_my_shop():
 		("Kept change", f"On (since {KEPT_CHANGE_FROM:%d %b %Y}), up to USD {KEPT_CHANGE_LIMIT} per customer",
 		 "Paying it out in cash needs the owner's PIN"),
 		("Kept change reminder", "After 60 days", "Old balances are listed for the owner"),
-		("Invoices on account", f"On (since {ON_ACCOUNT_FROM:%d %b %Y})", "Only for customers marked 'On account'"),
+		("Invoices on account", f"On (since {ON_ACCOUNT_FROM:%d %b %Y})", "Only for contacts marked 'On account'"),
 		("Quotes", "On, valid 7 days", "Shared as a PDF; not fiscal"),
 		("Suppliers and purchases", "On", "Supplier invoice photos go to <year>/Supplier invoices"),
+		("Phone keeps synced sales for", "7 days", "Older sales are read from the sheets when needed"),
 		("Sync", "Background, after each sale, Sync now, end of day", ""), ("Backups", "Daily, to hidden app data", ""),
 		("Payment callbacks", "Apps Script receiver (since 15 Aug 2026)", "Optional; the till always confirms by polling"),
 		("Receipt footer", "Thank you! Tatenda! Siyabonga!", ""), ("Data year", "2026", "Ledger and archive year"),
 	]
-	add_table(wb, "Settings", [("Setting", None, 24), ("Value", None, 52), ("Note", None, 60)], [list(s) for s in settings],
+	add_table(wb, "Settings", [("Setting", None, 26), ("Value", None, 52), ("Note", None, 60)], [list(s_) for s_ in settings],
 	          kind="owner")
 
-	add_table(wb, "Exchange Rates", H_RATES, rates_rows_y[2026], kind="owner")
-	ws = add_table(wb, "Ledger 2026", H_LEDGER, ledger_y[2026])
-	n = len(ledger_y[2026]) + 1
-	LT = col(H_LEDGER, "Type")
-	for types, colour in ((("Sold",), None), (("Stock in", "Opening", "Moved in", "Returned"), "E2EFDA"),
-	                      (("Written off", "Counted"), "FCE4D6"),
-	                      (("Purchase", "Supplier paid", "Invoiced on account", "Account paid", "Change kept",
-	                        "Change used", "Change paid out"), "FFF2CC")):
-		if colour:
-			highlight(ws, f"A2:{get_column_letter(len(H_LEDGER))}{n}", "OR(" + ",".join(f'${LT}2="{t}"' for t in types) + ")", colour)
-	add_table(wb, "Stock Counts 2026", H_COUNTS, counts_y[2026])
-	ws = add_table(wb, "Purchases 2026", H_PURCHASES, purchases_y[2026])
-	PS = col(H_PURCHASES, "Payment status")
-	highlight(ws, f"{PS}2:{PS}{len(purchases_y[2026]) + 1}", f'${PS}2="Unpaid"', "F4B183")
-	add_table(wb, "Payment Callbacks 2026", H_CALLBACKS, callbacks_y[2026])
+	ws = add_table(wb, "Exchange Rates", H_RATES, rates_rows_y[2026], kind="owner")
+	date_picker(ws, H_RATES, "Date", rows=400)
+	dropdown(ws, H_RATES, "Set by", "Staff!$B$2:$B$100", rows=400)
 
-	# Customer Balances: kept change owed to customers, accounts owed by customers, amounts owed to suppliers
-	H_BAL = [("ID", None, 10), ("Name", None, 24), ("Customer or supplier", None, 11), ("What", None, 18),
+	# The two ledgers
+	ws = add_table(wb, "Stock Ledger 2026", H_LEDGER, stock_ledger_y[2026])
+	n = len(stock_ledger_y[2026]) + 1
+	LT = col(H_LEDGER, "Type")
+	for types, colour in ((("Stock in", "Opening", "Moved in", "Returned"), GOOD), (("Written off", "Counted"), BAD),
+	                      (("Moved out",), WARN)):
+		highlight(ws, f"{LT}2:{LT}{n}", "OR(" + ",".join(f'${LT}2="{t}"' for t in types) + ")", colour)
+	ws = add_table(wb, "Money Ledger 2026", H_MONEY, money_ledger_y[2026])
+	n = len(money_ledger_y[2026]) + 1
+	MT = col(H_MONEY, "Type")
+	for types, colour in ((("Account paid", "Change used"), GOOD), (("Expense", "Change paid out", "Supplier paid"), BAD),
+	                      (("Purchase", "Invoiced on account", "Change kept"), WARN), (("Takings collected", "Banked"), INFO)):
+		highlight(ws, f"{MT}2:{MT}{n}", "OR(" + ",".join(f'${MT}2="{t}"' for t in types) + ")", colour)
+
+	ws = add_table(wb, "Stock Counts 2026", H_COUNTS, counts_y[2026])
+	n = len(counts_y[2026]) + 1
+	for column in ("Difference", "Value difference (USD)"):
+		L2 = col(H_COUNTS, column)
+		highlight(ws, f"{L2}2:{L2}{n}", f"{L2}2<0", BAD)
+		highlight(ws, f"{L2}2:{L2}{n}", f"{L2}2>0", WARN)
+	ws = add_table(wb, "Purchases 2026", H_PURCHASES, purchases_y[2026])
+	colour_status(ws, H_PURCHASES, "Payment status", len(purchases_y[2026]) + 1, {"Unpaid": "F4B183", "Paid": GOOD})
+	ws = add_table(wb, "Payment Callbacks 2026", H_CALLBACKS, callbacks_y[2026])
+	colour_status(ws, H_CALLBACKS, "Result", len(callbacks_y[2026]) + 1, {"Rejected": BAD, "Duplicate": OFF})
+
+	# Balances: kept change owed to customers, accounts owed by customers, amounts owed to suppliers
+	H_BAL = [("Contact ID", None, 10), ("Name", None, 24), ("Type", None, 10), ("What", None, 18),
 	         ("Currency", None, 8), ("The shop owes them", "money", 11), ("They owe the shop", "money", 11),
-	         ("Limit", "money", 9), ("Status", None, 11), ("Last movement", "date", 12)]
-	ws = add_table(wb, "Customer Balances", H_BAL, [], kind="dura")
-	B = {h: col(H_LEDGER, h) for h in ("Date", "Customer or supplier ID", "Balance change", "Cash currency")}
-	parties = sorted({(r[15], r[13]) for r in ledger_y[2026] if r[15]}, key=lambda k: (k[0] not in CUST, k[0]))
+	         ("Limit", "money", 9), ("Status", None, 18), ("Last movement", "date", 12)]
+	ws = add_table(wb, "Balances", H_BAL, [], kind="dura")
+	B = {h: col(H_MONEY, h) for h in ("Date", "Contact ID", "Balance change", "Currency")}
+	parties = sorted({(r_[10], r_[7]) for r_ in money_ledger_y[2026] if r_[10]}, key=lambda k: (k[0] not in CUST, k[0]))
 	r = 1
 	for party, cur in parties:
 		r += 1
 		is_cust = party in CUST
 		what = ("Account (invoices)" if party in account else "Kept change") if is_cust else "Supplier invoices"
 		limit = account[party][1] if party in account else (KEPT_CHANGE_LIMIT if is_cust else None)
-		tab = "Customers" if is_cust else "Suppliers"
-		total = (f"SUMIFS({led}!${B['Balance change']}:${B['Balance change']},{led}!${B['Customer or supplier ID']}:"
-		         f"${B['Customer or supplier ID']},$A{r},{led}!${B['Cash currency']}:${B['Cash currency']},$E{r})")
-		for c, v in enumerate([party, f"=IFERROR(INDEX({tab}!$B:$B,MATCH($A{r},{tab}!$A:$A,0)),\"\")",
-		                       "Customer" if is_cust else "Supplier", what, cur, f"=MAX(0,{total})", f"=MAX(0,-{total})",
-		                       limit, f'=IF(AND($H{r}<>"",MAX($F{r},$G{r})>$H{r}),"Over limit",IF(MAX($F{r},$G{r})>0,"Open","Settled"))',
-		                       f"=_xlfn.MAXIFS({led}!${B['Date']}:${B['Date']},{led}!${B['Customer or supplier ID']}:"
-		                       f"${B['Customer or supplier ID']},$A{r})"], start=1):
+		total = (f"SUMIFS({mled}!${B['Balance change']}:${B['Balance change']},{mled}!${B['Contact ID']}:"
+		         f"${B['Contact ID']},$A{r},{mled}!${B['Currency']}:${B['Currency']},$E{r})")
+		for c, v in enumerate([party, f'=IFERROR(INDEX(Contacts!$B:$B,MATCH($A{r},Contacts!$A:$A,0)),"")',
+		                       f'=IFERROR(INDEX(Contacts!${TY}:${TY},MATCH($A{r},Contacts!$A:$A,0)),"")', what, cur,
+		                       f"=MAX(0,{total})", f"=MAX(0,-{total})", limit,
+		                       f'=IF(AND($H{r}<>"",MAX($F{r},$G{r})>$H{r}),"🔴 Over limit",IF($G{r}>0,"🟠 Owes the shop",'
+		                       f'IF($F{r}>0,"🔵 Shop owes them","⚪ Settled")))',
+		                       f"=_xlfn.MAXIFS({mled}!${B['Date']}:${B['Date']},{mled}!${B['Contact ID']}:"
+		                       f"${B['Contact ID']},$A{r})"], start=1):
 			cell = ws.cell(row=r, column=c, value=v)
 			if c in (6, 7, 8):
 				cell.number_format = FMT["money"]
 			if c == 10:
 				cell.number_format = FMT["date"]
-	highlight(ws, f"A2:J{r}", '$I2="Over limit"', "F8CBAD")
-	highlight(ws, f"A2:J{r}", '$I2="Open"', "FFF2CC")
-	highlight(ws, f"A2:J{r}", '$I2="Settled"', "EDEDED")
+	colour_status(ws, H_BAL, "Status", r, {"Over limit": BAD, "Owes the shop": "F4B183", "Shop owes": INFO, "Settled": OFF})
 	ws.auto_filter.ref = f"A1:J{r}"
 	mark_formula_tab(ws)
 
@@ -1739,17 +1881,20 @@ def write_my_shop():
 	mark_formula_tab(ws)
 	ws["A1"] = f"{BUSINESS['Business name']}: stock, money owed, and the year so far"
 	ws["A1"].font = Font(bold=True, size=15, color="1F3864")
-	ws["A2"] = "Formulas only, from the tabs in this file. Values at cost are in USD; cash is shown per currency, never added up."
+	ws["A2"] = "Formulas only, from the tabs in this file. Values at cost are in USD; cash is shown per currency, never added up. Red numbers are negative."
 	r = 4
-	for c, h in enumerate(["Stock by location", "Products OK", "Low", "Out", "Stock value (USD)"], start=1):
+	for c, h in enumerate(["Stock by location", "🟢 OK", "🟡 Low", "🔴 Out", "Stock value (USD)"], start=1):
 		ws.cell(row=r, column=c, value=h).font = BOLD
 	r_stock = r
 	for loc, *_ in LOCATIONS:
 		r += 1
 		ws.cell(row=r, column=1, value=loc)
 		for c, st in enumerate(("OK", "Low", "Out"), start=2):
-			ws.cell(row=r, column=c, value=f'=COUNTIFS(Stock!$C:$C,$A{r},Stock!$F:$F,"{st}")')
+			ws.cell(row=r, column=c, value=f'=COUNTIFS(Stock!$C:$C,$A{r},Stock!$F:$F,"*{st}")')
 		ws.cell(row=r, column=5, value=f"=SUMIFS(Stock!$G:$G,Stock!$C:$C,$A{r})").number_format = FMT["money"]
+	for c, colour in ((2, GOOD), (3, WARN), (4, BAD)):
+		for rr in range(r_stock + 1, r + 1):
+			ws.cell(row=rr, column=c).fill = fill(colour)
 	ch = BarChart()
 	ch.type, ch.grouping, ch.overlap = "bar", "stacked", 100
 	ch.title = "Products in stock: OK, low, out"
@@ -1760,31 +1905,31 @@ def write_my_shop():
 		series.graphicalProperties.solidFill = colour
 	ws.add_chart(ch, "H4")
 
-	G, V, M, N = col(H_LEDGER, "Type"), col(H_LEDGER, "Stock value (USD)"), col(H_LEDGER, "Cash amount"), col(H_LEDGER, "Cash currency")
-	BC = col(H_LEDGER, "Balance change")
+	G, V = col(H_LEDGER, "Type"), col(H_LEDGER, "Stock value (USD)")
+	MG, M, N, BC = col(H_MONEY, "Type"), col(H_MONEY, "Cash amount"), col(H_MONEY, "Currency"), col(H_MONEY, "Balance change")
 	r += 2
 	ws.cell(row=r, column=1, value="Money owed (USD)").font = BOLD
-	owed = [("Kept change the shop owes customers", ("Change kept", "Change used", "Change paid out"), 1),
-	        ("Customers owe the shop (invoices)", ("Invoiced on account", "Account paid"), -1),
-	        ("The shop owes suppliers", ("Purchase", "Supplier paid"), 1)]
-	for label, types, sign in owed:
+	owed = [("Kept change the shop owes customers", ("Change kept", "Change used", "Change paid out"), 1, INFO),
+	        ("Customers owe the shop (invoices)", ("Invoiced on account", "Account paid"), -1, "F4B183"),
+	        ("The shop owes suppliers", ("Purchase", "Supplier paid"), 1, "FCE4D6")]
+	for label, types, sign, colour in owed:
 		r += 1
-		ws.cell(row=r, column=1, value=label)
-		f = "+".join(f'SUMIFS({led}!${BC}:${BC},{led}!${G}:${G},"{t}")' for t in types)
+		ws.cell(row=r, column=1, value=label).fill = fill(colour)
+		f = "+".join(f'SUMIFS({mled}!${BC}:${BC},{mled}!${MG}:${MG},"{t}")' for t in types)
 		ws.cell(row=r, column=2, value=f"={'-' if sign < 0 else ''}({f})").number_format = FMT["money"]
-	ws.cell(row=r + 1, column=1, value="Each customer and supplier: see Customer Balances.").font = Font(italic=True)
+	ws.cell(row=r + 1, column=1, value="Each customer and supplier: see Balances.").font = Font(italic=True)
 	r += 3
 	ws.cell(row=r, column=1, value="Year to date (USD at cost)").font = BOLD
-	lines = [("Stock received", f"=SUMIFS({led}!${V}:${V},{led}!${G}:${G},\"Stock in\")"),
-	         ("Cost of goods sold", f"=-SUMIFS({led}!${V}:${V},{led}!${G}:${G},\"Sold\")-SUMIFS({led}!${V}:${V},{led}!${G}:${G},\"Returned\")"),
-	         ("Written off", f"=-SUMIFS({led}!${V}:${V},{led}!${G}:${G},\"Written off\")"),
-	         ("Stock count differences", f"=SUMIFS({led}!${V}:${V},{led}!${G}:${G},\"Counted\")")]
+	lines = [("Stock received", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Stock in\")"),
+	         ("Cost of goods sold", f"=-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Sold\")-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Returned\")"),
+	         ("Written off", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Written off\")"),
+	         ("Stock count differences", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Counted\")")]
 	for label, f in lines:
 		r += 1
 		ws.cell(row=r, column=1, value=label)
 		ws.cell(row=r, column=2, value=f).number_format = FMT["money"]
 	r += 2
-	for c, h in enumerate(["Cash this year", "USD", "ZWG", "ZAR"], start=1):
+	for c, h in enumerate(["Cash this year (out is red)", "USD", "ZWG", "ZAR"], start=1):
 		ws.cell(row=r, column=c, value=h).font = BOLD
 	for label, typ in (("Expenses", "Expense"), ("Paid to suppliers", "Supplier paid"),
 	                   ("Kept change paid out", "Change paid out"), ("Takings collected", "Takings collected"),
@@ -1792,22 +1937,22 @@ def write_my_shop():
 		r += 1
 		ws.cell(row=r, column=1, value=label)
 		for c, cur in enumerate(("USD", "ZWG", "ZAR"), start=2):
-			ws.cell(row=r, column=c, value=f"=-SUMIFS({led}!${M}:${M},{led}!${G}:${G},\"{typ}\",{led}!${N}:${N},\"{cur}\")").number_format = FMT["money"]
+			ws.cell(row=r, column=c, value=f"=SUMIFS({mled}!${M}:${M},{mled}!${MG}:${MG},\"{typ}\",{mled}!${N}:${N},\"{cur}\")").number_format = FMT["money"]
 	# month by month, with a chart
 	r += 2
 	for c, h in enumerate(["Month", "Stock received", "Cost of goods sold", "Paid to suppliers (USD)"], start=1):
 		ws.cell(row=r, column=c, value=h).font = BOLD
 	r_month = r
-	D_ = col(H_LEDGER, "Date")
+	SD, MD = col(H_LEDGER, "Date"), col(H_MONEY, "Date")
 	for m in range(1, TODAY.month + 1):
 		r += 1
 		start, end = date(2026, m, 1), (date(2026, m, 1) + timedelta(days=32)).replace(day=1)
 		ws.cell(row=r, column=1, value=f"{start:%b}")
-		rng_ = (f'{led}!${D_}:${D_},">="&DATE({start.year},{start.month},1),'
-		        f'{led}!${D_}:${D_},"<"&DATE({end.year},{end.month},1)')
-		ws.cell(row=r, column=2, value=f'=SUMIFS({led}!${V}:${V},{led}!${G}:${G},"Stock in",{rng_})').number_format = FMT["money"]
-		ws.cell(row=r, column=3, value=f'=-SUMIFS({led}!${V}:${V},{led}!${G}:${G},"Sold",{rng_})').number_format = FMT["money"]
-		ws.cell(row=r, column=4, value=f'=-SUMIFS({led}!${M}:${M},{led}!${G}:${G},"Supplier paid",{led}!${N}:${N},"USD",{rng_})').number_format = FMT["money"]
+		within = lambda led, D_: (f'{led}!${D_}:${D_},">="&DATE({start.year},{start.month},1),'
+		                          f'{led}!${D_}:${D_},"<"&DATE({end.year},{end.month},1)')
+		ws.cell(row=r, column=2, value=f'=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},"Stock in",{within(sled, SD)})').number_format = FMT["money"]
+		ws.cell(row=r, column=3, value=f'=-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},"Sold",{within(sled, SD)})').number_format = FMT["money"]
+		ws.cell(row=r, column=4, value=f'=-SUMIFS({mled}!${M}:${M},{mled}!${MG}:${MG},"Supplier paid",{mled}!${N}:${N},"USD",{within(mled, MD)})').number_format = FMT["money"]
 	ch = BarChart()
 	ch.title = "Stock bought and sold each month (USD at cost)"
 	ch.height, ch.width = 8, 16
@@ -1816,43 +1961,50 @@ def write_my_shop():
 	ch.series[0].graphicalProperties.solidFill = "4472C4"
 	ch.series[1].graphicalProperties.solidFill = "ED7D31"
 	ws.add_chart(ch, "H18")
-	ws.column_dimensions["A"].width = 36
+	ws.column_dimensions["A"].width = 38
 	for c in "BCDE":
 		ws.column_dimensions[c].width = 16
 
 	readme(wb, f"My Shop: {BUSINESS['Business name']}", [
 		"The shop's main file. It stays in the Dura POS folder for good; each month's sales are in that year's folder.",
-		"Edit the green tabs whenever you like: Dura checks your changes on its next sync and lists anything it skipped in Activity.",
-		"Stock is never typed: it is the Ledger added up per product and location.",
-		"On 1 January, the year's Ledger, Stock Counts, Purchases and Payment Callbacks tabs move to that year's archive file.",
+		"Green tabs are yours: most cells are dropdowns, and dates have a calendar (in Google Sheets). Add your own",
+		"   categories, units and supplier terms in the Lists tab and they appear in the dropdowns.",
+		"Dura checks your changes on its next sync and lists anything it skipped in Activity.",
+		"Stock is never typed: it is the Stock Ledger added up per product and location.",
+		"Red numbers are negative: stock going out, money going out, short, or owed by someone.",
+		"Status dots: 🟢 good, 🟡 needs a look soon, 🟠 someone owes the shop, 🔵 the shop owes someone, 🔴 act now, ⚪ settled.",
+		"On 1 January, the year's ledgers, Stock Counts, Purchases and Payment Callbacks move to that year's archive file.",
 		"Seller PINs, payment keys and ZIMRA keys are never in any sheet: they stay on the phones.",
 		"SAMPLE DATA: the shop, people, tax IDs, rates and references are fictional.",
 	], tabs=[
 		("Products", "owner", "Your price list: one USD price per product, cost, tax, HS code, low-stock level."),
-		("Stock", "dura", "What's in stock at each location now. Low is yellow, out is red."),
-		("Locations", "owner", "The main shop and any stalls or branches."),
+		("Lists", "owner", "The choices behind every dropdown. Add to the green columns; the grey ones are fixed."),
+		("Stock", "dura", "What's in stock at each location now: 🟢 OK, 🟡 low, 🔴 out."),
+		("Locations", "owner", "Your shops, branches, stalls or storerooms."),
 		("Phones", "phones", "Each phone: where it is, its ZIMRA device, last sync."),
-		("Staff", "owner", "You and your sellers: what each may do. PINs are not here."),
-		("Customers", "owner", "Regular and business customers; phones add new ones at the till."),
-		("Suppliers", "owner", "Who you buy from, and on what terms."),
+		("Staff", "owner", "You and your sellers: role and what each may do. PINs are not here."),
+		("Contacts", "owner", "Everyone the shop deals with: customers (blue) and suppliers (pink), in one list."),
 		("Taxes", "phones", "VAT rates, copied from ZIMRA."),
-		("HS Codes", "dura", "The ZIMRA HS codes your products use, with ZIMRA's wording. Pick codes in the app; it has the full list."),
+		("HS Codes", "dura", "The ZIMRA HS codes your products use, with ZIMRA's wording. The app has the full list."),
 		("Currencies", "owner", "USD, ZWG, ZAR: which you accept, and rounding."),
 		("Payment Methods", "owner", "Cash, mobile money, card, bank, kept change, account. Keys are not here."),
 		("Settings", "owner", "Business details and how Dura behaves."),
 		("Exchange Rates", "owner", "Today's ZWG and ZAR rate per 1 USD. Prices in other currencies come from these."),
-		("Ledger 2026", "phones", "Every stock and money movement this year, from every phone."),
-		("Stock Counts 2026", "phones", "Each stock take: expected, counted, difference."),
-		("Purchases 2026", "phones", "Each supplier invoice: total, VAT, paid or unpaid (orange)."),
-		("Payment Callbacks 2026", "phones", "Messages from Paynow (optional)."),
-		("Customer Balances", "dura", "Who owes what: kept change, invoices, suppliers. Over limit is red."),
+		("Stock Ledger 2026", "phones", "Every stock movement this year: in (green), sold, moved, written off or counted short (pink)."),
+		("Money Ledger 2026", "phones", "Every money movement that isn't a sale: expenses, banking, suppliers, kept change, invoices."),
+		("Stock Counts 2026", "phones", "Each stock take: missing is red, extra found is yellow."),
+		("Purchases 2026", "phones", "Each supplier invoice: total, VAT, paid (green) or unpaid (orange)."),
+		("Payment Callbacks 2026", "phones", "Messages from Paynow (optional). Rejected ones are red."),
+		("Balances", "dura", "Who owes what: kept change, invoices and suppliers, with a status dot."),
 		("Summary", "dura", "Stock, money owed and the year so far, with charts."),
 	], questions=[
-		("What's running out?", "Stock (yellow and red rows), or the chart in Summary"),
+		("What's running out?", "Stock (🟡 and 🔴 rows), or the chart in Summary"),
+		("What happened to one product?", "Stock Ledger: filter Product ID (and Location)"),
 		("How much is my stock worth?", "Summary, 'Stock by location'"),
-		("Who owes me, and whom do I owe?", "Customer Balances"),
+		("Who owes me, and whom do I owe?", "Balances"),
 		("How much kept change do I owe customers?", "Summary, 'Money owed'"),
 		("What did I pay a supplier, and the VAT on it?", "Purchases 2026"),
+		("Where did cash go, apart from sales?", "Money Ledger 2026"),
 		("What did I sell in a month?", "That month's Sales file, in the year's folder"),
 		("Who changed what, and when?", "Activity file in the year's folder"),
 	])
@@ -1885,7 +2037,8 @@ def write_year_files():
 		wb.save(OUT / str(year) / f"Activity {year}.xlsx")
 	# 2025 archive
 	wb = Workbook()
-	add_table(wb, "Ledger 2025", H_LEDGER, ledger_y[2025], first=True)
+	add_table(wb, "Stock Ledger 2025", H_LEDGER, stock_ledger_y[2025], first=True)
+	add_table(wb, "Money Ledger 2025", H_MONEY, money_ledger_y[2025])
 	add_table(wb, "Stock Counts 2025", H_COUNTS, counts_y[2025])
 	add_table(wb, "Purchases 2025", H_PURCHASES, purchases_y[2025])
 	add_table(wb, "Exchange Rates 2025", H_RATES, rates_rows_y[2025])
@@ -1899,7 +2052,8 @@ def write_year_files():
 		"The shop started using Dura on 1 December 2025, so this year has one month.",
 		"SAMPLE DATA: fictional.",
 	], tabs=[
-		("Ledger 2025", "phones", "Every stock and money movement in 2025."),
+		("Stock Ledger 2025", "phones", "Every stock movement in 2025."),
+		("Money Ledger 2025", "phones", "Every money movement in 2025 that wasn't a sale."),
 		("Stock Counts 2025", "phones", "The year's stock takes."),
 		("Purchases 2025", "phones", "The year's supplier invoices, with VAT."),
 		("Exchange Rates 2025", "owner", "The rates used each day."),
@@ -1918,7 +2072,8 @@ def main():
 	write_year_files()
 	n_sales = sum(len(v) for v in sales_m.values())
 	print(f"Wrote {OUT}: {n_sales} sales, {sum(len(v) for v in items_m.values())} item lines, "
-	      f"{sum(len(v) for v in pays_m.values())} payment rows, {sum(len(v) for v in ledger_y.values())} ledger rows, "
+	      f"{sum(len(v) for v in pays_m.values())} payment rows, {sum(len(v) for v in stock_ledger_y.values())} stock and "
+	      f"{sum(len(v) for v in money_ledger_y.values())} money ledger rows, "
 	      f"{sum(len(v) for v in activity_y.values())} activity rows.")
 
 

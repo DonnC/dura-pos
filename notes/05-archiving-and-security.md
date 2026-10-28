@@ -27,12 +27,12 @@
 
 1. **In December**, the owner's phone creates the next year's folder and its
    `Activity <year>` file, along with January's Sales file.
-2. **On 1 January**, phones start writing to the new year's Ledger tab, which
+2. **On 1 January**, phones start writing to the new year's Stock and Money Ledger tabs, which
    opens with an `Opening` row per product and location.
 3. **Archive, once every active phone has synced past 31 December** (or after
    14 days, with a warning in Activity naming any phone that hasn't). The
    owner's phone:
-   - copies the year's `Ledger`, `Stock Counts`, `Exchange Rates` and
+   - copies the year's `Stock Ledger`, `Money Ledger`, `Stock Counts`, `Purchases`, `Exchange Rates` and
      `Payment Callbacks` tabs out of `My Shop` into `<year>/Ledger <year>`;
    - adds `Closing Stock <year>`, which is the ledger added up;
    - checks that the closing stock equals the new year's `Opening` rows, then

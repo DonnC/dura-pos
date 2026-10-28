@@ -2,7 +2,8 @@
 
 28 October 2026. This adds to `03`, `04` and `07`. The sample (`../samples/`)
 now has all of it: kept change, invoices on account, quotes, suppliers and
-purchases, and the Customer Balances tab.
+purchases, and the Balances tab. Customers and suppliers now share one `Contacts` tab,
+and the Ledger is split into a Stock Ledger and a Money Ledger (`04`).
 
 ## Kept change ("I'll keep your change")
 
@@ -37,7 +38,7 @@ spent.
 - In practice, kept change belongs to a till: the one where the coins are.
   The sample keeps it per location's till.
 - The cap keeps any slip tiny.
-- A balance that goes below zero shows in Customer Balances as the customer
+- A balance that goes below zero shows in Balances as the customer
   owing the shop, for the owner to settle.
 
 **Currency.** The balance stays in the currency it was owed in. USD cents
@@ -86,7 +87,7 @@ it's converted at the day's rate, like any other USD payment.
 
 ## Suppliers and purchases
 
-- **`Suppliers` tab** in `My Shop`: name, phone, TIN and VAT number, what they
+- **Suppliers are contacts** (`My Shop` → `Contacts`, `Type = Supplier`): name, phone, TIN and VAT number, what they
   supply, payment terms (cash on delivery, or 7, 14 or 30 days), and active.
 - **Receiving a delivery** is one screen:
   1. pick the supplier;
@@ -112,9 +113,8 @@ it's converted at the day's rate, like any other USD payment.
 
 | Where | What |
 |---|---|
-| `My Shop` → `Suppliers` | New data tab, owner-edited |
-| `My Shop` → `Purchases <year>` | New, written by phones; one row per supplier invoice. Archived at year end with the Ledger |
-| `My Shop` → `Customer Balances` | New Dura tab (formulas): per customer and currency, kept change owed and account balance owed; per supplier, amount owed. Overdue and over-limit rows are coloured |
+| `My Shop` → `Contacts` | Suppliers are contacts with `Type = Supplier`, beside the customers |
+| `My Shop` → `Balances` | New Dura tab (formulas): per customer and currency, kept change owed and account balance owed; per supplier, amount owed. Overdue and over-limit rows are coloured |
 | Ledger | New columns `Customer ID` and `Supplier ID`. New cash types: `Change kept`, `Change used`, `Change paid out`, `Invoiced on account`, `Account paid`, `Supplier paid`. Balances live here because the Ledger is the one file every phone writes and formulas can read |
 | Sales | `Type` adds `Invoice`. New columns `Due date` and `Payment status` (a status cell the phone updates) |
 | Payments | `Kind` adds `Change kept` and `Change used`. New statuses `On account` and `Paid later`. Each sale's rows still add up exactly to its total |
