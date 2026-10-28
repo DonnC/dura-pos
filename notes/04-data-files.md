@@ -66,6 +66,12 @@ On each phone only: PINs, payment keys, the ZIMRA device key and fiscal state
 
 ## `My Shop`
 
+The live tabs (`Stock Ledger`, `Money Ledger`, `Stock Counts`, `Purchases`,
+`Payment Callbacks`) have no year in their name. The year they hold is
+`Settings` → `Data year`, and the Summary reads it from there. Only archives
+and file names carry a year, so no formula has to change on 1 January (`05`,
+"Every year").
+
 | Tab | Written by | One row per | What it's for |
 |---|---|---|---|
 | Read Me | — | — | What each tab is, in plain words, with a colour key and "where to look" |
@@ -82,11 +88,11 @@ On each phone only: PINs, payment keys, the ZIMRA device key and fiscal state
 | Payment Methods | Owner | method | Cash per currency, EcoCash, InnBucks, card, bank transfer, kept change, on account. Each has its ZIMRA money type, provider (e.g. Paynow), sandbox or live, and how payment is confirmed. The keys themselves are never stored here |
 | Settings | Owner | setting | Business details, TIN and VAT number, the shop's Google account, the word for a location, discount limit, day close times, kept change, invoices, quotes, sync, backups, receipt footer |
 | Exchange Rates | Owner | day | ZWG and ZAR per 1 USD, set each morning |
-| Stock Ledger 2026 | Phones | stock movement | **The stock ledger.** Every movement of stock, from every phone and location (see below) |
-| Money Ledger 2026 | Phones | money movement | Every movement of money that isn't a sale: expenses, takings, banking, supplier invoices and payments, kept change, invoices on account (see below). Sales and their payments are in the monthly files |
-| Stock Counts 2026 | Phones | product per count | Each stock take: expected, counted, difference (missing is red, extra is yellow), value of the difference, who counted, who approved |
-| Purchases 2026 | Phones | supplier invoice | Supplier, their invoice number, total and VAT (input tax for the VAT return), how it was paid, payment status (Paid green, Unpaid orange), a photo of the invoice. The items are `Stock in` rows in the Stock Ledger with the same Purchase ID |
-| Payment Callbacks 2026 | The optional Apps Script receiver | callback | Payment confirmations sent by Paynow: signature valid or not, matched sale, result. Optional: tills always confirm by polling |
+| Stock Ledger | Phones | stock movement | **The stock ledger.** Every movement of stock, from every phone and location (see below) |
+| Money Ledger | Phones | money movement | Every movement of money that isn't a sale: expenses, takings, banking, supplier invoices and payments, kept change, invoices on account (see below). Sales and their payments are in the monthly files |
+| Stock Counts | Phones | product per count | Each stock take: expected, counted, difference (missing is red, extra is yellow), value of the difference, who counted, who approved |
+| Purchases | Phones | supplier invoice | Supplier, their invoice number, total and VAT (input tax for the VAT return), how it was paid, payment status (Paid green, Unpaid orange), a photo of the invoice. The items are `Stock in` rows in the Stock Ledger with the same Purchase ID |
+| Payment Callbacks | The optional Apps Script receiver | callback | Payment confirmations sent by Paynow: signature valid or not, matched sale, result. Optional: tills always confirm by polling |
 | Balances | Dura | contact, per currency | What the shop owes and is owed: kept change, invoices on account, and supplier invoices. Status 🔴 Over limit, 🟠 Owes the shop, 🔵 Shop owes them, ⚪ Settled |
 | Summary | Formulas | — | Products OK / Low / Out and stock value per location; money owed; year to date: stock received, cost of goods sold, write-offs, count differences, and expenses, supplier payments, takings and banking per currency; month by month. With charts |
 

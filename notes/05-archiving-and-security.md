@@ -25,25 +25,43 @@
 
 ### Every year
 
+The live tabs in `My Shop` never change name: `Stock Ledger`, `Money Ledger`,
+`Stock Counts`, `Purchases`, `Payment Callbacks`. The year they hold is
+`Settings` → `Data year`, and the Summary reads it from there. So no formula
+ever names a year, and nothing breaks on 1 January.
+
 1. **In December**, the owner's phone creates the next year's folder and its
    `Activity <year>` file, along with January's Sales file.
-2. **On 1 January**, phones start writing to the new year's Stock and Money Ledger tabs, which
-   opens with an `Opening` row per product and location.
+2. **On 1 January, nothing changes shape.** Phones keep adding rows to the
+   same tabs.
+   - Stock stays right, because it's the sum of every row.
+   - The Summary's year-to-date figures count only rows from `Data year`,
+     because they filter by date.
 3. **Archive, once every active phone has synced past 31 December** (or after
    14 days, with a warning in Activity naming any phone that hasn't). The
    owner's phone:
-   - copies the year's `Stock Ledger`, `Money Ledger`, `Stock Counts`, `Purchases`, `Exchange Rates` and
-     `Payment Callbacks` tabs out of `My Shop` into `<year>/Ledger <year>`;
-   - adds `Closing Stock <year>`, which is the ledger added up;
-   - checks that the closing stock equals the new year's `Opening` rows, then
-     removes the old tabs from `My Shop`;
-   - records the archive in Activity.
-4. **Late rows.** If a phone syncs rows for last year after the archive, they
-   are added to `Ledger <year>`. A correcting `Opening` row is added to the new
-   year's Ledger, so stock stays right.
+   1. copies last year's rows from each live tab into `<year>/Ledger <year>`,
+      as `Stock Ledger <year>`, `Money Ledger <year>`, `Stock Counts <year>`,
+      `Purchases <year>`, `Payment Callbacks <year>` and
+      `Exchange Rates <year>`;
+   2. reads the copy back and checks the row counts and totals match;
+   3. adds `Closing Stock <year>`: stock per product and location, and open
+      balances per contact and currency;
+   4. in one Sheets update, removes last year's rows from the live tabs and
+      adds `Opening` rows dated 1 January: stock in the Stock Ledger, balances
+      in the Money Ledger. This is the only time rows are removed, and only
+      after step 2 has passed;
+   5. sets `Data year` to the new year;
+   6. records the archive in Activity.
+4. **If the archive stops halfway** (lost connection, closed app), it starts
+   again from the beginning next time. Each step checks what's already been
+   done, so nothing is copied twice or lost.
+5. **Late rows.** If a phone syncs last year's rows after the archive, they
+   are added to `Ledger <year>`, and a correcting `Opening` row is added to the
+   live tab, so stock stays right.
 
-`My Shop` stays small, and there's only ever one live ledger. Closed years
-aren't written to again, except by step 4.
+`My Shop` stays small, and there's only ever one live set of tabs. Closed
+years aren't written to again, except by step 5.
 
 ### How long to keep it
 

@@ -1,6 +1,11 @@
 # Dura POS: feature design
 
-28 October 2026. This note replaces sections 1 and 7 of `01-assessment.md`. The
+28 October 2026. This note replaces sections 1 and 7 of `01-assessment.md`. The files and tabs
+described here were refined in `04-data-files.md`, which wins where they differ.
+The differences:
+- the live tabs have no year in their name;
+- the ledger is split into a Stock Ledger and a Money Ledger;
+- customers and suppliers share one Contacts tab. The
 business model is settled:
 
 - open source, with no vendor cloud;

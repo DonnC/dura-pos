@@ -1029,7 +1029,7 @@ EVENTS = {
 		(time(6, 16), "P1", "Chipo Moyo", "Seller added", "Rudo Chari, app only, PIN set on P2"),
 	],
 	date(2026, 1, 2): [
-		(time(8, 0), "P1", "Dura", "Year-end archive", "Stock and Money Ledgers 2025 moved to 2025/Ledger 2025; Stock Ledger 2026 opened with closing stock"),
+		(time(8, 0), "P1", "Dura", "Year-end archive", "2025 ledgers copied to 2025/Ledger 2025; Stock Ledger started 2026 with closing stock"),
 	],
 	date(2026, 2, 16): [(time(9, 0), "P1", "Chipo Moyo", "Fiscalisation", "ZIMRA test device registered on P1 and P2")],
 	date(2026, 2, 20): [(time(18, 0), "P1", "Chipo Moyo", "Fiscalisation", "Test fiscal day closed without errors")],
@@ -1639,7 +1639,7 @@ def write_my_shop():
 	ws = add_table(wb, "Stock", H_STOCK, [], kind="dura")
 	L = {h: col(H_LEDGER, h) for h in ("Date", "Location", "Type", "Product ID", "Qty")}
 	PR = {h: col(H_PRODUCTS, h) for h in ("Low-stock level", "Cost USD")}
-	sled, mled = "'Stock Ledger 2026'", "'Money Ledger 2026'"
+	sled, mled = "'Stock Ledger'", "'Money Ledger'"
 	r = 1
 	for loc, *_ in LOCATIONS:
 		for pid in PROD:
@@ -1811,7 +1811,8 @@ def write_my_shop():
 		("Phone keeps synced sales for", "7 days", "Older sales are read from the sheets when needed"),
 		("Sync", "Background, after each sale, Sync now, end of day", ""), ("Backups", "Daily, to hidden app data", ""),
 		("Payment callbacks", "Apps Script receiver (since 15 Aug 2026)", "Optional; the till always confirms by polling"),
-		("Receipt footer", "Thank you! Tatenda! Siyabonga!", ""), ("Data year", "2026", "Ledger and archive year"),
+		("Receipt footer", "Thank you! Tatenda! Siyabonga!", ""),
+		("Data year", 2026, "The year the ledger tabs and Summary show. Dura moves it on at the year-end archive"),
 	]
 	add_table(wb, "Settings", [("Setting", None, 26), ("Value", None, 52), ("Note", None, 60)], [list(s_) for s_ in settings],
 	          kind="owner")
@@ -1821,28 +1822,28 @@ def write_my_shop():
 	dropdown(ws, H_RATES, "Set by", "Staff!$B$2:$B$100", rows=400)
 
 	# The two ledgers
-	ws = add_table(wb, "Stock Ledger 2026", H_LEDGER, stock_ledger_y[2026])
+	ws = add_table(wb, "Stock Ledger", H_LEDGER, stock_ledger_y[2026])
 	n = len(stock_ledger_y[2026]) + 1
 	LT = col(H_LEDGER, "Type")
 	for types, colour in ((("Stock in", "Opening", "Moved in", "Returned"), GOOD), (("Written off", "Counted"), BAD),
 	                      (("Moved out",), WARN)):
 		highlight(ws, f"{LT}2:{LT}{n}", "OR(" + ",".join(f'${LT}2="{t}"' for t in types) + ")", colour)
-	ws = add_table(wb, "Money Ledger 2026", H_MONEY, money_ledger_y[2026])
+	ws = add_table(wb, "Money Ledger", H_MONEY, money_ledger_y[2026])
 	n = len(money_ledger_y[2026]) + 1
 	MT = col(H_MONEY, "Type")
 	for types, colour in ((("Account paid", "Change used"), GOOD), (("Expense", "Change paid out", "Supplier paid"), BAD),
 	                      (("Purchase", "Invoiced on account", "Change kept"), WARN), (("Takings collected", "Banked"), INFO)):
 		highlight(ws, f"{MT}2:{MT}{n}", "OR(" + ",".join(f'${MT}2="{t}"' for t in types) + ")", colour)
 
-	ws = add_table(wb, "Stock Counts 2026", H_COUNTS, counts_y[2026])
+	ws = add_table(wb, "Stock Counts", H_COUNTS, counts_y[2026])
 	n = len(counts_y[2026]) + 1
 	for column in ("Difference", "Value difference (USD)"):
 		L2 = col(H_COUNTS, column)
 		highlight(ws, f"{L2}2:{L2}{n}", f"{L2}2<0", BAD)
 		highlight(ws, f"{L2}2:{L2}{n}", f"{L2}2>0", WARN)
-	ws = add_table(wb, "Purchases 2026", H_PURCHASES, purchases_y[2026])
+	ws = add_table(wb, "Purchases", H_PURCHASES, purchases_y[2026])
 	colour_status(ws, H_PURCHASES, "Payment status", len(purchases_y[2026]) + 1, {"Unpaid": "F4B183", "Paid": GOOD})
-	ws = add_table(wb, "Payment Callbacks 2026", H_CALLBACKS, callbacks_y[2026])
+	ws = add_table(wb, "Payment Callbacks", H_CALLBACKS, callbacks_y[2026])
 	colour_status(ws, H_CALLBACKS, "Result", len(callbacks_y[2026]) + 1, {"Rejected": BAD, "Duplicate": OFF})
 
 	# Balances: kept change owed to customers, accounts owed by customers, amounts owed to suppliers
@@ -1882,6 +1883,10 @@ def write_my_shop():
 	ws["A1"] = f"{BUSINESS['Business name']}: stock, money owed, and the year so far"
 	ws["A1"].font = Font(bold=True, size=15, color="1F3864")
 	ws["A2"] = "Formulas only, from the tabs in this file. Values at cost are in USD; cash is shown per currency, never added up. Red numbers are negative."
+	ws["D1"] = "Year (from Settings)"
+	ws["E1"] = '=INDEX(Settings!$B:$B,MATCH("Data year",Settings!$A:$A,0))'
+	ws["D1"].font = ws["E1"].font = BOLD
+	year_from = f'">="&DATE($E$1,1,1)'  # year-to-date rows only, even while last year's rows wait for the archive
 	r = 4
 	for c, h in enumerate(["Stock by location", "🟢 OK", "🟡 Low", "🔴 Out", "Stock value (USD)"], start=1):
 		ws.cell(row=r, column=c, value=h).font = BOLD
@@ -1920,10 +1925,12 @@ def write_my_shop():
 	ws.cell(row=r + 1, column=1, value="Each customer and supplier: see Balances.").font = Font(italic=True)
 	r += 3
 	ws.cell(row=r, column=1, value="Year to date (USD at cost)").font = BOLD
-	lines = [("Stock received", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Stock in\")"),
-	         ("Cost of goods sold", f"=-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Sold\")-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Returned\")"),
-	         ("Written off", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Written off\")"),
-	         ("Stock count differences", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Counted\")")]
+	SD, MD = col(H_LEDGER, "Date"), col(H_MONEY, "Date")
+	ytd_s, ytd_m = f"{sled}!${SD}:${SD},{year_from}", f"{mled}!${MD}:${MD},{year_from}"
+	lines = [("Stock received", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Stock in\",{ytd_s})"),
+	         ("Cost of goods sold", f"=-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Sold\",{ytd_s})-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Returned\",{ytd_s})"),
+	         ("Written off", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Written off\",{ytd_s})"),
+	         ("Stock count differences", f"=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},\"Counted\",{ytd_s})")]
 	for label, f in lines:
 		r += 1
 		ws.cell(row=r, column=1, value=label)
@@ -1937,19 +1944,17 @@ def write_my_shop():
 		r += 1
 		ws.cell(row=r, column=1, value=label)
 		for c, cur in enumerate(("USD", "ZWG", "ZAR"), start=2):
-			ws.cell(row=r, column=c, value=f"=SUMIFS({mled}!${M}:${M},{mled}!${MG}:${MG},\"{typ}\",{mled}!${N}:${N},\"{cur}\")").number_format = FMT["money"]
+			ws.cell(row=r, column=c, value=f"=SUMIFS({mled}!${M}:${M},{mled}!${MG}:${MG},\"{typ}\",{mled}!${N}:${N},\"{cur}\",{ytd_m})").number_format = FMT["money"]
 	# month by month, with a chart
 	r += 2
 	for c, h in enumerate(["Month", "Stock received", "Cost of goods sold", "Paid to suppliers (USD)"], start=1):
 		ws.cell(row=r, column=c, value=h).font = BOLD
 	r_month = r
-	SD, MD = col(H_LEDGER, "Date"), col(H_MONEY, "Date")
-	for m in range(1, TODAY.month + 1):
+	for m in range(1, 13):  # all twelve months of the Settings year; months to come show zero
 		r += 1
-		start, end = date(2026, m, 1), (date(2026, m, 1) + timedelta(days=32)).replace(day=1)
-		ws.cell(row=r, column=1, value=f"{start:%b}")
-		within = lambda led, D_: (f'{led}!${D_}:${D_},">="&DATE({start.year},{start.month},1),'
-		                          f'{led}!${D_}:${D_},"<"&DATE({end.year},{end.month},1)')
+		ws.cell(row=r, column=1, value=f"{date(2026, m, 1):%b}")
+		within = lambda led, D_: (f'{led}!${D_}:${D_},">="&DATE($E$1,{m},1),'
+		                          f'{led}!${D_}:${D_},"<"&DATE($E$1,{m}+1,1)')
 		ws.cell(row=r, column=2, value=f'=SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},"Stock in",{within(sled, SD)})').number_format = FMT["money"]
 		ws.cell(row=r, column=3, value=f'=-SUMIFS({sled}!${V}:${V},{sled}!${G}:${G},"Sold",{within(sled, SD)})').number_format = FMT["money"]
 		ws.cell(row=r, column=4, value=f'=-SUMIFS({mled}!${M}:${M},{mled}!${MG}:${MG},"Supplier paid",{mled}!${N}:${N},"USD",{within(mled, MD)})').number_format = FMT["money"]
@@ -1973,7 +1978,8 @@ def write_my_shop():
 		"Stock is never typed: it is the Stock Ledger added up per product and location.",
 		"Red numbers are negative: stock going out, money going out, short, or owed by someone.",
 		"Status dots: 🟢 good, 🟡 needs a look soon, 🟠 someone owes the shop, 🔵 the shop owes someone, 🔴 act now, ⚪ settled.",
-		"On 1 January, the year's ledgers, Stock Counts, Purchases and Payment Callbacks move to that year's archive file.",
+		"The ledger tabs hold this year only (the year is in Settings, 'Data year'). On 1 January Dura copies them to",
+		"   that year's archive file (e.g. 2025/Ledger 2025) and empties them; tab names and formulas never change.",
 		"Seller PINs, payment keys and ZIMRA keys are never in any sheet: they stay on the phones.",
 		"SAMPLE DATA: the shop, people, tax IDs, rates and references are fictional.",
 	], tabs=[
@@ -1990,11 +1996,11 @@ def write_my_shop():
 		("Payment Methods", "owner", "Cash, mobile money, card, bank, kept change, account. Keys are not here."),
 		("Settings", "owner", "Business details and how Dura behaves."),
 		("Exchange Rates", "owner", "Today's ZWG and ZAR rate per 1 USD. Prices in other currencies come from these."),
-		("Stock Ledger 2026", "phones", "Every stock movement this year: in (green), sold, moved, written off or counted short (pink)."),
-		("Money Ledger 2026", "phones", "Every money movement that isn't a sale: expenses, banking, suppliers, kept change, invoices."),
-		("Stock Counts 2026", "phones", "Each stock take: missing is red, extra found is yellow."),
-		("Purchases 2026", "phones", "Each supplier invoice: total, VAT, paid (green) or unpaid (orange)."),
-		("Payment Callbacks 2026", "phones", "Messages from Paynow (optional). Rejected ones are red."),
+		("Stock Ledger", "phones", "Every stock movement this year: in (green), sold, moved, written off or counted short (pink)."),
+		("Money Ledger", "phones", "Every money movement that isn't a sale: expenses, banking, suppliers, kept change, invoices."),
+		("Stock Counts", "phones", "Each stock take: missing is red, extra found is yellow."),
+		("Purchases", "phones", "Each supplier invoice: total, VAT, paid (green) or unpaid (orange)."),
+		("Payment Callbacks", "phones", "Messages from Paynow (optional). Rejected ones are red."),
 		("Balances", "dura", "Who owes what: kept change, invoices and suppliers, with a status dot."),
 		("Summary", "dura", "Stock, money owed and the year so far, with charts."),
 	], questions=[
@@ -2003,8 +2009,8 @@ def write_my_shop():
 		("How much is my stock worth?", "Summary, 'Stock by location'"),
 		("Who owes me, and whom do I owe?", "Balances"),
 		("How much kept change do I owe customers?", "Summary, 'Money owed'"),
-		("What did I pay a supplier, and the VAT on it?", "Purchases 2026"),
-		("Where did cash go, apart from sales?", "Money Ledger 2026"),
+		("What did I pay a supplier, and the VAT on it?", "Purchases"),
+		("Where did cash go, apart from sales?", "Money Ledger"),
 		("What did I sell in a month?", "That month's Sales file, in the year's folder"),
 		("Who changed what, and when?", "Activity file in the year's folder"),
 	])
@@ -2057,7 +2063,7 @@ def write_year_files():
 		("Stock Counts 2025", "phones", "The year's stock takes."),
 		("Purchases 2025", "phones", "The year's supplier invoices, with VAT."),
 		("Exchange Rates 2025", "owner", "The rates used each day."),
-		("Closing Stock 2025", "dura", "The Ledger added up on 31 December: it equals the 'Opening' rows of Ledger 2026."),
+		("Closing Stock 2025", "dura", "The Ledger added up on 31 December: it equals the 'Opening' rows of the 2026 Stock Ledger."),
 	])
 	wb.save(OUT / "2025" / "Ledger 2025.xlsx")
 
