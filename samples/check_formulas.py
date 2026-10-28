@@ -4,9 +4,9 @@ Run: python3 check_formulas.py "Dura POS"
 import re, sys
 from pathlib import Path
 from openpyxl import load_workbook
-root = Path(sys.argv[1])
+root = Path(sys.argv[1]) / "Chipo's Corner Shop"
 ref = re.compile(r"(?:'([^']+)'|(\b[A-Za-z][A-Za-z ]*?))!\$([A-Z]+):\$?([A-Z]+)")
-for path in [root / "My Shop.xlsx", *sorted(root.glob("20*/20*-* Sales.xlsx"))[-1:], root / "2025" / "Ledger 2025.xlsx"]:
+for path in [root / "My Shop.xlsx", root / "2026" / "2026-10 October.xlsx", root / "2025" / "Ledger 2025.xlsx"]:
     wb = load_workbook(path)
     heads = {ws.title: {c.column_letter: c.value for c in ws[1]} for ws in wb.worksheets}
     seen = {}

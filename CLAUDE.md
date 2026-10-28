@@ -30,10 +30,26 @@ architecture, the build phases, and which note to read for what.
   - a Read Me in every file, and tabs colour-coded by who writes them;
   - dropdowns from the `Lists` tab instead of typing, and date validation;
   - red negatives, status dots and charts.
+- **Read `notes/12` with `notes/10`.** Note 12 wins where they differ:
+  - the Shop Hub;
+  - test mode;
+  - the file layout;
+  - the pricing currency chosen by the owner (never assume USD);
+  - Activity inside each month file.
+- **Financial records and AI:**
+  - `notes/13` covers which financial records Dura produces;
+  - `notes/14` is the future paid "Ask Dura" assistant: the phone works out
+    the numbers with tools; the model only explains.
+- **Phones write to Sheets directly.** Apps Script (the Shop Hub) is
+  optional: for payment keys and adapters, callbacks and scheduled jobs.
+  It's never in the path of a sale, and never touches ZIMRA.
+- **Test mode never touches live data:** a separate folder and database,
+  `T-` IDs, ZIMRA's test environment, and gateway sandboxes.
 - **Formulas never cross files, and never name a year.** Live tabs in
   `My Shop` have stable names; the year is `Settings` → `Data year`.
-- **Phones add rows; they don't rewrite them,** except status cells. Only the
-  owner's phone creates files and runs the year-end archive.
+- **Phones add rows; they don't rewrite them,** except status cells. Files and the
+  year-end archive are made by the Shop Hub, or, without a hub, by the owner's
+  phone only.
 - **Public posts:**
   - no code blocks;
   - don't claim ZIMRA certification;

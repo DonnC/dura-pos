@@ -30,7 +30,7 @@ The live tabs in `My Shop` never change name: `Stock Ledger`, `Money Ledger`,
 `Settings` → `Data year`, and the Summary reads it from there. So no formula
 ever names a year, and nothing breaks on 1 January.
 
-1. **In December**, the owner's phone creates the next year's folder and its
+1. **In December**, the Shop Hub (or, without one, the owner's phone) creates the next year's folder and its
    `Activity <year>` file, along with January's Sales file.
 2. **On 1 January, nothing changes shape.** Phones keep adding rows to the
    same tabs.
@@ -38,8 +38,9 @@ ever names a year, and nothing breaks on 1 January.
    - The Summary's year-to-date figures count only rows from `Data year`,
      because they filter by date.
 3. **Archive, once every active phone has synced past 31 December** (or after
-   14 days, with a warning in Activity naming any phone that hasn't). The
-   owner's phone:
+   14 days, with a warning in Activity naming any phone that hasn't), the
+   Shop Hub runs it at night (`12`). Without a hub, the owner's phone runs it
+   when it's next online:
    1. copies last year's rows from each live tab into `<year>/Ledger <year>`,
       as `Stock Ledger <year>`, `Money Ledger <year>`, `Stock Counts <year>`,
       `Purchases <year>`, `Payment Callbacks <year>` and

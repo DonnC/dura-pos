@@ -28,32 +28,45 @@ to Drive.
 
 ## Where everything lives
 
+**Updated by `12`:**
+- one folder per business;
+- Activity is a tab in each month's file;
+- month files are named `2026-10 October`;
+- product photos have their own folder;
+- test mode has its own folder.
+
+The sample (`../samples/Dura POS/`) follows this layout, including placeholder
+photos and a small `(TEST)` shop.
+
 ```
 Google Drive (the shop's Google account)
 └── Dura POS/
-    ├── My Shop                 the shop's main file, permanent
-    ├── 2026/                   the current year
-    │   ├── Activity 2026       audit trail for the year
-    │   ├── 2026-01 Sales       one file per month
-    │   ├── …
-    │   └── 2026-10 Sales
-    └── 2025/                   a closed year (archive)
-        ├── Ledger 2025         the year's ledger, stock counts, rates, closing stock
-        ├── Activity 2025
-        └── 2025-12 Sales
+    ├── Chipo's Corner Shop/        one folder per business
+    │   ├── My Shop                 the shop's main file, permanent
+    │   ├── Product photos/
+    │   ├── 2026/                   the current year
+    │   │   ├── 2026-01 January     one file per month (sales, payments, cash-ups,
+    │   │   ├── …                   fiscal days, quotes, activity, summary)
+    │   │   ├── 2026-10 October
+    │   │   └── Supplier invoices/
+    │   └── 2025/                   a closed year
+    │       ├── Ledger 2025         the year's ledgers, stock counts, purchases, rates, closing stock
+    │       └── 2025-12 December
+    └── Chipo's Corner Shop (TEST)/ test mode: the same layout, separate data
 
 Hidden app data (only Dura can see it): one backup of each phone's database
-On each phone only: PINs, payment keys, the ZIMRA device key and fiscal state
+On each phone only: PINs, the pairing secret, the ZIMRA device key and fiscal state
+In the Shop Hub (optional Apps Script): payment keys
 ```
 
 **Why it's chunked this way:**
 
 - `My Shop` is the one file the owner keeps coming back to.
-- Sales are split by month, so each file stays small and quick to open on a
-  phone, and "show me October" is one file.
-- The ledger and the audit trail are split by year.
-- A formula never reads another file. Every total is worked out inside its own
-  file.
+- Each month is one file: "what happened in October" is one file, small and
+  quick to open on a phone.
+- The ledgers are split by year, through the archive.
+- A formula never reads another file. Every total is worked out inside its
+  own file.
 
 ## Who writes what
 
@@ -75,7 +88,7 @@ and file names carry a year, so no formula has to change on 1 January (`05`,
 | Tab | Written by | One row per | What it's for |
 |---|---|---|---|
 | Read Me | — | — | What each tab is, in plain words, with a colour key and "where to look" |
-| Products | Owner | product | The price list and product master: name, barcode, one price in the pricing currency (USD), cost, tax, HS code, low-stock level, active. Other currencies' prices come from the day's rates |
+| Products | Owner | product | The price list and product master: name, barcode, a link to its photo (`Product photos/`), one price in the pricing currency (chosen in Settings; `12`), cost, tax, HS code, low-stock level, active. Other currencies' prices come from the day's rates |
 | Lists | Owner (green columns) and Dura (grey columns) | choice | The choices behind every dropdown (see "Dropdowns and dates") |
 | Stock | Formulas | product per location | Stock on hand, low-stock level, status (🟢 OK / 🟡 Low / 🔴 Out), value at cost, last received. Worked out from this year's Stock Ledger |
 | Locations | Owner | location | Shops, branches, stalls or storerooms, each Selling or Storage only (`09`). Usually just one |
@@ -87,12 +100,15 @@ and file names carry a year, so no formula has to change on 1 January (`05`,
 | Currencies | Owner | currency | USD, ZWG and ZAR: whether accepted, what each is used for, price rounding |
 | Payment Methods | Owner | method | Cash per currency, EcoCash, InnBucks, card, bank transfer, kept change, on account. Each has its ZIMRA money type, provider (e.g. Paynow), sandbox or live, and how payment is confirmed. The keys themselves are never stored here |
 | Settings | Owner | setting | Business details, TIN and VAT number, the shop's Google account, the word for a location, discount limit, day close times, kept change, invoices, quotes, sync, backups, receipt footer |
-| Exchange Rates | Owner | day | ZWG and ZAR per 1 USD, set each morning |
+| Exchange Rates | Owner | rate change | Units of each other currency per 1 unit of the pricing currency. Daily or latest, per the rate policy (`10`, section 6) |
 | Stock Ledger | Phones | stock movement | **The stock ledger.** Every movement of stock, from every phone and location (see below) |
 | Money Ledger | Phones | money movement | Every movement of money that isn't a sale: expenses, takings, banking, supplier invoices and payments, kept change, invoices on account (see below). Sales and their payments are in the monthly files |
 | Stock Counts | Phones | product per count | Each stock take: expected, counted, difference (missing is red, extra is yellow), value of the difference, who counted, who approved |
 | Purchases | Phones | supplier invoice | Supplier, their invoice number, total and VAT (input tax for the VAT return), how it was paid, payment status (Paid green, Unpaid orange), a photo of the invoice. The items are `Stock in` rows in the Stock Ledger with the same Purchase ID |
 | Payment Callbacks | The optional Apps Script receiver | callback | Payment confirmations sent by Paynow: signature valid or not, matched sale, result. Optional: tills always confirm by polling |
+| Months | Dura (values) | month | Written by the Shop Hub when a month closes, and nightly for the current month (or by the owner's phone without a hub). Sales, VAT and cost of goods sold in the pricing currency; output VAT and money in per currency. It's how `My Shop` reports on months whose sales live in other files, without a formula crossing files |
+| Reports | Formulas | — | **Financial reports** (`13`): income statement year to date and by month, VAT per currency, cash flow per currency, and what the business owns and owes |
+| Files | Dura | file or folder | Every Dura file and folder for the shop, with its Drive ID, layout version, and who made it. Phones and the hub find files here, never by name |
 | Balances | Dura | contact, per currency | What the shop owes and is owed: kept change, invoices on account, and supplier invoices. Status 🔴 Over limit, 🟠 Owes the shop, 🔵 Shop owes them, ⚪ Settled |
 | Summary | Formulas | — | Products OK / Low / Out and stock value per location; money owed; year to date: stock received, cost of goods sold, write-offs, count differences, and expenses, supplier payments, takings and banking per currency; month by month. With charts |
 
@@ -172,24 +188,25 @@ when they owe the shop more. Adding it up per contact and currency gives the
 
 The phones' tabs (blue) have no dropdowns, because nobody types there.
 
-## `<year>-<month> Sales`, one per month
+## `<year>-<month> <Month>`, one per month (e.g. `2026-10 October`)
 
 | Tab | Written by | One row per | What it's for |
 |---|---|---|---|
 | Read Me | — | — | What each tab is |
-| Sales | Phones | sale, invoice or return | Who sold it, where and when; currency, items, subtotal, discount, total, VAT; how it was paid and the change given; the customer ID, name and TIN (blank for walk-ins); the fiscal fields: status, ZIMRA device ID, fiscal day, ZIMRA receipt no, verification code; payment status (Paid, Unpaid, Refunded) and due date; synced time. A return has negative amounts and points to its original sale. An invoice on account is `Type = Invoice` and shows Unpaid until it's paid |
-| Items Sold | Phones | item line | Product, quantity, unit price at the time of sale, discount share, line total, tax, VAT |
+| Sales | Phones | sale, invoice or return | Who sold it, where and when; currency, items, subtotal, discount, total, VAT; how it was paid and the change given; the customer ID, name and TIN (blank for walk-ins); the fiscal fields: status, ZIMRA device ID, fiscal day, ZIMRA receipt no, verification code; payment status (Paid, Unpaid, Refunded) and due date; synced time; and the total and VAT converted into the pricing currency at the sale's own rate (for profit reports). A return has negative amounts and points to its original sale. An invoice on account is `Type = Invoice` and shows Unpaid until it's paid |
+| Items Sold | Phones | item line | Product, quantity, unit price at the time of sale, discount share, line total, tax, VAT, and the unit and line cost (pricing currency), so each month file works out its own gross profit |
 | Payments | Phones | payment, change, kept change, refund, or later payment of an invoice | The method and currency actually handed over (see "Several currencies" below). An invoice's later payment is filed in the month it arrived, pointing to the invoice |
 | Cash-ups | Phones | phone per day | Float, expected against counted cash per currency, the difference, mobile money and card totals per method, and kept change kept and used that day |
 | Fiscal Days | Phones | ZIMRA fiscal day per phone | Device ID, day number, opened and closed times, receipts and credit notes, totals and VAT per currency, status. Only from when fiscalisation is on |
 | Quotes | Phones | quote | Customer, items, total, valid until; Open, Accepted (with its sale) or Expired. Not fiscal, no stock change |
-| Summary | Formulas | — | The month by day (sales, returns, totals and VAT per currency), by location, phone, seller, payment method and product, plus cash-up differences. Charts of sales per day (USD and ZWG) and items sold |
+| Activity | Phones | action | The audit trail for the month (see below) |
+| Summary | Formulas | — | The month by day (sales, returns, totals and VAT per currency), by location, phone, seller, payment method and product, plus cash-up differences, **profit and VAT** (sales before VAT, cost of goods sold, gross profit and margin; output VAT per currency). Charts of sales per day (USD and ZWG) and items sold |
 
 A sale is filed in the month **it happened**, even if its phone synced it
 later. Rows appear once their phone has synced: in the sample, today's rows
 stop at each phone's last sync.
 
-## `Activity <year>`
+## Activity (a tab in each month's file; formerly `Activity <year>`)
 
 | Tab | Written by | One row per | What it's for |
 |---|---|---|---|
@@ -250,8 +267,9 @@ duplicate, and how a status cell is found again after the owner sorts the tab.
 Zimbabwe trades in USD, ZWG and ZAR side by side, and the files hold all
 three.
 
-- **One price per product, in the pricing currency (USD).** The ZWG and ZAR
-  price is the USD price times that day's rate (from Exchange Rates), rounded
+- **One price per product, in the pricing currency** (chosen by the owner in
+  Settings, not assumed to be USD; the sample uses USD). Other currencies'
+  prices are that price times the rate (from Exchange Rates), rounded
   to 0.50. There are no fixed per-currency prices: change the rate, and every
   price follows.
 - **A sale has one currency.** That is the currency of its receipt, and the one
@@ -328,8 +346,8 @@ so no cells are wasted.
 | `My Shop` (this year's Ledger in it) | about 0.45 million for ten months | about 450,000 Ledger rows in a year (20 columns each) |
 | `Activity <year>` | about 0.05 million (5,000 rows) | about a million actions in a year: far beyond any small shop |
 
-**Activity is one file per year.** That's enough by a wide margin, and one
-file is easier to search.
+**Activity is a tab in each month's file** (`12`), so the audit trail sits
+beside the sales it explains.
 
 **If a shop ever gets close,** the owner's phone watches each file's size on
 sync. When a file passes 70% of the limit:

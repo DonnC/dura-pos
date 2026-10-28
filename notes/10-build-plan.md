@@ -11,6 +11,19 @@ notes; this one says which to read when.
 A free, open-source Android point-of-sale for Zimbabwean street vendors and
 small shops (1 phone, a few, at most about 10).
 
+> **Read `12-hub-test-mode-files-migration.md` too.** It came after this plan
+> and wins where they differ:
+> - the optional Shop Hub (Apps Script) for payments and scheduled work;
+> - test and practice mode;
+> - files built from one schema;
+> - one folder per business;
+> - Activity inside each month file;
+> - the pricing currency chosen by the owner;
+> - photos;
+> - migrating a business onto Dura.
+>
+> The sections below have been brought in line.
+
 - **Sells offline**, in USD, ZWG and ZAR.
 - **Fiscalises with ZIMRA** on the phone, through the fzimra SDK.
 - **Takes mobile money** through the business's own payment accounts.
@@ -26,13 +39,17 @@ small shops (1 phone, a few, at most about 10).
 | Revenue | Consulting, for businesses that want setup or custom work. The app is free | `03` |
 | Scale | Street vendors and small shops, not chains. "Not an inflated idea" | `03` |
 | Sign-in | The owner's (preferably shop-only) Google account on every phone. Sellers only use the app, with a PIN, unless the owner raises their access | `03`, `05` |
-| One file set per business | `My Shop` (permanent) + a folder per year holding `Activity <year>` and a monthly `<yyyy-mm> Sales` file. Formulas never cross files | `04` |
+| One file set per business | `Dura POS/<business>/`: `My Shop` (permanent), plus a folder per year holding one file per month (`2026-10 October`, with Activity as a tab). Formulas never cross files. A branch is a column, not a folder | `04`, `12` |
+| Phones write to Sheets directly | Sheets and Drive REST APIs from the phone, with an outbox. Apps Script is never in the path of a sale | `12` |
+| Shop Hub (optional Apps Script) | Holds the payment keys and gateway adapters, receives callbacks, and runs scheduled work (month and year files, archive, daily summary, reminders, night checks). Installed when a shop turns on payments, a second phone, or automatic files | `12` |
+| Test and practice mode | A separate `(TEST)` folder and phone database, ZIMRA's test environment, gateway sandboxes, `T-` IDs and a TEST banner. Practice mode uses the fzimra simulator and a fake gateway | `12` |
+| Files built from one schema | `schema/dura-sheets.json` drives the app, the hub and the sample generator. There is no template file | `12` |
 | Phones add rows | Rows are never rewritten, except status cells on a phone's own rows (and the owner's phone updating payment status). Rows are removed only by the verified year-end archive | `04`, `05` |
 | Only the owner's phone creates files | Next month's file around the 25th; next year's folder in December | `05` |
-| Prices | One price per product in the pricing currency (USD). Other currencies come from the exchange rate | `04`, section 6 here |
+| Prices | One price per product in the pricing currency, **chosen by the owner** in onboarding (no USD default). Other currencies come from the exchange rate | `12`, section 6 here |
 | Sheets a person can use | Read Me in every file, colour-coded tabs, dropdowns instead of typing, date pickers, red negatives, status dots, charts | `04` |
 | Fiscalisation | Each selling phone is its own ZIMRA device, under its location's ZIMRA branch | `09` |
-| Payments | One gateway interface in the app; public providers built in; private wallets through the business's own Apps Script | Section 5 here |
+| Payments | One gateway interface in the app, forwarding to the Shop Hub, where each provider is an adapter. Paynow and ZB SmilePay first. Adapters for providers without public APIs are per client. Manual references always work | Section 5 here, `12` |
 
 **Rules for whoever builds it:**
 
@@ -72,6 +89,9 @@ small shops (1 phone, a few, at most about 10).
 | `09-locations-phones-staff.md` | Shops, branches and stores; phones against staff; roles; reporting |
 | `10-build-plan.md` | This note |
 | `11-talk-to-your-data.md` | The guide for owners who want an AI to read their files (it also ships with the app) |
+| `12-hub-test-mode-files-migration.md` | The Shop Hub, test mode, how files are created, the folder layout, photos, the pricing currency, and migrating a business |
+| `13-financial-records.md` | Which of Zimbabwe's usual financial records Dura produces, where, and the gaps |
+| `14-ai-assistant-plan.md` | The future paid "Ask Dura" AI assistant: scope, architecture, costs and pricing |
 
 **The executable spec** is `samples/generate_samples.py`. It builds a complete,
 realistic sample shop (`samples/Dura POS/`): every file, tab, column,
@@ -114,18 +134,18 @@ flowchart LR
     Sheets[("Google Sheets<br/>My Shop · Sales · Activity")]
     Drive[("Google Drive<br/>Dura POS folder · invoice photos")]
     AppData[("Drive hidden app data<br/>phone backups")]
-    Script["Apps Script (optional)<br/>payment callbacks ·<br/>private wallet adapters"]
+    Script["Shop Hub: Apps Script (optional)<br/>payment keys and adapters · callbacks ·<br/>scheduled files, archive, summaries"]
   end
   ZIMRA["ZIMRA FDMS"]
-  Paynow["Paynow and other<br/>public gateways"]
+  Paynow["Paynow · ZB SmilePay ·<br/>other gateways"]
   Wallet["Wallets without<br/>public APIs"]
   Firebase["Dura's Firebase (optional)<br/>crash and problem reports"]
   Sync -- "Sheets API: append · batchGet · batchUpdate" --> Sheets
   Sync -- "Drive API: create files · upload photos" --> Drive
   Sync -- "Drive API: backup" --> AppData
   Fiscal -- "mutual TLS" --> ZIMRA
-  Pay -- "HTTPS, the shop's keys" --> Paynow
-  Pay -- "HTTPS, signed" --> Script
+  Pay -- "HTTPS, signed with the phone's pairing secret" --> Script
+  Script -- "the shop's keys" --> Paynow
   Script --> Wallet
   Paynow -. "callback (a hint)" .-> Script
   Script --> Sheets
@@ -141,7 +161,7 @@ flowchart LR
 | **Drive API** | Creates the folder and files; uploads invoice photos; holds backups in hidden app data | Scope `drive.file`, which reaches only the files Dura created. Backups need `drive.appdata` too (still to check, section 10) |
 | **fzimra** | Everything ZIMRA: registration, signing, receipts, fiscal days, retries | Its key never leaves the phone. Talks to ZIMRA directly over mutual TLS. Apps Script can never do this |
 | **Payment gateway** | One way to take a non-cash payment, whatever the provider | Section 5 |
-| **Apps Script** (optional) | Runs in the shop's own Google account: receives payment callbacks, and hosts adapters for wallets without public APIs | Never holds business logic or ZIMRA. Thin, versioned, updated in place (`07`) |
+| **Shop Hub** (optional Apps Script) | Runs in the shop's own Google account. It holds the payment keys and adapters and receives callbacks. On timers, it creates month and year files, runs the archive, sends the daily summary and reminders, and runs the night checks | Never in the path of a sale, and never touches ZIMRA. Installed and updated in place by the owner's phone (`12`) |
 | **Firebase** (optional) | Dura's own: crash reports, problem reports, update notices, remote switches | No business data, ever. Free tier only. There's also a build without it (`08`) |
 
 ### 3.2 Who touches which file
@@ -295,6 +315,15 @@ interface PaymentGateway {
 }
 ```
 
+**Updated by `12`:**
+- **Keys and adapters move into the Shop Hub.** One business has one
+  merchant account, so its keys belong in one place, not on every phone.
+- **The app's main implementation is `HubGateway`.** It forwards `start`,
+  `check` and `cancel` to the hub, where Paynow, ZB SmilePay and any
+  per-client adapter sit behind the same contract.
+- **The table below still describes the three kinds of provider.** The
+  difference is that "built in" now means "ships in the open-source hub".
+
 The app asks the registry which provider handles a payment method, using
 `Payment Methods` → `Provider`. It calls `start`, then polls `check` until the
 payment is paid, fails or times out. A payment is **only ever marked paid by a
@@ -397,10 +426,10 @@ Each phase ends with:
 | Phase | Scope | Done when |
 |---|---|---|
 | **0. Validate and prototype** (in parallel) | Send `02` to ZIMRA. Talk to 5 shops. Spikes: (a) two phones with the same Google account see the same `drive.file` files; (b) Sheets append and batchGet timing at 10,000 rows; (c) Paynow sandbox `start`/`check`; (d) fzimra in a bare app against its simulator; (e) one Apps Script template deployed from a fresh account (time it, and screenshot the "unverified" screen) | Each spike answered in `notes/`; go or no-go on `drive.file` sharing and on the Apps Script gateway (`06`) |
-| **1. One phone sells** | Onboarding (5 minutes), products (scan, import), cash sales in USD, ZWG and ZAR with the rate policy, receipts (share and Bluetooth print), the local database and outbox, `My Shop` and month files created from code with Read Me, Lists, dropdowns and colours, the Stock Ledger, cash-up, Activity | A real vendor sells for a day; the sheets match the sample's layout |
+| **1. One phone sells** | Onboarding (5 minutes, with the pricing currency chosen there), products (scan, import, photos), practice and test mode (separate folder and database), cash sales in several currencies with the rate policy, receipts (share and Bluetooth print), the local database and outbox, `My Shop` and month files created from code with Read Me, Lists, dropdowns and colours, the Stock Ledger, cash-up, Activity | A real vendor sells for a day; the sheets match the sample's layout |
 | **2. Several phones and people** | QR pairing, PINs, roles (owner, manager, seller), locations and moves, stock takes, Settings and Staff from the sheet, the owner's phone creating files, the 7-day phone clean-up | Two phones and two sellers for a week, with no duplicates and cash-ups that balance |
 | **3. Fiscalisation** | fzimra: registration, receipts, fiscal days, credit notes, branch per location, the Fiscal Days tab, guided ZIMRA test, samples and approval | A full ZIMRA test-environment day, closed cleanly. Follows ZIMRA's answers to `02` |
-| **4. Payments** | The `PaymentGateway` interface; Paynow (EcoCash, InnBucks, card); the manual provider; the shop-script provider, the template script and pairing; Payment Callbacks | A Paynow sandbox payment is confirmed by polling; a template-script provider works end to end |
+| **4. Shop Hub and payments** | Hub install and update through the Apps Script API, pairing, `HubGateway`, Paynow and ZB SmilePay adapters (sandbox, then live), the manual provider, Payment Callbacks, the hub's scheduled month and year files | A sandbox payment on each provider is confirmed by polling through the hub. The hub creates next month's file with every phone switched off |
 | **5. Customers and money owed** | Contacts, kept change, invoices on account, quotes, suppliers and purchases (with photos), Balances, the Money Ledger, order lists to share | The sample's scenarios can be done in the app in under 5 seconds of thought per screen |
 | **6. Reports and running the shop** | Home cards and reports by role, the day-end message, year-end archive, file-size watch, sheet updates and migrations (`07`), backups and restore | The sample's year end runs on test data; a migration adds a column without losing a row |
 | **7. Support and release** | Problem reports with references and public GitHub issues, optional Firebase, the `foss` build, Play Store listing and data-safety form, `11` shipped in the app, the five-vendor usability test | Five vendors pass the timed tasks in `08`; beta on Play |
@@ -441,10 +470,40 @@ matches the files.
 | Does a second phone, signed in with the same account, see the files under `drive.file`? | Spike 0(a) |
 | Is `drive.appdata` (for phone backups) a non-sensitive scope that needs no Google verification? | Check Google's scope list. If it's a problem, back up into a hidden `Backups` folder created under `drive.file` |
 | Apps Script gateway for all syncing, or just payments? | Spike 0(e); `06` |
-| Which public payment aggregators besides Paynow? | Read each one's public docs and terms before adding it |
+| ZB SmilePay: is there a public, documented merchant API, or only one given to each merchant? | Read ZB's docs and merchant terms. This decides whether its adapter ships in the open hub or per client |
+| Can the app install and update the hub with the Apps Script API, after one settings switch and one approval by the owner? How long does it take, and what does the owner see? | Spike 0(e). If it's too hard, the hub stays an assisted (consulting) install |
+| Import workbook and dry run for migrating a business | Phase 5 or 6 (`12`, section 8) |
 | A Stock Card tab (pick a product, see its movements) | It works in Google Sheets with `FILTER`; add it in phase 6 |
 
-## 11. Moving to another machine
+## 11. The generator and the checks
+
+**Done on 28 October 2026:** the generator follows `12`.
+- **Folders and files:**
+  - one folder per business;
+  - `2026-10 October` month files, with Activity as a tab;
+  - a ready-made `2026-11 November` file (made by the hub on the 25th);
+  - product and supplier-invoice photos as placeholders.
+- **New tabs:** a `Files` tab, `Months` and `Reports` (`13`).
+- **The pricing currency comes from Settings.** Headers follow it, the Stock
+  Ledger has a `Cost currency` column, and the Money Ledger has the amount in
+  the pricing currency.
+- **Rates** have `Time` and `Applies` columns, and the rate policy is in
+  Settings.
+- **Payments** go through the Shop Hub, with ZB SmilePay set up in test mode.
+- **A `(TEST)` shop** with `T-` IDs and ZIMRA's test device.
+
+`samples/check_samples.py` checks all of it, including:
+- each month's profit against the stock ledger;
+- `Months` against each month file;
+- every file appearing in `Files`;
+- every photo existing;
+- test and live never mixing.
+
+**Still to do:** move the layout into `schema/dura-sheets.json` and have the
+generator read it, so the app and the hub use the same file. This is the
+first task of phase 1.
+
+## 12. Moving to another machine
 
 - Everything needed is in this repository:
   - the notes;

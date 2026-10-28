@@ -30,14 +30,13 @@ This guide explains:
 
 ## The files
 
-Everything is in one folder in your Google Drive, `Dura POS`.
+Everything is in your Google Drive, in `Dura POS/<your business name>/`.
 
 | File | Where | Made when | What's in it |
 |---|---|---|---|
-| **My Shop** | `Dura POS/My Shop` | When you set up Dura. Kept for good | Your products and prices, stock at each location, contacts (customers and suppliers), staff, settings, exchange rates, this year's stock and money movements, stock counts, supplier invoices, who owes what, and a summary |
-| **Monthly sales** | `Dura POS/2026/2026-10 Sales` | One per month, made before the month starts | Every sale, invoice and return, the items, the payments (including change), each till's cash-up, ZIMRA fiscal days, quotes, and a summary of the month |
-| **Activity** | `Dura POS/2026/Activity 2026` | One per year | Who did what, on which phone, and when: sign-ins, refunds, price changes, stock alerts, cash-ups |
-| **Year archive** | `Dura POS/2025/Ledger 2025` | Made automatically after the year ends | Last year's stock and money movements, stock counts, supplier invoices, rates, and the closing stock |
+| **My Shop** | `My Shop` | When you set up Dura. Kept for good | Your products and prices, stock at each location, contacts (customers and suppliers), staff, settings, exchange rates, this year's stock and money movements, stock counts, supplier invoices, who owes what, and a summary |
+| **Month file** | `2026/2026-10 October` | One per month, made before the month starts | Every sale, invoice and return, the items, the payments (including change), each till's cash-up, ZIMRA fiscal days, quotes, the **Activity** tab (who did what, on which phone, and when), and a summary of the month |
+| **Year archive** | `2025/Ledger 2025` | Made automatically after the year ends | Last year's stock and money movements, stock counts, supplier invoices, rates, and the closing stock |
 
 **Every file opens on a `Read Me` tab** that explains the file. Give that tab
 to the AI too.
@@ -46,17 +45,17 @@ to the AI too.
 
 | You want to know | Give the AI |
 |---|---|
-| Sales: by day, by till, by seller, by product, best sellers, busy days | That month's **Sales** file (several months for a comparison) |
-| How each currency did; how customers paid (cash, EcoCash, card) | The month's **Sales** file (Sales and Payments tabs) |
-| Whether a seller's cash was short, and when | The month's **Sales** file (Cash-ups tab), plus **Activity** for who was signed in |
-| What's running out, what to reorder, slow movers | **My Shop** (Stock, Stock Ledger, Products), plus a recent **Sales** file for how fast things sell |
+| Sales: by day, by till, by seller, by product, best sellers, busy days | That month's **month file** (several months for a comparison) |
+| How each currency did; how customers paid (cash, EcoCash, card) | The month's **month file** (Sales and Payments tabs) |
+| Whether a seller's cash was short, and when | The month's **month file** (Cash-ups tab), plus its Activity tab for who was signed in |
+| What's running out, what to reorder, slow movers | **My Shop** (Stock, Stock Ledger, Products), plus a recent **month file** for how fast things sell |
 | What stock was lost (written off, counted short) | **My Shop** (Stock Ledger, Stock Counts) |
 | Who owes the shop, and whom the shop owes | **My Shop** (Balances, Money Ledger, Contacts) |
 | What was bought from suppliers, and the VAT on it | **My Shop** (Purchases) |
-| Rough profit for a month | That month's **Sales** file, plus **My Shop** (Stock Ledger, for the cost of what was sold) |
-| Whether receipts reached ZIMRA | The month's **Sales** file (Fiscal status, Fiscal Days) |
-| Who changed a price, gave a refund, or approved a discount | **Activity** for the year |
-| Last year | The year's **Ledger** archive and its monthly **Sales** files |
+| Profit, VAT and cash flow | **My Shop** (Reports and Months tabs) for the year; the month file's Summary ("Profit and VAT") for one month |
+| Whether receipts reached ZIMRA | The month's **month file** (Fiscal status, Fiscal Days) |
+| Who changed a price, gave a refund, or approved a discount | the **Activity** tab in that month's file |
+| Last year | The year's **Ledger** archive and its **month files** |
 
 ## How to give the files to an AI
 
@@ -86,17 +85,20 @@ Dura's files work.
 >
 > **The files.** "My Shop" is the main file: products, stock, contacts,
 > staff, settings, exchange rates, this year's Stock Ledger and Money Ledger,
-> stock counts, purchases from suppliers, balances, and a summary. Each
-> "yyyy-mm Sales" file is one month: Sales, Items Sold, Payments, Cash-ups,
-> Fiscal Days, Quotes and a Summary. "Activity yyyy" is the audit trail.
+> stock counts, purchases from suppliers, balances, Months (one row of totals
+> per month), Reports (income statement, VAT per currency, cash flow, what the
+> business owns and owes), and a summary. Each
+> month file (named like "2026-10 October") is one month: Sales, Items Sold,
+> Payments, Cash-ups, Fiscal Days, Quotes, Activity and a Summary. Each month file also has an Activity tab: the audit trail.
 > "Ledger yyyy" is a closed year. Every file has a Read Me tab: read it first.
 >
 > **Currencies.** The shop trades in USD, ZWG and ZAR. Never add amounts in
 > different currencies together. Report each currency separately, unless I
 > ask you to convert; if I do, use the rate in the "Rate used" column of each
 > payment, or the Exchange Rates tab for that date, and say which you used.
-> Prices are set in USD, and ZWG or ZAR prices come from that day's rate.
-> Costs and stock values are in USD.
+> Prices are set in one "pricing currency" (see My Shop, Settings), and other
+> currencies' prices come from the exchange rate. Costs and stock values are
+> in the pricing currency.
 >
 > **Sales.** Each row in Sales is one sale (Type "Sale"), invoice on account
 > ("Invoice") or return ("Return", with negative amounts and pointing to the
@@ -171,8 +173,8 @@ Dura's files work.
   than 60 days?"
 - "How much did we pay suppliers this month, and how much VAT was on their
   invoices?"
-- "Roughly what profit did we make in September: sales minus the cost of
-  what we sold?"
+- "What profit did we make in September? Use the month file's Summary and
+  explain what drove it."
 
 **Customers and staff**
 
