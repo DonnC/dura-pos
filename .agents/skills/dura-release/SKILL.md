@@ -2,13 +2,22 @@
 name: dura-release
 description: Prepare or verify Dura POS changelogs, release metadata, monthly dependency groups and main-only CI gates. Use for Dura release engineering; publishing still requires user authorisation.
 ---
-<!-- Maintained by the Dura POS contributors. -->
-
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
 # Dura release engineering
 
 Read handbook/engineering/05-delivery.md and the activation checklist. Before
 activation, read cdx/engineering and cdx/scaffold/ACTIVATION.md. Do not report
 templates as installed automation.
+Run Dart/Flutter release tooling from client/. Repository-wide release.json,
+release-notes, CHANGELOG, AUTHORS and LICENSE remain at the root; the release
+script resolves those paths through the parent directory. CI run steps use
+client/ and artifact paths are repository-relative client/apps/dura paths.
 
 Meaningful changes require human-facing Unreleased entries. A release-intent
 commit aligns SemVer/build, app manifest, reviewed notes, schema versions and

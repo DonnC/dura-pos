@@ -2,7 +2,13 @@
 name: premium-mobile-product-design
 description: Design or review Dura POS mobile journeys, Flutter or Android screens, theme tokens, accessibility and visual consistency. Use for mobile UX and visual implementation, complementing engineering rules.
 ---
-<!-- Maintained by the Dura POS contributors. -->
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
 # Mobile product design and UX
 
 Use existing Dura research, user journeys and mockup before repeating discovery.
@@ -22,6 +28,9 @@ Use dura_ui theme tokens via ColorScheme/TextTheme/extensions. Centralise brand,
 status, spacing, radius and motion definitions; no arbitrary widget colours.
 Compose reusable fields, dropdowns, dialogs and status components. Keep business
 calculations and permission enforcement behind established controller contracts.
+Use google_fonts through the shared theme, with bundled fonts for first-launch
+offline use. Reuse the owner's approved mark when exporting launcher assets;
+do not silently substitute stock Flutter icons or redesign the approved identity.
 
 Account for SafeArea, keyboard/insets, 320px phones, large text, semantic labels,
 focus order, colour-independent feedback and reduced motion. A compiling screen

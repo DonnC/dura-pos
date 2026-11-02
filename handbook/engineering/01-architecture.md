@@ -1,34 +1,45 @@
-<!-- Maintained by the Dura POS contributors. -->
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+
 # Architecture and contributor boundaries
 
 ## Workspace
 
-Use native Pub workspaces for dependency resolution, one committed root
-`pubspec.lock`, and Melos installed as a root development dependency. Use
+Use native Pub workspaces under client/ for dependency resolution, one committed
+client/pubspec.lock, and Melos installed in client/pubspec.yaml. Use
 `dart run melos ...` so contributor and CI task versions come from that lockfile.
-Current Melos configuration belongs under `melos:` in the root pubspec; do not
+Current Melos configuration belongs under `melos:` in client/pubspec.yaml; do not
 copy an older melos.yaml-only layout without checking the selected version.
 
 Pin one validated Flutter release for local work, CI and golden generation.
-Exact SDK and package versions are selected at scaffold time after proving the
-Android/fzimra toolchain, not guessed in planning files.
+The foundation pins its SDK; Android compilation has a documented host issue.
+Qualify the optional fiscal toolchain separately in its later roadmap phase.
 
 ```text
 dura-pos/
-  pubspec.yaml                 workspace + Melos task definitions
-  pubspec.lock                 one dependency resolution
-  .flutter-version             exact tested SDK release
-  apps/dura/                   Flutter composition root and feature screens
-  packages/dura_core/          pure Dart domain + application contracts
-  packages/dura_data/          Drift, sync, repository and network adapters
-  packages/dura_ui/            tokens, accessible reusable components
-  packages/dura_fiscal/        LATER: optional fiscal adapter, not created yet
+  client/
+    pubspec.yaml                Pub workspace + Melos definitions
+    pubspec.lock                single Flutter dependency resolution
+    .flutter-version            exact SDK release
+    analysis_options.yaml       shared Dart analysis rules
+    apps/dura/                  Flutter composition root and screens
+    packages/dura_core/         pure Dart contracts and policies
+    packages/dura_data/         persistence and platform adapters
+    packages/dura_ui/           shared theme and components
+    tool/                      Dart verification/release/icon tooling
+    test/                      workspace tooling tests
   hub/                         future business-owned Apps Script
   schema/                      business-file and event specifications
-  samples/                     realistic deterministic example business
-  handbook/                        activated engineering policies and decisions
-  .agents/skills/              activated project skill sources
-  .github/                     activated workflow and contribution templates
+  samples/                     Python generator and example business
+  handbook/                    engineering policies and decisions
+  .agents/skills/              project skill sources
+  .github/                     workflow and contribution templates
+  AUTHORS, LICENSE             project authorship and MIT terms
 ```
 
 No second Flutter app until its distinct use case justifies one. The same app
@@ -38,10 +49,10 @@ owner viewing and desktop selling have different capability/recovery gates.
 ## Dependencies and direction
 
 ```text
-apps/dura → dura_ui
-apps/dura → dura_core
-apps/dura → dura_data → dura_core
-apps/dura → dura_fiscal → dura_core
+client/apps/dura → dura_ui
+client/apps/dura → dura_core
+client/apps/dura → dura_data → dura_core
+client/apps/dura → dura_fiscal → dura_core
 ```
 
 The last dependency is a future capability only. The active workspace contains
@@ -50,6 +61,8 @@ the app, core, data and UI packages. No fiscal dependency is installed initially
 `dura_core` must not import Flutter, Riverpod, Drift, Google APIs or a native
 plugin. UI components must not import concrete repositories. Cross-feature
 operations use core contracts, not another screen's controller.
+The data package now has Flutter platform dependencies because rotation_log is
+a Flutter package; its tests run with flutter test. The core stays pure Dart.
 
 Place a use-case class around meaningful orchestration, such as CompleteSale,
 SubmitCashUp or MatchProviderSettlement. Do not create a one-method abstraction

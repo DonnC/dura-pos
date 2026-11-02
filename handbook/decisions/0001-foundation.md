@@ -1,4 +1,11 @@
-<!-- Maintained by the Dura POS contributors. -->
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+
 # Decision 0001: local-first Flutter foundation
 
 Status: Accepted for the initial scaffold
@@ -7,7 +14,8 @@ Date: 2 November 2026
 ## Decision
 
 Use Flutter 3.47.9 / Dart 3.13.7, native Pub workspaces and Melos 8.10.0 with
-one root lockfile. Start with Android and three small shared packages: core,
+one workspace lockfile (now under client/; see decision 0002). Start with Android
+and three small shared packages: core,
 data and UI. Do not create an empty fiscal plugin: fiscalisation is optional
 per business and will be implemented in a later phase.
 
@@ -23,10 +31,12 @@ an empty architecture with every future feature represented by folders.
 
 ## Bounded diagnostics
 
-One bootstrap-owned writer records allowlisted metadata in JSONL. At most ten
-files, each at most 5 MiB. Archives are streamed on a worker isolate while the
-writer queue is held; at most two temporary ZIPs are retained. Sharing requires
-explicit confirmation. This bounds log storage to 50 MiB; temporary archives
+One bootstrap-owned writer records allowlisted metadata as JSON lines. Injectable
+limits default to ten files of 5 MiB, including the active file. rotation_log
+provides rotation and ZIP creation. Archives run on a worker isolate while the
+writer queue is held; by default two temporary ZIPs are retained. Manual sharing
+requires confirmation; an owner-triggered issue report attaches logs as part of
+that action. Default log storage is bounded to 50 MiB; temporary archives
 can require additional space. Logs are not encrypted archives; share only with
 trusted recipients. Background/multi-isolate logging needs a broker before use.
 

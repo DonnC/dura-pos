@@ -1,4 +1,11 @@
-<!-- Maintained by the Dura POS contributors. -->
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+
 # Dura POS engineering contract
 
 2 November 2026. Agreed product direction translated into engineering rules.
@@ -11,7 +18,7 @@ sales/sync/payment features remain planned. Historical files under
 
 | Area | Decision |
 |---|---|
-| Workspace | Flutter/Dart Pub workspace, with Melos tasks and one root lockfile |
+| Workspace | Flutter/Dart Pub workspace in client/, with Melos and one client lockfile |
 | UI state / wiring | Riverpod; persisted business facts live in the database |
 | Local data | Drift/SQLite; replaces Room in earlier Kotlin-first notes |
 | Shared core | Pure Dart calculation, permissions, accounting and workflow rules |

@@ -1,4 +1,11 @@
-<!-- Maintained by the Dura POS contributors. -->
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+
 # Open-source delivery, versioning, CI and dependency policy
 
 ## Initial activation status
@@ -10,8 +17,8 @@ Native emulator/fiscal, workbook and sync suites are not implemented; the fuller
 gates below apply as those capabilities are introduced. No empty suites are used
 to claim they passed. Publishing is disabled in release.json.
 
-Actual entrypoints are tool/verify.dart, tool/test_workspace.dart,
-tool/check_repository.dart, tool/release_manifest.dart and tool/release.dart.
+Actual entrypoints are client/tool/verify.dart, client/tool/test_workspace.dart,
+client/tool/check_repository.dart, client/tool/release_manifest.dart and client/tool/release.dart.
 The release script rejects existing releases rather than automatically replacing
 or resuming their assets. An interrupted publication needs explicit inspection.
 The historical activation template does not override these current facts.
