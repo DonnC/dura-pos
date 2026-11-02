@@ -1,0 +1,26 @@
+# Maintained by the Dura POS contributors.
+name: Bug report
+description: Report an incorrect Dura behaviour using fictitious or redacted data.
+body:
+  - type: markdown
+    attributes:
+      value: Do not post PINs, merchant keys, account tokens, private invoices or customer details. Report security vulnerabilities privately through the verified SECURITY.md channel.
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Steps and expected behaviour
+      description: Describe the shop workflow, what happened and what should happen.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: App version, device and connection state
+      description: Include live/practice mode, OS, offline/online state and whether a restart occurred. Do not include account credentials.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description: Safe screenshots/error codes and a minimal fictitious example. State if any payment or fiscal outcome is uncertain.

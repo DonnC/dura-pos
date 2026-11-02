@@ -1,0 +1,14 @@
+# Maintained by the Dura POS contributors.
+name: dura_ui
+description: Theme tokens and focused reusable Flutter components for Dura POS.
+version: 0.1.0-dev.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

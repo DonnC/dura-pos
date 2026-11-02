@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dura Records"
+  short_description: "Readable Sheets, exports and lifecycle rules"
+  default_prompt: "Use $dura-records to update a Dura file design with data previews and migration checks."

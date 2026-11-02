@@ -1,0 +1,34 @@
+# Maintained by the Dura POS contributors.
+name: dura_workspace
+publish_to: none
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+workspace:
+  - apps/dura
+  - packages/dura_core
+  - packages/dura_data
+  - packages/dura_ui
+dev_dependencies:
+  melos: ^8.10.0
+  lints: ^6.1.0
+  test: ^1.31.0
+  yaml: ^3.1.3
+  crypto: ^3.0.8
+  pub_semver: ^2.2.1
+melos:
+  scripts:
+    verify:
+      run: dart run tool/verify.dart
+      description: Format, architecture checks, analysis and all current tests.
+    test:
+      run: dart run tool/test_workspace.dart
+      description: Run every implemented package test target.
+    test:goldens:
+      run: dart run melos exec --scope=dura_ui -- flutter test --no-pub test/theme_golden_test.dart
+      description: Compare the reusable UI visual baseline.
+    generate:
+      run: dart run melos exec --scope=dura_data -- dart run build_runner build
+      description: Regenerate Drift database mappings.
+    check:
+      run: dart run tool/check_repository.dart
+      description: Check contributor headers, file sizes and package boundaries.

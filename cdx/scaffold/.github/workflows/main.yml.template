@@ -1,0 +1,103 @@
+# INACTIVE TEMPLATE. No workflow is installed under the repository's .github.
+# Replace every REVIEWED_*_SHA after reviewing that Action's source/release.
+# Implement/verify helper entrypoints listed in ACTIVATION.md before installing.
+name: Verify and release main
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: dura-main-delivery
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@REVIEWED_CHECKOUT_SHA
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: sdk
+        run: echo "version=$(cat .flutter-version)" >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@REVIEWED_FLUTTER_ACTION_SHA
+        with:
+          flutter-version: ${{ steps.sdk.outputs.version }}
+          cache: true
+      - run: flutter pub get --enforce-lockfile
+      - run: dart run melos bootstrap
+      - run: dart run melos run verify
+      - uses: actions/upload-artifact@REVIEWED_UPLOAD_ARTIFACT_SHA
+        if: always()
+        with:
+          name: test-evidence
+          path: artifacts/test-evidence/
+          if-no-files-found: error
+  android:
+    needs: verify
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@REVIEWED_CHECKOUT_SHA
+        with:
+          persist-credentials: false
+      - id: sdk
+        run: echo "version=$(cat .flutter-version)" >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@REVIEWED_FLUTTER_ACTION_SHA
+        with:
+          flutter-version: ${{ steps.sdk.outputs.version }}
+          cache: true
+      - uses: actions/setup-java@REVIEWED_SETUP_JAVA_SHA
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: flutter pub get --enforce-lockfile
+      - run: dart run melos bootstrap
+      # This helper owns a validated emulator setup and fails if integration or
+      # native fzimra targets are missing. Implement it at scaffold activation.
+      - run: dart run melos run test:android
+  release:
+    needs: [verify, android]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@REVIEWED_CHECKOUT_SHA
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: sdk
+        run: echo "version=$(cat .flutter-version)" >> "$GITHUB_OUTPUT"
+      - uses: subosito/flutter-action@REVIEWED_FLUTTER_ACTION_SHA
+        with:
+          flutter-version: ${{ steps.sdk.outputs.version }}
+          cache: true
+      - uses: actions/setup-java@REVIEWED_SETUP_JAVA_SHA
+        with:
+          distribution: temurin
+          java-version: '17'
+      - run: flutter pub get --enforce-lockfile
+      - run: dart run melos bootstrap
+      # Validates changed release intent, version, build number, notes and tag.
+      # Sets publish=true only for a valid release-intent change in this push.
+      - id: intent
+        run: dart run tool/ci/prepare_release.dart
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DURA_BEFORE_SHA: ${{ github.event.before }}
+          DURA_RELEASE_SHA: ${{ github.sha }}
+          DURA_REPOSITORY: ${{ github.repository }}
+      # Helper builds/signs FIRST, then publishes the exact verified artifacts;
+      # it uses GitHub's API/gh with a notes file, no shell-built release body.
+      - if: steps.intent.outputs.publish == 'true'
+        run: dart run tool/ci/publish_release.dart
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DURA_RELEASE_SHA: ${{ github.sha }}
+          DURA_REPOSITORY: ${{ github.repository }}
+          DURA_SIGNING_KEYSTORE_BASE64: ${{ secrets.DURA_SIGNING_KEYSTORE_BASE64 }}
+          DURA_SIGNING_STORE_PASSWORD: ${{ secrets.DURA_SIGNING_STORE_PASSWORD }}
+          DURA_SIGNING_KEY_ALIAS: ${{ secrets.DURA_SIGNING_KEY_ALIAS }}
+          DURA_SIGNING_KEY_PASSWORD: ${{ secrets.DURA_SIGNING_KEY_PASSWORD }}

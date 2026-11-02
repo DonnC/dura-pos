@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flutter Product Engineering"
+  short_description: "Local-first Flutter engineering and TDD"
+  default_prompt: "Use $flutter-product-engineering to implement a tested Dura POS change."

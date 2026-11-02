@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dura TDD"
+  short_description: "Behaviour-first changes with recovery tests"
+  default_prompt: "Use $dura-tdd to implement a Dura behaviour with red/green evidence."

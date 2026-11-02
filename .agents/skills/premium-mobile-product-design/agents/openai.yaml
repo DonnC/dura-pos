@@ -1,0 +1,4 @@
+interface:
+  display_name: "Premium Mobile Product Design"
+  short_description: "Purposeful mobile UX and visual verification"
+  default_prompt: "Use $premium-mobile-product-design to assess a Dura mobile user journey."
