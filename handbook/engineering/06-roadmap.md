@@ -16,7 +16,7 @@ initial setup. HTML concepts/sample workbooks are design inputs.
 | Phase | Scope | Required evidence before completion |
 |---|---|---|
 | 0: Contract and toolchain | Confirm package boundaries, exact SDKs, schemas, fiscal bridge, Drive retry and hub-install spikes | Recorded decisions; runnable failure/retry demonstrations; unresolved constraints listed |
-| 1: Workspace and quality | Pub workspace/Melos, Riverpod composition, Drift, reusable UI, test harness, CI/release activation | Clean bootstrap on fresh checkout; failing/green example; sample golden; main-only workflow verified |
+| 1: Workspace and quality | Pub workspace/Melos, Riverpod composition, Drift, reusable UI, test harness, CI/release activation | Clean bootstrap on fresh checkout; failing/green example; sample golden; pull-request and main workflows verified on GitHub |
 | 2: One-phone practice sale | Product, currency choice, durable draft, cash checkout, accounting, restart | Exact totals and postings; no duplicate completion; process-restart test; readable local record preview |
 | 3: Owner records and exit | Direct Drive journal, views, owner input validation, backup/restore, Excel/CSV/archive | Lost-response deduplication; damaged-view rebuild; independent reconstruction; Sheets/Excel checks |
 | 4: Cashier and shifts | Profiles/PINs, dedicated device guidance, roles, float, cash-up, handover | Offline auth limitations visible; requested/approved actions tracked; variance and late-event tests |

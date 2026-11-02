@@ -1,0 +1,109 @@
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+
+# Capability map
+
+2 November 2026. Everything Dura is meant to do, its status, and the roadmap
+phase that delivers it. Phases are those in
+[the roadmap](../engineering/06-roadmap.md). "Design" points to where the
+detail lives.
+
+**Status key:**
+
+- **Built**: in the code, with tests.
+- **Designed**: specified in the notes or handbook, not built.
+- **Planned**: agreed in direction, with detail still to write.
+- **Later**: wanted, after the core works.
+
+A design in a note isn't a promise that it's built. Check the status here,
+and the code.
+
+## Foundation
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| Flutter workspace, CI, release tooling, licence headers | Built | 1 | [`../engineering/05-delivery.md`](../engineering/05-delivery.md) |
+| Shared theme and controls (`dura_ui`), golden tests | Built | 1 | [`../engineering/01-architecture.md`](../engineering/01-architecture.md) |
+| Local preferences (Drift) | Built | 1 | [`../decisions/0001-foundation.md`](../decisions/0001-foundation.md) |
+| On-device diagnostics: rotating, redacted logs; ZIP shared by the owner | Built | 1 | [`../engineering/07-coding-and-diagnostics.md`](../engineering/07-coding-and-diagnostics.md) |
+| Report a problem, with logs attached automatically | Partly built: the operation exists; no screen or transport yet | 1, 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
+
+## Selling (the core)
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| Five-minute onboarding; pricing currency chosen by the owner (no default) | Designed | 2 | [`notes/07`](../../notes/07-customers-sync-onboarding-updates.md), [`notes/12`](../../notes/12-hub-test-mode-files-migration.md) §7 |
+| Products and services; units; optional stock tracking | Designed | 2 | [`notes/04`](../../notes/04-data-files.md) |
+| Cash sale: basket, totals, cash received, change; exact decimal money | Designed | 2 | [`../design/mobile-concept.md`](../design/mobile-concept.md) |
+| Several currencies (USD, ZWG, ZAR), split payment, a rate policy, each sale keeping its rate | Designed | 2 | [`notes/10`](../../notes/10-build-plan.md) §6 |
+| Held and cancelled sales, discounts, returns and refunds as linked records | Planned | 2, 7 | [`../../research/codex-product-brief.md`](../../research/codex-product-brief.md) |
+| Receipts: share, and Bluetooth ESC/POS print | Designed | 2 | [`notes/10`](../../notes/10-build-plan.md) §3.6 |
+| Barcode scanning (camera) | Designed | 2 | [`notes/10`](../../notes/10-build-plan.md) §3.6 |
+| Practice mode (fake shop, fake services) and test mode (separate folder and database, `T-` IDs) | Designed | 2, 5 | [`notes/12`](../../notes/12-hub-test-mode-files-migration.md) §4 |
+
+## The shop's records
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| Journal uploaded to the owner's Drive; Sheets built as views | Designed | 3 | [`../decisions/0003-records-journal-and-views.md`](../decisions/0003-records-journal-and-views.md) |
+| `My Shop` and monthly workbooks, with Read Me, Lists dropdowns, colour-coded tabs and charts | Designed; the sample exists | 3 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md), [`samples/`](../../samples/) |
+| Clean and demo workbook templates from the Python generator | Designed | 3 | [`../../schema/PLAN.md`](../../schema/PLAN.md) |
+| Owner edits in Sheets checked, then accepted | Designed | 3 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
+| Backup and restore onto a new phone | Designed | 3 | [`../design/records-file-design.md`](../design/records-file-design.md) §9 |
+| Excel, CSV and a complete exit archive | Designed | 3 | [`../design/records-file-design.md`](../design/records-file-design.md) §11 |
+| Migrating a business onto Dura (import workbook, dry run) | Designed | 7 | [`notes/12`](../../notes/12-hub-test-mode-files-migration.md) §8 |
+| Month and year handling with no destructive clearing | Designed | 3, 7 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
+
+## People, phones and places
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| Staff with their own PINs; roles: owner, manager, seller | Designed | 4 | [`notes/09`](../../notes/09-locations-phones-staff.md), [`../engineering/04-security-and-diagnostics.md`](../engineering/04-security-and-diagnostics.md) |
+| Shifts, opening float, cash-up per currency, handover | Designed | 4 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
+| A second phone paired by QR code | Designed | 4, 6 | [`notes/07`](../../notes/07-customers-sync-onboarding-updates.md) |
+| Locations (shops, branches, stores) as a column; stock moves | Designed | 7 | [`notes/09`](../../notes/09-locations-phones-staff.md) |
+
+## Money and stock
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| Stock movements, receipts, counts, losses, adjustments | Designed | 7 | [`notes/04`](../../notes/04-data-files.md) |
+| Suppliers and purchases, with invoice photos and balances owed | Designed | 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
+| Kept change ("I'll keep your change") as money the shop owes | Designed | 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
+| Customer credit, invoices on account, quotes, statements | Designed | 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
+| Expenses by category; owner drawings and contributions; transfers | Designed | 7 | [`notes/13`](../../notes/13-financial-records.md) |
+| Council levies, market rent and permits, with evidence status | Planned | 7 | [`../../research/codex-product-brief.md`](../../research/codex-product-brief.md) |
+| Double-entry postings behind the scenes; trial balance | Planned | 7 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
+| Reports that answer questions; day-end summary | Designed | 7 | [`notes/09`](../../notes/09-locations-phones-staff.md), [`notes/13`](../../notes/13-financial-records.md) |
+
+## Optional connections
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| ZIMRA fiscalisation through fzimra (a device per phone, fiscal days, credit notes) | Designed; waits on ZIMRA's answers | 5 | [`notes/02`](../../notes/02-questions-for-zimra.md), [`notes/05`](../../notes/05-archiving-and-security.md) |
+| Shop Hub (Apps Script): install, update, pairing | Designed; needs spike 0(e) | 6 | [`notes/12`](../../notes/12-hub-test-mode-files-migration.md) §2, [`../../hub/PLAN.md`](../../hub/PLAN.md) |
+| Mobile money through the hub: Paynow, then ZB Smile&Pay | Designed | 6 | [`notes/10`](../../notes/10-build-plan.md) §5 |
+| Manual payment references (bank transfer, wallets without an API) | Designed | 2, 6 | [`notes/10`](../../notes/10-build-plan.md) §5 |
+| Provider settlement matching (gross, fees, payouts) | Planned | 6 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
+| Optional Firebase crash and problem reports (never shop data); a build without it | Designed | 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
+
+## Later
+
+| Capability | Status | Phase | Design |
+|---|---|---|---|
+| Owner view on desktop and web | Later | 8 | [`../engineering/06-roadmap.md`](../engineering/06-roadmap.md) |
+| "Talk to your data" guide shipped in each shop's folder | Designed | 7 | [`notes/11`](../../notes/11-talk-to-your-data.md) |
+| "Ask Dura" AI assistant (bring your own key, then optional paid) | Later | n/a | [`notes/14`](../../notes/14-ai-assistant-plan.md) |
+| Shona and Ndebele translations | Planned | 7 | [`03-experience-principles.md`](03-experience-principles.md) |
+
+## Out of scope
+
+- Payroll with PAYE and NSSA.
+- Filing tax returns.
+- A Dura-hosted cloud.
+- Chains of more than about ten phones.

@@ -16,7 +16,7 @@ history. Sheets are readable views and supported input surfaces. Owner edits to
 input tabs are proposals until validated, journalled and acknowledged. Directly
 editing a report is not an accounting correction.
 
-Read `../../cdx/01-updated-approach-and-file-design.md` for file and data previews. This
+Read `../design/records-file-design.md` for file and data previews, and decision 0003 for why. This
 policy adds accounting, both settlement workflows and Excel portability.
 Every changed file/tab/column design needs a realistic preview and dictionary.
 Python authors formulas, formatting, validation and report layout, producing

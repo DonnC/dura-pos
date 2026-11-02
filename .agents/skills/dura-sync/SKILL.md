@@ -11,25 +11,53 @@ SPDX-License-Identifier: MIT
 -->
 # Dura sync and recovery
 
-Read the current engineering contract, architecture, records and security
-policies under handbook/engineering, in the active handbook. Confirm
-single-owner versus hub mode and the active shared-view writer before editing.
+## Read first
 
-Persist operation identity, complete event and outbox within defined local
-transaction boundaries. Batches are sealed with stable IDs/content. A timed-out
-request is not proof of failure. Verify durable upload before acknowledging;
-keep view completion, payment verification and fiscal acceptance separate.
+- `handbook/decisions/0003-records-journal-and-views.md`.
+- `handbook/engineering/01-architecture.md` (data and background work),
+  `03-records-and-sheets.md` and `04-security-and-diagnostics.md`.
+- Confirm the mode first: is it single-owner or hub mode, and which device is
+  the active view writer?
 
-Use per-origin sequencing/installation identities, durable download checkpoints
-and explicit gap handling. Do not order facts solely by device clock. Reuse
-current contracts for safe retries; never blanket-retry financial side effects.
+## Rules
 
-Start with failure-injection tests for the changed boundary: accepted upload with
-lost response, duplicate delivery, partial projection, restart/restore, stale
-permission or master-data edit, concurrent stock/count, or late shift event.
-Reconcile old and new views without changing historical prices or rates.
+- **Persist together:** the operation identity, the complete event and its
+  outbox entry go in one local transaction.
+- **Batches are sealed,** with stable IDs and content.
+  - A timed-out request isn't proof of failure.
+  - Verify a durable upload before acknowledging it.
+- **Keep these outcomes separate:**
+  - journal uploaded;
+  - view updated;
+  - payment verified;
+  - fiscal accepted.
+- **Ordering:**
+  - per-origin sequences and installation identities;
+  - durable download checkpoints;
+  - explicit gap handling;
+  - never order facts by device clock alone.
+- **Retries** reuse the existing contracts. Never blanket-retry a financial
+  side effect.
+- **Old and new views reconcile** without changing historical prices or
+  rates.
+- **Tell people the state plainly:** pending count, oldest pending work, and
+  per-device completeness. Offline shared stock and credit can't promise a
+  real-time global limit.
+- **Never:** silent dual-writer failover, or destructive cleanup of history.
 
-Expose pending count, oldest pending work and per-device completeness in plain
-language. Offline shared stock and credit cannot promise a real-time global
-limit. No silent dual-writer failover or destructive history cleanup. Report
-which guarantees are demonstrated and which remain hypotheses.
+## Start with failure-injection tests
+
+Write the test for the boundary you're changing first. Typical cases:
+
+- an accepted upload whose response was lost;
+- duplicate delivery;
+- a partial projection;
+- a restart or restore;
+- a stale permission or master-data edit;
+- a concurrent stock count;
+- a late shift event.
+
+## Done when
+
+- The guarantees that have been demonstrated are reported apart from those
+  that are still hypotheses.

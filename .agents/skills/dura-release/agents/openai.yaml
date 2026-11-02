@@ -6,5 +6,5 @@
 
 interface:
   display_name: "Dura Release"
-  short_description: "Versioned releases and main-only CI policy"
+  short_description: "Versioned releases and CI gates"
   default_prompt: "Use $dura-release to prepare Dura release metadata and verification evidence."

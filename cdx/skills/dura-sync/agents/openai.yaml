@@ -1,4 +1,0 @@
-interface:
-  display_name: "Dura Sync"
-  short_description: "Offline journal sync and recovery contracts"
-  default_prompt: "Use $dura-sync to assess a Dura synchronisation or recovery change."

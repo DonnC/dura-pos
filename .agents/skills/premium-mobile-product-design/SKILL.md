@@ -11,33 +11,51 @@ SPDX-License-Identifier: MIT
 -->
 # Mobile product design and UX
 
-Use existing Dura research, user journeys and mockup before repeating discovery.
-Primary users are small-shop owners/cashiers on practical Android devices with
-interrupted connectivity. Distinguish research evidence from hypotheses. Never
-invent user interviews, competitor findings or accessibility compliance.
+## Read first
 
-For a major screen define purpose, entry/exit, hierarchy, main action, required
-input and recovery. Cover loading, empty, populated, offline, error, disabled and
-interrupted states. Do not redesign screens when only engineering setup is asked.
+- `handbook/product/03-experience-principles.md`: the five-second rule,
+  states, language, identity, targets and the UI pull-request checklist.
+  **This is the standard.**
+- `handbook/product/01-vision.md`, for who the users are.
+- `handbook/design/mobile-concept.md` and its prototype, before repeating
+  discovery.
 
-Prefer familiar mobile navigation, readable currency/unit labels, reachable
-actions and progressive disclosure. Do not decorate with generic gradients,
-glass panels, gratuitous cards/shadows or animations that delay selling.
+## Rules
 
-Use dura_ui theme tokens via ColorScheme/TextTheme/extensions. Centralise brand,
-status, spacing, radius and motion definitions; no arbitrary widget colours.
-Compose reusable fields, dropdowns, dialogs and status components. Keep business
-calculations and permission enforcement behind established controller contracts.
-Use google_fonts through the shared theme, with bundled fonts for first-launch
-offline use. Reuse the owner's approved mark when exporting launcher assets;
-do not silently substitute stock Flutter icons or redesign the approved identity.
+- **Users:** small-shop owners and cashiers on cheap Android phones, often
+  outdoors and one-handed, with patchy connectivity.
+  - Keep research evidence apart from hypotheses.
+  - Never invent interviews, competitor findings or compliance results.
+- **For a major screen, define:**
+  - its purpose;
+  - entry and exit;
+  - its hierarchy and one main action;
+  - the input it needs;
+  - how it recovers.
 
-Account for SafeArea, keyboard/insets, 320px phones, large text, semantic labels,
-focus order, colour-independent feedback and reduced motion. A compiling screen
-is not visual verification. Inspect an actual render and meaningful golden diffs;
-test interaction separately. Report unverified device/accessibility conditions.
+  Cover the loading, empty, populated, offline, error, disabled and
+  interrupted states.
+- **Navigation and actions:** familiar navigation, progressive disclosure,
+  and reachable actions. Amounts show their currency; quantities show units.
+- **No decoration that slows selling:** no generic gradients, glass,
+  gratuitous cards or shadows, or long animations.
+- **Tokens and components:**
+  - colours, type, spacing, radius, status and motion come from `dura_ui`
+    tokens;
+  - compose existing components;
+  - business rules stay behind controllers.
+- **Identity:** evergreen, a restrained grain-gold, and the approved tapered
+  silo-and-phone mark. The dollar sign isn't a currency default. Don't
+  redesign the mark.
+- **Accessibility:** check SafeArea and insets, 320 px width, 200% text,
+  semantic labels, focus order, feedback that doesn't rely on colour, and
+  reduced motion.
+- **Don't redesign screens** when only engineering work was asked for.
 
-For audits rank findings by user impact and prefer focused fixes. Preserve product
-identity: evergreen, restrained grain-gold, tapered silo/phone mark. The dollar
-symbol is not a currency default. Apply flutter-product-engineering for code
-quality/performance; use dura-ui for project visual-test and reuse conventions.
+## Done when
+
+- An actual render was inspected and golden diffs reviewed. A screen that
+  compiles isn't verified.
+- Interaction and semantics are tested separately (see `dura-ui`).
+- Audit findings are ranked by user impact, and unverified device or
+  accessibility conditions are reported.

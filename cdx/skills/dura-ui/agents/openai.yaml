@@ -1,4 +1,0 @@
-interface:
-  display_name: "Dura UI"
-  short_description: "Reusable Flutter UI and reviewed golden tests"
-  default_prompt: "Use $dura-ui to change a Dura screen while preserving core behaviour."

@@ -4,15 +4,21 @@
 # found in the LICENSE file at the repository root.
 # SPDX-License-Identifier: MIT
 
-name: Main verification and release
+# Pull requests run verification only, with a read-only token. A push to main
+# verifies again and then runs the release job, which publishes only when
+# release.json declares release intent. See handbook/decisions/0004.
+name: Verification and release
 on:
+  pull_request:
   push:
     branches: [main]
 permissions:
   contents: read
 concurrency:
-  group: dura-main-delivery
-  cancel-in-progress: false
+  # One run per branch or PR. Superseded PR runs are cancelled; main runs are
+  # serialized and never cancelled mid-publication.
+  group: dura-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   verify:
     runs-on: windows-2025
@@ -56,6 +62,7 @@ jobs:
           if-no-files-found: ignore
   release:
     needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: windows-2025
     timeout-minutes: 30
     defaults:

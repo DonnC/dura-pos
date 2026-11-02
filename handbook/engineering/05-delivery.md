@@ -27,15 +27,11 @@ The historical activation template does not override these current facts.
 
 At application scaffold activation, install a project overview, CONTRIBUTING.md,
 SECURITY.md, CHANGELOG.md, root AGENTS.md, architecture/roadmap/testing/records
-policies, decision records, PR/issue templates and release-note template. Keep
-the existing GPL v3 licence unchanged; determine any "or later" designation
-from the actual project's licensing statement rather than assuming it from the
-licence text. Preserve third-party licence/NOTICE requirements when distributing.
-No AI attribution trailers are added.
-
-Current additions live in cdx. `cdx/scaffold` is an inactive staging area. Do not
-mistake YAML templates for installed GitHub settings, or planned test commands
-for an implemented test suite.
+policies, decision records, PR/issue templates and release-note template. These
+are installed, along with CODE_OF_CONDUCT.md and SUPPORT.md. Original work is
+MIT (decision 0002). Preserve third-party licence/NOTICE requirements when
+distributing. No AI attribution trailers are added. Do not mistake planned test
+commands for an implemented test suite.
 
 ## Version model
 
@@ -83,10 +79,11 @@ Preview:
 
 ## Release from main
 
-Only `push` to `main` triggers the proposed workflow. No PR, tag, schedule or
-manual workflow trigger is included. Contributor checks therefore run locally
-before merging; main-only CI does not protect against merging untested code.
-No automatic dependency merging. Repository branch/ruleset configuration is a
+The workflow runs the verify job on every pull request (read-only token) and on
+every push to `main`. The release job runs only on a push to `main`. No tag,
+schedule or manual trigger is included. Superseded pull-request runs are
+cancelled; main runs are serialized and never cancelled mid-publication
+(decision 0004). No automatic dependency merging. Repository branch/ruleset configuration is a
 separate future action, not accomplished by these templates.
 
 Every main push runs checks. A release-intent commit additionally changes the
@@ -166,4 +163,5 @@ unreviewed mass upgrade directly to main.
 
 Template placeholders and required helper commands must be resolved against the
 real scaffold. Run the pipeline locally, then validate actual GitHub behaviour
-before claiming automation works. See `../../cdx/scaffold/ACTIVATION.md`.
+before claiming automation works. Record the first real GitHub run in
+`08-foundation-validation.md`.

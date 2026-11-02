@@ -21,7 +21,8 @@ per business and will be implemented in a later phase.
 
 Use handbook for engineering information. Reserve docs for the owner's future
 purpose. Install the seven project skills under .agents/skills and route them
-from AGENTS.md. Keep historical research/prototypes under cdx.
+from AGENTS.md. Keep historical research/prototypes under cdx (superseded by
+decision 0004: research/ and handbook/design/).
 
 Drift stores local non-secret preferences initially. Financial tables, sync,
 cashier authentication and sales are not yet implemented. Riverpod wires a

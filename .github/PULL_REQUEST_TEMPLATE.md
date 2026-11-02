@@ -29,13 +29,15 @@ effects. Write "None" with a reason when not applicable. Never include secrets.
 ## Visual changes
 
 Attach reviewed before/after/diff images and text-scale/semantic checks where
-applicable. Explain each intentional golden change.
+applicable. Explain each intentional golden change. Confirm the checklist in
+handbook/product/03-experience-principles.md.
 
 ## Verification and limitations
 
 Exact checks performed, actual platform/device, checks not performed, and remaining
-limits. Main-only CI means these local checks are required before merging.
+limits. CI repeats the checks on this PR, but say what you ran yourself.
 
 - [ ] Changelog updated for meaningful change.
 - [ ] Docs, sample previews and schemas agree with the final implementation.
 - [ ] No live credentials or private business data in this PR.
+- [ ] No AI attribution lines in commits or files.

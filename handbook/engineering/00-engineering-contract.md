@@ -11,8 +11,8 @@ SPDX-License-Identifier: MIT
 2 November 2026. Agreed product direction translated into engineering rules.
 This is the active entry point for the Flutter foundation. Skills, Pub/Melos
 workspace, local preferences, diagnostics and shared UI are implemented. Product
-sales/sync/payment features remain planned. Historical files under
-`../../cdx/scaffold/` are templates, not the source of active configuration.
+sales/sync/payment features remain planned. For the product goal, users and
+UX standard, read `../product/` first; `../README.md` maps every document.
 
 ## Decisions
 
@@ -27,7 +27,7 @@ sales/sync/payment features remain planned. Historical files under
 | Development | Behaviour-first TDD, contract tests, widget tests, goldens and integration tests |
 | Records | Immutable uploaded event journal plus readable, rebuildable Sheets/Excel views |
 | Staff device option | Dedicated business phone/account with app PINs and optional owner-managed device/app locks |
-| CI | Push to main only; all release gates pass before GitHub release publication |
+| CI | Verify on pull requests and pushes to main; release only from main after all gates pass (decision 0004) |
 | Dependency updates | Monthly grouped routine updates; no automatic merging |
 | Release policy | Meaningful changes update the changelog; release-intent main commits carry a new version and reviewed notes |
 | Branding | Unified tapered silo/phone; dollar sign inside screen; not a USD-only product |
@@ -45,13 +45,14 @@ symbol and must not introduce a currency default into onboarding.
 - [Roadmap and completion evidence](06-roadmap.md)
 - [Coding and diagnostic limits](07-coding-and-diagnostics.md)
 - [Foundation decision](../decisions/0001-foundation.md)
+- [Records decision](../decisions/0003-records-journal-and-views.md)
 - Project skill sources: `../../.agents/skills/`.
 
 These documents supersede earlier suggestions where explicitly different: native
 Kotlin UI, Room as the app database, multi-writer direct Sheets appends, late
-recovery work, or automatic destructive year-end clearing. The earlier
-`../../cdx/01-updated-approach-and-file-design.md` remains the detailed file-preview
-reference; the lifecycle clarifications here take precedence.
+recovery work, or automatic destructive year-end clearing (see decision 0003).
+`../design/records-file-design.md` remains the detailed file-preview reference;
+the lifecycle clarifications here take precedence.
 
 ## Change discipline
 

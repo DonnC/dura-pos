@@ -11,35 +11,62 @@ SPDX-License-Identifier: MIT
 -->
 # Dura records and file lifecycle
 
-Read the records policy in handbook/engineering/03-records-and-sheets.md; before
-activation use cdx/engineering. Consult approved workbook templates and the small
-compatibility contract in schema/PLAN.md. Python is the core template authoring
-tool; evolve samples/generate_samples.py into cohesive modules. Generate clean
-and mock-shop variants from the same definitions for every workbook type. Keep
-layout/formula authoring out of Flutter; distinguish template-only changes from
-domain-contract changes. Bring visual workbook edits back into Python definitions.
-Use the available spreadsheet skill when actually creating/editing
-workbooks and follow its rendering/verification requirements.
+## Read first
 
-Every file/tab/column change includes a sample preview, dictionary, writer,
-creation stage, authority, version, retention and recovery/migration behaviour.
-Show currencies, units, signs and completeness. New examples are fictitious and
-must add up across sales, payments, stock, shifts and accounting. Clean templates
-retain formulas/reference lists but no demo records. Label mock files DEMO, use
-fixed fixture dates and prevent demo artifacts from provisioning live businesses.
+- `handbook/decisions/0003-records-journal-and-views.md`: the journal is the
+  history, and Sheets are views and checked inputs.
+- `handbook/engineering/03-records-and-sheets.md` and
+  `handbook/design/records-file-design.md`, with its file previews.
+- `schema/PLAN.md` (template-first, the compatibility contract) and
+  `notes/04-data-files.md` (the current sample layout).
+- `samples/generate_samples.py`, the executable spec. Use the spreadsheet
+  skill, if one is available, when creating or editing workbooks.
 
-Treat accepted immutable events as history and Sheets as inputs/views. Define
-how proposed owner edits are validated; no silent last-write-wins for money.
-Keep provider settlement, shift cash-up/handover and fiscal closing distinct.
+## Rules
 
-Use standard Excel-compatible formulas and readable fallback values. Pivots and
-Google-only features cannot be essential to understanding an offline export.
-Verify calculations independently, inspect renders, and report the actual
-Google Sheets/Excel/LibreOffice versions checked. Structural parsing is not
-recalculation proof. Preserve owner-created sheets in migrations.
+- **Authoring:** Python authors the layout, formulas, validation, charts and
+  guidance. Grow `generate_samples.py` into modules; don't start a competing
+  generator. Keep layout out of Flutter.
+- **Template-only versus contract changes:** a wider column or a new owner
+  notes column is a template change. A changed meaning is a contract change,
+  with tests and a migration.
+- **Clean and demo pairs:** generate both for every workbook type. Clean
+  templates keep their formulas and lists but no records. Demo files are
+  labelled DEMO, use fixed dates, and must never provision a live shop.
+  Changes explored in Sheets or Excel go back into Python.
+- **Every file, tab or column change states:**
+  - a sample preview and dictionary entry;
+  - its writer, creation stage and authority;
+  - its version and retention;
+  - its migration and restore behaviour.
 
-Do not delete journals as part of cache cleanup or restore old fiscal counters.
-Update templates/contract/checks together as applicable; pin template versions,
-preserve owner additions and preview upgrades to existing copies. Mark
-design-only previews honestly. Include late events, month/year boundaries,
-missing devices, duplicate batches and damaged-view reconstruction as applicable.
+  Show currencies, units, signs and completeness. Examples are fictitious and
+  must add up across sales, payments, stock, shifts and accounting.
+- **History:**
+  - accepted events are immutable;
+  - owner edits are proposals, validated before they're accepted, with no
+    silent last-write-wins for money;
+  - provider settlement, shift cash-up and fiscal closing stay distinct.
+- **People-first sheets:**
+  - a Read Me;
+  - colour-coded tabs labelled in words;
+  - `Lists` dropdowns and date validation;
+  - red negatives;
+  - formulas that never cross files or name a year.
+- **Portability:** Excel-compatible formulas, with readable fallback values.
+  Pivots and Google-only functions can't be essential to an export. Report
+  the actual Sheets, Excel or LibreOffice versions checked; structural
+  parsing isn't proof of recalculation.
+- **Never:**
+  - delete journals as cache cleanup;
+  - restore old fiscal counters;
+  - overwrite owner-created sheets in a migration.
+
+## Done when
+
+- The generator, templates, contract and checks are updated together, and
+  regenerated.
+- `check_samples.py` and `check_formulas.py` pass.
+- Late events, month and year boundaries, a missing device, a duplicate batch
+  and rebuilding a damaged view are covered, where they apply.
+- Design-only previews are labelled honestly.

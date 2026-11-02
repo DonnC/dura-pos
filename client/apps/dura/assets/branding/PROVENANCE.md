@@ -8,7 +8,7 @@ SPDX-License-Identifier: MIT
 
 # Android launcher artwork
 
-Source reference: cdx/branding/dura-silo-phone-dollar-v3.png, the owner's approved
+Source reference: handbook/design/branding/dura-silo-phone-dollar-v3.png, the owner's approved
 unified silo/phone mark with a dollar symbol. launcher-source.png is its standalone
 launcher adaptation of that approved mark.
 

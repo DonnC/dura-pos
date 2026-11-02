@@ -94,11 +94,12 @@ does not prove correctness and must not replace behavioural evidence. Exclude
 generated files openly. Other packages report coverage and establish baselines
 in the scaffold phase; do not invent current percentages.
 
-Local checks run before merge because the requested CI runs only on main.
-On main run format, analysis, generated-file drift, dependency-boundary checks,
+Run `dart run melos run verify` locally before opening a pull request. CI runs
+the verify job on every pull request and again on main: format, analysis, generated-file drift, dependency-boundary checks,
 unit/contract/widget/golden tests, schema/sample checks, and Android recovery
 integration tests before release. Failure produces diagnostics and no release.
-This catches a failed merge after it reaches main; it is not a pre-merge CI gate.
+Integration suites join the CI job as they are implemented; until then the
+pull-request job covers only the current targets.
 
 The foundation has real tests for log rotation/redaction/archives, SQLite reopen,
 UI interactions, sharing confirmation and shared-control goldens. It does not yet

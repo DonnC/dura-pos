@@ -1,0 +1,17 @@
+# Copyright (c) 2026, DonnC & contributors.
+# Please see the AUTHORS file for details. All rights reserved.
+# Use of this source code is governed by the MIT license that can be
+# found in the LICENSE file at the repository root.
+# SPDX-License-Identifier: MIT
+
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/DonnC/dura-pos/blob/main/SECURITY.md
+    about: Report privately. Never post exploit details, keys or customer data in an issue.
+  - name: Help running Dura, or paid setup and migration
+    url: https://github.com/DonnC/dura-pos/blob/main/SUPPORT.md
+    about: Where to ask, and what not to post.
+  - name: How Dura is designed
+    url: https://github.com/DonnC/dura-pos/blob/main/handbook/README.md
+    about: Vision, capabilities, glossary and engineering rules.

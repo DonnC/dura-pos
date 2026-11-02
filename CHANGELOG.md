@@ -10,6 +10,56 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Documentation and project structure
+
+- **New `handbook/product/` pages:**
+  - the vision: the goal, users, promise, business model, non-goals and
+    reasons;
+  - the capability map: every feature with its status and phase;
+  - the experience principles: the five-second rule, states, language, look
+    and targets;
+  - a glossary.
+- **New `handbook/README.md`** maps every document, sets the reading order
+  when documents disagree, and lists what changed since the Kotlin-era notes.
+- **Decision 0003:**
+  - the uploaded journal is the shared history, and Sheets are views and
+    checked inputs;
+  - one view writer at a time;
+  - workbooks are template-first;
+  - there's no destructive year-end clearing in the first release.
+- **Decision 0004:**
+  - the repository layout and research archive;
+  - CI verification on pull requests.
+- **Rewrites:**
+  - `README.md` for a public launch;
+  - `CONTRIBUTING.md` for first-time contributors;
+  - `AGENTS.md`, `CLAUDE.md` and all seven project skills, now structured,
+    deduplicated and pointing at current paths.
+- **New files:** `CODE_OF_CONDUCT.md`, `SUPPORT.md`, and an issue-template
+  `config.yml` that turns off blank issues and links to security and support.
+  `SECURITY.md` now lists high-impact areas.
+- **`cdx/` dissolved:**
+  - the records design, mobile concept, prototype and branding moved to
+    `handbook/design/`;
+  - the staged copies of the skills, handbook and GitHub files were deleted,
+    as their active versions exist.
+- **Research moved to `research/`, with an index:**
+  - the first brainstorm;
+  - the Gemini transcripts (part 2 recovered from the HTML export);
+  - the Codex product brief.
+
+  The 1 MB Gemini HTML export, which embedded a personal email address, was
+  removed from the tree. It remains in Git history.
+- **`notes/README.md`** says which parts of each note are still current.
+- **Corrected stale handbook statements:** the GPL licence, `cdx` paths, and
+  main-only CI.
+
+### Compatibility
+
+- No app behaviour, data format or workbook layout changed.
+- The CI workflow now also runs verification on pull requests. The release job
+  is skipped there.
+
 ### Changed
 
 - Move the Flutter workspace, packages, tooling and tests into client/; keep

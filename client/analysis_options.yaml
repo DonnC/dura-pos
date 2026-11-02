@@ -10,7 +10,6 @@ formatter:
 analyzer:
   exclude:
     - '**/*.g.dart'
-    - cdx/**
 linter:
   rules:
     avoid_print: true

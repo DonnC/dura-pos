@@ -11,33 +11,42 @@ SPDX-License-Identifier: MIT
 -->
 # Dura UI contributions
 
-Read current architecture/testing policies in handbook/engineering or, before
-activation, cdx/engineering. Use the real shared dura_ui components and theme;
-the Flutter app and packages live under client/. Run tests from that workspace.
-do not scatter new text-field, dropdown or confirmation-dialog implementations.
-Extend focused components through composition rather than a giant field API.
+## Read first
 
-Put each widget/component in its own file; keep necessary widget/State pairs
-together. Prefer stateless/consumer widgets where no local lifecycle is needed.
-Use google_fonts in the central theme with bundled assets and runtime fetching
-disabled for offline operation. Use approved silo/phone branding for launcher
-assets, not generated Flutter placeholders or a new unapproved logo direction.
-Dispose owned resources; test asynchronous completion after unmount where relevant.
+- `handbook/product/03-experience-principles.md`, including its UI
+  pull-request checklist.
+- `handbook/engineering/01-architecture.md` (UI kit) and `02-testing.md`
+  (visual tests).
+- The existing `dura_ui` components and theme in `client/packages/dura_ui`.
 
-Screens consume feature state and explicit commands. Keep money, permission,
-payment initiation and fiscal issuance out of build methods. Do not place a
-network operation in a provider read just to drive a loading spinner.
+## Rules
 
-Write interaction/semantic tests and use the existing golden harness. Cover the
-affected narrow-width, large-text, dark/light and error/offline state. Readable
-data previews and currency labels are mandatory where records are shown. No
-demo sign-in/payment success may masquerade as a real integration.
+- **Reuse before creating.** Don't scatter new text fields, dropdowns or
+  dialogs. Extend focused components by composition, not by building one
+  giant configurable field.
+- **Screens consume feature state and explicit commands.**
+  - Money, permissions, payment initiation and fiscal issuance stay out of
+    `build`.
+  - No network call inside a provider read just to drive a spinner.
+- **Fonts and icons:** `google_fonts` through the central theme, with bundled
+  fonts and runtime fetching disabled. Launcher assets use the approved
+  branding only.
+- **Tests:** write interaction and semantic tests, and use the existing
+  golden harness. Cover the affected narrow width, large text, dark and light
+  mode, and the error and offline states.
+- **Records shown on screen** need readable data previews and currency labels.
+- **No fake success:** no demo sign-in or payment that masquerades as a real
+  integration.
+- **Goldens:**
+  - update baselines only after inspecting the before, after and diff, and
+    explain the change;
+  - keep only deliberate baseline PNGs in Git;
+  - failure, actual and diff images stay ignored CI artifacts;
+  - goldens aren't branding or store assets.
+- **Screenshots and fixtures:** deterministic fakes; no live services, real
+  customer data or credentials.
 
-Update baselines only after inspecting before/after/diff and explaining intended
-changes. Do not accept every golden automatically. Keep only deliberate
-reference PNGs in version control: comparison tests need
-these baselines. Failure/actual/diff screenshots remain ignored CI artifacts.
-Do not confuse golden baselines with product branding or store assets. Keep
-fakes deterministic and
-avoid live services, real customer data and credentials in screenshots. Report
-exact visual/behaviour checks and any untested physical-device behaviour.
+## Done when
+
+- The visual and behaviour checks that ran are reported, plus any physical
+  device behaviour that wasn't tested.

@@ -1,18 +1,21 @@
 # Dura POS
 
-A free, open-source Android POS for Zimbabwean street vendors and small shops.
-It sells offline in USD, ZWG and ZAR, fiscalises with ZIMRA on the phone (via
-fzimra), and keeps every record in the owner's own Google Drive as Google
-Sheets.
+A free, open-source POS for Zimbabwean street vendors and small shops,
+Android first, in Flutter. It sells offline in USD, ZWG and ZAR, fiscalises
+with ZIMRA on the phone (via fzimra), and keeps every record in the owner's
+own Google Drive, with Google Sheets as the face of the records.
 
-**Start with `notes/10-build-plan.md`.** It has the settled decisions, the
-architecture, the build phases, and which note to read for what.
+**Start with `handbook/README.md`.** It maps every document, lists what
+changed since the notes, and says which document wins when they disagree:
+code, then decisions, then the handbook, then notes (`12`, then `10`), then
+research. Also follow `AGENTS.md` and the skills in `.agents/skills/`.
 
 ## Standing rules
 
 - **No AI attribution** (no Co-Authored-By or "generated with" lines) in
   commits, PRs or files.
-- **Notes go in `notes/`, numbered** (`NN-topic.md`).
+- **Notes go in `notes/`, numbered** (`NN-topic.md`). Decisions that change
+  earlier notes go in `handbook/decisions/`.
 - **Work in phases:** agree the scope, build it with tests, update the
   changelog, commit, then the next phase. Commit only when asked.
 - **The business model is settled,** so don't relitigate it:
@@ -26,30 +29,37 @@ architecture, the build phases, and which note to read for what.
   - the `zw_compliance` ERPNext app.
 - **Read ZIMRA's spec strictly.** Offer only what it allows, and never an
   option that can stop a shop from trading.
+- **UI/UX is king:** follow `handbook/product/03-experience-principles.md`.
+  - the five-second rule;
+  - never block a sale;
+  - amounts always show their currency;
+  - plain shop words.
 - **Sheets are for people:**
   - a Read Me in every file, and tabs colour-coded by who writes them;
   - dropdowns from the `Lists` tab instead of typing, and date validation;
   - red negatives, status dots and charts.
-- **Read `notes/12` with `notes/10`.** Note 12 wins where they differ:
-  - the Shop Hub;
-  - test mode;
-  - the file layout;
-  - the pricing currency chosen by the owner (never assume USD);
-  - Activity inside each month file.
+- **The pricing currency is chosen by the owner.** Never assume USD.
+- **Records (decision 0003):**
+  - a sale completes on the phone;
+  - each phone uploads an append-only journal to the owner's Drive, which is
+    the shared history;
+  - Sheets are views built from it, plus input tabs the owner edits, which
+    are checked before they're accepted;
+  - events are never rewritten, and a correction is a new linked event;
+  - one writer at a time builds the views: the owner's phone, or the Shop Hub;
+  - workbooks are template-first, copied from the Python generator's
+    templates;
+  - there's no destructive year-end clearing in the first release.
+- **The Shop Hub** (Apps Script) is optional: for payment keys and adapters,
+  callbacks and scheduled jobs. It's never in the path of a sale, and never
+  touches ZIMRA.
+- **Test mode never touches live data:** a separate folder and database,
+  `T-` IDs, ZIMRA's test environment, and gateway sandboxes.
+- **Formulas never cross files, and never name a year.**
 - **Financial records and AI:**
   - `notes/13` covers which financial records Dura produces;
   - `notes/14` is the future paid "Ask Dura" assistant: the phone works out
     the numbers with tools; the model only explains.
-- **Phones write to Sheets directly.** Apps Script (the Shop Hub) is
-  optional: for payment keys and adapters, callbacks and scheduled jobs.
-  It's never in the path of a sale, and never touches ZIMRA.
-- **Test mode never touches live data:** a separate folder and database,
-  `T-` IDs, ZIMRA's test environment, and gateway sandboxes.
-- **Formulas never cross files, and never name a year.** Live tabs in
-  `My Shop` have stable names; the year is `Settings` → `Data year`.
-- **Phones add rows; they don't rewrite them,** except status cells. Files and the
-  year-end archive are made by the Shop Hub, or, without a hub, by the owner's
-  phone only.
 - **Public posts:**
   - no code blocks;
   - don't claim ZIMRA certification;
@@ -59,8 +69,9 @@ architecture, the build phases, and which note to read for what.
 
 `samples/generate_samples.py` builds a complete sample shop (`samples/Dura
 POS/`): every file, tab, column, dropdown, colour rule, formula and chart the
-app must create. When the sheet layout changes, change the generator,
-regenerate, and run both checks:
+app must create. It still has note 12's layout until the records phase moves
+it to the handbook's (decision 0003). When the sheet layout changes, change
+the generator, regenerate, and run both checks:
 
 ```
 cd samples
@@ -68,5 +79,8 @@ python3 generate_samples.py          # needs openpyxl
 python3 check_samples.py "Dura POS"
 python3 check_formulas.py "Dura POS"
 ```
+
+The Flutter workspace is in `client/`. Run `dart run melos run verify` there
+before committing.
 
 `reference/zimra_hs_codes.csv` is ZIMRA's HS code list.

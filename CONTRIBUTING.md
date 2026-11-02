@@ -6,43 +6,143 @@ found in the LICENSE file at the repository root.
 SPDX-License-Identifier: MIT
 -->
 
-# Contributing
+# Contributing to Dura POS
 
-Start with AGENTS.md, the engineering contract and the current roadmap under
-handbook. Run Flutter/Melos from client/, using its pinned SDK and single lockfile.
-Root-level research, samples and repository-wide policies stay outside client/.
-Do not install another state-management or DI system for a local feature.
+Thank you for helping. Dura is for vendors who can't afford for their POS to
+lose a sale, miscount their change, or lock up their records. Every rule below
+protects one of those.
 
-For meaningful behaviour, write an acceptance test and observe the intended
-failure before implementation. Implement minimally, refactor green and run
-relevant contracts, widget/golden, persistence and recovery checks. Add regression
-tests before bug fixes. Record red/green evidence and actual limitations in the PR.
+## 1. Understand the project (about 30 minutes)
 
-Run `dart run melos run verify` before merging. Run `dart run melos run generate`
-when Drift definitions change; include the generated result. CI runs only after
-a main push, so it cannot be relied on as a pre-merge PR check. No auto-merge.
+1. Read the [README](README.md).
+2. Read the four product pages in the [handbook](handbook/README.md): vision,
+   capabilities, experience principles, glossary.
+3. Skim the [roadmap](handbook/engineering/06-roadmap.md) to see what's next.
+4. For code, read the [engineering contract](handbook/engineering/00-engineering-contract.md)
+   and [architecture](handbook/engineering/01-architecture.md).
 
-Source/test files are limited to 500 lines; Dart uses 80-column formatting.
-Centralise constants by ownership, derive colours from theme, and extract cohesive
-shared logic when about 60% similar. Avoid needless classes/enums and abstractions.
-Use the copyright/AUTHORS/MIT/SPDX header in client/tool/source_header.dart,
-adapted to each language. New files use the current year. Preserve third-party
-licence notices and older copyright years. Do not edit the owner's CLAUDE.md.
-Generated code/JSON/lockfiles are exempt. Comment contracts and why, not obvious code.
+If two documents disagree, the handbook's [reading order](handbook/README.md#when-documents-disagree)
+says which wins.
 
-Preserve local-first persistence, exact money, business/mode isolation and known
-external-outcome states. Swap adapters through contracts rather than changing UI
-rules. A UI-only change does not alter pricing/accounting. New record designs
-include previews, dictionaries, versions and migration/restore effects.
+## 2. Ways to help
 
-Review real golden renders before changing baselines. The initial canonical
-environment is Windows with pinned Flutter and test fonts. Never auto-update
-goldens in CI or claim unmeasured performance/accessibility compliance.
+| You are | You could |
+|---|---|
+| A Flutter or Dart developer | Pick a Phase 2 roadmap task; add tests; improve `dura_ui` components |
+| A designer | Review a screen against the [experience principles](handbook/product/03-experience-principles.md); improve the [prototype](handbook/design/prototype/) |
+| Good with spreadsheets or accounting | Review the [sample shop](samples/) and the [records policy](handbook/engineering/03-records-and-sheets.md); check that the numbers add up |
+| A Shona or Ndebele speaker | Help with plain-language wording and translations |
+| Close to vendors or shops | Run the five-vendor usability test; tell us what they actually need |
+| Familiar with ZIMRA or Zimbabwean payments | Check designs against the spec; help answer [`notes/02`](notes/02-questions-for-zimra.md) |
 
-Use fictitious data, safe diagnostics and fake external services in tests. Never
-post PINs, merchant keys, private fiscal keys or customer records. The application
-has no live fiscal/payment integrations yet. Do not claim certification.
+## 3. Before you start work
 
-Update the changelog for meaningful pushes. Commit/push/deploy only when authorised.
-Original contributions use the root MIT licence; preserve third-party notices
-and update AUTHORS with agreed attribution. No AI attribution trailers.
+- **Open or find an issue first** for anything bigger than a small fix, and
+  agree the scope. Use the issue templates, with fictional data only.
+- **Don't reopen the settled choices:**
+  - no Dura-hosted cloud;
+  - the shop's own Google account and keys;
+  - free core with consulting revenue;
+  - small shops, about ten phones at most;
+  - MIT licence.
+
+  They're explained in the [vision](handbook/product/01-vision.md).
+- **A change to architecture needs a decision record** in
+  [`handbook/decisions/`](handbook/decisions/0000-template.md).
+
+## 4. Set up
+
+```sh
+cd client
+flutter pub get
+dart run melos bootstrap
+dart run melos run verify
+```
+
+Use the Flutter version in `client/.flutter-version`. All Flutter and Melos
+commands run from `client/`. Research, samples, the handbook and repository
+policies stay at the root.
+
+## 5. How we work
+
+**Test first, for behaviour:**
+
+1. State an example with fictional shop data, e.g. "two loaves at USD 1.00,
+   paid with USD 5.00, gives USD 3.00 change".
+2. Write a test, run it, and see it fail for the right reason.
+3. Make it pass with the smallest change, then refactor while green.
+4. For a bug, write the failing regression test before fixing it.
+
+Put the red and green evidence in the pull request. The full method is in
+[testing](handbook/engineering/02-testing.md).
+
+**Keep these guarantees:**
+
+- **Local first:** save before any network call, payment or fiscal call.
+- **Exact money:** decimal types only, never `double`. Every amount carries a
+  currency, and currencies are never added together.
+- **Live, test and practice data never mix.**
+- **External outcomes stay honest:**
+  - unknown is a state;
+  - a payment is confirmed only by a check;
+  - nothing retries a charge blindly.
+- **Business rules live in `dura_core`,** not in widgets. Swap adapters
+  through their contracts.
+- **A file, tab or column change** includes sample rows, the dictionary, and
+  migration and restore effects. Change the generator, regenerate, and run
+  both sample checks.
+
+**Code style:**
+
+- At most 500 lines per handwritten file.
+- Format Dart to 80 columns.
+- One widget, model or service per file.
+- Colours come from theme tokens; constants belong to their owning package.
+- New handwritten files start with the copyright, AUTHORS, MIT and SPDX
+  header in [`client/tool/source_header.dart`](client/tool/source_header.dart),
+  in the file's comment syntax. Generated files, JSON and lockfiles are exempt.
+- Comment contracts and the "why", not the obvious.
+
+`dart run melos run check` enforces the header, size, boundary and colour
+rules. The full rules are in [coding](handbook/engineering/07-coding-and-diagnostics.md).
+
+**UI changes:**
+
+- Follow the [experience principles](handbook/product/03-experience-principles.md)
+  and their checklist.
+- Review golden images by eye before updating them, and attach before and
+  after images to the PR. Never accept goldens automatically.
+
+**Drift changes:** run `dart run melos run generate` and commit the generated
+output.
+
+## 6. Pull requests
+
+- **Branch from `develop`,** and target `develop`.
+- **Fill in the PR template:**
+  - the shop workflow affected;
+  - the TDD evidence;
+  - record and compatibility effects;
+  - the checks you actually ran.
+- **Run `dart run melos run verify` locally.** CI runs the same checks on your
+  PR, but a green CI run doesn't replace saying what you tested.
+- **Add a line to [CHANGELOG](CHANGELOG.md)** under *Unreleased* for any
+  meaningful change.
+- **Use conventional commit prefixes** where they fit: `feat`, `fix`, `docs`,
+  `test`, `refactor`, `build`, `chore`.
+- **No AI attribution lines** (such as `Co-Authored-By` trailers for an AI
+  tool) in commits, PRs or files.
+
+## 7. Safety
+
+- Use fictional data and fake services in tests, screenshots and issues.
+- Never post PINs, merchant keys, ZIMRA keys, tokens or real customer records.
+- Security problems go through [SECURITY](SECURITY.md), not public issues.
+- Don't claim ZIMRA certification, or any performance or accessibility result
+  that hasn't been measured.
+
+## Licence
+
+By contributing, you agree that your contribution is licensed under the
+[MIT licence](LICENSE). Third-party notices are kept. Agreed contributors are
+listed in [AUTHORS](AUTHORS).
