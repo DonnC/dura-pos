@@ -30,13 +30,17 @@ explicit confirmation. This bounds log storage to 50 MiB; temporary archives
 can require additional space. Logs are not encrypted archives; share only with
 trusted recipients. Background/multi-isolate logging needs a broker before use.
 
-## Workbook generation decision
+## Workbook template decision (revised)
 
-Generate user files from a versioned schema through Google APIs or the hub's
-selected writer. Excel exports use that same schema. Static .xlsx examples may
-help owners/imports, but are not a second authoritative template to maintain.
-Creation/migration must remain resumable and owner edits validated. Workbook
-generation is a subsequent slice, not a hidden bootstrap network requirement.
+Python remains the core authoring tool, starting from samples/generate_samples.py.
+Generate every workbook type as both a clean template and a reconciled mock-shop
+example from shared definitions. Review the outputs in Sheets/Excel and bring
+changes back into Python. The app copies approved, versioned templates rather
+than constructing their presentation in Dart. A small compatibility contract identifies
+app-used tables/fields and writable ranges independently of column positions.
+See schema/PLAN.md for examples and upgrade boundaries. Existing copies require
+deliberate, resumable upgrades that preserve owner additions. Provisioning is a
+later slice, not a hidden bootstrap network requirement.
 
 ## Verification and limits
 

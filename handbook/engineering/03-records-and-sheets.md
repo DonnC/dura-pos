@@ -12,6 +12,11 @@ editing a report is not an accounting correction.
 Read `../../cdx/01-updated-approach-and-file-design.md` for file and data previews. This
 policy adds accounting, both settlement workflows and Excel portability.
 Every changed file/tab/column design needs a realistic preview and dictionary.
+Python authors formulas, formatting, validation and report layout, producing
+clean templates and coherent mock-shop files from shared definitions. The app
+copies approved templates and fills them. A small compatibility contract identifies app-used
+fields independently of column positions. See ../../schema/PLAN.md for change
+examples, template versioning and explicit upgrades to existing copies.
 
 ## File registry
 
@@ -77,8 +82,8 @@ approved administrative command.
 | Summary | Human-readable period totals, charts, outstanding work and differences |
 
 These are illustrative independent rows, not a claim that every value above is
-one reconciled sample business. The generator must create a fully coherent
-business fixture and prove all cross-table totals before these become templates.
+one reconciled sample business. Template validation must use a fully coherent
+business fixture and prove all cross-table totals before approval.
 Unused feature tabs may be hidden but remain documented in the schema.
 
 Accounting entry rows may cover all accounts in one table. Separate ledgers are
@@ -112,8 +117,8 @@ second sale. A counted shortfall is reviewable evidence, not automatic staff deb
 Prefer Excel-compatible SUM, SUMIFS, COUNTIFS, IF, IFERROR and INDEX/MATCH. Use
 bounded ranges and helper columns where they improve clarity and speed. Example
 for a fixed documented layout: `=SUMIFS(Payments!$G$2:$G$5000,Payments!$D$2:$D$5000,"USD")`
-where G is Net applied and D is Currency. The schema generator resolves actual
-columns; this preview is not permission to hardcode positions throughout the app.
+where G is Net applied and D is Currency. Template authors maintain the formula;
+the app resolves field mappings rather than hardcoding these column positions.
 
 Never total cash received as revenue without subtracting change. Never add
 currencies into one nominal total. Specify functional-currency conversion and
@@ -135,7 +140,8 @@ versions work from an openpyxl structural check.
 ## Creation, late events and archiving
 
 1. Create the business identity and local database during setup. Connect Google
-   and create the directory, My Shop and current month without blocking a local
+   and create the directory, copying My Shop and current-month templates without
+   blocking a local
    practice workflow. Warn about records not yet uploaded.
 2. One authorised writer creates each month. Use logical business/month identity,
    a registry and recovery checks; filenames alone are not uniqueness keys.

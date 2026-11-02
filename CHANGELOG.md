@@ -16,8 +16,10 @@
 ### Design decisions
 
 - Fiscalisation is optional per business and deferred; no fiscal plugin is installed.
-- Business files will be generated from a versioned schema. Static Excel examples
-  are samples/import aids, not a second authoritative template.
+- Python remains the core template generator, producing clean and mock-shop
+  workbook pairs from shared definitions. The app copies approved templates;
+  a small contract maps app-used fields. Existing copies receive deliberate
+  upgrades that preserve owner additions.
 - Native business records, sync, sales, authentication and gateways remain planned.
 
 ### Validation

@@ -37,7 +37,7 @@ merchant credentials or fiscal keys are required for the foundation.
 | `handbook` | Active architecture, tests, roadmap, records and decisions |
 | `.agents/skills` | Seven project-specific engineering/design workflows |
 | `hub` | Future Apps Script plan; nothing deployed |
-| `schema` | Business-file generation decision; implementation later |
+| `schema` | Workbook template and compatibility plan; implementation later |
 | `cdx` | Historical research, mockup and staged templates |
 
 See [the engineering contract](handbook/engineering/00-engineering-contract.md)

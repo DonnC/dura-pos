@@ -1,6 +1,6 @@
 # Assessment: Apps Script as the shop's gateway
 
-28 October 2026. This assesses `../GeminiAppScriptResearchHistory.md` against the
+28 October 2026. This assesses `../GeminiAppScriptResearchHistory.md` (full chat at `../app-script-Google_2026-10-29_12-07 PM.html`) against the
 current design (`03-feature-design.md`, `04-data-files.md`,
 `05-archiving-and-security.md`).
 
