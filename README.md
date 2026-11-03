@@ -8,124 +8,140 @@ SPDX-License-Identifier: MIT
 
 # Dura POS
 
-**A free, open-source point of sale for Zimbabwean vendors and small shops. It
-works offline and keeps every record in the shop's own Google Drive.**
+A free, open-source point of sale for Zimbabwean vendors and small shops. It
+sells offline and keeps the shop's records in the owner's own Google account.
 
-*Dura* is Shona for a granary, the place a household keeps its harvest. Dura
-POS keeps a shop's sales, stock and money in a store the shop owns.
+*Dura* is the Shona word for a granary, where a household stores its harvest.
+Dura POS is that store for a shop's sales, stock and money.
 
-> **Status: early foundation. It doesn't sell yet.** The Flutter workspace,
-> shared UI, local storage and diagnostics exist. Selling, sync, staff,
-> payments and ZIMRA fiscalisation are designed but not built. Don't use it
-> for live trading. See [where it is](#where-it-is-and-where-its-going).
+> **Status: early development.** The app foundation is in place: the Flutter
+> workspace, shared UI components, local storage, on-device diagnostics and CI.
+> Selling, sync, staff, payments and fiscalisation are designed and next on
+> the [roadmap](handbook/engineering/06-roadmap.md). It isn't ready for live
+> trading yet.
 
 ## Why Dura
 
-Most point-of-sale systems in Zimbabwe are rented by the month and keep the
-shop's data on someone else's server. Small traders don't want to pay that,
-and when they stop paying they lose the records. Dura takes a different
-approach:
+Point-of-sale systems sold in Zimbabwe usually come with a monthly or yearly
+fee, and keep the shop's data on the vendor's servers. Small traders often
+don't want to pay that, and when they stop paying they can lose access to
+their own records.
 
-- **Free, with no vendor cloud.** There is no Dura server. The records live in
-  the owner's own Google account, which comes with 15 GB free.
-- **The records are the shop's.** They're Google Sheets the owner and their
-  accountant can open, read, export to Excel, and take elsewhere.
-- **Selling never waits for the network.** Every sale is saved on the phone
-  first and uploads when there's signal.
-- **Made for how Zimbabwe trades:**
+Dura takes a different approach:
+
+- **No subscription and no Dura server.** The app is free and open source.
+  Records live in the business's own Google Drive, using the Google services
+  that come with its account.
+- **The records belong to the shop.** They're ordinary Google Sheets that the
+  owner or their accountant can open, edit, export to Excel, or take to
+  another system.
+- **Offline first.** A sale is saved on the phone first, and uploaded when
+  there's a connection.
+- **Built for local trading:**
   - USD, ZWG and ZAR, with the owner choosing the pricing currency;
-  - "kept change" when the till has no coins;
-  - credit for regulars;
-  - expenses paid straight out of the till.
-- **The shop's own keys.** ZIMRA fiscalisation and mobile money (Paynow, ZB
-  Smile&Pay) are optional, and use the business's own credentials. Money goes
-  straight to the business.
-- **Simple enough for anyone.** No screen should need more than five seconds
-  of thought.
+  - change owed to a customer when the till runs short;
+  - credit for regular customers;
+  - expenses paid from the till.
+- **The business's own accounts.** Mobile money and ZIMRA fiscalisation use
+  the shop's own merchant and ZIMRA credentials. Payments go straight to the
+  business.
 
-It's for a street vendor with one phone, up to a shop with about ten phones.
-It isn't for chains.
+Dura is for street vendors, market traders, tuck shops and small shops, from
+one phone up to about ten. Businesses that want help with setup, migration or
+a custom integration can pay for that work; the app stays free.
+
+## Planned features
+
+| Area | What's planned |
+|---|---|
+| Selling | Products and services, barcode scanning, cash and split payments in several currencies, change, receipts (share or Bluetooth print), returns and refunds |
+| Stock | Stock movements, receiving, counts, losses, low-stock alerts, suppliers and purchases with invoice photos |
+| Money | Cash-ups per shift and currency, expenses by category, owner drawings, kept change, customer credit and invoices, quotes |
+| People | Owner, manager and seller roles with PINs; several phones; several locations |
+| Records | Google Sheets workbooks with a Read Me, dropdowns, colour-coded tabs and charts; Excel and CSV export; backup and restore |
+| Payments | Paynow and ZB Smile&Pay through the optional Shop Hub, plus manual payment references |
+| Fiscalisation | ZIMRA fiscal receipts on the phone through [fzimra](https://github.com/DonnC/zimra-fdms-android); optional, per business |
+| Training | Practice mode with a fictional shop, and a test mode kept separate from live data |
+
+The [capability map](handbook/product/02-capabilities.md) tracks the status of
+each feature.
 
 ## How it works
 
 ```mermaid
 flowchart LR
-  Phone["Android phone<br/>sells offline from its own database"]
-  Journal[("Journal in the owner's Drive<br/>append-only history")]
-  Sheets[("Google Sheets<br/>My Shop · one file per month")]
-  Hub["Shop Hub (optional)<br/>Apps Script in the shop's account"]
-  ZIMRA["ZIMRA FDMS (optional)"]
-  Phone -- "uploads when online" --> Journal
-  Journal -- "builds" --> Sheets
-  Hub -. "payments · scheduled jobs" .-> Sheets
-  Phone -- "fiscal receipts" --> ZIMRA
+  subgraph Phone["Android phone"]
+    App["Dura app"] --> DB[("Local database")]
+  end
+  subgraph Google["The shop's Google account"]
+    Hub["Shop Hub<br/>Apps Script, runs as the owner"]
+    Drive[("Drive<br/>record of sales and stock")]
+    Sheets[("Google Sheets<br/>My Shop · monthly workbooks")]
+    Hub --> Drive
+    Hub --> Sheets
+  end
+  DB -- "signed requests" --> Hub
+  Hub --> Providers["Paynow · Smile&Pay"]
+  App -- "fzimra, later" --> ZIMRA["ZIMRA FDMS"]
 ```
 
-- **The phone** sells from its own database.
-- **The journal** in the owner's Drive is the shared history. Every event has
-  an ID, so a retried upload never counts twice.
-- **Google Sheets** are built from the journal for people:
-  - a Read Me in every file;
-  - dropdowns and colour-coded tabs;
-  - charts.
-- **The optional Shop Hub** holds payment keys and receives payment callbacks.
-  It's never needed to finish a cash sale.
-- **Fiscalisation** runs on the phone through
-  [fzimra](https://github.com/DonnC/zimra-fdms-android).
+- **The phone does the selling** from its own database, with or without a
+  connection.
+- **The Shop Hub is the shop's own backend.** It's an Apps Script web app
+  that the app installs in the owner's Google account, and it runs as the
+  owner. It does the work that reaches Google:
+  - stores each phone's append-only record of sales, payments and stock
+    changes in Drive;
+  - builds the readable Sheets from that record, so a damaged sheet can be
+    rebuilt;
+  - holds payment keys and receives provider callbacks;
+  - runs scheduled jobs, such as preparing next month's file.
 
-The reasons behind each choice are in the [vision](handbook/product/01-vision.md#why-its-built-this-way).
+  Its usage counts against the shop's account, not Dura's
+  ([decision 0005](handbook/decisions/0005-shop-hub-as-the-backend.md)).
+- **Phones pair with the hub by QR code.** They sign every request with their
+  own secret, and never hold a Google sign-in.
+- **Workbooks start from Excel templates.** A Python generator produces them
+  for each release. The hub checks them and converts them into Google Sheets
+  in the shop's Drive.
+- **The app is server-agnostic.** It talks to one backend port. The hub is
+  the first implementation; another backend would mean a new adapter, not a
+  new app.
+- **Fiscalisation** will use fzimra, which runs on the phone and talks to
+  ZIMRA directly. Each business completes ZIMRA's tests before moving from
+  the test environment to production.
 
-## Where it is, and where it's going
+## Getting started
 
-| Phase | What it delivers | Status |
-|---|---|---|
-| 0 | Spikes: Google Drive permissions, Sheets timing, the hub install, questions to ZIMRA | Not started |
-| 1 | Workspace, CI, shared UI, local storage, diagnostics | **Foundation done** |
-| 2 | One phone sells: products, pricing currency, cash sales, receipts, restart safety | Next |
-| 3 | Owner records: journal upload, Sheets views, backup, restore, Excel and CSV export | Designed |
-| 4 | Staff and shifts: PINs, roles, cash-up, handover | Designed |
-| 5 | ZIMRA fiscalisation (optional) | Designed; waits on ZIMRA's answers |
-| 6 | Shop Hub, several phones, mobile money | Designed |
-| 7 | Stock, suppliers, credit, reports, then a pilot with real shops | Designed |
-| 8 | Owner view on desktop and web | Later |
-
-Feature by feature: the [capability map](handbook/product/02-capabilities.md).
-Exit criteria per phase: the [roadmap](handbook/engineering/06-roadmap.md).
-
-## Try the design today
-
-There's no app to sell with yet, but you can explore the design:
-
-- **A complete sample shop** in [`samples/Dura POS/`](samples/): every
-  workbook, tab, dropdown, formula and chart Dura will create, for a fictional
-  shop. Open the `.xlsx` files in Excel or Google Sheets.
-- **An interactive mock-up** of the first screens:
-  [`handbook/design/prototype/dura-mobile-preview.html`](handbook/design/prototype/).
-  Open it in a browser.
-
-## Build the foundation
+### Run the app
 
 You'll need:
 
-- Flutter **3.47.9** (Dart 3.13.7), pinned in `client/.flutter-version`;
+- Flutter 3.47.9 (pinned in [`client/.flutter-version`](client/.flutter-version));
 - the Android SDK and Java 17;
 - an Android device or emulator.
 
-No Google account, merchant keys or ZIMRA credentials are needed.
+No Google account or credentials are needed yet.
 
 ```sh
 cd client
 flutter pub get
 dart run melos bootstrap
-dart run melos run verify      # format, policy checks, analysis, all tests
+dart run melos run verify      # formatting, policy checks, analysis and tests
 cd apps/dura
 flutter run
 ```
 
-Only Android is set up so far. The app opens a foundation screen with
-diagnostic settings.
+The current build opens the foundation screen and diagnostic settings.
 
-To regenerate and check the sample shop (needs Python 3 and `openpyxl`):
+### Explore the sample shop
+
+[`samples/Dura POS/`](samples/) holds a complete fictional shop: every
+workbook, tab, dropdown, formula and chart Dura is designed to create. Open
+the `.xlsx` files in Excel or Google Sheets.
+
+The generator is only needed when the workbook layout changes. It needs
+Python 3 and `openpyxl`:
 
 ```sh
 cd samples
@@ -134,43 +150,52 @@ python3 check_samples.py "Dura POS"
 python3 check_formulas.py "Dura POS"
 ```
 
-## Repository map
+## Project structure
 
-| Where | What |
-|---|---|
-| [`handbook/`](handbook/README.md) | **Start here.** Vision, capabilities, experience principles, glossary, engineering rules and decisions |
-| [`client/`](client/) | All Flutter code: the app (`apps/dura`) and packages `dura_core` (pure Dart rules), `dura_data` (storage), `dura_ui` (theme and components) |
-| [`samples/`](samples/) | The executable spec: a generator for the sample shop, plus checks that its numbers add up |
-| [`schema/`](schema/PLAN.md) | The workbook template and compatibility plan |
-| [`hub/`](hub/PLAN.md) | The future Shop Hub (Apps Script) |
-| [`notes/`](notes/README.md) | Numbered design notes: the detailed reasoning |
-| [`research/`](research/README.md) | The original research conversations; historical |
-| [`reference/`](reference/) | ZIMRA's HS code list |
-| [`.agents/skills/`](.agents/skills/) | Project workflows for AI coding assistants |
+```text
+dura-pos/
+├── client/                 Flutter workspace (Melos)
+│   ├── apps/dura/          the Android app
+│   └── packages/
+│       ├── dura_core/      business rules in pure Dart
+│       ├── dura_data/      local storage and diagnostics
+│       └── dura_ui/        theme and shared components
+├── handbook/               product vision, engineering rules, decisions, design
+├── samples/                workbook generator, sample shop and checks
+├── schema/                 workbook template plan
+├── hub/                    Shop Hub (Apps Script) plan
+├── notes/                  design notes from the research phase
+├── research/               original research conversations
+└── reference/              ZIMRA HS code list
+```
+
+## Documentation
+
+- [Handbook](handbook/README.md): start here. It links everything below.
+- [Vision](handbook/product/01-vision.md): the problem, the users, and the
+  reasons behind each design choice.
+- [Experience principles](handbook/product/03-experience-principles.md): how
+  screens and sheets should behave.
+- [Architecture](handbook/engineering/01-architecture.md) and
+  [roadmap](handbook/engineering/06-roadmap.md).
+- [Glossary](handbook/product/04-glossary.md).
 
 ## Contributing
 
-Contributions are welcome, from code and tests to design, translation into
-Shona or Ndebele, and testing with real vendors.
+Contributions are welcome: code, tests, design, spreadsheet and accounting
+review, translation into Shona or Ndebele, and feedback from people who run
+shops. Read [CONTRIBUTING](CONTRIBUTING.md) to get started, and follow the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
-- Read [CONTRIBUTING](CONTRIBUTING.md) for the workflow, and the
-  [handbook](handbook/README.md) for the design.
-- Good first steps:
-  - review a design note;
-  - improve the sample shop;
-  - pick up a Phase 2 task from the [roadmap](handbook/engineering/06-roadmap.md).
-- Be kind: [Code of Conduct](CODE_OF_CONDUCT.md).
-
-Never post PINs, keys, tokens or real customer records in an issue. For
-security problems, see [SECURITY](SECURITY.md). For help running Dura, see
+Please don't post PINs, keys, tokens or real customer data in issues. Report
+security problems as described in [SECURITY](SECURITY.md). For help, see
 [SUPPORT](SUPPORT.md).
 
-## Credits and licence
+## Licence and credits
 
-- Original Dura POS work is [MIT](LICENSE) licensed. Third-party licences are
-  in [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md). Authors are listed in
-  [AUTHORS](AUTHORS).
-- ZIMRA fiscalisation builds on
-  [fzimra](https://github.com/DonnC/zimra-fdms-android), and on the original
-  TypeScript `zimra-fdms` SDK by Shaun Chivandire.
-- Dura POS is not certified or approved by ZIMRA.
+- Dura POS is released under the [MIT licence](LICENSE). See
+  [AUTHORS](AUTHORS) and [third-party notices](THIRD_PARTY_NOTICES.md).
+- ZIMRA fiscalisation will use
+  [fzimra](https://github.com/DonnC/zimra-fdms-android), which builds on
+  Shaun Chivandire's original TypeScript `zimra-fdms` SDK.
+- Dura POS is not certified by ZIMRA.

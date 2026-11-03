@@ -48,6 +48,10 @@ Why direct rows aren't enough on their own:
 3. **A sale completes on the phone.** Upload, payment confirmation and ZIMRA
    acceptance are later, separate states. Neither Sheets nor the Shop Hub is
    ever needed to finish a cash sale.
+> **Points 4 and 5 are replaced by [decision 0005](0005-shop-hub-as-the-backend.md):**
+> every upload goes through the Shop Hub, the hub is the only view writer, and
+> the hub (not the app) creates workbooks from the templates.
+
 4. **Two ways to upload:**
    - a phone signed in to the shop's Google account uploads its batches
      directly through the Drive API (`drive.file`);
@@ -62,8 +66,13 @@ Why direct rows aren't enough on their own:
 6. **Workbooks are template-first.**
    - The Python generator (`samples/generate_samples.py`, growing into
      modules) produces approved clean templates, plus a matching demo shop.
-   - The app copies a template and fills it, using a small compatibility
-     contract that names fields by ID, not column letter.
+   - The generated `.xlsx` templates are committed and bundled with the app.
+     Contributors working on the app never need to run Python.
+   - The app uploads a bundled template to the shop's Drive and has Drive
+     convert it to a Google Sheet. Because Dura uploads it, `drive.file`
+     covers it.
+   - The app fills it using a small compatibility contract that names fields
+     by ID, not column letter.
    - This replaces note 12 §5's "from code, not from a template file". See
      [`schema/PLAN.md`](../../schema/PLAN.md).
 7. **No destructive year-end clearing in the first release.** Original
@@ -111,12 +120,10 @@ Before live piloting, prove each of these with tests or spikes:
 4. An owner's sheet edit is validated, journalled and reconstructable.
 5. A restore onto a new phone doesn't replay fiscal state or duplicate events.
 6. An export rebuilds the opening position, transactions, stock and balances.
-7. The `drive.file` questions:
-   - a second phone signed in to the same account sees Dura's files;
-   - a copied template counts as a file Dura created.
-
-   If a copied template doesn't count, upload a bundled template so that Dura
-   creates it.
+7. A second phone, signed in to the same account, sees Dura's files under
+   `drive.file`.
+8. A converted template keeps its dropdowns, colour rules, formulas and
+   charts in Google Sheets.
 
 **Reversal:** if the journal proves too costly in files, quota or complexity
 for one-phone shops, a later decision may let single-phone mode write views

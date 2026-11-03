@@ -24,3 +24,4 @@ New notes go here, numbered `NN-topic.md`.
 | [12](12-hub-test-mode-files-migration.md) | Shop Hub, test mode, folders, photos, pricing currency, migration | Yes, except §1, §3 and §5 (direct writes; built from code), replaced by decision 0003 |
 | [13](13-financial-records.md) | Which financial records Dura produces | Yes |
 | [14](14-ai-assistant-plan.md) | The future "Ask Dura" assistant | Yes; later |
+| [15](15-apps-script-route.md) | All records through the shop's own Apps Script hub: install, pairing, files, sync, payments, limits | Research; would replace parts of decision 0003 if adopted |

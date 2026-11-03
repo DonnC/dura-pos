@@ -57,8 +57,15 @@ column moves; avoid duplicating the whole workbook layout in a code schema.
 
 Template versions are immutable approved snapshots, not a mutable public URL
 that can silently change a business's files. Pin versions and distribute them
-through an owner-accessible route without requiring public business data. Decide
-the exact template packaging/copy mechanism during the records implementation.
+through an owner-accessible route without requiring public business data.
+
+Packaging: the generator writes the clean `.xlsx` templates, and they are
+committed and bundled as app assets. App contributors use them as files and
+don't need Python. Only a layout change touches the generator, then
+regenerates. To create a file, the app uploads the bundled template to the
+shop's Drive with conversion to Google Sheets, so the file is one Dura created
+and `drive.file` covers it. Check the first converted template for lost
+validation, formatting or charts.
 
 New businesses/months use the compatible approved version. Existing workbooks
 retain their version until an explicit, backed-up, resumable upgrade is applied.

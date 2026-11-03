@@ -10,6 +10,49 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Design decisions: the Shop Hub is the backend
+
+- **Note 15 researches the Apps Script route:**
+  - install from the app;
+  - files and the registry;
+  - QR pairing and signed requests;
+  - sync;
+  - payments;
+  - security;
+  - Gmail quotas;
+  - spikes.
+- **Decision 0005:**
+  - everything that reaches Google goes through the shop's own Apps Script
+    hub, so usage counts against the shop's account;
+  - Dura's Google Cloud project is used only to install and update the hub;
+  - phones pair by QR and hold no Google token;
+  - the hub is the only view writer, and creates workbooks from the
+    templates.
+- **The Flutter app reaches any backend through one port in `dura_core`.**
+  The hub is its first adapter, in `dura_hub`.
+- **Replaced:** points 4 and 5 of decision 0003.
+- **Updated to match:** the README, vision, glossary, capability map,
+  architecture, security policy and `CLAUDE.md`.
+
+### Added: exact money and cash sales (phase 2, first slice)
+
+- **New `dura_core` types:** `Currency`, `Money`, `Quantity` and
+  `ExchangeRate`. They use exact decimals (the `decimal` package), never
+  `double`, and round half away from zero to the currency's scale.
+  - Money in different currencies can't be added, subtracted or compared.
+  - An entered amount with more decimal places than its currency allows is
+    rejected, never rounded.
+- **`SaleLine`, `CashSale` and `CashPayment`:**
+  - a line keeps the name and price it was sold at, and is rounded per line;
+  - a sale needs at least one line, all in one currency;
+  - cash short of the total, or in another currency, is refused;
+  - change and the amount applied to the sale are recorded separately from
+    cash received.
+- **Out of scope for this slice:** paying in another currency, split
+  payments, storage and UI.
+- **Validation:** 16 new tests, first failing on unimplemented skeletons;
+  `dart run melos run verify` passed with 47 tests.
+
 ### Documentation and project structure
 
 - **New `handbook/product/` pages:**
@@ -27,6 +70,10 @@ SPDX-License-Identifier: MIT
   - one view writer at a time;
   - workbooks are template-first;
   - there's no destructive year-end clearing in the first release.
+- **Template packaging:** the generated `.xlsx` templates are committed and
+  bundled with the app. The app uploads them to the shop's Drive as Google
+  Sheets, so app contributors don't need Python (decision 0003,
+  `schema/PLAN.md`).
 - **Decision 0004:**
   - the repository layout and research archive;
   - CI verification on pull requests.
