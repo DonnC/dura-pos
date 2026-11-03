@@ -39,7 +39,7 @@
       "label": "Templates: check the sample adds up",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["check_samples.py", "sample/Dura POS"],
+      "args": ["-m", "dura_templates", "check"],
       "options": { "cwd": "${workspaceFolder}/backend/templates" },
       "problemMatcher": []
     },
@@ -47,7 +47,7 @@
       "label": "Templates: check Excel compatibility",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["check_excel.py", "sample/Dura POS"],
+      "args": ["-m", "dura_templates", "excel"],
       "options": { "cwd": "${workspaceFolder}/backend/templates" },
       "problemMatcher": []
     },
@@ -70,7 +70,7 @@
       "label": "Templates: regenerate sample shop",
       "type": "process",
       "command": "${command:python.interpreterPath}",
-      "args": ["generate_samples.py"],
+      "args": ["-m", "dura_templates", "sample"],
       "options": { "cwd": "${workspaceFolder}/backend/templates" },
       "problemMatcher": []
     },

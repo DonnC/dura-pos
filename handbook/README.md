@@ -50,6 +50,7 @@ Numbered, never rewritten: a later decision supersedes an earlier one.
 | [0004](decisions/0004-repository-layout-and-pr-checks.md) | This map, the research archive, and CI on pull requests |
 | [0005](decisions/0005-shop-hub-as-the-backend.md) | The shop's own Apps Script hub is the backend; phones pair by QR; the app reaches it through one server-agnostic port |
 | [0006](decisions/0006-backend-folder-and-uniform-conventions.md) | `backend/` holds the hub and templates; the hub is JavaScript; templates must be Excel-compatible; uniform conventions |
+| [0007](decisions/0007-generator-package-and-cli.md) | The workbook generator is the `dura_templates` package with a CLI; refactors proven by fingerprints |
 
 Use the [template](decisions/0000-template.md) for a new decision.
 
@@ -67,7 +68,7 @@ Use the [template](decisions/0000-template.md) for a new decision.
 |---|---|
 | [`../notes/`](../notes/README.md) | The numbered design notes: detailed reasoning on files, ZIMRA, payments, staff, sync and finance |
 | [`../research/`](../research/README.md) | The original AI research conversations; historical |
-| [`../backend/templates/`](../backend/templates/README.md) | The executable spec: the workbook generator, the sample shop, and the checks, including Excel compatibility |
+| [`../backend/templates/`](../backend/templates/README.md) | The executable spec: the `dura_templates` generator and CLI, the sample shop, and its checks |
 | [`../backend/hub/`](../backend/hub/README.md) | The Shop Hub (Apps Script, JavaScript) |
 | [`../data/`](../data/) | ZIMRA's HS code list |
 

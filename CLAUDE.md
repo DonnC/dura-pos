@@ -77,9 +77,9 @@ research. Also follow `AGENTS.md` and the skills in `.agents/skills/`.
 
 ## The executable spec
 
-`backend/templates/generate_samples.py` builds a complete sample shop
-(`backend/templates/sample/Dura POS/`): every file, tab, column, dropdown, colour rule, formula and chart the
-app must create. It still has note 12's layout until the records phase moves
+`backend/templates/dura_templates` (a package with a CLI) builds a complete
+sample shop (`backend/templates/sample/Dura POS/`): every file, tab, column,
+dropdown, colour rule, formula and chart the app must create. It still has note 12's layout until the records phase moves
 it to the handbook's (decision 0003). When the sheet layout changes, change
 the generator, regenerate, and run the checks. Templates must stay
 Excel-compatible (decision 0006):
@@ -87,9 +87,10 @@ Excel-compatible (decision 0006):
 ```
 cd backend/templates
 python -m pip install -r requirements.txt
-python generate_samples.py
-python check_samples.py "sample/Dura POS"
-python check_excel.py "sample/Dura POS"
+python -m dura_templates fingerprint --write before.json   # before a change
+python -m dura_templates sample
+python -m dura_templates verify
+python -m dura_templates fingerprint --compare before.json
 ```
 
 The Flutter workspace is in `client/`. Run `dart run melos run verify` there

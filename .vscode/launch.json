@@ -34,7 +34,8 @@
       "type": "debugpy",
       "request": "launch",
       "cwd": "${workspaceFolder}/backend/templates",
-      "program": "generate_samples.py",
+      "module": "dura_templates",
+      "args": ["sample", "--out", "${workspaceFolder}/artifacts/debug_sample"],
       "console": "integratedTerminal"
     }
   ]

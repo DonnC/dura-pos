@@ -1,5 +1,5 @@
 """Map every cross-tab formula reference to the heading it reads, to spot a formula pointing at the wrong column.
-Run: python3 check_formulas.py "Dura POS"
+Run: python -m dura_templates formulas
 """
 import re, sys
 from pathlib import Path

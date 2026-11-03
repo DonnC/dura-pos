@@ -146,13 +146,13 @@ Python 3.11 or later:
 ```sh
 cd backend/templates
 python -m pip install -r requirements.txt
-python generate_samples.py
-python check_samples.py "sample/Dura POS"
-python check_excel.py "sample/Dura POS"
+python -m dura_templates sample    # rebuild the sample shop
+python -m dura_templates verify    # it reconciles, and every formula works in Excel
 ```
 
-Every template must work in Google Sheets and in Excel 2019 or later;
-`check_excel.py` enforces that.
+Every template must work in Google Sheets and in Excel 2019 or later; the
+`excel` check enforces that. See [the generator's README](backend/templates/README.md)
+for all commands.
 
 ## Project structure
 

@@ -7,7 +7,7 @@
 """Fail if any workbook uses a function outside the Excel-compatible allowlist.
 
 Every template must calculate the same in Google Sheets and in Excel 2019 or
-later. Run: python check_excel.py "sample/Dura POS"
+later. Run: python -m dura_templates excel
 """
 
 import re
@@ -42,6 +42,7 @@ def formulas(workbook):
 
 
 def main(root):
+    """Checks every workbook under `root`; returns 1 if any formula is not allowed."""
     problems = []
     files = sorted(Path(root).rglob("*.xlsx"))
     for path in files:

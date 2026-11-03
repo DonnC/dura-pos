@@ -10,6 +10,43 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Changed: the workbook generator is a package with a CLI
+
+- **Decision 0007:** the 2,499-line `generate_samples.py` is now the
+  `dura_templates` package, in modules of under 500 lines each:
+  - `sample/`: the fictional shop and its simulation;
+  - `workbook/`: styles, tables, headings, dropdowns;
+  - `files/`: one module per file type;
+  - `checks/`.
+
+  Every public function has a docstring.
+- **One command line, `python -m dura_templates`:**
+  - `sample [--out]`;
+  - `check`, `excel` and `verify`;
+  - `formulas`;
+  - `fingerprint --write` and `--compare`.
+
+  CI, the VS Code tasks and the docs use it.
+- **New `fingerprint` command:** proves a code change is or isn't a layout
+  change, by hashing every file except each workbook's timestamp part. The
+  split was proven with it: all 102 generated files match the old script's
+  output.
+- **`backend/templates/README.md` rewritten:**
+  - why the generator works this way;
+  - every file and tab it creates;
+  - the simulated year's timeline;
+  - the archive and the test shop;
+  - the code map;
+  - how to change the layout safely.
+
+### Fixed
+
+- **`check` (formerly `check_samples.py`) exited with code 0 even when it
+  found problems.** It now exits 1, so CI can fail.
+- **`sample --out` refuses a folder** that holds files the generator didn't
+  make. It checks before simulating, so a mistake costs two seconds, not 90.
+- **`__pycache__/` folders** are now ignored by Git.
+
 ### Added: shop setup in the hub, and fewer quota calls
 
 - **New owner-only `setup.run` action (protocol updated).** It creates:

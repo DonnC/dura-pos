@@ -19,15 +19,15 @@ SPDX-License-Identifier: MIT
   `handbook/design/records-file-design.md`, with its file previews.
 - `backend/templates/README.md` (template-first, Excel compatibility, the contract) and
   `notes/04-data-files.md` (the current sample layout).
-- `backend/templates/generate_samples.py`, the executable spec, and its
-  checks, including `check_excel.py`. Use the spreadsheet
+- `backend/templates/dura_templates/`, the executable spec, run through its
+  CLI (`python -m dura_templates`). Use the spreadsheet
   skill, if one is available, when creating or editing workbooks.
 
 ## Rules
 
 - **Authoring:** Python authors the layout, formulas, validation, charts and
-  guidance. Grow `generate_samples.py` into modules; don't start a competing
-  generator. Keep layout out of Flutter.
+  guidance. Extend the `dura_templates` package (one module per kind of file);
+  don't start a competing generator. Keep layout out of Flutter.
 - **Template-only versus contract changes:** a wider column or a new owner
   notes column is a template change. A changed meaning is a contract change,
   with tests and a migration.
@@ -67,7 +67,8 @@ SPDX-License-Identifier: MIT
 
 - The generator, templates, contract and checks are updated together, and
   regenerated.
-- `check_samples.py` and `check_formulas.py` pass.
+- `python -m dura_templates verify` passes, and `fingerprint --compare` lists
+  only the files you meant to change.
 - Late events, month and year boundaries, a missing device, a duplicate batch
   and rebuilding a damaged view are covered, where they apply.
 - Design-only previews are labelled honestly.

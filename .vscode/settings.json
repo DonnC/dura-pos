@@ -20,8 +20,8 @@
     "editor.insertSpaces": true
   },
 
-  // backend/templates/: generate_samples.py predates the conventions and
-  // uses tabs, so Python isn't reformatted on save.
+  // backend/templates/: no Python formatter is configured yet, so nothing is
+  // reformatted on save.
   "[python]": {
     "editor.formatOnSave": false
   },

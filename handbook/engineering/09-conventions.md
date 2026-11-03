@@ -19,7 +19,7 @@ records why.
 |---|---|---|
 | `client/` | Dart and Flutter | `dart run melos run verify` |
 | `backend/hub/` | JavaScript on Apps Script V8 | `npm run verify` (type check, then tests) |
-| `backend/templates/` | Python 3 | `python check_samples.py "sample/Dura POS"` and `python check_excel.py "sample/Dura POS"` |
+| `backend/templates/` | Python 3 | `python -m dura_templates verify` |
 
 Each component has:
 
@@ -37,8 +37,8 @@ Each component has:
 |---|---|---|
 | Folders | lower case; `-` between words | `backend/hub`, `release-notes` |
 | Dart packages | `snake_case`, as Dart requires | `dura_core` |
-| Source files, every language | `snake_case` | `cash_sale.dart`, `check_excel.py`, `journal_put.js` |
-| Test files | `*_test.<ext>` | `money_test.dart`, `journal_put_test.js`, `check_excel_test.py` |
+| Source files, every language | `snake_case` | `cash_sale.dart`, `excel_compat.py`, `journal_put.js` |
+| Test files | `*_test.<ext>` | `money_test.dart`, `journal_put_test.js`, `excel_compat_test.py` |
 | Notes | `NN-topic.md` | `15-apps-script-route.md` |
 | Decisions | `NNNN-topic.md` | `0006-backend-folder-and-uniform-conventions.md` |
 | Workbook files and tabs | Plain English, for people | `My Shop`, `2026-11 November`, `Stock Movements` |
@@ -54,8 +54,8 @@ Each component has:
   JSON and lockfiles are exempt.
 - **Size:** at most 500 lines per handwritten source or test file, with one
   responsibility per file.
-  - The known exception is `backend/templates/generate_samples.py`. It's due
-    to be split.
+  - The old exception, `generate_samples.py`, is now the `dura_templates`
+    package (decision 0007).
 - **Line length:**
   - Dart is formatted to 80 columns;
   - other code stays near 100;
