@@ -26,15 +26,21 @@ var MONTH_NAMES_ = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 
 var TIME_ZONE_PATTERN_ = /^(UTC|[A-Z][A-Za-z_]+(\/[A-Za-z0-9_+-]+)+)$/;
 
+// The owner chooses the pricing currency; there is no default (note 12 §7).
+var PRICING_CURRENCIES_ = ['USD', 'ZWG', 'ZAR'];
+
 /** @param {any} body */
 function readSetupInput_(body) {
   var name = typeof body.name === 'string' ? body.name.trim() : '';
   var timeZone = typeof body.timeZone === 'string' ? body.timeZone : '';
-  if (name.length < 1 || name.length > 80 || !TIME_ZONE_PATTERN_.test(timeZone)) {
+  var currency = body.pricingCurrency;
+  if (name.length < 1 || name.length > 80 || !TIME_ZONE_PATTERN_.test(timeZone) ||
+      PRICING_CURRENCIES_.indexOf(currency) < 0) {
     throw hubError_('validation', 'bad_setup',
-      'Setup needs a shop name of 1 to 80 characters and a time zone like Africa/Harare.');
+      'Setup needs a shop name of 1 to 80 characters, a time zone like Africa/Harare, ' +
+      'and the pricing currency the owner chose: USD, ZWG or ZAR.');
   }
-  return { name: name, timeZone: timeZone };
+  return { name: name, timeZone: timeZone, pricingCurrency: currency };
 }
 
 /**
@@ -72,6 +78,7 @@ function runSetup_(request, services, device) {
         businessId: makeBusinessId_(input.name, day),
         businessName: input.name,
         timeZone: input.timeZone,
+        pricingCurrency: input.pricingCurrency,
       });
     }
     var timeZone = store.get('timeZone');
@@ -82,7 +89,7 @@ function runSetup_(request, services, device) {
     var needed = [];
     if (!store.get('file:myshop')) needed.push('myShop');
     if (!store.get(monthKey)) needed.push('month');
-    var templates = fetchTemplates_(services, needed);
+    var templates = fetchTemplates_(services.templates[store.get('pricingCurrency')], needed);
 
     var root = ensureFile_(services, 'file:root', function () { return createFolder_('Dura POS', null); });
     var shop = ensureFile_(services, 'file:business', function () {
@@ -103,6 +110,7 @@ function runSetup_(request, services, device) {
         businessId: store.get('businessId'),
         businessName: store.get('businessName'),
         timeZone: timeZone,
+        pricingCurrency: store.get('pricingCurrency'),
         files: { root: root, business: shop, journal: journal, myShop: myShop },
       });
     });

@@ -19,7 +19,11 @@ import runpy
 import sys
 from pathlib import Path
 
-from dura_templates.paths import DEFAULT_SAMPLE_ROOT
+import os
+import shutil
+import subprocess
+
+from dura_templates.paths import DEFAULT_SAMPLE_ROOT, DEFAULT_TEMPLATES_DIR
 
 
 def _sample(args: argparse.Namespace) -> int:
@@ -28,6 +32,37 @@ def _sample(args: argparse.Namespace) -> int:
     from dura_templates.paths import output_root
     summary = ", ".join(f"{n} {name}" for name, n in counts.items())
     print(f"Wrote {output_root()}: {summary}.")
+    return 0
+
+
+def _templates(args: argparse.Namespace) -> int:
+    """Builds every currency's templates, each in its own process (the pricing
+    currency is fixed per process), then writes the manifest.
+    """
+    from dura_templates.profile import CURRENCIES
+    out = Path(args.out).resolve() if args.out else DEFAULT_TEMPLATES_DIR
+    known = set(CURRENCIES) | {"manifest.json"}
+    if out.exists():
+        unknown = [p.name for p in out.iterdir() if p.name not in known]
+        if unknown:
+            raise SystemExit(f"Refusing to clear {out}: it holds {', '.join(sorted(unknown)[:3])}.")
+        shutil.rmtree(out)
+    for code in CURRENCIES:
+        env = {**os.environ, "DURA_PRICING_CURRENCY": code}
+        done = subprocess.run([sys.executable, "-m", "dura_templates", "template-one", "--out", str(out)], env=env)
+        if done.returncode:
+            return done.returncode
+    from dura_templates.files.templates import write_manifest
+    from dura_templates.workbook.styles import LAYOUT_VERSION
+    manifest = write_manifest(out, LAYOUT_VERSION)
+    print(f"Wrote templates for {', '.join(CURRENCIES)} and {manifest}.")
+    return 0
+
+
+def _template_one(args: argparse.Namespace) -> int:
+    from dura_templates.files.templates import build_templates
+    for path in build_templates(Path(args.out)):
+        print(f"  {path}")
     return 0
 
 
@@ -58,13 +93,21 @@ def _formulas(args: argparse.Namespace) -> int:
 
 
 def _verify(args: argparse.Namespace) -> int:
+    """The sample reconciles and is Excel-compatible, then the template tests
+    pass (including that the committed dist/ matches a fresh build).
+    """
     folder = Path(args.folder)
     for name, run in (("check", _check), ("excel", _excel)):
         code = run(argparse.Namespace(folder=folder))
         if code:
             print(f"{name} failed.")
             return code
-    return 0
+    from dura_templates.paths import TEMPLATES_DIR
+    tests = subprocess.run([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "*_test.py"],
+                           cwd=TEMPLATES_DIR)
+    if tests.returncode:
+        print("template tests failed.")
+    return tests.returncode
 
 
 def _fingerprint(args: argparse.Namespace) -> int:
@@ -99,6 +142,13 @@ def parser() -> argparse.ArgumentParser:
     sample = commands.add_parser("sample", help="build the fictional sample shop")
     sample.add_argument("--out", help="write to this folder instead of sample/Dura POS")
     sample.set_defaults(run=_sample)
+
+    templates = commands.add_parser("templates", help="build the clean templates for every pricing currency")
+    templates.add_argument("--out", help="write to this folder instead of dist/")
+    templates.set_defaults(run=_templates)
+    one = commands.add_parser("template-one", help=argparse.SUPPRESS)
+    one.add_argument("--out", required=True)
+    one.set_defaults(run=_template_one)
 
     for name, run, text in (
         ("check", _check, "check the sample's numbers reconcile across every file"),

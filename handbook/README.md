@@ -51,6 +51,7 @@ Numbered, never rewritten: a later decision supersedes an earlier one.
 | [0005](decisions/0005-shop-hub-as-the-backend.md) | The shop's own Apps Script hub is the backend; phones pair by QR; the app reaches it through one server-agnostic port |
 | [0006](decisions/0006-backend-folder-and-uniform-conventions.md) | `backend/` holds the hub and templates; the hub is JavaScript; templates must be Excel-compatible; uniform conventions |
 | [0007](decisions/0007-generator-package-and-cli.md) | The workbook generator is the `dura_templates` package with a CLI; refactors proven by fingerprints |
+| [0008](decisions/0008-clean-templates.md) | Clean templates, one set per pricing currency, byte-reproducible with a hash manifest; setup requires the pricing currency |
 
 Use the [template](decisions/0000-template.md) for a new decision.
 

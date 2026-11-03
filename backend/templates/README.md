@@ -10,8 +10,12 @@ SPDX-License-Identifier: MIT
 
 `dura_templates` is a Python package and command-line tool. It builds every
 workbook Dura creates in a shop's Google Drive, and checks that they're
-right. Today it builds the **sample shop**: a complete fictional business,
-with every file, tab, column, dropdown, colour rule, formula and chart.
+right. It builds two things from the same writers:
+
+- **the sample shop**, a complete fictional business with every file, tab,
+  column, dropdown, colour rule, formula and chart;
+- **the clean templates** the Shop Hub converts into a new shop's files, one
+  set per pricing currency, in `dist/`.
 The sample is the executable specification of the records. The app and the
 Shop Hub must produce files that match it.
 
@@ -25,16 +29,18 @@ python -m venv .venv
 .venv/Scripts/activate            # Windows; on macOS or Linux: source .venv/bin/activate
 python -m pip install -r requirements.txt
 
-python -m dura_templates sample   # build sample/Dura POS/ (about 90 seconds)
-python -m dura_templates verify   # the numbers reconcile, and formulas work in Excel
+python -m dura_templates sample      # build sample/Dura POS/ (about 90 seconds)
+python -m dura_templates templates   # build dist/ (a few seconds)
+python -m dura_templates verify      # the sample reconciles, formulas work in Excel, template tests pass
 ```
 
 | Command | What it does |
 |---|---|
 | `sample [--out DIR]` | Simulates the shop's trading and writes the sample to `sample/Dura POS/`, or `DIR`. It clears the output folder first, but refuses if the folder holds anything it didn't make |
+| `templates [--out DIR]` | Builds the clean templates for USD, ZWG and ZAR into `dist/`, or `DIR`, and writes `manifest.json` with each file's SHA-256 |
 | `check [FOLDER]` | Reads the workbooks back and checks they add up across sales, payments, stock, cash-ups, balances, fiscal numbering and HS codes. Exits 1 on any problem |
 | `excel [FOLDER]` | Fails if any formula uses a function outside the Excel-compatible allowlist |
-| `verify [FOLDER]` | `check`, then `excel`. This is what CI runs |
+| `verify [FOLDER]` | `check`, then `excel`, then the template tests in `tests/`. This is what CI runs |
 | `formulas [FOLDER]` | Prints which column heading each cross-tab formula reads, for review |
 | `fingerprint [FOLDER] --write F` or `--compare F` | Fingerprints every generated file, to prove a code change did or didn't change the output |
 
@@ -140,6 +146,43 @@ tab has realistic rows:
 
 **Rows appear in Drive only once their phone has synced,** as they would.
 
+## The clean templates
+
+```text
+dist/
+├── manifest.json        each template's file and SHA-256, per currency
+├── USD/
+│   ├── My Shop.xlsx
+│   └── Month.xlsx
+├── ZWG/  (the same two files)
+└── ZAR/  (the same two files)
+```
+
+- **One set per pricing currency.** Headings carry the currency, as in
+  `Price (ZWG)` and `USD per 1 ZWG`, and the owner chooses it, so each shop
+  gets the set for its own currency
+  ([decision 0008](../../handbook/decisions/0008-clean-templates.md)).
+- **What's in them:**
+  - every heading, formula, dropdown, colour rule, chart and Read Me the
+    sample has;
+  - starter Lists: common categories and units, `Any` location, standard
+    supplier terms;
+  - Settings defaults from note 10: daily rate, ask when a rate is missing,
+    owner-only rates, fiscalisation off;
+  - the three currencies, with the pricing one accepted;
+  - a cash method per currency.
+- **What's not in them:** rows, or anything from the sample shop. A test scans
+  every cell for the sample's names.
+- **What the hub fills in after converting:**
+  - My Shop's `Settings` identity rows and `Data year`;
+  - the month's `Summary!E1`, the month's first day. The Summary's 31 day
+    rows work out their dates from that cell, and stay blank for days the
+    month doesn't have.
+- **Reproducible.** Each file's zip times and creation stamps are fixed, so a
+  rebuild gives the same bytes, and `manifest.json`'s hashes stay valid. The
+  committed `dist/` must match a fresh build: a test checks it. Rebuild with
+  `templates` whenever the layout changes.
+
 ## The archive and the year end
 
 The sample follows the layout of note 12: live ledgers in `My Shop`, and a
@@ -168,7 +211,8 @@ month file:
 dura_templates/
 ├── cli.py, __main__.py   the commands
 ├── build.py              the order of work: simulate, then write each file
-├── paths.py              input data and the output root (--out)
+├── paths.py              input data and the output roots (--out)
+├── profile.py            the pricing currency the layout is built for (one per process)
 ├── money.py              exact two-decimal rounding and splitting
 ├── fingerprint.py        content hashes of generated files
 ├── sample/               the fictional shop and its simulated trading
@@ -189,15 +233,20 @@ dura_templates/
 │   └── lists.py          the Lists tab, dropdowns, date pickers, status colours
 ├── files/                one module per kind of file
 │   ├── month_file.py     the monthly workbook and its Summary
-│   ├── my_shop.py        My Shop
+│   ├── my_shop.py        My Shop's layout, for any content
+│   ├── my_shop_content.py  the sample's My Shop content
 │   ├── reports.py        My Shop's Months, Reports and Files tabs
 │   ├── archive.py        Ledger 2025
 │   ├── photos.py         placeholder photos
-│   └── test_shop.py      the (TEST) shop
+│   ├── test_shop.py      the (TEST) shop
+│   └── templates.py      clean templates: content, reproducible bytes, manifest
 └── checks/
     ├── sample_totals.py  everything reconciles (used by `check`)
     ├── excel_compat.py   the function allowlist (used by `excel`)
     └── formula_headings.py  the formula report (used by `formulas`)
+
+tests/templates_test.py   what a clean template must be (run by `verify`)
+dist/                     the committed clean templates
 ```
 
 **How data flows:**
@@ -243,14 +292,6 @@ Microsoft 365:
 - **Pivots and charts are extras,** never the only way to read a number.
 
 ## Templates and the compatibility contract
-
-**Clean templates** are the next step. For every workbook type, the generator
-will produce two versions from the same definitions:
-
-- **a clean template,** with headings, formulas, Lists, formatting, charts
-  and Read Me, but no rows or sample identity, which the hub converts for a
-  new shop or month;
-- **the sample,** labelled as fictional, for exploring and testing.
 
 **Packaging and versions:**
 

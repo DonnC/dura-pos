@@ -22,7 +22,9 @@ LIST_ROWS = 40  # room for the owner to add categories, units and terms
 
 
 def shop_lists() -> list[tuple[str, list[str], bool]]:
-    """Every repeated choice in the sheets, as (name, values, owner can add to it)."""
+    """The sample shop's choices behind every dropdown, as (name, values,
+    owner can add to it). Templates start from `starter_lists` instead.
+    """
     return [
         ("Yes/No", ["Yes", "No"], False),
         ("Category", sorted({p[2] for p in PRODUCTS}), True),
@@ -44,14 +46,26 @@ def shop_lists() -> list[tuple[str, list[str], bool]]:
     ]
 
 
-def write_lists(wb: Workbook) -> dict[str, str]:
+def starter_lists() -> list[tuple[str, list[str], bool]]:
+    """The choices a new shop starts with: the same lists, without the sample's
+    locations or supplier terms. Categories and units are common starters the
+    owner can extend; tax names are replaced from ZIMRA once fiscalised.
+    """
+    starters = {
+        "Usual location": ["Any"],
+        "Supplier terms": ["Cash on delivery", "Cash on purchase", "7 days", "14 days", "30 days"],
+    }
+    return [(name, starters.get(name, values), editable) for name, values, editable in shop_lists()]
+
+
+def write_lists(wb: Workbook, lists: list[tuple[str, list[str], bool]] | None = None) -> dict[str, str]:
     """Writes the Lists tab: one column per dropdown, with room to add values.
     Returns each list's range for `dropdown`.
     """
     ws = wb.create_sheet("Lists")
     ws.sheet_properties.tabColor = KINDS["owner"][0]
     ranges = {}
-    for c, (name, values, editable) in enumerate(shop_lists(), start=1):
+    for c, (name, values, editable) in enumerate(lists or shop_lists(), start=1):
         L = get_column_letter(c)
         cell = ws.cell(row=1, column=c, value=name)
         cell.font = BOLD

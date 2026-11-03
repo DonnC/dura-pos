@@ -19,6 +19,7 @@ TEMPLATES_DIR = Path(__file__).resolve().parents[1]  # backend/templates
 REPO_DIR = TEMPLATES_DIR.parents[1]
 HS_CODES_CSV = REPO_DIR / "data" / "zimra_hs_codes.csv"
 DEFAULT_SAMPLE_ROOT = TEMPLATES_DIR / "sample" / "Dura POS"
+DEFAULT_TEMPLATES_DIR = TEMPLATES_DIR / "dist"  # clean templates, one folder per pricing currency
 
 _output_root = DEFAULT_SAMPLE_ROOT
 

@@ -16,7 +16,8 @@ from openpyxl.chart import BarChart, Reference
 from openpyxl.formatting.rule import ColorScaleRule
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
-from dura_templates.sample.business import BUSINESS, PC, month_name
+from dura_templates.profile import PC
+from dura_templates.sample.business import BUSINESS, month_name
 from dura_templates.sample.period import START, TODAY
 from dura_templates.sample.records import items_m, pays_m, sales_m
 from dura_templates.workbook.headers import H_LEDGER, H_MONEY, H_MONTHS, H_PURCHASES
@@ -50,19 +51,20 @@ def month_rows(year: int) -> list[list]:
     return out
 
 
-def write_months_and_reports(wb: Workbook, sled: str, mled: str):
+def write_months_and_reports(wb: Workbook, sled: str, mled: str, months: list[list] | None = None,
+                             title: str | None = None):
     """Adds My Shop's Months tab (one row per month, written when the month
     closes) and the Reports tab (year to date, by formula from Settings'
     Data year).
     """
-    rows = month_rows(2026)
+    rows = month_rows(2026) if months is None else months
     ws = add_table(wb, "Months", H_MONTHS, rows, kind="dura")
     colour_status(ws, H_MONTHS, "Status", len(rows) + 1, {"To date": INFO, "Closed": OFF})
     mark_formula_tab(ws)
 
     ws = wb.create_sheet("Reports")
     mark_formula_tab(ws)
-    ws["A1"] = f"{BUSINESS['Business name']}: financial reports"
+    ws["A1"] = f"{title}: financial reports" if title else "Financial reports"
     ws["A1"].font = Font(bold=True, size=15, color="1F3864")
     ws["A2"] = ("For running the business and for your accountant. Profit is in the pricing currency, each sale at its own "
                 "rate; VAT and cash are per currency, never added together. Red numbers are negative.")
@@ -209,10 +211,21 @@ def fake_id(name: str) -> str:
     return "1" + hashlib.sha1(name.encode()).hexdigest()[:32]
 
 
-def write_files_tab(wb: Workbook):
+def write_files_tab(wb: Workbook, rows: list[list] | None = None):
     """Adds the Files tab: every file and folder Dura made, with its ID, period
     and layout version. Phones and the hub find files here, never by name.
     """
+    if rows is None:
+        rows = files_rows()
+    H_FILES = [("File or folder", None, 26), ("Kind", None, 14), ("Period", None, 10), ("Where", None, 34),
+               ("File ID", None, 36), ("Layout version", "int", 8), ("Created on", "date", 12), ("Created by", None, 20)]
+    ws = add_table(wb, "Files", H_FILES, rows, kind="dura")
+    colour_status(ws, H_FILES, "Kind", len(rows) + 1, {"Test": "F4B183", "Main": GOOD})
+    mark_formula_tab(ws)
+
+
+def files_rows() -> list[list]:
+    """The sample shop's Files rows: every file and folder, as the hub records them."""
     biz = BUSINESS["Business name"]
     rows = [["My Shop", "Main file", "Permanent", f"Dura POS/{biz}/", fake_id("myshop"), LAYOUT_VERSION, START, "P1 (setup)"]]
     for ym in sorted(set(sales_m) | {"2026-11"}):
@@ -228,8 +241,4 @@ def write_files_tab(wb: Workbook):
                      START if y == 2025 else date(2025, 12, 1), "P1 (owner's phone)"])
     rows.append([f"{biz} (TEST)", "Test shop folder", "Test mode", "Dura POS/", fake_id("test"), LAYOUT_VERSION,
                  date(2026, 10, 27), "P4 (test mode)"])
-    H_FILES = [("File or folder", None, 26), ("Kind", None, 14), ("Period", None, 10), ("Where", None, 34),
-               ("File ID", None, 36), ("Layout version", "int", 8), ("Created on", "date", 12), ("Created by", None, 20)]
-    ws = add_table(wb, "Files", H_FILES, rows, kind="dura")
-    colour_status(ws, H_FILES, "Kind", len(rows) + 1, {"Test": "F4B183", "Main": GOOD})
-    mark_formula_tab(ws)
+    return rows

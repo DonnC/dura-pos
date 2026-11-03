@@ -67,6 +67,14 @@
       "problemMatcher": []
     },
     {
+      "label": "Templates: build clean templates",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "dura_templates", "templates"],
+      "options": { "cwd": "${workspaceFolder}/backend/templates" },
+      "problemMatcher": []
+    },
+    {
       "label": "Templates: regenerate sample shop",
       "type": "process",
       "command": "${command:python.interpreterPath}",

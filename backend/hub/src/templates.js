@@ -11,14 +11,14 @@ var XLSX_MIME_ = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sh
 /**
  * Downloads the named templates in one parallel fetchAll and checks each
  * against its pinned SHA-256 before anything is created from it.
- * @param {any} services
- * @param {string[]} names keys of services.templates, e.g. ['myShop', 'month']
+ * @param {any} set one pricing currency's templates from the manifest
+ * @param {string[]} names keys of `set`, e.g. ['myShop', 'month']
  * @returns {Object<string, GoogleAppsScript.Base.Blob>}
  */
-function fetchTemplates_(services, names) {
+function fetchTemplates_(set, names) {
   if (names.length === 0) return {};
   var entries = names.map(function (name) {
-    var entry = services.templates[name];
+    var entry = set && set[name];
     if (!entry || !entry.url || !PATTERNS_.hash.test(entry.sha256)) {
       throw hubError_('retryable_unavailable', 'template_unavailable',
         'This hub version has no released template for ' + name + '.');

@@ -1,0 +1,35 @@
+{
+  "layoutVersion": 3,
+  "templates": {
+    "USD": {
+      "myShop": {
+        "file": "USD/My Shop.xlsx",
+        "sha256": "7b5951419de8880a83816b83bacba8b8bb86e2cb606877ddf0d6121f809c9502"
+      },
+      "month": {
+        "file": "USD/Month.xlsx",
+        "sha256": "268fee21c2f7486c272dcbe6571d2005a6393a65b7b99fee7af18438c6673bb6"
+      }
+    },
+    "ZWG": {
+      "myShop": {
+        "file": "ZWG/My Shop.xlsx",
+        "sha256": "64bafca55d129f5a946a3acfe96d2c9e2f8c03fdca1023e2ee1e23b9aff5e0ff"
+      },
+      "month": {
+        "file": "ZWG/Month.xlsx",
+        "sha256": "c8b7585e5bd1b3c808190ab65c1bb7863e6c2aa555fcc6991169b5ba22c2b1a6"
+      }
+    },
+    "ZAR": {
+      "myShop": {
+        "file": "ZAR/My Shop.xlsx",
+        "sha256": "176bc1d57228849d8d846ac37118eaaea16603be059e88026107b7d6407a3eba"
+      },
+      "month": {
+        "file": "ZAR/Month.xlsx",
+        "sha256": "54147cbc98f7059c89f19dff1dc7b729a0817f40d9caf0c61fb16124bdf3298e"
+      }
+    }
+  }
+}

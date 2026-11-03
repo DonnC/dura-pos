@@ -12,7 +12,8 @@ from __future__ import annotations
 
 from openpyxl import Workbook
 from dura_templates.files.reports import month_rows
-from dura_templates.sample.business import BUSINESS, PC, business_dir
+from dura_templates.profile import PC
+from dura_templates.sample.business import BUSINESS, business_dir
 from dura_templates.sample.records import closing_2025, counts_y, money_ledger_y, purchases_y, rates_rows_y, stock_ledger_y
 from dura_templates.workbook.headers import H_COUNTS, H_LEDGER, H_MONEY, H_MONTHS, H_PURCHASES, H_RATES
 from dura_templates.workbook.tables import add_table, readme

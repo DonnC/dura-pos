@@ -16,7 +16,8 @@ from openpyxl import Workbook
 from openpyxl.chart import BarChart, LineChart, Reference
 from openpyxl.formatting.rule import ColorScaleRule
 from openpyxl.utils import get_column_letter
-from dura_templates.sample.business import BUSINESS, PC, PROD, business_dir, month_name
+from dura_templates.profile import PC
+from dura_templates.sample.business import BUSINESS, PROD, business_dir, month_name
 from dura_templates.sample.period import TODAY
 from dura_templates.sample.records import activity_y, cashups_m, fdays_m, items_m, pays_m, quotes_m, sales_m
 from dura_templates.workbook.headers import H_ACTIVITY, H_CASHUPS, H_FDAYS, H_ITEMS, H_PAYS, H_QUOTES, H_SALES
@@ -25,13 +26,23 @@ from dura_templates.workbook.styles import BAD, BOLD, FMT, GOOD, INFO, OFF, TITL
 from dura_templates.workbook.tables import add_table, col, mark_formula_tab, readme
 
 
-def month_summary(wb: Workbook, ym: str, data: dict):
+def month_summary(wb: Workbook, ym: str, data: dict, template: bool = False):
     """The month's Summary tab: totals by day, location, phone, seller, payment
     method and product, profit and VAT, and charts, all as formulas.
+
+    `template=True` makes it period-neutral: the month comes from cell E1,
+    which the hub writes (the month's first day), and the 31 day rows are
+    formulas that stay blank for days the month doesn't have.
     """
     ws = wb.create_sheet("Summary")
     mark_formula_tab(ws)
-    ws["A1"] = f"Summary of {datetime.strptime(ym, '%Y-%m'):%B %Y}"
+    if template:
+        ws["A1"] = "Summary of the month"
+        ws["D1"] = "Month (its first day)"
+        ws["D1"].font = BOLD
+        ws["E1"].number_format = FMT["date"]
+    else:
+        ws["A1"] = f"Summary of {datetime.strptime(ym, '%Y-%m'):%B %Y}"
     ws["A1"].font = TITLE_FONT
     ws["A2"] = "Worked out by formulas from the other tabs in this file. Totals are net of returns."
     S = {h: col(H_SALES, h) for h in ("Date", "Type", "Currency", "Total", "VAT", "Phone", "Location", "Seller")}
@@ -47,8 +58,11 @@ def month_summary(wb: Workbook, ym: str, data: dict):
     elif last > TODAY:
         last = TODAY
     r0 = r + 1
+    if template:
+        _template_days(ws, r0, S)
+        r += 31
     d2 = first
-    while d2 <= last:
+    while d2 <= last and not template:
         r += 1
         ws.cell(row=r, column=1, value=d2).number_format = FMT["date"]
         ws.cell(row=r, column=2, value=f'=COUNTIFS(Sales!${S["Date"]}:${S["Date"]},$A{r},Sales!${S["Type"]}:${S["Type"]},"<>Return")')
@@ -140,7 +154,7 @@ def month_summary(wb: Workbook, ym: str, data: dict):
     ws.conditional_formatting.add(f"B{r + 0}:D{r + 0}", ColorScaleRule(start_type="num", start_value=-5, start_color="F8696B",
                                                                      mid_type="num", mid_value=0, mid_color="FFFFFF",
                                                                      end_type="num", end_value=5, end_color="FFEB84"))
-    if not data["sales"]:
+    if not data["sales"] and not template:
         ws.column_dimensions["A"].width = 44
         return
     cats = Reference(ws, min_col=1, min_row=r0, max_row=r_last)
@@ -154,19 +168,36 @@ def month_summary(wb: Workbook, ym: str, data: dict):
         ch.legend = None
         ch.x_axis.number_format = "d"
         ws.add_chart(ch, f"K{4 + i * 15}")
-    ch = BarChart()
-    ch.type = "bar"
-    ch.title = "Items sold this month"
-    ch.height, ch.width = 12, 18
-    ch.add_data(Reference(ws, min_col=3, min_row=r_prod, max_row=r_prod_end), titles_from_data=True)
-    ch.set_categories(Reference(ws, min_col=2, min_row=r_prod + 1, max_row=r_prod_end))
-    ch.legend = None
-    ws.add_chart(ch, "K34")
+    if not template:  # a template has no product rows yet to chart
+        ch = BarChart()
+        ch.type = "bar"
+        ch.title = "Items sold this month"
+        ch.height, ch.width = 12, 18
+        ch.add_data(Reference(ws, min_col=3, min_row=r_prod, max_row=r_prod_end), titles_from_data=True)
+        ch.set_categories(Reference(ws, min_col=2, min_row=r_prod + 1, max_row=r_prod_end))
+        ch.legend = None
+        ws.add_chart(ch, "K34")
     ws.column_dimensions["A"].width = 44
     ws.column_dimensions["B"].width = 22
     for c in "CDEFGHI":
         ws.column_dimensions[c].width = 12
     ws.freeze_panes = "A5"
+
+
+def _template_days(ws, r0: int, S: dict[str, str]) -> None:
+    """31 day rows driven by the month in E1. Every formula is guarded, so a
+    blank day never makes COUNTIFS count the empty cells of a whole column.
+    """
+    for k in range(31):
+        r = r0 + k
+        day = f'IF(MONTH($E$1+{k})=MONTH($E$1),$E$1+{k},"")'
+        ws.cell(row=r, column=1, value=f'=IF($E$1="","",{day})').number_format = FMT["date"]
+        guard = f'IF($A{r}="",""'
+        ws.cell(row=r, column=2, value=f'={guard},COUNTIFS(Sales!${S["Date"]}:${S["Date"]},$A{r},Sales!${S["Type"]}:${S["Type"]},"<>Return"))')
+        ws.cell(row=r, column=3, value=f'={guard},COUNTIFS(Sales!${S["Date"]}:${S["Date"]},$A{r},Sales!${S["Type"]}:${S["Type"]},"Return"))')
+        for c, cur in enumerate(("USD", "ZWG", "ZAR"), start=4):
+            ws.cell(row=r, column=c, value=f'={guard},SUMIFS(Sales!${S["Total"]}:${S["Total"]},Sales!${S["Date"]}:${S["Date"]},$A{r},Sales!${S["Currency"]}:${S["Currency"]},"{cur}"))').number_format = FMT["money"]
+            ws.cell(row=r, column=c + 3, value=f'={guard},SUMIFS(Sales!${S["VAT"]}:${S["VAT"]},Sales!${S["Date"]}:${S["Date"]},$A{r},Sales!${S["Currency"]}:${S["Currency"]},"{cur}"))').number_format = FMT["money"]
 
 
 def month_data(ym: str) -> dict:
@@ -176,7 +207,8 @@ def month_data(ym: str) -> dict:
             "activity": [r for r in activity_y[int(ym[:4])] if f"{r[1]:%Y-%m}" == ym]}
 
 
-def write_month(ym: str, data: dict | None = None, folder: Path | None = None, test: bool = False):
+def write_month(ym: str, data: dict | None = None, folder: Path | None = None, test: bool = False,
+                template_path: Path | None = None):
     """Writes one month file into its year folder. Empty `data` gives a ready-made
     month, as the hub makes it; `test=True` labels it as the test shop.
     """
@@ -214,15 +246,17 @@ def write_month(ym: str, data: dict | None = None, folder: Path | None = None, t
         highlight(ws, f"A2:{get_column_letter(len(H_QUOTES))}{n}", f'${Q}2="{status}"', colour)
     ws = add_table(wb, "Activity", H_ACTIVITY, data["activity"])
     colour_activity(ws, len(data["activity"]) + 1)
-    month_summary(wb, ym, data)
-    month = f"{datetime.strptime(ym, '%Y-%m'):%B %Y}"
-    readme(wb, f"{month}{' (TEST)' if test else ''}: {BUSINESS['Business name']}", [
+    template = template_path is not None
+    month_summary(wb, ym, data, template=template)
+    month = "one month" if template else f"{datetime.strptime(ym, '%Y-%m'):%B %Y}"
+    title = "Month file" if template else f"{month}{' (TEST)' if test else ''}: {BUSINESS['Business name']}"
+    readme(wb, title, [
         *(["TEST MODE: practice data, kept apart from the live shop. Every ID starts with T-. Nothing here is a real sale."] if test else []),
         f"Everything that happened in {month}, from every phone: sales, money, cash-ups, fiscal days and who did what.",
         "Phones add rows here; nobody needs to type in this file.",
         "Rows appear once their phone has synced. A sale is filed in the month it happened, even if it synced later.",
         "Money is never added across currencies: USD, ZWG and ZAR always have their own columns.",
-        "SAMPLE DATA: the shop, people, tax IDs, rates and references are fictional.",
+        *([] if template else ["SAMPLE DATA: the shop, people, tax IDs, rates and references are fictional."]),
     ], tabs=[
         ("Sales", "phones", "One row per sale, invoice or return. Returns are pink and have negative totals; invoices on account are blue."),
         ("Items Sold", "phones", "One row per item line, at the price on the day."),
@@ -241,7 +275,7 @@ def write_month(ym: str, data: dict | None = None, folder: Path | None = None, t
         ("Who gave a refund, and who approved it?", "Activity: filter Action = Refund"),
         ("Was a receipt accepted by ZIMRA?", "Sales: Fiscal status and Verification code"),
     ])
-    path = folder / y / f"{month_name(ym)}.xlsx"
+    path = template_path or folder / y / f"{month_name(ym)}.xlsx"
     path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(path)
 

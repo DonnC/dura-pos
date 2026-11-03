@@ -14,9 +14,10 @@ from collections import defaultdict
 from datetime import date, time
 from openpyxl import Workbook
 from dura_templates.files.month_file import write_month
-from dura_templates.files.my_shop import product_rows
+from dura_templates.files.my_shop_content import product_rows
 from dura_templates.money import q2
-from dura_templates.sample.business import BUSINESS, PC, PROD, active_product, price_cost, test_dir
+from dura_templates.profile import PC
+from dura_templates.sample.business import BUSINESS, PROD, active_product, price_cost, test_dir
 from dura_templates.sample.records import items_m, pays_m, sales_m
 from dura_templates.sample.sales import vcode
 from dura_templates.sample.stock import stock

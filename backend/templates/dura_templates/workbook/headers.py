@@ -10,7 +10,7 @@ columns by heading, never by letter, so reordering here is safe.
 
 from __future__ import annotations
 
-from dura_templates.sample.business import PC
+from dura_templates.profile import OTHER_CURRENCIES, PC
 
 
 H_SALES = [("Sale ID", None, 18), ("Date", "date", 11), ("Time", "time", 7), ("Phone", None, 7), ("Location", None, 9),
@@ -62,8 +62,8 @@ H_COUNTS = [("Count ID", None, 20), ("Date", "date", 11), ("Location", None, 9),
 H_CALLBACKS = [("Received at", "datetime", 16), ("Provider", None, 9), ("Reference", None, 12), ("Amount", "money", 10),
                ("Currency", None, 8), ("Provider status", None, 9), ("Signature valid", None, 9),
                ("Matched sale", None, 18), ("Result", None, 30), ("Note", None, 30)]
-H_RATES = [("Date", "date", 12), ("Time", "time", 7), ("Applies", None, 9), (f"ZWG per 1 {PC}", "rate", 10),
-           (f"ZAR per 1 {PC}", "rate", 10), ("Set by", None, 13),
+H_RATES = [("Date", "date", 12), ("Time", "time", 7), ("Applies", None, 9),
+           *((f"{other} per 1 {PC}", "rate", 10) for other in OTHER_CURRENCIES), ("Set by", None, 13),
            ("Source", None, 26), ("Note", None, 20)]
 H_PRODUCTS = [("Product ID", None, 9), ("Name", None, 24), ("Category", None, 11), ("Unit", None, 7),
               ("Barcode", None, 14), ("Photo", None, 22), (f"Price ({PC})", "money", 9), (f"Cost ({PC})", "money", 9), ("Tax", None, 18), ("HS code", None, 10),

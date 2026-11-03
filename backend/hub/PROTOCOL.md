@@ -187,7 +187,7 @@ body: {
 Builds the shop's files in its Google Drive, from the released templates.
 
 ```json
-body: {"name": "Chipo's Corner Shop", "timeZone": "Africa/Harare"}
+body: {"name": "Chipo's Corner Shop", "timeZone": "Africa/Harare", "pricingCurrency": "USD"}
 → result: {
   "status": "ready",
   "business": "chipos-corner-shop-261103-a1b2",
@@ -206,13 +206,16 @@ body: {"name": "Chipo's Corner Shop", "timeZone": "Africa/Harare"}
     zone.
 - **Safe to repeat.** A second call creates nothing and returns the same
   result. A call that failed part-way resumes from the first missing file.
+- **The pricing currency** is the owner's choice (USD, ZWG or ZAR), with no
+  default. It picks which template set is used, since headings carry it.
 - **Templates come from the backend's pinned release.** Each is checked
   against its SHA-256 before use:
   - a mismatch is `integrity_conflict` / `template_mismatch`;
   - a download failure is `retryable_unavailable` / `template_unavailable`.
 - **Errors:**
-  - a name outside 1 to 80 characters, or a time zone not in the form
-    `Area/City`, is `validation` / `bad_setup`;
+  - a name outside 1 to 80 characters, a time zone not in the form
+    `Area/City`, or a missing or unknown pricing currency, is `validation` /
+    `bad_setup`;
   - a Drive failure is `retryable_unavailable` / `storage_unavailable`.
 - **Before setup,** `journal.put` answers `retryable_unavailable` /
   `not_set_up`. The phone keeps its batches until setup is done.

@@ -131,8 +131,11 @@ backend/hub/
 - **If setup fails between creating a file and recording its ID,** the next
   run creates that one file again. The earlier copy is left behind; nothing
   else is duplicated.
-- **The template manifest is empty** until the first templates release, so
-  `setup.run` answers `template_unavailable` on a real install until then.
+- **The template manifest's URLs are empty** until templates are published in
+  a release, so `setup.run` answers `template_unavailable` on a real install
+  until then. The hashes come from `backend/templates/dist/manifest.json`.
+- **After converting, the hub doesn't yet write** My Shop's identity rows and
+  `Data year`, or the month's `Summary!E1` (decision 0008).
 
 ## Keeping inside Google's limits
 

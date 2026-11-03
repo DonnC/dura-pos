@@ -10,6 +10,40 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: clean templates, one set per pricing currency
+
+- **Decision 0008:** `python -m dura_templates templates` builds
+  `dist/<USD|ZWG|ZAR>/My Shop.xlsx` and `Month.xlsx`, plus `manifest.json`
+  with each file's SHA-256.
+- **What a template contains:**
+  - every heading, formula, dropdown, colour rule, chart and Read Me;
+  - starter Lists and note 10's Settings defaults;
+  - the pricing currency accepted;
+  - no rows, and no sample identity.
+- **The same writers build the sample and the templates:**
+  - `My Shop`'s writer lays out content it's given;
+  - the month file has a template mode, whose Summary takes its month from
+    `Summary!E1` with guarded day formulas.
+- **Headings follow the pricing currency,** e.g. `Price (ZWG)` and `USD per 1
+  ZWG`. The currency is set per process from `DURA_PRICING_CURRENCY`.
+- **Templates are byte-reproducible:** zip times and creation stamps are
+  fixed. `dist/` is committed, and Git never converts it.
+- **10 template tests,** run by `verify`, cover:
+  - one set per currency, and the manifest's hashes;
+  - identical rebuilds;
+  - no sample names in any cell;
+  - empty data tabs, currency headings, dropdowns;
+  - the month's period cell;
+  - Excel compatibility;
+  - the committed `dist/` matching a fresh build.
+
+  They were written after the code. Two mutations confirmed they fail when
+  they should.
+- **Hub:** `setup.run` now requires `pricingCurrency` (USD, ZWG or ZAR, with
+  no default), uses that currency's templates, and records the currency in
+  `business.json`. The template manifest is per currency. 53 hub tests pass.
+- **The sample is unchanged:** all 102 files still match by fingerprint.
+
 ### Changed: the workbook generator is a package with a CLI
 
 - **Decision 0007:** the 2,499-line `generate_samples.py` is now the

@@ -91,6 +91,7 @@ python -m dura_templates fingerprint --write before.json   # before a change
 python -m dura_templates sample
 python -m dura_templates verify
 python -m dura_templates fingerprint --compare before.json
+python -m dura_templates templates                         # rebuild dist/ if the layout changed
 ```
 
 The Flutter workspace is in `client/`. Run `dart run melos run verify` there

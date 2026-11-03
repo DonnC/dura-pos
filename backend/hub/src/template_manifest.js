@@ -6,11 +6,13 @@
 
 // @ts-check
 
-// The workbook templates this hub version creates files from: each pinned to
-// a Dura release URL and its SHA-256. A release fills these in; a template
-// whose bytes don't match its hash is never used. Empty means not released.
+// The workbook templates this hub version creates files from, per pricing
+// currency (headings carry it). Each is pinned to a Dura release URL and its
+// SHA-256 from backend/templates/dist/manifest.json; a template whose bytes
+// don't match is never used. Empty URLs mean not released yet.
 
 var TEMPLATE_MANIFEST_ = {
-  myShop: { url: '', sha256: '' },
-  month: { url: '', sha256: '' },
+  USD: { myShop: { url: '', sha256: '' }, month: { url: '', sha256: '' } },
+  ZWG: { myShop: { url: '', sha256: '' }, month: { url: '', sha256: '' } },
+  ZAR: { myShop: { url: '', sha256: '' }, month: { url: '', sha256: '' } },
 };
