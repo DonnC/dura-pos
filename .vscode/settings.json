@@ -1,0 +1,55 @@
+{
+  // Shared editor settings for every contributor. Personal preferences
+  // belong in your user settings, not here.
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.rulers": [100],
+
+  // client/: Dart formats to 80 columns (handbook/engineering/07).
+  "dart.lineLength": 80,
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.rulers": [80],
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+
+  // backend/hub/: plain JavaScript, type-checked through backend/hub/tsconfig.json.
+  "[javascript]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+
+  // backend/templates/: generate_samples.py predates the conventions and
+  // uses tabs, so Python isn't reformatted on save.
+  "[python]": {
+    "editor.formatOnSave": false
+  },
+
+  // Markdown prose wraps near 80 columns (handbook/engineering/09).
+  "[markdown]": {
+    "editor.rulers": [80],
+    "files.trimTrailingWhitespace": false
+  },
+
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/node_modules": true,
+    "**/__pycache__": true
+  },
+  "search.exclude": {
+    "**/build": true,
+    "**/.dart_tool": true,
+    "**/node_modules": true,
+    "**/*.lock": true,
+    "**/package-lock.json": true,
+    "artifacts": true,
+    "**/*.g.dart": true
+  },
+  "files.watcherExclude": {
+    "**/build/**": true,
+    "**/.dart_tool/**": true,
+    "**/node_modules/**": true,
+    "artifacts/**": true
+  }
+}

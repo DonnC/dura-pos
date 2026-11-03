@@ -59,6 +59,21 @@ dart run melos bootstrap
 dart run melos run verify
 ```
 
+For the hub, run `npm ci` in `backend/hub`. For the templates, create a
+virtual environment in `backend/templates` (`python -m venv .venv`), then run
+`python -m pip install -r requirements.txt` there.
+
+**In VS Code:**
+
+- Open the repository root, and install the recommended extensions when
+  asked.
+- **Terminal → Run Task** has each component's verify command, plus
+  *Verify everything*.
+- The Run and Debug panel can start the app, debug the hub's tests, or debug
+  the generator.
+- Python tasks use the interpreter you select with *Python: Select
+  Interpreter*.
+
 Use the Flutter version in `client/.flutter-version`. All Flutter and Melos
 commands run from `client/`. The hub and the workbook generator live in
 `backend/`; each component's README says how to run and verify it, and the

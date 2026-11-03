@@ -1,0 +1,85 @@
+{
+  // Each component's verify command (handbook/engineering/09-conventions.md).
+  // Run one from Terminal > Run Task, or all with "Verify everything".
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Client: verify",
+      "type": "shell",
+      "command": "dart run melos run verify",
+      "options": { "cwd": "${workspaceFolder}/client" },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Client: regenerate Drift code",
+      "type": "shell",
+      "command": "dart run melos run generate",
+      "options": { "cwd": "${workspaceFolder}/client" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Hub: verify",
+      "type": "shell",
+      "command": "npm run verify",
+      "options": { "cwd": "${workspaceFolder}/backend/hub" },
+      "group": "test",
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "Hub: install tools",
+      "type": "shell",
+      "command": "npm ci",
+      "options": { "cwd": "${workspaceFolder}/backend/hub" },
+      "problemMatcher": []
+    },
+    {
+      // Python tasks use the interpreter chosen in the Python extension, e.g.
+      // backend/templates/.venv after `python -m venv .venv`.
+      "label": "Templates: check the sample adds up",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["check_samples.py", "sample/Dura POS"],
+      "options": { "cwd": "${workspaceFolder}/backend/templates" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Templates: check Excel compatibility",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["check_excel.py", "sample/Dura POS"],
+      "options": { "cwd": "${workspaceFolder}/backend/templates" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Templates: check",
+      "dependsOn": ["Templates: check the sample adds up", "Templates: check Excel compatibility"],
+      "dependsOrder": "sequence",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Templates: install requirements",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["-m", "pip", "install", "-r", "requirements.txt"],
+      "options": { "cwd": "${workspaceFolder}/backend/templates" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Templates: regenerate sample shop",
+      "type": "process",
+      "command": "${command:python.interpreterPath}",
+      "args": ["generate_samples.py"],
+      "options": { "cwd": "${workspaceFolder}/backend/templates" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Verify everything",
+      "dependsOn": ["Client: verify", "Hub: verify", "Templates: check"],
+      "dependsOrder": "sequence",
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    }
+  ]
+}

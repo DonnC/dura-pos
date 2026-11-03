@@ -10,6 +10,19 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: VS Code workspace setup
+
+- **`.vscode/`:**
+  - recommended extensions: Dart, Flutter, Python, debugpy, YAML, GitHub
+    Actions;
+  - shared editor settings that follow the conventions: Dart formatted to
+    80 columns on save, no reformatting of the tab-indented generator,
+    build output hidden;
+  - tasks for each component's verify command, plus *Verify everything*;
+  - debug configurations for the app, the hub's tests and the generator.
+- **Python virtual environments** are ignored by Git.
+- **CONTRIBUTING** explains the setup.
+
 ### Added: the Shop Hub's first behaviours
 
 - **`backend/hub/PROTOCOL.md`, version 1:**
