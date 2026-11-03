@@ -86,7 +86,7 @@ and the code.
 | Capability | Status | Phase | Design |
 |---|---|---|---|
 | ZIMRA fiscalisation through fzimra on the phone (a device per phone, fiscal days, credit notes). Each business passes ZIMRA's tests before moving from test to production | Designed; later | 5 | [`notes/02`](../../notes/02-questions-for-zimra.md), [`notes/05`](../../notes/05-archiving-and-security.md) |
-| Shop Hub (Apps Script) as the backend: install from the app, QR pairing, signed requests, self-update | Partly built: signed requests, pairing, removing a phone and journal acceptance, with tests; not deployed. Install, views and update need the spikes in note 15 | 3, 6 | [`notes/15`](../../notes/15-apps-script-route.md), [decision 0005](../decisions/0005-shop-hub-as-the-backend.md) |
+| Shop Hub (Apps Script) as the backend: install from the app, QR pairing, signed requests, self-update | Partly built: signed requests, pairing, removing a phone, journal acceptance and shop setup from templates, with tests; not deployed. Install, views and update need the spikes in note 15 | 3, 6 | [`notes/15`](../../notes/15-apps-script-route.md), [decision 0005](../decisions/0005-shop-hub-as-the-backend.md) |
 | Server-agnostic backend port in `dura_core`, hub adapter in `dura_hub` | Designed | 3 | [decision 0005](../decisions/0005-shop-hub-as-the-backend.md) |
 | Mobile money through the hub: Paynow, then ZB Smile&Pay | Designed | 6 | [`notes/10`](../../notes/10-build-plan.md) §5 |
 | Manual payment references (bank transfer, wallets without an API) | Designed | 2, 6 | [`notes/10`](../../notes/10-build-plan.md) §5 |

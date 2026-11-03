@@ -42,7 +42,9 @@ Each component has:
 | Notes | `NN-topic.md` | `15-apps-script-route.md` |
 | Decisions | `NNNN-topic.md` | `0006-backend-folder-and-uniform-conventions.md` |
 | Workbook files and tabs | Plain English, for people | `My Shop`, `2026-11 November`, `Stock Movements` |
-| IDs in records | Device, then kind, then sequence; `T-` prefix in test mode | `P1-S000031`, `T-P1-S000031` |
+| IDs in records | `<device>-<kind><yymmdd>-<seq>`: the date in the business time zone, the sequence per device, kind and day, at least 4 digits; `T-` prefix in test mode (note 04) | `P1-S261103-0031`, `P2-E261103-0611`, `T-P1-S261103-0031` |
+| Business IDs | Name slug, setup date, 4 random hex | `chipos-corner-shop-261103-a1b2` |
+| Secrets and codes | Random hex, never readable or dated | pairing codes, device secrets |
 
 ## Files
 

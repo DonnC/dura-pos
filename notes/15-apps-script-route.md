@@ -262,6 +262,12 @@ and charts.
 
 ## 8. How the hub knows the business's files
 
+> **Update, 3 November 2026 (as built):** the registry lives in Script
+> Properties, as `file:<key>` entries holding Drive IDs, not in a private
+> workbook. Each request already reads Script Properties once, so lookups cost
+> no extra quota and no Sheets read. A readable `Files` tab in `My Shop` can
+> mirror it later.
+
 The hub never looks a file up by name. It uses three layers:
 
 1. **Script Properties (the root):** a few small values.

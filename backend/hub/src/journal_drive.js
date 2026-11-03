@@ -7,24 +7,25 @@
 // @ts-check
 
 /**
- * Stores each accepted batch as one JSON file in the journal folder, through
- * the Drive advanced service so `drive.file` is enough. Routing batches into
- * per-month folders arrives with the file registry.
- * @param {any} props Script Properties
+ * Stores each accepted batch as one JSON file in the Journal folder that
+ * setup.run recorded in the registry (file:journal). Routing batches into
+ * per-month folders comes later.
+ * @param {any} store the request's property store
  */
-function driveJournalWriter_(props) {
+function driveJournalWriter_(store) {
   return {
     /** @param {any} entry */
     write: function (entry) {
-      var folderId = props.getProperty('journalFolderId');
+      var folderId = store.get('file:journal');
       if (!folderId) {
         throw hubError_('retryable_unavailable', 'not_set_up',
-          'The journal folder is not set up yet.');
+          'The shop is not set up yet; run setup first.');
       }
       var name = entry.device + '-' + ('00000' + entry.batch).slice(-6) + '.json';
       var blob = Utilities.newBlob(JSON.stringify(entry), 'application/json', name);
       return Drive.Files.create(
-        { name: name, parents: [folderId], mimeType: 'application/json' }, blob);
+        { name: name, parents: [folderId], mimeType: 'application/json' }, blob,
+        { fields: 'id' });
     },
   };
 }

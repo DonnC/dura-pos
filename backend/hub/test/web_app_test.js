@@ -45,7 +45,7 @@ test('an unexpected failure is reported without its details', () => {
 
 test('the Drive journal writer stores each batch as a named JSON file', () => {
   const { hub, google } = loadHub();
-  google.PropertiesService.getScriptProperties().setProperty('journalFolderId', 'folder-1');
+  google.PropertiesService.getScriptProperties().setProperty('file:journal', 'folder-1');
   const writer = hub.createServices_().journalWriter;
   const file = writer.write({ device: 'P2', batch: 124, events: [], hash: 'h', receivedAt: 1 });
   assert.equal(file.id, 'file-1');

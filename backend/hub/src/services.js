@@ -7,27 +7,29 @@
 // @ts-check
 
 /**
- * The Google services a request uses, in one object so tests can replace any
- * of them. Handlers never reach for Google globals directly.
+ * The Google services one execution uses, in one object so tests can replace
+ * any of them. Handlers never reach for Google globals directly, except the
+ * thin Drive and fetch wrappers.
  * @param {object} [overrides]
  */
 function createServices_(overrides) {
-  var props = PropertiesService.getScriptProperties();
+  var store = createPropertyStore_(PropertiesService.getScriptProperties());
   var services = {
-    props: props,
+    store: store,
     cache: CacheService.getScriptCache(),
     lock: LockService.getScriptLock(),
     now: function () { return Math.floor(Date.now() / 1000); },
-    business: props.getProperty('businessId') || '',
     install: { codeHash: INSTALL_CODE_HASH_, installedAt: INSTALLED_AT_ },
-    journalWriter: driveJournalWriter_(props),
+    templates: TEMPLATE_MANIFEST_,
+    journalWriter: driveJournalWriter_(store),
   };
   return Object.assign(services, overrides || {});
 }
 
 /**
- * Runs `work` under the script lock and always releases it. A lock that
- * can't be had in time is a retryable error, never a half-done write.
+ * Runs `work` under the script lock and always releases it. The property
+ * store is reloaded once the lock is held, so counters read inside are
+ * current. A lock that can't be had in time is a retryable error.
  * @template T
  * @param {any} services
  * @param {() => T} work
@@ -40,6 +42,7 @@ function withLock_(services, work) {
     throw hubError_('retryable_unavailable', 'busy', 'The hub is busy; try again.');
   }
   try {
+    services.store.reload();
     return work();
   } finally {
     services.lock.releaseLock();

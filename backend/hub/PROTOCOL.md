@@ -22,7 +22,8 @@ Status of each part:
   - `pair`;
   - `pairing.create`;
   - `device.revoke`;
-  - `journal.put`.
+  - `journal.put`;
+  - `setup.run`.
 - **Specified only:** the rest is marked *planned*.
 
 ## Transport
@@ -160,7 +161,7 @@ Uploads one sealed batch of events.
 ```json
 body: {
   "batch": 124,
-  "events": [ { "id": "P2-E000611", "type": "sale.completed", "at": "2026-11-03T16:20:00+02:00", "data": { } } ],
+  "events": [ { "id": "P2-E261103-0611", "type": "sale.completed", "at": "2026-11-03T16:20:00+02:00", "data": { } } ],
   "hash": "<sha256 hex of the canonical JSON of events>"
 }
 → result: {"status":"accepted","through":124}
@@ -180,6 +181,41 @@ body: {
   same acknowledgement.
 - **"Accepted" means stored in the journal.** Building the Sheets views is a
   separate, later step, reported by `status`.
+
+### `setup.run`: owner only
+
+Builds the shop's files in its Google Drive, from the released templates.
+
+```json
+body: {"name": "Chipo's Corner Shop", "timeZone": "Africa/Harare"}
+→ result: {
+  "status": "ready",
+  "business": "chipos-corner-shop-261103-a1b2",
+  "period": "2026-11",
+  "files": {"business": "<folder id>", "journal": "<folder id>", "myShop": "<file id>", "month": "<file id>"}
+}
+```
+
+- **It creates:**
+  - `Dura POS/<name>/`;
+  - `business.json`, with no secrets;
+  - `My Shop`;
+  - `Journal/`;
+  - the year folder;
+  - this month's workbook, e.g. `2026-11 November`, in the business time
+    zone.
+- **Safe to repeat.** A second call creates nothing and returns the same
+  result. A call that failed part-way resumes from the first missing file.
+- **Templates come from the backend's pinned release.** Each is checked
+  against its SHA-256 before use:
+  - a mismatch is `integrity_conflict` / `template_mismatch`;
+  - a download failure is `retryable_unavailable` / `template_unavailable`.
+- **Errors:**
+  - a name outside 1 to 80 characters, or a time zone not in the form
+    `Area/City`, is `validation` / `bad_setup`;
+  - a Drive failure is `retryable_unavailable` / `storage_unavailable`.
+- **Before setup,** `journal.put` answers `retryable_unavailable` /
+  `not_set_up`. The phone keeps its batches until setup is done.
 
 ### Planned
 

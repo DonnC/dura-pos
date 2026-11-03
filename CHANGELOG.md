@@ -10,6 +10,39 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: shop setup in the hub, and fewer quota calls
+
+- **New owner-only `setup.run` action (protocol updated).** It creates:
+  - `Dura POS/<shop>/`;
+  - `My Shop`;
+  - `Journal/`;
+  - the year folder;
+  - this month's workbook, e.g. `2026-11 November`, in the business time
+    zone;
+  - `business.json`, with no secrets.
+- **How setup behaves:**
+  - workbooks are converted from `.xlsx` templates, downloaded in one
+    parallel fetch and checked against pinned SHA-256 hashes;
+  - it's resumable: a repeat creates nothing, and a part-failed run picks up
+    from the first missing file.
+- **The file registry** is kept in Script Properties as Drive IDs, so files
+  are never found by name. Journal batches now go to the registered
+  `Journal` folder.
+- **Fewer quota calls:**
+  - Script Properties are read once per request, and again only after taking
+    the lock;
+  - related values are written with one `setProperties`;
+  - Drive returns only file IDs.
+- **Readable, dated IDs** are written into the conventions:
+  `<device>-<kind><yymmdd>-<seq>`, e.g. `P1-S261103-0031`, following
+  note 04. Business IDs read like `chipos-corner-shop-261103-a1b2`.
+- **Validation:**
+  - 12 new tests, all seen failing first;
+  - one test that passed with no implementation was tightened;
+  - 52 hub tests pass, and the type check is clean.
+- **Checked against the current official docs:** the Apps Script Drive v3
+  advanced service, Properties, `UrlFetchApp` and the best-practices page.
+
 ### Added: VS Code workspace setup
 
 - **`.vscode/`:**

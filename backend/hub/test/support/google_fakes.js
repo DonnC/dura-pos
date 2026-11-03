@@ -21,20 +21,76 @@ function toBuffer(value) {
   return Buffer.from(value.map((b) => (b < 0 ? b + 256 : b)));
 }
 
+/** Script Properties, counting calls the way the daily quota counts them. */
 function createProperties() {
   const map = new Map();
+  const calls = { reads: 0, writes: 0 };
   return {
     map,
-    getProperty: (key) => (map.has(key) ? map.get(key) : null),
+    calls,
+    getProperty(key) {
+      calls.reads += 1;
+      return map.has(key) ? map.get(key) : null;
+    },
+    getProperties() {
+      calls.reads += 1;
+      return Object.fromEntries(map);
+    },
     setProperty(key, value) {
+      calls.writes += 1;
       map.set(key, String(value));
       return this;
     },
+    setProperties(values) {
+      calls.writes += 1;
+      for (const [key, value] of Object.entries(values)) map.set(key, String(value));
+      return this;
+    },
     deleteProperty(key) {
+      calls.writes += 1;
       map.delete(key);
       return this;
     },
-    getProperties: () => Object.fromEntries(map),
+  };
+}
+
+function createBlob(data, contentType, name) {
+  const bytes = typeof data === 'string' ? Array.from(Buffer.from(data, 'utf8')) : data;
+  const blob = {
+    bytes,
+    contentType: contentType || null,
+    name: name || null,
+    getBytes: () => bytes,
+    getDataAsString: () => toBuffer(bytes).toString('utf8'),
+    getContentType: () => blob.contentType,
+    setContentType(type) {
+      blob.contentType = type;
+      return blob;
+    },
+  };
+  return blob;
+}
+
+/** UrlFetchApp serving fixed responses by URL; unknown URLs answer 404. */
+function createUrlFetch() {
+  const routes = new Map();
+  const log = [];
+  const respond = (request) => {
+    const url = typeof request === 'string' ? request : request.url;
+    log.push(url);
+    const route = routes.get(url) || { code: 404, body: 'Not Found' };
+    const bytes = toSignedBytes(Buffer.from(route.body));
+    return {
+      getResponseCode: () => route.code,
+      getContent: () => bytes,
+      getBlob: () => createBlob(bytes, 'application/octet-stream'),
+    };
+  };
+  return {
+    routes,
+    log,
+    fetch: (url) => respond(url),
+    fetchAll: (requests) => requests.map(respond),
   };
 }
 
@@ -64,19 +120,39 @@ function createLock() {
   return lock;
 }
 
+/** Drive v3 advanced service. `failOnCall` makes the nth create throw. */
 function createDrive() {
   const files = [];
-  return {
+  const drive = {
     files,
+    calls: 0,
+    failOnCall: 0,
     Files: {
-      create(resource, blob) {
+      create(resource, blob, optionalArgs) {
+        drive.calls += 1;
+        if (drive.calls === drive.failOnCall) throw new Error('Drive is unavailable');
         const file = { id: `file-${files.length + 1}`, ...resource };
         file.content = blob ? blob.getDataAsString() : null;
+        file.uploadType = blob ? blob.getContentType() : null;
+        file.fields = optionalArgs ? optionalArgs.fields : undefined;
         files.push(file);
-        return file;
+        return { id: file.id };
       },
     },
   };
+  return drive;
+}
+
+/** Utilities.formatDate for the patterns the hub uses. */
+function formatDate(date, timeZone, pattern) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
+    timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(date).map((p) => [p.type, p.value]));
+  return pattern
+    .replace('yyyy', parts.year)
+    .replace('yy', parts.year.slice(2))
+    .replace('MM', parts.month)
+    .replace('dd', parts.day);
 }
 
 /** The fake Google globals, plus handles tests use to inspect them. */
@@ -87,8 +163,10 @@ function createGoogle(options = {}) {
   const cache = createCache(clock);
   const lock = createLock();
   const drive = createDrive();
+  const urlFetch = createUrlFetch();
   return {
     clock,
+    UrlFetchApp: urlFetch,
     Utilities: {
       DigestAlgorithm: { SHA_256: 'SHA_256' },
       Charset: { UTF_8: 'UTF_8' },
@@ -100,11 +178,8 @@ function createGoogle(options = {}) {
         return toSignedBytes(mac.update(toBuffer(value)).digest());
       },
       getUuid: () => crypto.randomUUID(),
-      newBlob: (data, contentType, name) => ({
-        getDataAsString: () => String(data),
-        contentType,
-        name,
-      }),
+      newBlob: createBlob,
+      formatDate,
     },
     PropertiesService: { getScriptProperties: () => properties },
     CacheService: { getScriptCache: () => cache },

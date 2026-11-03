@@ -20,14 +20,16 @@ const BUSINESS = 'shop-demo-001';
 function installedHub(overrides = {}) {
   const { hub, google } = loadHub();
   const written = [];
-  const services = hub.createServices_({
+  const settings = {
     now: () => google.clock.now(),
-    business: BUSINESS,
     install: {
       codeHash: client.sha256Hex(INSTALL_CODE),
       installedAt: google.clock.now(),
     },
-    journalWriter: {
+  };
+  if (overrides.templates) settings.templates = overrides.templates;
+  if (!overrides.useDriveJournal) {
+    settings.journalWriter = {
       write(entry) {
         if (overrides.failWrites && overrides.failWrites()) {
           throw new Error('Drive unavailable');
@@ -35,10 +37,13 @@ function installedHub(overrides = {}) {
         written.push(JSON.parse(JSON.stringify(entry)));
         return { id: `file-${written.length}` };
       },
-    },
-  });
+    };
+  }
+  google.PropertiesService.getScriptProperties().setProperty('businessId', BUSINESS);
+  // A new services object per request, as each Apps Script execution has.
+  const services = () => hub.createServices_(settings);
   const call = (request) =>
-    JSON.parse(JSON.stringify(hub.handleRequest_(request, services)));
+    JSON.parse(JSON.stringify(hub.handleRequest_(request, services())));
   const pair = (code, name) =>
     call({ v: 1, ts: google.clock.now(), action: 'pair', body: { code, name } });
   const send = (device, action, body = {}, extra = {}) =>

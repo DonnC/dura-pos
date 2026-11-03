@@ -16,13 +16,13 @@
 
 /** @param {any} services @param {string} key */
 function readJson_(services, key) {
-  var text = services.props.getProperty(key);
+  var text = services.store.get(key);
   return text === null ? null : JSON.parse(text);
 }
 
 /** @param {any} services @param {string} key @param {any} value */
 function writeJson_(services, key, value) {
-  services.props.setProperty(key, JSON.stringify(value));
+  services.store.set(key, JSON.stringify(value));
 }
 
 /**
@@ -49,15 +49,15 @@ function requireOwner_(device) {
 
 /** @param {any} services @param {string} name @param {string} role */
 function addDevice_(services, name, role) {
-  var next = Number(services.props.getProperty('devices:next') || '1');
+  var next = Number(services.store.get('devices:next') || '1');
   var id = 'P' + next;
   var secret = randomHex_(32);
   writeJson_(services, 'device:' + id, {
     id: id, name: name, role: role, secret: secret,
     pairedAt: services.now(), revoked: false,
   });
-  services.props.setProperty('devices:next', String(next + 1));
-  return { device: id, secret: secret, role: role, business: services.business };
+  services.store.set('devices:next', String(next + 1));
+  return { device: id, secret: secret, role: role, business: services.store.get('businessId') || '' };
 }
 
 /** @param {any} services @param {string} codeHash */
@@ -65,8 +65,8 @@ function isInstallCode_(services, codeHash) {
   var install = services.install;
   return Boolean(install && install.codeHash) &&
     constantTimeEqual_(codeHash, install.codeHash) &&
-    services.props.getProperty('devices:next') === null &&
-    services.props.getProperty('install:used') === null &&
+    services.store.get('devices:next') === null &&
+    services.store.get('install:used') === null &&
     services.now() - install.installedAt <= LIMITS_.installCodeSeconds;
 }
 
@@ -84,23 +84,23 @@ function pair_(request, services) {
   var codeHash = sha256Hex_(code);
   return withLock_(services, function () {
     if (isInstallCode_(services, codeHash)) {
-      services.props.setProperty('install:used', String(services.now()));
+      services.store.set('install:used', String(services.now()));
       return addDevice_(services, name || 'Owner phone', 'owner');
     }
     var key = 'pairing:' + codeHash;
-    var expires = Number(services.props.getProperty(key));
+    var expires = Number(services.store.get(key));
     if (!expires || expires < services.now()) throw badCode_();
-    services.props.deleteProperty(key);
+    services.store.remove(key);
     return addDevice_(services, name || 'Phone', 'seller');
   });
 }
 
 /** Drops pairing codes that have expired, so the store stays small. */
 function dropExpiredCodes_(services) {
-  var all = services.props.getProperties();
+  var all = services.store.getAll();
   Object.keys(all).forEach(function (key) {
     if (key.indexOf('pairing:') === 0 && Number(all[key]) < services.now()) {
-      services.props.deleteProperty(key);
+      services.store.remove(key);
     }
   });
 }
@@ -116,7 +116,7 @@ function createPairingCode_(request, services, device) {
   dropExpiredCodes_(services);
   var code = randomHex_(16);
   var expires = services.now() + LIMITS_.pairingCodeSeconds;
-  services.props.setProperty('pairing:' + sha256Hex_(code), String(expires));
+  services.store.set('pairing:' + sha256Hex_(code), String(expires));
   return { code: code, expires: expires };
 }
 

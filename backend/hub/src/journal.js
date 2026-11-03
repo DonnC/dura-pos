@@ -37,7 +37,7 @@ function putJournal_(request, services, device) {
   checkBatch_(body);
   return withLock_(services, function () {
     var key = 'journal:' + device.id;
-    var through = Number(services.props.getProperty(key) || '0');
+    var through = Number(services.store.get(key) || '0');
     if (body.batch <= through) return { status: 'accepted', through: through };
     if (body.batch > through + 1) return { status: 'gap', need: through + 1 };
     try {
@@ -50,7 +50,7 @@ function putJournal_(request, services, device) {
       throw hubError_('retryable_unavailable', 'storage_unavailable',
         'The batch could not be stored; send it again.');
     }
-    services.props.setProperty(key, String(body.batch));
+    services.store.set(key, String(body.batch));
     return { status: 'accepted', through: body.batch };
   });
 }

@@ -58,6 +58,7 @@ function handlerFor_(action) {
     case 'pairing.create': return createPairingCode_;
     case 'device.revoke': return revokeDevice_;
     case 'journal.put': return putJournal_;
+    case 'setup.run': return runSetup_;
     default: return null;
   }
 }

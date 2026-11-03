@@ -20,11 +20,12 @@ open questions are in [note 15](../../notes/15-apps-script-route.md).
   - signed requests;
   - pairing by one-time code;
   - removing a phone;
-  - accepting journal batches in order.
+  - accepting journal batches in order;
+  - shop setup: folders, `My Shop` and this month's workbook from checked
+    templates, `business.json` and the file registry.
 - **Planned:**
   - Sheets views;
-  - files from templates;
-  - the file registry;
+  - next month's and next year's files on a timer;
   - payments;
   - scheduled jobs;
   - install and update.
@@ -85,6 +86,11 @@ backend/hub/
     journal.js         batch acceptance and per-device batch numbers
     journal_drive.js   stores batches as JSON files in Drive
     services.js        the services object and the script lock
+    property_store.js  Script Properties read once per execution, reloaded under the lock
+    setup.js           setup.run: folders, workbooks, business.json, registry; resumable
+    templates.js       parallel template download, checked against pinned SHA-256
+    template_manifest.js  the release's template URLs and hashes
+    drive_files.js     Drive v3 folder, conversion and JSON helpers; asks only for ids
     crypto.js          SHA-256, HMAC, random hex, constant-time compare
     canonical_json.js  the signing string
     protocol.js        version, limits, patterns, errors
@@ -118,4 +124,28 @@ backend/hub/
   duplicate, because the hub keeps only the highest batch number per phone.
   The phone must never reuse a batch number.
 - **The Drive writer stores batches in one journal folder.** Routing them
-  into per-month folders comes with the file registry.
+  into per-month folders comes later.
+- **Folders are created with a `null` upload** and `{fields: 'id'}`, a call
+  shape not shown in Google's samples. Spike 2 in note 15 must confirm it
+  against the real Drive advanced service.
+- **If setup fails between creating a file and recording its ID,** the next
+  run creates that one file again. The earlier copy is left behind; nothing
+  else is duplicated.
+- **The template manifest is empty** until the first templates release, so
+  `setup.run` answers `template_unavailable` on a real install until then.
+
+## Keeping inside Google's limits
+
+Apps Script counts calls per day, so each request is built to make as few as
+possible:
+
+- **Script Properties:** one `getProperties()` per request, plus one more
+  after taking the lock. Several values are written with one
+  `setProperties()`.
+- **The file registry** lives in Script Properties, so finding a file costs
+  no Drive or Sheets call.
+- **Templates:** fetched in parallel with one `fetchAll`, and only those still
+  needed.
+- **Drive:** every create asks for `fields: 'id'` only.
+- **Replay checks** use `CacheService`, not properties.
+- **The script lock** is held only around writes.
