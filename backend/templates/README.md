@@ -6,10 +6,54 @@ found in the LICENSE file at the repository root.
 SPDX-License-Identifier: MIT
 -->
 
-# Template-first business files and compatibility contract
+# Workbook templates
+
+The Python generator that builds every workbook Dura creates, the checks that
+prove the numbers add up and the formulas work in Excel, and the sample shop.
+
+## Use it
+
+You'll need Python 3.11 or later.
+
+```sh
+cd backend/templates
+python -m pip install -r requirements.txt
+python generate_samples.py                    # writes sample/Dura POS/
+python check_samples.py "sample/Dura POS"     # the numbers add up
+python check_excel.py "sample/Dura POS"       # only Excel-compatible functions
+python check_formulas.py "sample/Dura POS"    # report: which heading each formula reads
+```
+
+The generator deletes and rebuilds `sample/Dura POS/`. Commit the regenerated
+files only when the layout really changed: openpyxl stamps each file with the
+time, so an unchanged layout still produces different bytes.
+
+| File | Purpose |
+|---|---|
+| `generate_samples.py` | Builds the sample shop: every file, tab, column, dropdown, colour rule, formula and chart |
+| `check_samples.py` | Reads the sample back and checks it reconciles across sales, payments, stock and money |
+| `check_excel.py` | Fails on any function outside the Excel-compatible allowlist |
+| `check_formulas.py` | Prints each cross-tab formula against the heading it reads, for review |
+| `requirements.txt` | Pinned Python dependencies |
+| `sample/Dura POS/` | The generated fictional shop |
+
+## Excel compatibility
+
+Every template must calculate the same in Google Sheets and in Excel 2019 or
+Microsoft 365
+([decision 0006](../../handbook/decisions/0006-backend-folder-and-uniform-conventions.md)):
+
+- **Functions:** only those allowed by `check_excel.py`. No `QUERY`,
+  `ARRAYFORMULA`, `FILTER`, `IMPORTRANGE` or other Google-only functions.
+  `MAXIFS` and `MINIFS` need Excel 2019 or later.
+- **No formula crosses files or names a year.** No macros, scripts or custom
+  functions.
+- **Pivots and charts are extras,** never the only way to read a number.
+
+## Design
 
 The Python generator is the core authoring tool for approved workbook templates
-and mock-shop examples. Evolve the existing samples/generate_samples.py entry
+and mock-shop examples. Evolve the existing `generate_samples.py` entry
 point into small modules rather than introducing a competing generator. Keep
 column definitions, formulas and styling in clearly owned configuration/builders
 so a minor workbook change does not require Flutter changes.
@@ -35,13 +79,12 @@ fiscal or accounting events merely to fill files.
 
 Review generated workbooks visually in Sheets/Excel. Changes explored there must
 be brought back into the Python source/configuration and regenerated before
-approval; do not maintain a second independent master by hand. The app copies
-the appropriate approved
-template into the business account, sets identity/period metadata and populates
-data ranges. Do not recreate formatting, reports and formulas in Dart code.
+approval; do not maintain a second independent master by hand. The Shop Hub
+creates each file from the approved template in the business account, sets
+identity and period metadata, and populates data ranges. Do not recreate formatting, reports and formulas in Dart code.
 
 Python template definitions own layout, formulas, validation, charts and guidance;
-approved generated workbooks are the app's provisioning artifacts. A small versioned
+approved generated workbooks are the hub's provisioning artifacts. A small versioned
 contract owns stable table/field identifiers, types, required fields, writable
 ranges and supported versions. Column letters and human-readable labels are not
 field identities. The records phase must prove that mappings survive supported
@@ -59,13 +102,14 @@ Template versions are immutable approved snapshots, not a mutable public URL
 that can silently change a business's files. Pin versions and distribute them
 through an owner-accessible route without requiring public business data.
 
-Packaging: the generator writes the clean `.xlsx` templates, and they are
-committed and bundled as app assets. App contributors use them as files and
-don't need Python. Only a layout change touches the generator, then
-regenerates. To create a file, the app uploads the bundled template to the
-shop's Drive with conversion to Google Sheets, so the file is one Dura created
-and `drive.file` covers it. Check the first converted template for lost
-validation, formatting or charts.
+Packaging: the generator writes the clean `.xlsx` templates. They are
+committed and published with each Dura release, with their SHA-256 hashes.
+Contributors who don't change the layout never need Python. The hub's code pins
+a release; to create a file, the hub fetches the template, checks its hash, and
+converts it into a Google Sheet in the shop's folder, so the file is one the
+hub created and `drive.file` covers it
+([decision 0005](../../handbook/decisions/0005-shop-hub-as-the-backend.md)).
+Check the first converted template for lost validation, formatting or charts.
 
 New businesses/months use the compatible approved version. Existing workbooks
 retain their version until an explicit, backed-up, resumable upgrade is applied.
@@ -74,8 +118,7 @@ not repair existing copies; offer a targeted report update or replacement report
 tab with a preview. If a required mapping is missing, pause workbook writes and
 explain the repair while sales remain local.
 
-The initial app does not create Drive/Sheets files. It only creates a local
-preferences database and diagnostic files described in the handbook.
+Nothing creates Drive or Sheets files yet: the hub is not built.
 
 Preview of the planned workbook data:
 

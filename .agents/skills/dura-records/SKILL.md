@@ -17,9 +17,10 @@ SPDX-License-Identifier: MIT
   history, and Sheets are views and checked inputs.
 - `handbook/engineering/03-records-and-sheets.md` and
   `handbook/design/records-file-design.md`, with its file previews.
-- `schema/PLAN.md` (template-first, the compatibility contract) and
+- `backend/templates/README.md` (template-first, Excel compatibility, the contract) and
   `notes/04-data-files.md` (the current sample layout).
-- `samples/generate_samples.py`, the executable spec. Use the spreadsheet
+- `backend/templates/generate_samples.py`, the executable spec, and its
+  checks, including `check_excel.py`. Use the spreadsheet
   skill, if one is available, when creating or editing workbooks.
 
 ## Rules

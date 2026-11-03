@@ -8,7 +8,7 @@ every file and tab Dura writes to the owner's Google Drive, including the
 
     python3 generate_samples.py
 
-It writes the "Dura POS" folder next to this script. All names, numbers,
+It writes sample/Dura POS next to this script. All names, numbers,
 tax IDs, rates and references are made up.
 """
 
@@ -33,8 +33,8 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 
-OUT = Path(__file__).resolve().parent / "Dura POS"
-HS_CODES_CSV = Path(__file__).resolve().parent.parent / "reference" / "zimra_hs_codes.csv"
+OUT = Path(__file__).resolve().parent / "sample" / "Dura POS"
+HS_CODES_CSV = Path(__file__).resolve().parents[2] / "data" / "zimra_hs_codes.csv"
 START = date(2025, 12, 1)
 TODAY = date(2026, 10, 28)
 rng = random.Random(2026)

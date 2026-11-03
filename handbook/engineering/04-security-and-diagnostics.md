@@ -25,11 +25,11 @@ has actually been applied and tested.
 
 Modes:
 
-- Owner-only: direct owner Google access, local owner profile.
-- Dedicated controlled shop phone: direct access is an explicit owner-managed
-  trust choice; explain the boundary, keep PIN roles inside Dura.
-- Paired restricted staff client: use business hub mediation without signing the
-  owner's Google account into the staff device.
+Every phone is a paired Shop Hub client (decision 0005). The owner's Google
+account signs in only on the owner's phone, only to install or update the hub,
+and the token is discarded afterwards. No phone keeps a Google token, so a lost
+or shared phone can't reach the owner's Drive. Owner, manager and seller roles
+are enforced by PIN in the app and again by the hub for owner-only operations.
 
 No mode exposes merchant secrets or fiscal private keys to spreadsheet users.
 

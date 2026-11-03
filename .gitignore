@@ -46,3 +46,8 @@ artifacts/
 **/android/gradlew.bat
 **/android/gradle/wrapper/gradle-wrapper.jar
 .release-signing/
+
+# Shop Hub (Node tooling and per-developer clasp settings)
+node_modules/
+.clasp.json
+.clasprc.json

@@ -27,8 +27,11 @@ follow [CONTRIBUTING](CONTRIBUTING.md), which says the same in more detail.
 - **All Flutter code** (apps, packages, Dart tooling, tests, the SDK pin,
   pubspec and lockfile) lives in `client/`. Run Flutter and Melos commands
   from there.
-- **Policies, samples, schema, the hub plan, research and GitHub
-  configuration** stay at the root.
+- **The Shop Hub and the workbook generator** live in `backend/` (`hub/`,
+  `templates/`). Shared reference data is in `data/`. Policies, research and
+  GitHub configuration stay at the root.
+- **Follow [`handbook/engineering/09-conventions.md`](handbook/engineering/09-conventions.md)**
+  in every language: names, headers, tests, sizes, money and secrets.
 - **New design notes** go in `notes/` as `NN-topic.md`. New decisions go in
   `handbook/decisions/`.
 

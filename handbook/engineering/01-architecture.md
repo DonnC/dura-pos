@@ -33,9 +33,9 @@ dura-pos/
     packages/dura_ui/           shared theme and components
     tool/                      Dart verification/release/icon tooling
     test/                      workspace tooling tests
-  hub/                         future business-owned Apps Script
-  schema/                      business-file and event specifications
-  samples/                     Python generator and example business
+  backend/hub/                 the Shop Hub: Apps Script (JavaScript)
+  backend/templates/           Python workbook generator, checks, sample shop
+  data/                        shared reference data (HS codes)
   handbook/                    engineering policies and decisions
   .agents/skills/              project skill sources
   .github/                     workflow and contribution templates
@@ -111,9 +111,12 @@ share a coordinator with database-backed work ownership. An expired worker may
 not acknowledge another worker's work; use ownership checks/fencing in the
 implementation. Apps Script locks only coordinate cooperating script writers.
 
-Single-owner mode uses direct owner Google access. Hub mode mediates paired
-staff devices and is the sole shared-view writer. Switching modes requires a
-documented writer handover; no automatic dual-writer failover in the first release.
+All backend access goes through one port in `dura_core` (decision 0005). The
+Shop Hub adapter in `dura_hub` implements it over the protocol in
+`backend/hub/PROTOCOL.md`; no Google or Apps Script type crosses the port. Every
+device, the owner's included, is a paired hub client, and the hub is the sole
+shared-view writer. A future backend is a new adapter that passes the same
+port contract tests.
 
 ## Money and versioned rules
 

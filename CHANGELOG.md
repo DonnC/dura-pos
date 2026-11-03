@@ -10,6 +10,72 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: the Shop Hub's first behaviours
+
+- **`backend/hub/PROTOCOL.md`, version 1:**
+  - the JSON envelope;
+  - HMAC-SHA256 signing over canonical JSON;
+  - the six error categories;
+  - the `pair`, `pairing.create`, `device.revoke` and `journal.put` actions;
+  - the planned actions.
+- **The hub, in plain JavaScript:**
+  - signed requests, rejecting bad signatures, stale clocks, replays, unknown
+    or removed phones, and malformed envelopes;
+  - pairing:
+    - a one-time install code pairs the owner's phone, within 15 minutes;
+    - one-time 10-minute codes pair seller phones;
+    - codes are stored only as hashes;
+  - the owner can remove a phone;
+  - journal batches are accepted in order per phone, under the script lock:
+    - duplicates are acknowledged without being stored twice;
+    - gaps ask for the missing batch;
+    - a failed write acknowledges nothing;
+  - batches are stored as JSON files through the Drive advanced service;
+  - unexpected errors are reported without details.
+- **Tooling:** pinned clasp 3.4.1, TypeScript 5.9.3 (type checking only) and
+  the Apps Script types. The manifest has the V8 runtime, the scopes, the
+  Drive advanced service, and the web app running as the owner.
+- **CI:** a new `hub` job runs `npm ci` and `npm run verify`. npm joins the
+  monthly Dependabot groups.
+- **Validation:**
+  - 40 tests, first failing on unimplemented stubs, now passing;
+  - the test client is written independently from `PROTOCOL.md`;
+  - the type check covers all 10 source files, and a probe file with errors
+    was caught.
+
+### Changed: `backend/` folder, Excel-compatible templates, uniform conventions
+
+- **Decision 0006:**
+  - the hub moves to `backend/hub/`;
+  - the generator, its checks, the template plan and the sample shop move to
+    `backend/templates/`, with the sample under `sample/Dura POS/`;
+  - the HS code list is in `data/`;
+  - all moves were made with `git mv`.
+- **The hub will be written in JavaScript on Apps Script V8,** with no build
+  step:
+  - JSDoc types checked by `tsc --checkJs`;
+  - tests on Node's built-in runner, with fake Google services;
+  - `clasp` for pushing to test accounts.
+- **New `check_excel.py`:** fails on any function outside an allowlist that
+  works in both Google Sheets and Excel 2019 or later. The current sample
+  passes; a fixture using `ARRAYFORMULA` fails.
+- **New `requirements.txt`** pins openpyxl 3.1.5 and Pillow 13.0.0.
+- **New `handbook/engineering/09-conventions.md`:**
+  - one README and one verify command per component;
+  - `snake_case` files and `*_test` tests;
+  - the same header in every language;
+  - shared rules for money, time and secrets.
+- **CI:** a new `templates` job checks the committed sample, regenerates it,
+  and checks again. Release now waits for it. pip joins the monthly
+  Dependabot groups.
+
+### Fixed
+
+- **`check_samples.py` failed on Windows.** It read the HS code list without
+  stating an encoding; it now reads it as UTF-8.
+- **The generator and checks found the HS code list relative to the
+  repository layout.** They now find it relative to their own file.
+
 ### Design decisions: the Shop Hub is the backend
 
 - **Note 15 researches the Apps Script route:**

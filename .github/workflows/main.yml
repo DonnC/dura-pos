@@ -60,8 +60,40 @@ jobs:
           name: golden-failure-diffs
           path: '**/test/failures/**'
           if-no-files-found: ignore
+  templates:
+    # Uses the runner image's own Python, so no extra action is pinned.
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend/templates
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - run: python --version
+      - run: python -m pip install -r requirements.txt
+      - run: python check_samples.py "sample/Dura POS"
+      - run: python check_excel.py "sample/Dura POS"
+      - run: python generate_samples.py
+      - run: python check_samples.py "sample/Dura POS"
+      - run: python check_excel.py "sample/Dura POS"
+  hub:
+    # Uses the runner image's own Node; the hub's tests need Node 22 or later.
+    runs-on: windows-2025
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend/hub
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - run: node --version
+      - run: npm ci --no-audit --no-fund
+      - run: npm run verify
   release:
-    needs: verify
+    needs: [verify, templates, hub]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: windows-2025
     timeout-minutes: 30

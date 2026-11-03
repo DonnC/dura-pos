@@ -41,18 +41,28 @@ research. Also follow `AGENTS.md` and the skills in `.agents/skills/`.
 - **The pricing currency is chosen by the owner.** Never assume USD.
 - **Records (decision 0003):**
   - a sale completes on the phone;
-  - each phone uploads an append-only journal to the owner's Drive, which is
-    the shared history;
+  - each phone uploads an append-only journal to the owner's Drive, through
+    the Shop Hub; it's the shared history;
   - Sheets are views built from it, plus input tabs the owner edits, which
     are checked before they're accepted;
   - events are never rewritten, and a correction is a new linked event;
-  - one writer at a time builds the views: the owner's phone, or the Shop Hub;
-  - workbooks are template-first, copied from the Python generator's
-    templates;
+  - the Shop Hub is the only view writer;
+  - workbooks are template-first: the hub creates them from the Python
+    generator's templates;
   - there's no destructive year-end clearing in the first release.
-- **The Shop Hub** (Apps Script) is optional: for payment keys and adapters,
-  callbacks and scheduled jobs. It's never in the path of a sale, and never
-  touches ZIMRA.
+- **The Shop Hub is the backend (decision 0005):**
+  - a standalone Apps Script web app in the shop's own account, running as
+    the owner;
+  - every upload, file, Sheets view, photo, payment and scheduled job goes
+    through it, so all usage counts against the shop's account;
+  - Dura's Google Cloud project is used only to install and update it;
+  - phones pair with it by QR code, sign every request, and never hold a
+    Google token;
+  - it's never needed to complete a sale, and never touches ZIMRA.
+- **The Flutter app is server-agnostic.** It reaches any backend through one
+  port in `dura_core`. The hub client is one adapter, in `dura_hub`, speaking
+  the protocol in `backend/hub/PROTOCOL.md`. No Google type appears above that
+  adapter.
 - **Test mode never touches live data:** a separate folder and database,
   `T-` IDs, ZIMRA's test environment, and gateway sandboxes.
 - **Formulas never cross files, and never name a year.**
@@ -67,20 +77,23 @@ research. Also follow `AGENTS.md` and the skills in `.agents/skills/`.
 
 ## The executable spec
 
-`samples/generate_samples.py` builds a complete sample shop (`samples/Dura
-POS/`): every file, tab, column, dropdown, colour rule, formula and chart the
+`backend/templates/generate_samples.py` builds a complete sample shop
+(`backend/templates/sample/Dura POS/`): every file, tab, column, dropdown, colour rule, formula and chart the
 app must create. It still has note 12's layout until the records phase moves
 it to the handbook's (decision 0003). When the sheet layout changes, change
-the generator, regenerate, and run both checks:
+the generator, regenerate, and run the checks. Templates must stay
+Excel-compatible (decision 0006):
 
 ```
-cd samples
-python3 generate_samples.py          # needs openpyxl
-python3 check_samples.py "Dura POS"
-python3 check_formulas.py "Dura POS"
+cd backend/templates
+python -m pip install -r requirements.txt
+python generate_samples.py
+python check_samples.py "sample/Dura POS"
+python check_excel.py "sample/Dura POS"
 ```
 
 The Flutter workspace is in `client/`. Run `dart run melos run verify` there
 before committing.
 
-`reference/zimra_hs_codes.csv` is ZIMRA's HS code list.
+`data/zimra_hs_codes.csv` is ZIMRA's HS code list. The Apps Script hub
+lives in `backend/hub/`. Shared conventions: `handbook/engineering/09-conventions.md`.

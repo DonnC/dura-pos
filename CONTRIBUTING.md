@@ -30,7 +30,7 @@ says which wins.
 |---|---|
 | A Flutter or Dart developer | Pick a Phase 2 roadmap task; add tests; improve `dura_ui` components |
 | A designer | Review a screen against the [experience principles](handbook/product/03-experience-principles.md); improve the [prototype](handbook/design/prototype/) |
-| Good with spreadsheets or accounting | Review the [sample shop](samples/) and the [records policy](handbook/engineering/03-records-and-sheets.md); check that the numbers add up |
+| Good with spreadsheets or accounting | Review the [sample shop](backend/templates/) and the [records policy](handbook/engineering/03-records-and-sheets.md); check that the numbers add up |
 | A Shona or Ndebele speaker | Help with plain-language wording and translations |
 | Close to vendors or shops | Run the five-vendor usability test; tell us what they actually need |
 | Familiar with ZIMRA or Zimbabwean payments | Check designs against the spec; help answer [`notes/02`](notes/02-questions-for-zimra.md) |
@@ -60,8 +60,9 @@ dart run melos run verify
 ```
 
 Use the Flutter version in `client/.flutter-version`. All Flutter and Melos
-commands run from `client/`. Research, samples, the handbook and repository
-policies stay at the root.
+commands run from `client/`. The hub and the workbook generator live in
+`backend/`; each component's README says how to run and verify it, and the
+shared rules are in [conventions](handbook/engineering/09-conventions.md).
 
 ## 5. How we work
 

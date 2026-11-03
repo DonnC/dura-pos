@@ -36,6 +36,7 @@ whichever engineering page matches your work.
 | [06 Roadmap](engineering/06-roadmap.md) | Choosing what to work on next |
 | [07 Coding and diagnostics](engineering/07-coding-and-diagnostics.md) | Writing Dart: file size, headers, constants, disposal, logging |
 | [08 Foundation validation](engineering/08-foundation-validation.md) | Checking what has actually been verified so far |
+| [09 Conventions](engineering/09-conventions.md) | Naming, headers, tests and verify commands in every language |
 
 ## Decisions
 
@@ -47,6 +48,8 @@ Numbered, never rewritten: a later decision supersedes an earlier one.
 | [0002](decisions/0002-client-layout-and-licence.md) | All Flutter code under `client/`; MIT licence |
 | [0003](decisions/0003-records-journal-and-views.md) | The journal is the history and Sheets are views; workbooks are template-first; no destructive year end |
 | [0004](decisions/0004-repository-layout-and-pr-checks.md) | This map, the research archive, and CI on pull requests |
+| [0005](decisions/0005-shop-hub-as-the-backend.md) | The shop's own Apps Script hub is the backend; phones pair by QR; the app reaches it through one server-agnostic port |
+| [0006](decisions/0006-backend-folder-and-uniform-conventions.md) | `backend/` holds the hub and templates; the hub is JavaScript; templates must be Excel-compatible; uniform conventions |
 
 Use the [template](decisions/0000-template.md) for a new decision.
 
@@ -64,10 +67,9 @@ Use the [template](decisions/0000-template.md) for a new decision.
 |---|---|
 | [`../notes/`](../notes/README.md) | The numbered design notes: detailed reasoning on files, ZIMRA, payments, staff, sync and finance |
 | [`../research/`](../research/README.md) | The original AI research conversations; historical |
-| [`../samples/`](../samples/) | The executable spec: a generator that builds a complete sample shop, and two checks |
-| [`../schema/PLAN.md`](../schema/PLAN.md) | The template-first workbook plan and compatibility contract |
-| [`../hub/PLAN.md`](../hub/PLAN.md) | The future Shop Hub (Apps Script) |
-| [`../reference/`](../reference/) | ZIMRA's HS code list |
+| [`../backend/templates/`](../backend/templates/README.md) | The executable spec: the workbook generator, the sample shop, and the checks, including Excel compatibility |
+| [`../backend/hub/`](../backend/hub/README.md) | The Shop Hub (Apps Script, JavaScript) |
+| [`../data/`](../data/) | ZIMRA's HS code list |
 
 ## When documents disagree
 
@@ -89,7 +91,8 @@ Sheets. These points have since changed:
 |---|---|---|
 | Kotlin, Jetpack Compose, Room, WorkManager | Flutter, Riverpod, Drift; fzimra through a typed Android bridge | [0001](decisions/0001-foundation.md), [architecture](engineering/01-architecture.md) |
 | Phones append rows to Sheets; Sheets are the record | An uploaded journal is the history; Sheets are views and checked inputs | [0003](decisions/0003-records-journal-and-views.md) |
-| Files built from code, from `schema/dura-sheets.json`; no template file | Template-first: Python generates templates, and the app copies them | [0003](decisions/0003-records-journal-and-views.md), [`schema/PLAN.md`](../schema/PLAN.md) |
+| Phones call the Sheets and Drive APIs; the hub is optional | Everything that reaches Google goes through the shop's own hub; phones pair by QR and hold no Google token | [0005](decisions/0005-shop-hub-as-the-backend.md), [note 15](../notes/15-apps-script-route.md) |
+| Files built from code, from `schema/dura-sheets.json`; no template file | Template-first: Python generates templates, and the hub converts them into the shop's Drive | [0003](decisions/0003-records-journal-and-views.md), [`backend/templates/`](../backend/templates/README.md) |
 | The year-end archive removes last year's rows | No destructive clearing in the first release; journals kept | [0003](decisions/0003-records-journal-and-views.md) |
 | 7 days of sales kept on the phone | A retention policy based on real offline needs | [records design](design/records-file-design.md) §12 |
 | Onboarding turns on USD and ZWG | No default: the owner picks the pricing currency | [note 12](../notes/12-hub-test-mode-files-migration.md) §7 |

@@ -22,7 +22,7 @@ Every changed file/tab/column design needs a realistic preview and dictionary.
 Python authors formulas, formatting, validation and report layout, producing
 clean templates and coherent mock-shop files from shared definitions. The app
 copies approved templates and fills them. A small compatibility contract identifies app-used
-fields independently of column positions. See ../../schema/PLAN.md for change
+fields independently of column positions. See ../../backend/templates/README.md for change
 examples, template versioning and explicit upgrades to existing copies.
 
 ## File registry

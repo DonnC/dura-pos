@@ -85,32 +85,34 @@ flowchart LR
     App --> DB
   end
   subgraph Google["The shop's own Google account"]
+    Hub["Shop Hub<br/>Apps Script, runs as the owner"]
     Journal[("Journal<br/>append-only history")]
     Sheets[("Google Sheets<br/>My Shop · monthly files")]
-    Hub["Shop Hub (optional)<br/>Apps Script"]
+    Hub --> Journal
+    Journal -- "rebuilt into" --> Sheets
   end
-  DB -- "upload when online" --> Journal
-  Journal -- "rebuilt into" --> Sheets
-  Hub -. "payments · scheduled jobs" .-> Sheets
+  DB -- "signed upload when online" --> Hub
   Phone -- "fiscal receipts (optional)" --> ZIMRA["ZIMRA FDMS"]
 ```
 
 - **The phone** does all the selling, from its own database.
+- **The Shop Hub** is the shop's own backend: an Apps Script web app the app
+  installs in the owner's Google account. Phones pair with it by QR code, and
+  everything that reaches Google goes through it, so it counts against the
+  shop's account. It also holds payment keys and runs scheduled work.
 - **The journal** is an append-only record of every sale, payment and stock
-  movement, uploaded to the owner's Drive. It is the shared history.
+  movement, stored in the owner's Drive by the hub. It is the shared history.
 - **The Sheets** (`My Shop`, plus one file per month) are built from the
   journal for people to read, with Read Me tabs, dropdowns, colours and charts.
   The owner can edit the input tabs (products, prices, rates), and Dura checks
   those edits before accepting them.
-- **The Shop Hub** is an optional Apps Script in the shop's own account. It
-  holds payment keys, receives payment callbacks and runs scheduled work. A
-  one-phone cash vendor never needs it.
 - **ZIMRA fiscalisation** is optional, per business, and runs on the phone
   through [fzimra](https://github.com/DonnC/zimra-fdms-android). It's never
   routed through the hub.
 
-The why behind each of these is in [decision 0003](../decisions/0003-records-journal-and-views.md)
-and the [architecture](../engineering/01-architecture.md).
+The why behind each of these is in [decision 0003](../decisions/0003-records-journal-and-views.md),
+[decision 0005](../decisions/0005-shop-hub-as-the-backend.md) and the
+[architecture](../engineering/01-architecture.md).
 
 ## Why it's built this way
 
@@ -121,7 +123,8 @@ and the [architecture](../engineering/01-architecture.md).
 | **A journal behind the Sheets** | Sheets can't stop a retried upload from adding the same row twice, and a half-finished write can leave a tab wrong. The journal gives every event one ID, so views can be checked and rebuilt, and a damaged sheet never loses history |
 | **Offline first** | Connectivity and power fail daily. A POS that stops when the network does loses sales |
 | **Flutter, Android first** | One codebase for the phone now, with owner views on desktop or the web later. The ZIMRA SDK stays native Android, behind a typed bridge |
-| **Apps Script only where it's needed** | It's free and runs in the shop's account, so it can hold shared payment keys and receive callbacks a phone can't. Keeping it out of the sale path avoids its quotas, cold starts and outages |
+| **The shop's own Apps Script as the backend** | It runs as the owner, so its usage counts against the shop's account, not a shared Dura project. It holds payment keys and receives callbacks a phone can't. Phones never hold a Google sign-in. Sales still complete on the phone, so its cold starts and outages never stop selling |
+| **A server-agnostic app** | The app talks to one backend port. If a shop or the project moves away from Google, only the adapter behind that port changes |
 | **Bring your own keys** | The money and the regulatory relationship stay the business's own. Dura's developers never hold a shop's secrets |
 | **Open source (MIT)** | Anyone can check that "we can't see your data" is true. Anyone can help a shop, fork it, or carry it on. See [decision 0002](../decisions/0002-client-layout-and-licence.md) |
 | **Consulting, not subscriptions** | The app stays free. Shops that want setup, training, migration or a custom payment adapter can pay for that work |

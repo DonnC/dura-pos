@@ -136,19 +136,23 @@ The current build opens the foundation screen and diagnostic settings.
 
 ### Explore the sample shop
 
-[`samples/Dura POS/`](samples/) holds a complete fictional shop: every
+[`backend/templates/sample/Dura POS/`](backend/templates/) holds a complete fictional shop: every
 workbook, tab, dropdown, formula and chart Dura is designed to create. Open
 the `.xlsx` files in Excel or Google Sheets.
 
 The generator is only needed when the workbook layout changes. It needs
-Python 3 and `openpyxl`:
+Python 3.11 or later:
 
 ```sh
-cd samples
-python3 generate_samples.py
-python3 check_samples.py "Dura POS"
-python3 check_formulas.py "Dura POS"
+cd backend/templates
+python -m pip install -r requirements.txt
+python generate_samples.py
+python check_samples.py "sample/Dura POS"
+python check_excel.py "sample/Dura POS"
 ```
+
+Every template must work in Google Sheets and in Excel 2019 or later;
+`check_excel.py` enforces that.
 
 ## Project structure
 
@@ -160,13 +164,13 @@ dura-pos/
 │       ├── dura_core/      business rules in pure Dart
 │       ├── dura_data/      local storage and diagnostics
 │       └── dura_ui/        theme and shared components
+├── backend/                runs in, or is created in, the shop's Google account
+│   ├── hub/                Shop Hub (Apps Script, JavaScript)
+│   └── templates/          workbook generator, checks and sample shop (Python)
+├── data/                   shared reference data: ZIMRA HS code list
 ├── handbook/               product vision, engineering rules, decisions, design
-├── samples/                workbook generator, sample shop and checks
-├── schema/                 workbook template plan
-├── hub/                    Shop Hub (Apps Script) plan
 ├── notes/                  design notes from the research phase
-├── research/               original research conversations
-└── reference/              ZIMRA HS code list
+└── research/               original research conversations
 ```
 
 ## Documentation

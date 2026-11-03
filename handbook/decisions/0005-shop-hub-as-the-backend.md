@@ -64,7 +64,7 @@ Research: [note 15](../../notes/15-apps-script-route.md).
      same protocol, or another implementation of the port. Screens, rules and
      the local database don't change.
 7. **One protocol, owned by Dura.** The hub protocol (versioned JSON messages,
-   signed by the device) is specified in `hub/PROTOCOL.md`. It describes
+   signed by the device) is specified in `backend/hub/PROTOCOL.md`. It describes
    business operations, not Google APIs, so any backend can implement it.
 
 ## The port
@@ -108,7 +108,7 @@ No Google type appears in the port.
   shop's folder.
 - **Decision 0003's acceptance item 7** (`drive.file` on a second phone) no
   longer applies. It's replaced by note 15's scope spike.
-- **The hub's code lives in `hub/`.** It's versioned with the protocol, and
+- **The hub's code lives in `backend/hub/`** (decision 0006). It's versioned with the protocol, and
   installed per shop at a pinned version.
 
 ## Acceptance and reversal

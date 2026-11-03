@@ -74,7 +74,7 @@ Why direct rows aren't enough on their own:
    - The app fills it using a small compatibility contract that names fields
      by ID, not column letter.
    - This replaces note 12 §5's "from code, not from a template file". See
-     [`schema/PLAN.md`](../../schema/PLAN.md).
+     [`backend/templates/README.md`](../../backend/templates/README.md).
 7. **No destructive year-end clearing in the first release.** Original
    journals are kept. The year end creates opening positions and groups files
    by year. It does not delete rows. This replaces the "remove last year's

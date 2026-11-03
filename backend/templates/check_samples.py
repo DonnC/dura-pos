@@ -151,7 +151,7 @@ if bal[CLINIC] != -sum(dec(s["Total"]) for s in all_sales.values() if s["Type"] 
 	problems.append("clinic balance != unpaid invoices")
 
 # HS codes: every product's code is in ZIMRA's list
-hs = {r[0] for r in csv.reader(open(ROOT.parent.parent / "reference" / "zimra_hs_codes.csv"))}
+hs = {r[0] for r in csv.reader(open(Path(__file__).resolve().parents[2] / "data" / "zimra_hs_codes.csv", encoding="utf-8"))}
 for p in rows(BIZ / "My Shop.xlsx", "Products"):
 	if p["HS code"] not in hs:
 		problems.append(f"{p['Product ID']}: HS code {p['HS code']} not in the ZIMRA list")
