@@ -90,6 +90,19 @@ class TemplatesTest(unittest.TestCase):
                 headings = [c.value for c in book[table][1]]
                 self.assertEqual([f["heading"].replace("{pricing}", "ZWG") for f in spec["fields"].values()], headings)
 
+    def test_the_contract_carries_the_stock_row_formulas(self):
+        stock_row = json.loads((self.out / "contract.json").read_text(encoding="utf-8"))["stockRow"]
+        self.assertEqual(sorted(stock_row), ["2", "4", "5", "6", "7", "8"])
+        self.assertIn("$A{r}", stock_row["4"])
+        self.assertNotIn("_xlfn", stock_row["8"])
+
+    def test_the_month_summary_has_the_labels_the_hub_reads(self):
+        summary = self.book("USD", "Month.xlsx")["Summary"]
+        labels = {row[0] for row in summary.iter_rows(values_only=True)}
+        for label in ("Month", "Sales, VAT included", "VAT in those sales", "Sales before VAT", "Cost of goods sold",
+                      "Gross profit", "VAT in this month's sales, less returns"):
+            self.assertIn(label, labels)
+
     def test_a_rebuild_gives_the_same_bytes(self):
         with tempfile.TemporaryDirectory() as other:
             again = Path(other) / "dist"

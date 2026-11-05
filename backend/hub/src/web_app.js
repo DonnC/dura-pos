@@ -59,6 +59,8 @@ function handlerFor_(action) {
     case 'device.revoke': return revokeDevice_;
     case 'journal.put': return putJournal_;
     case 'setup.run': return runSetup_;
+    case 'changes.pull': return pullChanges_;
+    case 'status': return readStatus_;
     default: return null;
   }
 }

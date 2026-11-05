@@ -69,10 +69,11 @@ but the generator could only build the sample shop:
 - **The hub protocol changes within version 1,** since nothing is deployed:
   `setup.run` gains a required field.
 - **Known gaps,** for the slices that build views:
-  - the hub doesn't yet write the identity and period cells;
+  - the hub didn't yet write the identity and period cells, and now does;
+  - My Shop's Stock rows were missing, and the hub now writes them;
   - the Summary breakdowns by location, phone, seller, payment method and
-    product, and My Shop's Stock and Balances rows, fill only when the hub
-    builds views. The sample's writer computes those labels from data.
+    product, and My Shop's Balances rows, fill only when the hub builds them.
+    The sample's writer computes those labels from data.
 - **The URLs in the hub's template manifest are empty** until templates are
   published in a release.
 

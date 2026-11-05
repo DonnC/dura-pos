@@ -31,7 +31,7 @@ import zipfile
 from pathlib import Path
 
 from dura_templates.files.month_file import write_month
-from dura_templates.files.my_shop import write_my_shop
+from dura_templates.files.my_shop import stock_row_formulas, write_my_shop
 from dura_templates.profile import CURRENCIES, PC
 from dura_templates.workbook.lists import starter_lists
 
@@ -40,6 +40,8 @@ MONTH_FILE = "Month.xlsx"
 
 CURRENCY_NAMES = {"USD": "US dollar", "ZWG": "Zimbabwe Gold (ZiG)", "ZAR": "South African rand"}
 ROUNDING = {"USD": "0.01", "ZWG": "0.50", "ZAR": "0.50"}
+
+STOCK_ROW_MARKER = 987654  # stands for the row number while writing the contract's formulas
 
 # Fixed times written into every template, so a rebuild gives identical bytes.
 _FIXED_ZIP_TIME = (2026, 1, 1, 0, 0, 0)
@@ -151,7 +153,8 @@ def table_contract() -> dict:
               ("Cash-ups", "month", h.H_CASHUPS), ("Fiscal Days", "month", h.H_FDAYS), ("Quotes", "month", h.H_QUOTES),
               ("Activity", "month", h.H_ACTIVITY), ("Stock Ledger", "myShop", h.H_LEDGER),
               ("Money Ledger", "myShop", h.H_MONEY), ("Stock Counts", "myShop", h.H_COUNTS),
-              ("Purchases", "myShop", h.H_PURCHASES), ("Payment Callbacks", "myShop", h.H_CALLBACKS))
+              ("Purchases", "myShop", h.H_PURCHASES), ("Payment Callbacks", "myShop", h.H_CALLBACKS),
+              ("Months", "myShop", h.H_MONTHS))
     contract = {}
     for table, file, columns in tables:
         fields = {}
@@ -161,7 +164,11 @@ def table_contract() -> dict:
                 raise ValueError(f"{table}: two headings make the field {field}")
             fields[field] = {"heading": heading.replace(f"({PC})", "({pricing})"), "kind": kind or "text"}
         contract[table] = {"file": file, "fields": fields}
-    return {"tables": contract}
+    contract["Months"]["hubOnly"] = True  # phones never write this one
+    # The hub adds a Stock row per product and location, with `{r}` as its row.
+    formulas = stock_row_formulas(STOCK_ROW_MARKER)
+    stock_row = {str(c): f.replace(str(STOCK_ROW_MARKER), "{r}").replace("_xlfn.", "") for c, (f, _) in formulas.items()}
+    return {"tables": contract, "stockRow": stock_row}
 
 
 def write_contract(out: Path, hub_file: Path | None = None) -> None:

@@ -891,6 +891,84 @@
      "kind": "text"
     }
    }
+  },
+  "Months": {
+   "file": "myShop",
+   "fields": {
+    "year": {
+     "heading": "Year",
+     "kind": "int"
+    },
+    "month": {
+     "heading": "Month",
+     "kind": "text"
+    },
+    "status": {
+     "heading": "Status",
+     "kind": "text"
+    },
+    "sales": {
+     "heading": "Sales",
+     "kind": "int"
+    },
+    "sales_incl_vat_pricing": {
+     "heading": "Sales incl VAT ({pricing})",
+     "kind": "money"
+    },
+    "vat_pricing": {
+     "heading": "VAT ({pricing})",
+     "kind": "money"
+    },
+    "sales_before_vat_pricing": {
+     "heading": "Sales before VAT ({pricing})",
+     "kind": "money"
+    },
+    "cost_of_goods_sold_pricing": {
+     "heading": "Cost of goods sold ({pricing})",
+     "kind": "money"
+    },
+    "gross_profit_pricing": {
+     "heading": "Gross profit ({pricing})",
+     "kind": "money"
+    },
+    "output_vat_usd": {
+     "heading": "Output VAT USD",
+     "kind": "money"
+    },
+    "output_vat_zwg": {
+     "heading": "Output VAT ZWG",
+     "kind": "money"
+    },
+    "output_vat_zar": {
+     "heading": "Output VAT ZAR",
+     "kind": "money"
+    },
+    "money_in_usd": {
+     "heading": "Money in USD",
+     "kind": "money"
+    },
+    "money_in_zwg": {
+     "heading": "Money in ZWG",
+     "kind": "money"
+    },
+    "money_in_zar": {
+     "heading": "Money in ZAR",
+     "kind": "money"
+    },
+    "written_by": {
+     "heading": "Written by",
+     "kind": "text"
+    }
+   },
+   "hubOnly": true
   }
+ },
+ "stockRow": {
+  "2": "=IFERROR(INDEX(Products!$B:$B,MATCH($A{r},Products!$A:$A,0)),\"\")",
+  "4": "=SUMIFS('Stock Ledger'!$J:$J,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r})",
+  "5": "=IFERROR(INDEX(Products!$K:$K,MATCH($A{r},Products!$A:$A,0)),0)",
+  "6": "=IF($D{r}<=0,\"\ud83d\udd34 Out\",IF($D{r}<=$E{r},\"\ud83d\udfe1 Low\",\"\ud83d\udfe2 OK\"))",
+  "7": "=IFERROR($D{r}*INDEX(Products!$H:$H,MATCH($A{r},Products!$A:$A,0)),0)",
+  "8": "=IF(MAX(MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Stock in\"),MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Moved in\"))=0,\"\",MAX(MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Stock in\"),MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Moved in\")))"
  }
 }

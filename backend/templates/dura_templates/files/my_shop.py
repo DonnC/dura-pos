@@ -31,6 +31,28 @@ from dura_templates.workbook.tables import add_table, col, mark_formula_tab, rea
 TEMPLATE_LOCATION_ROWS = 10  # a template's Summary lists up to this many locations by formula
 
 
+def stock_row_formulas(r: int) -> dict[int, tuple[str, str | None]]:
+    """One Stock row's formulas, by column: column 1 is the product and 3 the
+    location. They're over this year's Stock Ledger. The hub writes the same
+    formulas for a real shop's products, from the template contract.
+    """
+    sled = "'Stock Ledger'"
+    L = {h: col(H_LEDGER, h) for h in ("Date", "Location", "Type", "Product ID", "Qty")}
+    PR = {h: col(H_PRODUCTS, h) for h in ("Low-stock level", f"Cost ({PC})")}
+    last_in = (f"MAX(_xlfn.MAXIFS({sled}!${L['Date']}:${L['Date']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},"
+               f"{sled}!${L['Location']}:${L['Location']},$C{r},{sled}!${L['Type']}:${L['Type']},\"Stock in\"),"
+               f"_xlfn.MAXIFS({sled}!${L['Date']}:${L['Date']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},"
+               f"{sled}!${L['Location']}:${L['Location']},$C{r},{sled}!${L['Type']}:${L['Type']},\"Moved in\"))")
+    return {
+        2: (f"=IFERROR(INDEX(Products!$B:$B,MATCH($A{r},Products!$A:$A,0)),\"\")", None),
+        4: (f"=SUMIFS({sled}!${L['Qty']}:${L['Qty']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},{sled}!${L['Location']}:${L['Location']},$C{r})", "int"),
+        5: (f"=IFERROR(INDEX(Products!${PR['Low-stock level']}:${PR['Low-stock level']},MATCH($A{r},Products!$A:$A,0)),0)", None),
+        6: (f'=IF($D{r}<=0,"🔴 Out",IF($D{r}<=$E{r},"🟡 Low","🟢 OK"))', None),
+        7: (f"=IFERROR($D{r}*INDEX(Products!${PR[f'Cost ({PC})']}:${PR[f'Cost ({PC})']},MATCH($A{r},Products!$A:$A,0)),0)", "money"),
+        8: (f'=IF({last_in}=0,"",{last_in})', "date"),
+    }
+
+
 def write_my_shop(content: dict | None = None, path: Path | None = None):
     """Writes My Shop: inputs the owner edits (products, contacts, staff,
     settings, rates), the ledgers phones add to, and the formula reports.
@@ -57,25 +79,16 @@ def write_my_shop(content: dict | None = None, path: Path | None = None):
                ("Low-stock level", "int", 9), ("Status", None, 10), (f"Stock value ({PC})", "money", 11),
                ("Last received", "date", 12)]
     ws = add_table(wb, "Stock", H_STOCK, [], kind="dura")
-    L = {h: col(H_LEDGER, h) for h in ("Date", "Location", "Type", "Product ID", "Qty")}
-    PR = {h: col(H_PRODUCTS, h) for h in ("Low-stock level", f"Cost ({PC})")}
     sled, mled = "'Stock Ledger'", "'Money Ledger'"
     r = 1
     for loc, pid in content["stock"]:
-        if True:  # keeps the layout code below unchanged
-            r += 1
-            ws.cell(row=r, column=1, value=pid)
-            ws.cell(row=r, column=2, value=f"=IFERROR(INDEX(Products!$B:$B,MATCH($A{r},Products!$A:$A,0)),\"\")")
-            ws.cell(row=r, column=3, value=loc)
-            ws.cell(row=r, column=4, value=f"=SUMIFS({sled}!${L['Qty']}:${L['Qty']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},{sled}!${L['Location']}:${L['Location']},$C{r})").number_format = FMT["int"]
-            ws.cell(row=r, column=5, value=f"=IFERROR(INDEX(Products!${PR['Low-stock level']}:${PR['Low-stock level']},MATCH($A{r},Products!$A:$A,0)),0)")
-            ws.cell(row=r, column=6, value=f'=IF($D{r}<=0,"🔴 Out",IF($D{r}<=$E{r},"🟡 Low","🟢 OK"))')
-            ws.cell(row=r, column=7, value=f"=IFERROR($D{r}*INDEX(Products!${PR[f'Cost ({PC})']}:${PR[f'Cost ({PC})']},MATCH($A{r},Products!$A:$A,0)),0)").number_format = FMT["money"]
-            mx = (f"MAX(_xlfn.MAXIFS({sled}!${L['Date']}:${L['Date']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},"
-                  f"{sled}!${L['Location']}:${L['Location']},$C{r},{sled}!${L['Type']}:${L['Type']},\"Stock in\"),"
-                  f"_xlfn.MAXIFS({sled}!${L['Date']}:${L['Date']},{sled}!${L['Product ID']}:${L['Product ID']},$A{r},"
-                  f"{sled}!${L['Location']}:${L['Location']},$C{r},{sled}!${L['Type']}:${L['Type']},\"Moved in\"))")
-            ws.cell(row=r, column=8, value=f'=IF({mx}=0,"",{mx})').number_format = FMT["date"]
+        r += 1
+        ws.cell(row=r, column=1, value=pid)
+        ws.cell(row=r, column=3, value=loc)
+        for column, (formula, fmt) in stock_row_formulas(r).items():
+            cell = ws.cell(row=r, column=column, value=formula)
+            if fmt:
+                cell.number_format = FMT[fmt]
     ws.auto_filter.ref = f"A1:H{r}"
     highlight(ws, f"A2:H{r}", 'ISNUMBER(SEARCH("Out",$F2))', BAD)
     highlight(ws, f"A2:H{r}", 'ISNUMBER(SEARCH("Low",$F2))', WARN)

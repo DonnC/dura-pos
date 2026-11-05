@@ -160,7 +160,9 @@ function runSetup_(request, services, device) {
       cells[TEMPLATE_CELLS_.myShop.hubVersion] = HUB_VERSION_;
       cells[TEMPLATE_CELLS_.myShop.dataYear] = Number(year);
       writeCells_(myShop, cells);
+      store.set('dataYear', year);
     });
+    installTriggers_();
     return {
       status: 'ready',
       business: store.get('businessId'),

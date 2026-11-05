@@ -242,15 +242,50 @@ body: {"name": "Chipo's Corner Shop", "timeZone": "Africa/Harare", "pricingCurre
 - **Before setup,** `journal.put` answers `retryable_unavailable` /
   `not_set_up`. The phone keeps its batches until setup is done.
 
+### `changes.pull`
+
+Master data from the tabs the owner edits. Any paired phone may ask.
+
+```text
+body:   {"since":"<version from the last reply>"}          since is optional
+result: {"unchanged":false,"version":"<sha-256>",
+         "tables":{"Products":[{"product_id":"P001","name":"Bread loaf",
+                                "price_pricing":"1.50","active":"Yes"}],
+                   "Locations":[],"Staff":[],"Contacts":[],"Currencies":[],
+                   "Payment Methods":[],"Settings":[],"Exchange Rates":[]},
+         "skipped":[{"table":"Products","row":4,"reason":"..."}]}
+result when up to date: {"unchanged":true,"version":"<sha-256>"}
+```
+
+- Rows are keyed by field ID. Every value is a string; blank rows are dropped.
+- The tabs are proposals from a person: a row the hub can't use is left out and
+  listed in `skipped`, so the owner can fix it. It never reaches a phone.
+- The version is a hash of what was read, not a clock.
+- A pull also brings My Shop's `Stock` tab up to date, when products or
+  locations changed.
+
+### `status`
+
+The backend's health. Any paired phone may ask; it holds no secrets.
+
+```text
+result: {"hub":"0.1.0-dev.1","protocols":[1],"business":"...","pricingCurrency":"USD",
+         "views":{"queued":0,"skipped":0},
+         "phones":[{"device":"P1","name":"Owner phone","role":"owner",
+                    "through":124,"viewed":124,"lastSeen":1793700000}]}
+```
+
+`through` is the last batch stored, `viewed` the last one in the Sheets views,
+and `lastSeen` the last accepted upload in Unix seconds, or 0. `views.skipped`
+counts rows or fields this hub didn't recognise.
+
 ### Planned
 
 | Action | Purpose |
 |---|---|
-| `changes.pull` | Master data changed since a version: products, prices, rates, staff, settings |
 | `attachment.put` | A product or supplier-invoice photo |
 | `export.request` | An Excel or CSV export of a period |
 | `payment.start`, `payment.check` | Payments with the shop's provider keys |
-| `status` | View lag, registry health, last seen per device, backend version |
 | `keys.set` | Owner only: store payment-provider keys |
 
 ## Versioning

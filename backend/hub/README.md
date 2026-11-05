@@ -23,11 +23,15 @@ open questions are in [note 15](../../notes/15-apps-script-route.md).
   - accepting journal batches in order;
   - writing journal rows into the Sheets views, queued and retried;
   - shop setup: folders, `My Shop` and this month's workbook from checked
-    templates, `business.json` and the file registry.
+    templates, `business.json` and the file registry;
+  - handing master data to phones, with bad rows skipped and listed;
+  - `Stock` rows per product and location;
+  - timers that catch views up, make next month's and next year's files, move
+    `Data year` on and keep the `Months` tab current, with every phone off;
+  - a health report for the owner's screen.
 - **Planned:**
-  - next month's and next year's files on a timer;
   - payments;
-  - scheduled jobs;
+  - photos and exports;
   - install and update.
 
 ## Set up and verify
@@ -86,6 +90,8 @@ backend/hub/
     journal.js         batch acceptance and per-device batch numbers
     journal_drive.js   stores batches as JSON files in Drive
     views.js           journal rows into Sheets, exactly once, by heading
+    master_data.js     changes.pull: master data for phones, and the Stock rows
+    jobs.js            timers, the daily pass, the Months tab, status
     view_contract.js   generated: tables and fields phones may write
     services.js        the services object and the script lock
     property_store.js  Script Properties read once per execution, reloaded under the lock
@@ -137,6 +143,11 @@ backend/hub/
 - **The template manifest's URLs are empty** until templates are published in
   a release, so `setup.run` answers `template_unavailable` on a real install
   until then. The hashes come from `backend/templates/dist/manifest.json`.
+- **`Values.batchGet(id, {ranges, ...})`** is inferred from how the advanced
+  services order their arguments; it's not on Google's pages. Spike 2 must
+  confirm it, along with `USER_ENTERED` formulas in a converted sheet.
+- **A daily step that fails** is logged and tried again the next day. Nothing
+  reports it to the owner yet.
 - **The Sheets advanced service's manifest entry** (`sheets`, `v4`) follows
   Google's Drive example; the pages don't state it. Using `drive.file` alone
   for Sheets writes follows the API reference. Spike 2 must confirm both on a
@@ -160,5 +171,10 @@ possible:
 - **Sheets:** setup makes one `batchUpdate` per file, and none on a repeat. The
   cell addresses come from the template manifest, so no sheet is read to find
   them.
+- **Master data:** one `batchGet` per pull. Stock rows are written only when
+  their hash changes.
+- **Timers:** `runViews` runs every 15 minutes and stops after one property
+  read if the queue is empty, and `dailyJob` runs once. Timers share a daily
+  runtime budget, 90 minutes on a Gmail account.
 - **Replay checks** use `CacheService`, not properties.
 - **The script lock** is held only around writes.

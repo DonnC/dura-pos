@@ -10,6 +10,22 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: daily operation in the hub
+
+- **`changes.pull`** gives phones master data by field ID, in one Sheets read.
+  Bad rows are skipped and listed, and a phone already up to date gets a short
+  reply.
+- **The `Stock` tab** gets a row per active product and location, with the
+  generator's own formulas (now in `contract.json`), and old rows are blanked.
+- **Timers:** views catch up every 15 minutes. A daily pass makes next month's
+  file from the 25th, moves `Data year` on and keeps the `Months` tab current,
+  so `Reports` works across months. A failing step doesn't stop the others.
+- **`status`** reports hub version, view lag and each phone's progress, with no
+  secrets.
+- **`Months` is hub-only:** a phone's rows for it are skipped.
+- **Validation:** 85 hub tests, 14 template tests; all 102 sample files match
+  their fingerprints.
+
 ### Added: Sheets views in the hub
 
 - **Journal rows now reach the workbooks.** Events carry rows keyed by stable

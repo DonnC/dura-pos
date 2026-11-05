@@ -56,6 +56,7 @@ function putJournal_(request, services, device) {
     var marks = {};
     marks[key] = body.batch;
     marks[queued] = stored.id;
+    marks['seen:' + device.id] = services.now();
     services.store.setMany(marks); // accepted and queued for views, in one write
     /** @type {Object<string, any[]>} */
     var known = {};

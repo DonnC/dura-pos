@@ -160,6 +160,7 @@ function createSheets() {
     gets: 0,
     grown: [],
     headings: {},
+    cells: {},
     rowCount: 1000,
     Spreadsheets: {
       get(spreadsheetId, options) {
@@ -180,6 +181,15 @@ function createSheets() {
         return {};
       },
       Values: {
+        batchGet(spreadsheetId, options) {
+          sheets.gets += 1;
+          return {
+            valueRanges: options.ranges.map((range) => ({
+              range,
+              values: sheets.cells[range.split('!')[0].replace(/'/g, '')] || [],
+            })),
+          };
+        },
         batchUpdate(request, spreadsheetId) {
           sheets.calls += 1;
           if (sheets.calls === sheets.failOnCall) throw new Error('Sheets is unavailable');
@@ -190,6 +200,22 @@ function createSheets() {
     },
   };
   return sheets;
+}
+
+/** ScriptApp: the OAuth token, and time triggers described in plain words. */
+function createScriptApp() {
+  const app = { created: [] };
+  app.getOAuthToken = () => 'fake-token';
+  app.getProjectTriggers = () => app.created.map((text) => ({ getHandlerFunction: () => text.split(' ')[0] }));
+  app.newTrigger = (name) => ({
+    timeBased: () => ({
+      everyMinutes: (n) => ({ create: () => app.created.push(`${name} every ${n} minutes`) }),
+      everyDays: (n) => ({
+        atHour: (h) => ({ create: () => app.created.push(`${name} every day at ${h}`) }),
+      }),
+    }),
+  });
+  return app;
 }
 
 /** Utilities.formatDate for the patterns the hub uses. */
@@ -217,7 +243,7 @@ function createGoogle(options = {}) {
   return {
     clock,
     UrlFetchApp: urlFetch,
-    ScriptApp: { getOAuthToken: () => 'fake-token' },
+    ScriptApp: createScriptApp(),
     Utilities: {
       DigestAlgorithm: { SHA_256: 'SHA_256' },
       Charset: { UTF_8: 'UTF_8' },

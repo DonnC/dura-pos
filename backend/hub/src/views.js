@@ -121,7 +121,7 @@ function groupRows_(events) {
     Object.keys(event.rows || {}).forEach(function (table) {
       var spec = VIEW_CONTRACT_.tables[table];
       var period = /^(\d{4}-\d{2})-/.exec(String(event.at));
-      if (!spec || (spec.file === 'month' && !period)) {
+      if (!spec || spec.hubOnly || (spec.file === 'month' && !period)) {
         skipped += 1;
         return;
       }
