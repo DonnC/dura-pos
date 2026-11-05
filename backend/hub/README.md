@@ -144,18 +144,16 @@ backend/hub/
   The phone must never reuse a batch number.
 - **The Drive writer stores batches in one journal folder.** Routing them
   into per-month folders comes later.
-- **Folders are created with a `null` upload** and `{fields: 'id'}`, a call
-  shape not shown in Google's samples. Spike 2 in note 15 must confirm it
-  against the real Drive advanced service.
 - **If setup fails between creating a file and recording its ID,** the next
   run creates that one file again. The earlier copy is left behind; nothing
   else is duplicated.
 - **The template manifest's URLs are empty** until templates are published in
   a release, so `setup.run` answers `template_unavailable` on a real install
   until then. The hashes come from `backend/templates/dist/manifest.json`.
-- **`Values.batchGet(id, {ranges, ...})`** is inferred from how the advanced
-  services order their arguments; it's not on Google's pages. Spike 2 must
-  confirm it, along with `USER_ENTERED` formulas in a converted sheet.
+- **`USER_ENTERED` formulas in a converted sheet** haven't been checked on a real
+  account yet, because the first run had no products.
+- **An owner can untick single permissions on Google's consent screen.** What the
+  hub does with fewer than all three isn't tested.
 - **Paynow has only been tested against a fake.** Its documentation doesn't
   show the mobile checkout's first reply, so the hub assumes it matches the
   ordinary one (`Status`, `PollUrl`, `Hash`). InnBucks' authorisation code
@@ -171,14 +169,10 @@ backend/hub/
 - **A new photo for the same product is a new file;** the old one stays.
 - **Google limits a Drive export to 10 MB.** A larger workbook answers
   `export_failed`; a CSV of one tab still works.
-- **The shop page has been rendered in a browser, not served by Google.** Its
-  buttons and any banner Google adds need the real-account test.
+- **The shop page's buttons, and any banner Google adds,** still need checking on
+  a phone.
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
-- **The Sheets advanced service's manifest entry** (`sheets`, `v4`) follows
-  Google's Drive example; the pages don't state it. Using `drive.file` alone
-  for Sheets writes follows the API reference. Spike 2 must confirm both on a
-  real account.
 
 ## Keeping inside Google's limits
 

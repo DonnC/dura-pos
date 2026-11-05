@@ -9,9 +9,9 @@ SPDX-License-Identifier: MIT
 # Testing the hub on a real Google account
 
 The hub's tests run on fake Google services, so they can't prove what Google really
-does. This is the first real run, and it covers spikes 1 to 3 in
+does. This run covers spikes 1 to 3 in
 [note 15](../../notes/15-apps-script-route.md), plus the shop page. Allow about an
-hour. Nothing here touches a real shop.
+hour. Nothing here touches a real shop. The first run's results are at the end.
 
 `node tools/try_hub.js` stands in for a phone. It keeps the install code and the
 device secret in `backend/hub/.try/`, which Git ignores.
@@ -53,8 +53,7 @@ npx clasp create-script --type standalone --title "Dura Shop Hub test" --rootDir
 
 `clasp login` opens a browser. Sign in with the **test account**, not your own.
 
-Now fill in the hub and upload it. The install code it prints lasts 15 minutes, so
-keep going:
+Now fill in the hub, upload it and deploy it:
 
 ```sh
 cd ..
@@ -64,11 +63,8 @@ npx clasp push --force
 npx clasp create-deployment --description "First test"
 ```
 
-Copy the deployment ID it prints. Your hub's address is:
-
-```text
-https://script.google.com/macros/s/<deployment ID>/exec
-```
+Ignore the install code `prepare` printed: the next step takes longer than it
+lasts. You'll get a fresh one in step 5.
 
 ## 4. Authorise it
 
@@ -86,18 +82,24 @@ has to prepare them for it.
 
 ## 5. Try it
 
-Go back to `backend/hub` in the terminal.
+Go back to `backend/hub` in the terminal, and get a new install code. `fresh`
+uploads it, redeploys, and prints your hub's address and the code:
 
 ```sh
-node tools/try_hub.js pair "<hub address>" <install code>
+node tools/try_hub.js fresh
+```
+
+Pair within 15 minutes, using what it printed:
+
+```sh
+node tools/try_hub.js pair "<address>" <code>
 node tools/try_hub.js setup "Test Corner Shop" Africa/Harare USD
 node tools/try_hub.js status
 node tools/try_hub.js sale
 node tools/try_hub.js status
 ```
 
-If the install code has run out, run `prepare` again, then `clasp push --force` and
-`clasp create-deployment --deploymentId <deployment ID>` from `.try`.
+If the install code runs out, run `fresh` again.
 
 ## 6. Look at what it made
 
@@ -166,6 +168,42 @@ Then delete the `.try` folder. You can keep the test account for the next round.
 |---|---|
 | `clasp` says the Apps Script API isn't enabled | Step 1.4, or wait a few minutes after turning it on |
 | `The hub did not answer JSON` | Step 4 wasn't done, or the address is wrong |
-| `bad_code` when pairing | The install code ran out or was used. Run `prepare` again, and start over with a new script project if the hub already has an owner |
+| `bad_code` when pairing | The install code ran out. Run `fresh` again. If the hub already has an owner, it needs a new script project |
 | `template_unavailable` during setup | Step 2: the template address isn't public, or `prepare` ran before the latest templates were pushed |
-| `npx clasp` sits with no output | Press Ctrl+C and run it again, or use `node ..\node_modules\@google\clasp\build\src\index.js` in its place |
+| `npx clasp` sits with no output | Press Ctrl+C and run it again |
+
+## Results of the first run
+
+5 November 2026, on a consumer Gmail account, with the repository public.
+
+**Proven on real Google:**
+
+| Check | Result |
+|---|---|
+| Install with `clasp`, and the consent screen | Worked. Google asks for three permissions, each with its own tick box |
+| Pairing and signed requests | Worked. A replayed request was refused |
+| Setup: folders, template download and hash check, conversion, filling cells, timers | Worked in 16 seconds |
+| `drive.file` alone for Sheets, and the `sheets` `v4` manifest entry | Worked: no `spreadsheets` scope is needed |
+| `Values.batchGet` and `Values.batchUpdate` with the advanced service | Worked |
+| A sale into the journal and Sheets views | Worked: `viewed` matched `through` |
+| A batch of 200 sales | Accepted and viewed in about 4.5 seconds, twice |
+| Re-sending a batch after a lost reply | Acknowledged, with nothing stored twice |
+| `changes.pull` on the real template | Read every table, with no skipped rows |
+| Photos, and Excel and CSV exports | Worked |
+| Shop page | Answered an anonymous request with HTTP 200 and the shop's title |
+
+Google wraps the page in its own frame, so a command-line request can't show whether
+a banner appears.
+
+**Still to confirm by eye:** the table in step 6, and the shop page on a phone.
+
+**Still to run:** the daily job, a timer firing by itself, Paynow's sandbox, and
+spikes 6 and 7.
+
+**Learned:**
+
+- Authorising took about 11 minutes the first time, longer than the install code
+  lasts, so the code must be issued after authorising. An app install has to do the
+  same.
+- Google's screen lets an owner untick single permissions, and the app needs to
+  explain that all three are needed. What the hub does with fewer isn't tested yet.

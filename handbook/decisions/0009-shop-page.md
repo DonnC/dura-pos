@@ -60,5 +60,6 @@ Call, WhatsApp and Directions buttons, and a searchable list of products and pri
 
 - Tests show that private fields never appear, that owner text is escaped, and that
   50 visits read nothing from Sheets or Script Properties.
-- It's been rendered in a browser with sample data, but not yet served by Google.
+- Google has served it to an anonymous request. Its buttons, and any banner Google
+  adds, still need checking on a phone.
 - To reverse it, remove `doGet`; the web app then answers GET with an error.

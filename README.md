@@ -33,8 +33,8 @@ edit and take with them.
 POS is that store for a shop's sales, stock and money.
 
 > **Early development: not ready for live trading.** The backend is written and
-> tested, but hasn't run on a real Google account yet. The app has its foundation,
-> with no selling screens yet. See [where it stands](#where-it-stands).
+> tested, and its main path has run on a real Google account. The app has its
+> foundation, with no selling screens yet. See [where it stands](#where-it-stands).
 
 ## Why Dura
 
@@ -128,7 +128,7 @@ turn it off ([decision 0009](handbook/decisions/0009-shop-page.md)).
 | Part | State |
 |---|---|
 | Workbook generator | Built: a complete sample shop, and clean templates for each pricing currency |
-| Shop Hub | Written and tested against fake Google services: pairing, journal, shop setup, Sheets views, timers, Paynow, photos, exports, shop page. **Not yet run on a real Google account** |
+| Shop Hub | Written and tested: pairing, journal, shop setup, Sheets views, timers, Paynow, photos, exports, shop page. The [first run on a real Google account](handbook/engineering/10-real-account-test.md#results-of-the-first-run) passed for install, setup, uploads, views, photos and exports. **Timers and Paynow's sandbox are still to try** |
 | App foundation | Built: Flutter workspace, shared UI, local storage, on-device diagnostics, money types |
 | Selling screens, backend port, hub install | Next |
 | Staff, stock, reports | [Designed](handbook/product/02-capabilities.md) |

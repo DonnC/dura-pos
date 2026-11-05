@@ -10,6 +10,18 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Proven: the hub's first run on a real Google account
+
+- **Worked on real Google:** install, consent, pairing, signed requests, setup in
+  16 seconds, views, a 200-sale batch in about 4.5 seconds, a re-sent batch, a
+  refused replay, `changes.pull`, photos, Excel and CSV exports, and the shop page.
+- **Settled:** `drive.file` alone is enough for Sheets, and the `batchGet` call and
+  `sheets` manifest entry are right.
+- **`try_hub.js fresh`** issues the install code after authorising, which takes
+  longer than the code lasts, and prints the hub's address.
+- **Not yet proven:** timers, the daily job, formulas written by the hub, and
+  Paynow's sandbox.
+
 ### Added: a shop page, payment docs and a brand set
 
 - **The hub's address now shows a one-page shop page:** the shop's name and

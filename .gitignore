@@ -6,6 +6,7 @@
 
 # A trial hub: holds an install code and a device secret
 backend/hub/.try/
+backend/hub/screenshots/
 
 # Gradle files
 .gradle/

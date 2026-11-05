@@ -11,6 +11,7 @@
 
 'use strict';
 
+const { execSync } = require('node:child_process');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -82,11 +83,59 @@ async function sale() {
   return reply;
 }
 
+/** Times one batch of many sales, then re-sends it, as a phone does after a lost reply. */
+async function load(count = '200') {
+  const device = loadDevice();
+  device.batch = (device.batch || 0) + 1;
+  const at = new Date().toISOString();
+  const events = Array.from({ length: Number(count) }, (_, i) => {
+    const id = `${device.device}-S${at.slice(2, 10).replace(/-/g, '')}-L${device.batch}-${i + 1}`;
+    return {
+      id, type: 'sale.completed', at,
+      data: { total: '1.00', currency: 'USD' },
+      rows: { Sales: [{ sale_id: id, date: at.slice(0, 10), phone: device.device, currency: 'USD', total: '1.00' }] },
+    };
+  });
+  const body = client.batch(device.batch, events);
+  const started = Date.now();
+  const first = await send('journal.put', body);
+  const seconds = (Date.now() - started) / 1000;
+  if (first.ok) fs.writeFileSync(DEVICE, JSON.stringify(device, null, 2));
+  return { seconds, first: first.result ?? first.error, again: (await send('journal.put', body)).result };
+}
+
+/** Sends the very same signed request twice. The second must be refused. */
+async function retry() {
+  const device = loadDevice();
+  const request = client.signed({ device: device.device, secret: device.secret, action: 'status', body: {}, ts: Math.floor(Date.now() / 1000) });
+  const first = await post(device.url, request);
+  const second = await post(device.url, request);
+  return { first: first.ok, second: second.error ?? second.ok };
+}
+
+/** Runs clasp in .try and returns what it printed. */
+function clasp(args) {
+  const bin = path.join(HUB, 'node_modules', '.bin', 'clasp');
+  return execSync(`"${bin}" ${args}`, { cwd: TRY, encoding: 'utf8' });
+}
+
+/** A new install code on the same hub, and the address to pair with. */
+function fresh(base = RAW) {
+  const code = prepare(TRY, base, Math.floor(Date.now() / 1000));
+  clasp('push --force');
+  const ids = clasp('list-deployments').match(/AKfy[A-Za-z0-9_-]+/g) ?? [];
+  const id = ids[ids.length - 1];
+  if (!id) throw new Error('No deployment yet. Run clasp create-deployment in .try first.');
+  clasp(`create-deployment --deploymentId ${id} --description "Fresh install code"`);
+  return { address: `https://script.google.com/macros/s/${id}/exec`, code, note: 'Valid for 15 minutes.' };
+}
+
 const COMMANDS = {
   prepare: (base = RAW) => {
     const code = prepare(TRY, base, Math.floor(Date.now() / 1000));
     return { code, note: 'Valid for 15 minutes. Push and deploy now.' };
   },
+  fresh,
   pair: async (url, code) => {
     const reply = await post(url, { v: 1, ts: Math.floor(Date.now() / 1000), action: 'pair', body: { code, name: 'Test phone' } });
     if (reply.ok) {
@@ -106,6 +155,13 @@ const COMMANDS = {
     return send('payment.start', { reference: `T-PAY${stamp}`, provider: 'paynow', method, amount, currency, payer });
   },
   check: (reference) => send('payment.check', { reference }),
+  load,
+  retry,
+  photo: () => send('attachment.put', {
+    kind: 'product', id: 'TRY-PHOTO', contentType: 'image/png',
+    data: fs.readFileSync(path.join(HUB, 'src', 'appsscript.json')).toString('base64'),
+  }),
+  export: (file = 'myShop', format = 'xlsx', table) => send('export.request', { file, format, ...(table ? { table } : {}) }),
 };
 
 async function main() {
