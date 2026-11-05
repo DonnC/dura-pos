@@ -152,6 +152,20 @@ function rowCells_(table, row, headings, pricing) {
 }
 
 /**
+ * Writes one hub-made row at a known position, by heading. Call inside the lock.
+ * @param {any} services @param {string} fileId @param {string} table @param {number} at @param {any} row
+ */
+function writeRowAt_(services, fileId, table, at, row) {
+  var sheet = sheetInfo_(services, fileId, [table])[table];
+  growIfNeeded_(services, fileId, table, sheet, at);
+  var built = rowCells_(table, row, sheet.headings, services.store.get('pricingCurrency'));
+  Sheets.Spreadsheets.Values.batchUpdate({
+    valueInputOption: 'RAW',
+    data: [{ range: "'" + table + "'!A" + at + ':' + columnLetter_(sheet.headings.length) + at, values: [built.cells] }],
+  }, fileId);
+}
+
+/**
  * Writes one batch's rows, in one Sheets call per workbook, and returns the
  * row pointers to save once every workbook has succeeded.
  * @param {any} services @param {any[]} events

@@ -75,12 +75,15 @@ function createBlob(data, contentType, name) {
 function createUrlFetch() {
   const routes = new Map();
   const log = [];
-  const respond = (request) => {
+  const respond = (request, options) => {
     const url = typeof request === 'string' ? request : request.url;
     log.push(url);
+    if (options) urlFetch.posts.push({ url, options });
     const media = /drive\/v3\/files\/([^?]+)\?alt=media/.exec(url);
     const stored = media && urlFetch.drive.files.find((f) => f.id === media[1]);
-    const route = stored ? { code: 200, body: stored.content } : routes.get(url) || { code: 404, body: 'Not Found' };
+    const found = routes.get(url);
+    const answer = typeof found === 'function' ? found(options) : found;
+    const route = stored ? { code: 200, body: stored.content } : answer || { code: 404, body: 'Not Found' };
     const bytes = toSignedBytes(Buffer.from(route.body));
     return {
       getResponseCode: () => route.code,
@@ -92,9 +95,10 @@ function createUrlFetch() {
   const urlFetch = {
     routes,
     log,
+    posts: [],
     drive: null,
-    fetch: (url) => respond(url),
-    fetchAll: (requests) => requests.map(respond),
+    fetch: (url, options) => respond(url, options),
+    fetchAll: (requests) => requests.map((request) => respond(request)),
   };
   return urlFetch;
 }
@@ -206,6 +210,7 @@ function createSheets() {
 function createScriptApp() {
   const app = { created: [] };
   app.getOAuthToken = () => 'fake-token';
+  app.getService = () => ({ getUrl: () => 'https://script.test/exec' });
   app.getProjectTriggers = () => app.created.map((text) => ({ getHandlerFunction: () => text.split(' ')[0] }));
   app.newTrigger = (name) => ({
     timeBased: () => ({
@@ -222,8 +227,13 @@ function createScriptApp() {
 function formatDate(date, timeZone, pattern) {
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
     timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
   }).formatToParts(date).map((p) => [p.type, p.value]));
   return pattern
+    .replace("'T'", 'T')
+    .replace('HH', parts.hour)
+    .replace('mm', parts.minute)
+    .replace('ss', parts.second)
     .replace('yyyy', parts.year)
     .replace('yy', parts.year.slice(2))
     .replace('MM', parts.month)
@@ -245,10 +255,10 @@ function createGoogle(options = {}) {
     UrlFetchApp: urlFetch,
     ScriptApp: createScriptApp(),
     Utilities: {
-      DigestAlgorithm: { SHA_256: 'SHA_256' },
+      DigestAlgorithm: { SHA_256: 'sha256', SHA_512: 'sha512' },
       Charset: { UTF_8: 'UTF_8' },
       computeDigest(algorithm, value) {
-        return toSignedBytes(crypto.createHash('sha256').update(toBuffer(value)).digest());
+        return toSignedBytes(crypto.createHash(algorithm).update(toBuffer(value)).digest());
       },
       computeHmacSha256Signature(value, key) {
         const mac = crypto.createHmac('sha256', toBuffer(key));

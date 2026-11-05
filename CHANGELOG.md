@@ -10,6 +10,22 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: payments in the hub
+
+- **Paynow mobile checkout** (EcoCash, OneMoney, InnBucks, O'mari) with the
+  shop's own keys, set per currency from the owner's phone and never returned.
+- **Paid comes only from Paynow's status check,** with its hash verified and
+  the amount matched. A callback is logged and only prompts a check.
+- **A charge is never repeated.** The reference is claimed before Paynow is
+  called, and a lost reply stays `unknown`.
+- **`Payment Callbacks`** gets a row per update, rejected ones included, and
+  only the hub can write it.
+- **Providers sit behind one adapter contract,** ready for ZB Smile&Pay.
+- **The customer's number isn't kept** after the prompt.
+- **Not yet tried against Paynow's sandbox.**
+- **Validation:** 115 hub tests; seven deliberate breaks of the hash, amount,
+  ownership and claim checks each failed a test.
+
 ### Added: daily operation in the hub
 
 - **`changes.pull`** gives phones master data by field ID, in one Sheets read.

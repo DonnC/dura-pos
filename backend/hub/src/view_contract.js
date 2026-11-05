@@ -892,7 +892,8 @@ var VIEW_CONTRACT_ = {
      "heading": "Note",
      "kind": "text"
     }
-   }
+   },
+   "hubOnly": true
   },
   "Months": {
    "file": "myShop",

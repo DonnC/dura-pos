@@ -890,7 +890,8 @@
      "heading": "Note",
      "kind": "text"
     }
-   }
+   },
+   "hubOnly": true
   },
   "Months": {
    "file": "myShop",

@@ -164,7 +164,8 @@ def table_contract() -> dict:
                 raise ValueError(f"{table}: two headings make the field {field}")
             fields[field] = {"heading": heading.replace(f"({PC})", "({pricing})"), "kind": kind or "text"}
         contract[table] = {"file": file, "fields": fields}
-    contract["Months"]["hubOnly"] = True  # phones never write this one
+    for table in ("Months", "Payment Callbacks"):
+        contract[table]["hubOnly"] = True  # only the hub writes these
     # The hub adds a Stock row per product and location, with `{r}` as its row.
     formulas = stock_row_formulas(STOCK_ROW_MARKER)
     stock_row = {str(c): f.replace(str(STOCK_ROW_MARKER), "{r}").replace("_xlfn.", "") for c, (f, _) in formulas.items()}

@@ -28,9 +28,10 @@ open questions are in [note 15](../../notes/15-apps-script-route.md).
   - `Stock` rows per product and location;
   - timers that catch views up, make next month's and next year's files, move
     `Data year` on and keep the `Months` tab current, with every phone off;
-  - a health report for the owner's screen.
+  - a health report for the owner's screen;
+  - mobile payments through the shop's own Paynow keys.
 - **Planned:**
-  - payments;
+  - ZB Smile&Pay;
   - photos and exports;
   - install and update.
 
@@ -92,6 +93,8 @@ backend/hub/
     views.js           journal rows into Sheets, exactly once, by heading
     master_data.js     changes.pull: master data for phones, and the Stock rows
     jobs.js            timers, the daily pass, the Months tab, status
+    payments.js        keys, start, check, callbacks; provider-neutral
+    paynow.js          the Paynow adapter: forms, SHA-512 hashes, statuses
     view_contract.js   generated: tables and fields phones may write
     services.js        the services object and the script lock
     property_store.js  Script Properties read once per execution, reloaded under the lock
@@ -146,6 +149,13 @@ backend/hub/
 - **`Values.batchGet(id, {ranges, ...})`** is inferred from how the advanced
   services order their arguments; it's not on Google's pages. Spike 2 must
   confirm it, along with `USER_ENTERED` formulas in a converted sheet.
+- **Paynow has only been tested against a fake.** Its documentation doesn't
+  show the mobile checkout's first reply, so the hub assumes it matches the
+  ordinary one (`Status`, `PollUrl`, `Hash`). InnBucks' authorisation code
+  isn't passed on yet. Spike 5 in note 15 must try the sandbox, including a
+  callback through Google's redirect.
+- **An `unknown` payment stays unknown.** Paynow's trace call could settle it;
+  the hub doesn't use it yet.
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
 - **The Sheets advanced service's manifest entry** (`sheets`, `v4`) follows
@@ -176,5 +186,8 @@ possible:
 - **Timers:** `runViews` runs every 15 minutes and stops after one property
   read if the queue is empty, and `dailyJob` runs once. Timers share a daily
   runtime budget, 90 minutes on a Gmail account.
+- **Payments:** the reference is claimed under the lock, and the provider is
+  called outside it, so a slow provider doesn't hold up uploads. Payment
+  records are dropped after 3 days, since Script Properties hold 500 KB.
 - **Replay checks** use `CacheService`, not properties.
 - **The script lock** is held only around writes.

@@ -279,14 +279,78 @@ result: {"hub":"0.1.0-dev.1","protocols":[1],"business":"...","pricingCurrency":
 and `lastSeen` the last accepted upload in Unix seconds, or 0. `views.skipped`
 counts rows or fields this hub didn't recognise.
 
+### `keys.set`: owner only
+
+Stores a provider's keys for one currency. Keys are write-only: no reply, log,
+sheet or export ever contains them. A Paynow integration belongs to one wallet,
+so a shop sets one per currency.
+
+```text
+body:   {"provider":"paynow","currency":"USD","integrationId":"1234",
+         "integrationKey":"...","authEmail":"shop@example.com"}
+result: {"provider":"paynow","currency":"USD","set":true}
+```
+
+`status` lists what's set, as `"payments":["paynow:USD"]`.
+
+### `payment.start`
+
+Asks the provider to prompt the customer. The phone picks the reference, in
+the readable ID format, and uses a new one for each attempt.
+
+```text
+body:   {"reference":"P2-PAY261103-0001","provider":"paynow","method":"ecocash",
+         "amount":"2.50","currency":"USD","payer":"0771234567",
+         "sale":"P2-S261103-0001"}                         sale is optional
+result: {"reference":"...","state":"pending","amount":"2.50","currency":"USD"}
+```
+
+Paynow methods are `ecocash`, `onemoney`, `innbucks` and `omari`.
+
+| State | Meaning |
+|---|---|
+| `pending` | The customer has been prompted |
+| `paid` | The provider's status check confirmed it, for the right amount |
+| `failed` | Refused or not completed; `note` says why when known |
+| `cancelled` | Cancelled or refunded at the provider |
+| `unknown` | No usable reply. It may or may not have gone through |
+
+- **A reference is charged at most once.** Repeating `payment.start` returns the
+  same payment and doesn't call the provider. The same reference with another
+  amount is `integrity_conflict` / `reference_reused`.
+- **No usable reply** is `unknown_external_outcome` / `payment_outcome_unknown`,
+  and the state stays `unknown`. Never retry it: ask the customer, then record
+  the sale by hand or start a new attempt.
+- **No keys** for that provider and currency is `validation` /
+  `payments_not_set_up`. The seller takes another payment method.
+
+### `payment.check`
+
+```text
+body:   {"reference":"P2-PAY261103-0001"}
+result: as for payment.start
+```
+
+While a payment is `pending`, each check asks the provider. A provider that
+doesn't answer is `retryable_unavailable`. The hub doesn't record the sale: the
+phone does that, in its journal, once it sees `paid`.
+
+### Provider callbacks
+
+Providers post status updates to `<hub address>?cb=paynow`. These aren't
+protocol requests: they carry no envelope and always get plain `ok`.
+
+- An update for a reference the hub didn't start is ignored.
+- A bad hash is logged in `Payment Callbacks` as `Rejected`.
+- A good one is logged and makes the hub check with the provider. It never
+  marks a payment paid by itself.
+
 ### Planned
 
 | Action | Purpose |
 |---|---|
 | `attachment.put` | A product or supplier-invoice photo |
 | `export.request` | An Excel or CSV export of a period |
-| `payment.start`, `payment.check` | Payments with the shop's provider keys |
-| `keys.set` | Owner only: store payment-provider keys |
 
 ## Versioning
 

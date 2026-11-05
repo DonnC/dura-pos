@@ -90,16 +90,10 @@ function refreshMonthRow_(services, period, status) {
     written_by: 'Shop Hub',
   };
   var shop = store.get('file:myshop');
-  var sheet = sheetInfo_(services, shop, ['Months']).Months;
   var rowKey = 'months:' + period;
   var pointer = 'row:' + shop + ':Months';
   var at = Number(store.get(rowKey) || store.get(pointer) || '2');
-  growIfNeeded_(services, shop, 'Months', sheet, at);
-  var built = rowCells_('Months', row, sheet.headings, store.get('pricingCurrency'));
-  Sheets.Spreadsheets.Values.batchUpdate({
-    valueInputOption: 'RAW',
-    data: [{ range: "'Months'!A" + at + ':' + columnLetter_(sheet.headings.length) + at, values: [built.cells] }],
-  }, shop);
+  writeRowAt_(services, shop, 'Months', at, row);
   if (!store.get(rowKey)) {
     /** @type {Object<string, string | number>} */
     var marks = {};
@@ -144,6 +138,9 @@ function runDaily_(services) {
       refreshMonthRow_(services, period, 'To date');
       if (date <= DAYS_TO_CLOSE_LAST_MONTH_) refreshMonthRow_(services, addMonths_(period, -1), 'Closed');
     });
+    dailyStep_('payments', function () {
+      reviewPayments_(services);
+    });
     dailyStep_('stock rows', function () {
       refreshStockRows_(services, readMasterData_(services));
     });
@@ -174,6 +171,9 @@ function readStatus_(request, services) {
     business: store.get('businessId') || '',
     pricingCurrency: store.get('pricingCurrency') || '',
     views: { queued: viewQueue_(services).length, skipped: Number(store.get('view:skipped') || '0') },
+    payments: Object.keys(store.getAll())
+      .filter(function (key) { return key.indexOf('paykey:') === 0; })
+      .map(function (key) { return key.slice('paykey:'.length); }),
     phones: phones,
   };
 }

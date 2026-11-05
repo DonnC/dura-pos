@@ -12,6 +12,7 @@
  * @param {any} e
  */
 function doPost(e) {
+  if (e && e.parameter && e.parameter.cb) return answerCallback_(e);
   var reply;
   try {
     var request;
@@ -26,6 +27,20 @@ function doPost(e) {
   }
   return ContentService.createTextOutput(JSON.stringify(reply))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * A provider's callback, unsigned and from outside. It's a hint, so whatever
+ * goes wrong the answer is the same plain text, and it says nothing.
+ * @param {any} e
+ */
+function answerCallback_(e) {
+  try {
+    handlePaymentCallback_(e.parameter.cb, e.postData ? e.postData.contents : '', createServices_());
+  } catch (error) {
+    console.error('Callback not handled: ' + (error && error.name));
+  }
+  return ContentService.createTextOutput('ok');
 }
 
 /**
@@ -61,6 +76,9 @@ function handlerFor_(action) {
     case 'setup.run': return runSetup_;
     case 'changes.pull': return pullChanges_;
     case 'status': return readStatus_;
+    case 'keys.set': return setPaymentKeys_;
+    case 'payment.start': return startPayment_;
+    case 'payment.check': return checkPayment_;
     default: return null;
   }
 }
