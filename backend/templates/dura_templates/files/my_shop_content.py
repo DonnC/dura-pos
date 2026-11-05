@@ -128,6 +128,7 @@ def _settings() -> list[list]:
         ("Shop Hub", "Installed 15 Aug 2026, layout 3", "Apps Script in this account: payment keys and gateways, callbacks, month and year files, daily summary"),
         ("Receipt footer", "Thank you! Tatenda! Siyabonga!", ""),
         ("Data year", 2026, "The year the ledger tabs and Summary show. Dura moves it on at the year-end archive"),
+        ("Shop page", "On", "On: anyone with the hub's address sees your name, address, phone, products and prices. Never costs, stock, staff or customers"),
     ]]
 
 

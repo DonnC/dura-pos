@@ -199,8 +199,10 @@ function runDaily_(services) {
     dailyStep_('payments', function () {
       reviewPayments_(services);
     });
-    dailyStep_('stock rows', function () {
-      refreshStockRows_(services, readMasterData_(services));
+    dailyStep_('stock rows and shop page', function () {
+      var master = readMasterData_(services);
+      refreshStockRows_(services, master);
+      publishStorefront_(services, master);
     });
     dailyStep_('balances', function () {
       refreshBalanceRows_(services);

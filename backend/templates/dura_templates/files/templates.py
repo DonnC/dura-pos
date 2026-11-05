@@ -97,6 +97,7 @@ def _settings() -> list[list]:
         ("Shop Hub", "", "The hub records its version here"),
         ("Receipt footer", "Thank you!", ""),
         ("Data year", "", "The year the ledger tabs and Summary show. The hub sets it"),
+        ("Shop page", "On", "On: anyone with the hub's address sees your name, address, phone, products and prices. Never costs, stock, staff or customers"),
     ]]
 
 

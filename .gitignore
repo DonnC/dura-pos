@@ -4,6 +4,9 @@
 # found in the LICENSE file at the repository root.
 # SPDX-License-Identifier: MIT
 
+# A trial hub: holds an install code and a device secret
+backend/hub/.try/
+
 # Gradle files
 .gradle/
 build/

@@ -14,7 +14,7 @@
     "USD": {
       "myShop": {
         "file": "USD/My Shop.xlsx",
-        "sha256": "7b5951419de8880a83816b83bacba8b8bb86e2cb606877ddf0d6121f809c9502"
+        "sha256": "1c8378d19ea2dd55e6b90b7fe88cd32d5a2f910ffc84428d95164048b132b0d6"
       },
       "month": {
         "file": "USD/Month.xlsx",
@@ -24,7 +24,7 @@
     "ZWG": {
       "myShop": {
         "file": "ZWG/My Shop.xlsx",
-        "sha256": "64bafca55d129f5a946a3acfe96d2c9e2f8c03fdca1023e2ee1e23b9aff5e0ff"
+        "sha256": "935aa863a2d3bf6792afc4ce7d66e3a37c3160620abd03d8e9162c32dd60ec83"
       },
       "month": {
         "file": "ZWG/Month.xlsx",
@@ -34,7 +34,7 @@
     "ZAR": {
       "myShop": {
         "file": "ZAR/My Shop.xlsx",
-        "sha256": "176bc1d57228849d8d846ac37118eaaea16603be059e88026107b7d6407a3eba"
+        "sha256": "24686f07c33051cebf40f1c2781a3ebcfd8b4e816c37d8a18312a98f22ba0d49"
       },
       "month": {
         "file": "ZAR/Month.xlsx",

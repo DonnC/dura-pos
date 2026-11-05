@@ -277,6 +277,20 @@ function createGoogle(options = {}) {
     PropertiesService: { getScriptProperties: () => properties },
     CacheService: { getScriptCache: () => cache },
     LockService: { getScriptLock: () => lock },
+    HtmlService: {
+      createHtmlOutput(html) {
+        const output = { html, title: '', meta: {} };
+        output.setTitle = (value) => {
+          output.title = value;
+          return output;
+        };
+        output.addMetaTag = (name, content) => {
+          output.meta[name] = content;
+          return output;
+        };
+        return output;
+      },
+    },
     ContentService: {
       MimeType: { JSON: 'JSON' },
       createTextOutput(text) {
