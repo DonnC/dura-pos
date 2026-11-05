@@ -40,8 +40,9 @@ function putJournal_(request, services, device) {
     var through = Number(services.store.get(key) || '0');
     if (body.batch <= through) return { status: 'accepted', through: through };
     if (body.batch > through + 1) return { status: 'gap', need: through + 1 };
+    var stored;
     try {
-      services.journalWriter.write({
+      stored = services.journalWriter.write({
         device: device.id, batch: body.batch, events: body.events,
         hash: body.hash, receivedAt: services.now(),
       });
@@ -50,7 +51,16 @@ function putJournal_(request, services, device) {
       throw hubError_('retryable_unavailable', 'storage_unavailable',
         'The batch could not be stored; send it again.');
     }
-    services.store.set(key, String(body.batch));
+    var queued = 'viewq:' + device.id + ':' + ('00000' + body.batch).slice(-6);
+    /** @type {Object<string, string | number>} */
+    var marks = {};
+    marks[key] = body.batch;
+    marks[queued] = stored.id;
+    services.store.setMany(marks); // accepted and queued for views, in one write
+    /** @type {Object<string, any[]>} */
+    var known = {};
+    known[queued] = body.events;
+    tryDrain_(services, known);
     return { status: 'accepted', through: body.batch };
   });
 }

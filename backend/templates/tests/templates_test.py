@@ -76,6 +76,20 @@ class TemplatesTest(unittest.TestCase):
             self.assertEqual(address[0], "B")
         self.assertEqual(cells["month"]["period"], "Summary!E1")
 
+    def test_the_contract_names_every_field_the_phones_write(self):
+        contract = json.loads((self.out / "contract.json").read_text(encoding="utf-8"))
+        sales = contract["tables"]["Sales"]
+        self.assertEqual(sales["file"], "month")
+        self.assertEqual(sales["fields"]["sale_id"], {"heading": "Sale ID", "kind": "text"})
+        self.assertEqual(sales["fields"]["total"], {"heading": "Total", "kind": "money"})
+        self.assertEqual(sales["fields"]["total_pricing"], {"heading": "Total ({pricing})", "kind": "money"})
+        self.assertEqual(contract["tables"]["Stock Ledger"]["file"], "myShop")
+        book = self.book("ZWG", "Month.xlsx")
+        for table, spec in contract["tables"].items():
+            if spec["file"] == "month":
+                headings = [c.value for c in book[table][1]]
+                self.assertEqual([f["heading"].replace("{pricing}", "ZWG") for f in spec["fields"].values()], headings)
+
     def test_a_rebuild_gives_the_same_bytes(self):
         with tempfile.TemporaryDirectory() as other:
             again = Path(other) / "dist"

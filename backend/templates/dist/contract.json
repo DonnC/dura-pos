@@ -1,0 +1,896 @@
+{
+ "tables": {
+  "Sales": {
+   "file": "month",
+   "fields": {
+    "sale_id": {
+     "heading": "Sale ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "seller": {
+     "heading": "Seller",
+     "kind": "text"
+    },
+    "receipt_no": {
+     "heading": "Receipt no",
+     "kind": "text"
+    },
+    "type": {
+     "heading": "Type",
+     "kind": "text"
+    },
+    "original_sale": {
+     "heading": "Original sale",
+     "kind": "text"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "items": {
+     "heading": "Items",
+     "kind": "int"
+    },
+    "subtotal": {
+     "heading": "Subtotal",
+     "kind": "money"
+    },
+    "discount": {
+     "heading": "Discount",
+     "kind": "money"
+    },
+    "total": {
+     "heading": "Total",
+     "kind": "money"
+    },
+    "vat": {
+     "heading": "VAT",
+     "kind": "money"
+    },
+    "paid_by": {
+     "heading": "Paid by",
+     "kind": "text"
+    },
+    "change_given": {
+     "heading": "Change given",
+     "kind": "text"
+    },
+    "customer_id": {
+     "heading": "Customer ID",
+     "kind": "text"
+    },
+    "customer": {
+     "heading": "Customer",
+     "kind": "text"
+    },
+    "customer_tin": {
+     "heading": "Customer TIN",
+     "kind": "text"
+    },
+    "fiscal_status": {
+     "heading": "Fiscal status",
+     "kind": "text"
+    },
+    "zimra_device_id": {
+     "heading": "ZIMRA device ID",
+     "kind": "text"
+    },
+    "fiscal_day_no": {
+     "heading": "Fiscal day no",
+     "kind": "text"
+    },
+    "zimra_receipt_no": {
+     "heading": "ZIMRA receipt no",
+     "kind": "text"
+    },
+    "verification_code": {
+     "heading": "Verification code",
+     "kind": "text"
+    },
+    "payment_status": {
+     "heading": "Payment status",
+     "kind": "text"
+    },
+    "due_date": {
+     "heading": "Due date",
+     "kind": "date"
+    },
+    "synced_at": {
+     "heading": "Synced at",
+     "kind": "datetime"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    },
+    "total_pricing": {
+     "heading": "Total ({pricing})",
+     "kind": "money"
+    },
+    "vat_pricing": {
+     "heading": "VAT ({pricing})",
+     "kind": "money"
+    }
+   }
+  },
+  "Items Sold": {
+   "file": "month",
+   "fields": {
+    "sale_id": {
+     "heading": "Sale ID",
+     "kind": "text"
+    },
+    "line": {
+     "heading": "Line",
+     "kind": "int"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "type": {
+     "heading": "Type",
+     "kind": "text"
+    },
+    "product_id": {
+     "heading": "Product ID",
+     "kind": "text"
+    },
+    "product": {
+     "heading": "Product",
+     "kind": "text"
+    },
+    "qty": {
+     "heading": "Qty",
+     "kind": "int"
+    },
+    "unit_price": {
+     "heading": "Unit price",
+     "kind": "money"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "discount": {
+     "heading": "Discount",
+     "kind": "money"
+    },
+    "line_total": {
+     "heading": "Line total",
+     "kind": "money"
+    },
+    "tax": {
+     "heading": "Tax",
+     "kind": "text"
+    },
+    "vat": {
+     "heading": "VAT",
+     "kind": "money"
+    },
+    "unit_cost_pricing": {
+     "heading": "Unit cost ({pricing})",
+     "kind": "money"
+    },
+    "line_cost_pricing": {
+     "heading": "Line cost ({pricing})",
+     "kind": "money"
+    }
+   }
+  },
+  "Payments": {
+   "file": "month",
+   "fields": {
+    "payment_id": {
+     "heading": "Payment ID",
+     "kind": "text"
+    },
+    "sale_id": {
+     "heading": "Sale ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "seller": {
+     "heading": "Seller",
+     "kind": "text"
+    },
+    "kind": {
+     "heading": "Kind",
+     "kind": "text"
+    },
+    "method": {
+     "heading": "Method",
+     "kind": "text"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "amount": {
+     "heading": "Amount",
+     "kind": "money"
+    },
+    "rate_used": {
+     "heading": "Rate used",
+     "kind": "rate"
+    },
+    "sale_currency": {
+     "heading": "Sale currency",
+     "kind": "text"
+    },
+    "amount_in_sale_currency": {
+     "heading": "Amount in sale currency",
+     "kind": "money"
+    },
+    "status": {
+     "heading": "Status",
+     "kind": "text"
+    },
+    "provider": {
+     "heading": "Provider",
+     "kind": "text"
+    },
+    "provider_reference": {
+     "heading": "Provider reference",
+     "kind": "text"
+    },
+    "confirmed_by": {
+     "heading": "Confirmed by",
+     "kind": "text"
+    },
+    "zimra_money_type": {
+     "heading": "ZIMRA money type",
+     "kind": "text"
+    }
+   }
+  },
+  "Cash-ups": {
+   "file": "month",
+   "fields": {
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "seller": {
+     "heading": "Seller",
+     "kind": "text"
+    },
+    "float_usd": {
+     "heading": "Float USD",
+     "kind": "money"
+    },
+    "float_zwg": {
+     "heading": "Float ZWG",
+     "kind": "money"
+    },
+    "float_zar": {
+     "heading": "Float ZAR",
+     "kind": "money"
+    },
+    "cash_usd_expected": {
+     "heading": "Cash USD expected",
+     "kind": "money"
+    },
+    "cash_usd_counted": {
+     "heading": "Cash USD counted",
+     "kind": "money"
+    },
+    "cash_usd_difference": {
+     "heading": "Cash USD difference",
+     "kind": "money"
+    },
+    "cash_zwg_expected": {
+     "heading": "Cash ZWG expected",
+     "kind": "money"
+    },
+    "cash_zwg_counted": {
+     "heading": "Cash ZWG counted",
+     "kind": "money"
+    },
+    "cash_zwg_difference": {
+     "heading": "Cash ZWG difference",
+     "kind": "money"
+    },
+    "cash_zar_expected": {
+     "heading": "Cash ZAR expected",
+     "kind": "money"
+    },
+    "cash_zar_counted": {
+     "heading": "Cash ZAR counted",
+     "kind": "money"
+    },
+    "cash_zar_difference": {
+     "heading": "Cash ZAR difference",
+     "kind": "money"
+    },
+    "ecocash_usd": {
+     "heading": "EcoCash USD",
+     "kind": "money"
+    },
+    "ecocash_zwg": {
+     "heading": "EcoCash ZWG",
+     "kind": "money"
+    },
+    "innbucks_usd": {
+     "heading": "InnBucks USD",
+     "kind": "money"
+    },
+    "card_usd": {
+     "heading": "Card USD",
+     "kind": "money"
+    },
+    "bank_transfer_usd": {
+     "heading": "Bank transfer USD",
+     "kind": "money"
+    },
+    "kept_change_usd_kept_today": {
+     "heading": "Kept change USD (kept today)",
+     "kind": "money"
+    },
+    "kept_change_usd_used_today": {
+     "heading": "Kept change USD (used today)",
+     "kind": "money"
+    },
+    "sales": {
+     "heading": "Sales",
+     "kind": "int"
+    },
+    "returns": {
+     "heading": "Returns",
+     "kind": "int"
+    },
+    "closed_at": {
+     "heading": "Closed at",
+     "kind": "time"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  },
+  "Fiscal Days": {
+   "file": "month",
+   "fields": {
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "zimra_device_id": {
+     "heading": "ZIMRA device ID",
+     "kind": "text"
+    },
+    "fiscal_day_no": {
+     "heading": "Fiscal day no",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "opened_at": {
+     "heading": "Opened at",
+     "kind": "time"
+    },
+    "closed_at": {
+     "heading": "Closed at",
+     "kind": "time"
+    },
+    "receipts": {
+     "heading": "Receipts",
+     "kind": "int"
+    },
+    "credit_notes": {
+     "heading": "Credit notes",
+     "kind": "int"
+    },
+    "total_usd": {
+     "heading": "Total USD",
+     "kind": "money"
+    },
+    "total_zwg": {
+     "heading": "Total ZWG",
+     "kind": "money"
+    },
+    "total_zar": {
+     "heading": "Total ZAR",
+     "kind": "money"
+    },
+    "vat_usd": {
+     "heading": "VAT USD",
+     "kind": "money"
+    },
+    "vat_zwg": {
+     "heading": "VAT ZWG",
+     "kind": "money"
+    },
+    "vat_zar": {
+     "heading": "VAT ZAR",
+     "kind": "money"
+    },
+    "status": {
+     "heading": "Status",
+     "kind": "text"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  },
+  "Quotes": {
+   "file": "month",
+   "fields": {
+    "quote_id": {
+     "heading": "Quote ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "seller": {
+     "heading": "Seller",
+     "kind": "text"
+    },
+    "customer_id": {
+     "heading": "Customer ID",
+     "kind": "text"
+    },
+    "customer": {
+     "heading": "Customer",
+     "kind": "text"
+    },
+    "valid_until": {
+     "heading": "Valid until",
+     "kind": "date"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "items": {
+     "heading": "Items",
+     "kind": "text"
+    },
+    "total": {
+     "heading": "Total",
+     "kind": "money"
+    },
+    "status": {
+     "heading": "Status",
+     "kind": "text"
+    },
+    "sale_id": {
+     "heading": "Sale ID",
+     "kind": "text"
+    },
+    "shared_by": {
+     "heading": "Shared by",
+     "kind": "text"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  },
+  "Activity": {
+   "file": "month",
+   "fields": {
+    "row_id": {
+     "heading": "Row ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "who": {
+     "heading": "Who",
+     "kind": "text"
+    },
+    "role": {
+     "heading": "Role",
+     "kind": "text"
+    },
+    "action": {
+     "heading": "Action",
+     "kind": "text"
+    },
+    "details": {
+     "heading": "Details",
+     "kind": "text"
+    },
+    "reference": {
+     "heading": "Reference",
+     "kind": "text"
+    },
+    "approved_by": {
+     "heading": "Approved by",
+     "kind": "text"
+    }
+   }
+  },
+  "Stock Ledger": {
+   "file": "myShop",
+   "fields": {
+    "row_id": {
+     "heading": "Row ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "who": {
+     "heading": "Who",
+     "kind": "text"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "type": {
+     "heading": "Type",
+     "kind": "text"
+    },
+    "product_id": {
+     "heading": "Product ID",
+     "kind": "text"
+    },
+    "product": {
+     "heading": "Product",
+     "kind": "text"
+    },
+    "qty": {
+     "heading": "Qty",
+     "kind": "int"
+    },
+    "unit_cost_pricing": {
+     "heading": "Unit cost ({pricing})",
+     "kind": "money"
+    },
+    "stock_value_pricing": {
+     "heading": "Stock value ({pricing})",
+     "kind": "money"
+    },
+    "cost_currency": {
+     "heading": "Cost currency",
+     "kind": "text"
+    },
+    "supplier_id": {
+     "heading": "Supplier ID",
+     "kind": "text"
+    },
+    "supplier": {
+     "heading": "Supplier",
+     "kind": "text"
+    },
+    "reference": {
+     "heading": "Reference",
+     "kind": "text"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  },
+  "Money Ledger": {
+   "file": "myShop",
+   "fields": {
+    "row_id": {
+     "heading": "Row ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "who": {
+     "heading": "Who",
+     "kind": "text"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "type": {
+     "heading": "Type",
+     "kind": "text"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "cash_amount": {
+     "heading": "Cash amount",
+     "kind": "money"
+    },
+    "cash_amount_pricing": {
+     "heading": "Cash amount ({pricing})",
+     "kind": "money"
+    },
+    "from_till": {
+     "heading": "From till",
+     "kind": "text"
+    },
+    "contact_id": {
+     "heading": "Contact ID",
+     "kind": "text"
+    },
+    "contact": {
+     "heading": "Contact",
+     "kind": "text"
+    },
+    "balance_change": {
+     "heading": "Balance change",
+     "kind": "money"
+    },
+    "reference": {
+     "heading": "Reference",
+     "kind": "text"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  },
+  "Stock Counts": {
+   "file": "myShop",
+   "fields": {
+    "count_id": {
+     "heading": "Count ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "counted_by": {
+     "heading": "Counted by",
+     "kind": "text"
+    },
+    "product_id": {
+     "heading": "Product ID",
+     "kind": "text"
+    },
+    "product": {
+     "heading": "Product",
+     "kind": "text"
+    },
+    "expected": {
+     "heading": "Expected",
+     "kind": "int"
+    },
+    "counted": {
+     "heading": "Counted",
+     "kind": "int"
+    },
+    "difference": {
+     "heading": "Difference",
+     "kind": "int"
+    },
+    "unit_cost_pricing": {
+     "heading": "Unit cost ({pricing})",
+     "kind": "money"
+    },
+    "value_difference_pricing": {
+     "heading": "Value difference ({pricing})",
+     "kind": "money"
+    },
+    "status": {
+     "heading": "Status",
+     "kind": "text"
+    },
+    "approved_by": {
+     "heading": "Approved by",
+     "kind": "text"
+    }
+   }
+  },
+  "Purchases": {
+   "file": "myShop",
+   "fields": {
+    "purchase_id": {
+     "heading": "Purchase ID",
+     "kind": "text"
+    },
+    "date": {
+     "heading": "Date",
+     "kind": "date"
+    },
+    "time": {
+     "heading": "Time",
+     "kind": "time"
+    },
+    "phone": {
+     "heading": "Phone",
+     "kind": "text"
+    },
+    "location": {
+     "heading": "Location",
+     "kind": "text"
+    },
+    "supplier_id": {
+     "heading": "Supplier ID",
+     "kind": "text"
+    },
+    "supplier": {
+     "heading": "Supplier",
+     "kind": "text"
+    },
+    "supplier_invoice_no": {
+     "heading": "Supplier invoice no",
+     "kind": "text"
+    },
+    "products": {
+     "heading": "Products",
+     "kind": "int"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "total": {
+     "heading": "Total",
+     "kind": "money"
+    },
+    "vat": {
+     "heading": "VAT",
+     "kind": "money"
+    },
+    "paid_how": {
+     "heading": "Paid how",
+     "kind": "text"
+    },
+    "payment_status": {
+     "heading": "Payment status",
+     "kind": "text"
+    },
+    "paid_on": {
+     "heading": "Paid on",
+     "kind": "date"
+    },
+    "invoice_photo": {
+     "heading": "Invoice photo",
+     "kind": "text"
+    },
+    "received_by": {
+     "heading": "Received by",
+     "kind": "text"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  },
+  "Payment Callbacks": {
+   "file": "myShop",
+   "fields": {
+    "received_at": {
+     "heading": "Received at",
+     "kind": "datetime"
+    },
+    "provider": {
+     "heading": "Provider",
+     "kind": "text"
+    },
+    "reference": {
+     "heading": "Reference",
+     "kind": "text"
+    },
+    "amount": {
+     "heading": "Amount",
+     "kind": "money"
+    },
+    "currency": {
+     "heading": "Currency",
+     "kind": "text"
+    },
+    "provider_status": {
+     "heading": "Provider status",
+     "kind": "text"
+    },
+    "signature_valid": {
+     "heading": "Signature valid",
+     "kind": "text"
+    },
+    "matched_sale": {
+     "heading": "Matched sale",
+     "kind": "text"
+    },
+    "result": {
+     "heading": "Result",
+     "kind": "text"
+    },
+    "note": {
+     "heading": "Note",
+     "kind": "text"
+    }
+   }
+  }
+ }
+}

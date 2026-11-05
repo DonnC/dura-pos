@@ -23,7 +23,7 @@ import os
 import shutil
 import subprocess
 
-from dura_templates.paths import DEFAULT_SAMPLE_ROOT, DEFAULT_TEMPLATES_DIR
+from dura_templates.paths import DEFAULT_SAMPLE_ROOT, DEFAULT_TEMPLATES_DIR, REPO_DIR
 
 
 def _sample(args: argparse.Namespace) -> int:
@@ -41,7 +41,7 @@ def _templates(args: argparse.Namespace) -> int:
     """
     from dura_templates.profile import CURRENCIES
     out = Path(args.out).resolve() if args.out else DEFAULT_TEMPLATES_DIR
-    known = set(CURRENCIES) | {"manifest.json"}
+    known = set(CURRENCIES) | {"manifest.json", "contract.json"}
     if out.exists():
         unknown = [p.name for p in out.iterdir() if p.name not in known]
         if unknown:
@@ -52,9 +52,11 @@ def _templates(args: argparse.Namespace) -> int:
         done = subprocess.run([sys.executable, "-m", "dura_templates", "template-one", "--out", str(out)], env=env)
         if done.returncode:
             return done.returncode
-    from dura_templates.files.templates import write_manifest
+    from dura_templates.files.templates import write_contract, write_manifest
     from dura_templates.workbook.styles import LAYOUT_VERSION
     manifest = write_manifest(out, LAYOUT_VERSION)
+    hub_file = REPO_DIR / "backend" / "hub" / "src" / "view_contract.js"
+    write_contract(out, hub_file if out == DEFAULT_TEMPLATES_DIR else None)
     print(f"Wrote templates for {', '.join(CURRENCIES)} and {manifest}.")
     return 0
 

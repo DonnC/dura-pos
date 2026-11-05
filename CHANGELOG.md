@@ -10,6 +10,22 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: Sheets views in the hub
+
+- **Journal rows now reach the workbooks.** Events carry rows keyed by stable
+  field IDs; the hub finds columns by heading, so a moved column keeps working.
+- **`dist/contract.json`** names each table and field; `templates` also
+  generates `backend/hub/src/view_contract.js`, so a new column needs no hub
+  change.
+- **Exactly once without reading the sheet:** rows go to explicit positions,
+  and the pointers move only after every write succeeded, so a retry
+  overwrites the same rows.
+- **A view failure never fails an upload.** The batch stays queued.
+- **Late sales** reach their own month, creating that file if it's missing.
+- **Tabs grow** before they run out of rows.
+- **Validation:** 69 hub tests, 12 template tests; the view tests were seen
+  failing first.
+
 ### Added: the hub fills in new files after converting them
 
 - **`setup.run` now writes** My Shop's business name, hub version and data

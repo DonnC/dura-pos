@@ -8,39 +8,14 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const client = require('./support/test_client');
-const { installedHub, INSTALL_CODE } = require('./support/hub_fixture');
+const { setupHub, named, TEMPLATES } = require('./support/shop_fixture');
 
 const SHEET = 'application/vnd.google-apps.spreadsheet';
 const FOLDER = 'application/vnd.google-apps.folder';
 const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-
-const sha = (text) => crypto.createHash('sha256').update(text).digest('hex');
-const templateSet = (code) => ({
-  myShop: { url: `https://example.test/v1/${code}/my_shop.xlsx`, sha256: sha(`${code} my shop bytes`) },
-  month: { url: `https://example.test/v1/${code}/month.xlsx`, sha256: sha(`${code} month bytes`) },
-});
-const TEMPLATES = { USD: templateSet('USD'), ZWG: templateSet('ZWG'), ZAR: templateSet('ZAR') };
-
-/** An installed hub with templates served, the owner paired. */
-function setupHub(options = {}) {
-  const fixture = installedHub({ templates: TEMPLATES, useDriveJournal: true, ...options });
-  const routes = fixture.google.UrlFetchApp.routes;
-  for (const code of Object.keys(TEMPLATES)) {
-    routes.set(TEMPLATES[code].myShop.url, { code: 200, body: `${code} my shop bytes` });
-    routes.set(TEMPLATES[code].month.url, { code: 200, body: `${code} month bytes` });
-  }
-  fixture.google.PropertiesService.getScriptProperties().deleteProperty('businessId');
-  const owner = fixture.pair(INSTALL_CODE, 'Owner phone').result;
-  const setup = (body = { name: "Chipo's Corner Shop", timeZone: 'Africa/Harare', pricingCurrency: 'USD' }) =>
-    fixture.send(owner, 'setup.run', body);
-  return { ...fixture, owner, setup, drive: fixture.google.Drive };
-}
-
-const named = (drive, name) => drive.files.find((f) => f.name === name);
 
 test('setup builds the shop folder, My Shop and this month from templates', () => {
   const { setup, drive } = setupHub();

@@ -21,10 +21,10 @@ open questions are in [note 15](../../notes/15-apps-script-route.md).
   - pairing by one-time code;
   - removing a phone;
   - accepting journal batches in order;
+  - writing journal rows into the Sheets views, queued and retried;
   - shop setup: folders, `My Shop` and this month's workbook from checked
     templates, `business.json` and the file registry.
 - **Planned:**
-  - Sheets views;
   - next month's and next year's files on a timer;
   - payments;
   - scheduled jobs;
@@ -85,6 +85,8 @@ backend/hub/
     devices.js         pairing codes, install code, device records, revoking
     journal.js         batch acceptance and per-device batch numbers
     journal_drive.js   stores batches as JSON files in Drive
+    views.js           journal rows into Sheets, exactly once, by heading
+    view_contract.js   generated: tables and fields phones may write
     services.js        the services object and the script lock
     property_store.js  Script Properties read once per execution, reloaded under the lock
     setup.js           setup.run: folders, workbooks, business.json, registry; resumable
@@ -153,6 +155,8 @@ possible:
 - **Templates:** fetched in parallel with one `fetchAll`, and only those still
   needed.
 - **Drive:** every create asks for `fields: 'id'` only.
+- **Views:** one `batchUpdate` per workbook per batch; headings and row counts
+  come from one cached `Spreadsheets.get`.
 - **Sheets:** setup makes one `batchUpdate` per file, and none on a repeat. The
   cell addresses come from the template manifest, so no sheet is read to find
   them.

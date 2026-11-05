@@ -180,7 +180,27 @@ body: {
 - **A lost reply is safe:** the phone sends the same batch again and gets the
   same acknowledgement.
 - **"Accepted" means stored in the journal.** Building the Sheets views is a
-  separate, later step, reported by `status`.
+  separate, later step, reported by `status`. A view failure never fails the
+  upload.
+
+**Rows.** An event may carry `rows`, which the backend writes into the
+readable views:
+
+```json
+{ "id": "P2-E261103-0611", "type": "sale.completed", "at": "2026-11-03T16:20:00+02:00", "data": { },
+  "rows": { "Sales": [ { "sale_id": "P2-S261103-0031", "date": "2026-11-03", "total": "2.00" } ],
+            "Stock Ledger": [ { "row_id": "P2-L261103-0007", "product_id": "P001", "qty": "-2" } ] } }
+```
+
+- **Tables and fields** are named in `backend/templates/dist/contract.json`.
+  Field IDs come from headings: `Total (USD)` is `total_pricing`, whatever the
+  pricing currency, and `Total USD` is `total_usd`.
+- **Values are strings or integers:** amounts as decimal strings, dates as
+  `2026-11-03`, times as `16:20:30`, date-times as `2026-11-03T16:20:30`.
+- **Month tables** go to the month in `at`, in local time, so a late sale
+  reaches its own month. The file is created if it's missing.
+- **Unknown tables and fields are skipped and counted,** so a newer phone
+  can't jam an older backend.
 
 ### `setup.run`: owner only
 

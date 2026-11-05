@@ -78,20 +78,25 @@ function createUrlFetch() {
   const respond = (request) => {
     const url = typeof request === 'string' ? request : request.url;
     log.push(url);
-    const route = routes.get(url) || { code: 404, body: 'Not Found' };
+    const media = /drive\/v3\/files\/([^?]+)\?alt=media/.exec(url);
+    const stored = media && urlFetch.drive.files.find((f) => f.id === media[1]);
+    const route = stored ? { code: 200, body: stored.content } : routes.get(url) || { code: 404, body: 'Not Found' };
     const bytes = toSignedBytes(Buffer.from(route.body));
     return {
       getResponseCode: () => route.code,
       getContent: () => bytes,
+      getContentText: () => Buffer.from(route.body).toString('utf8'),
       getBlob: () => createBlob(bytes, 'application/octet-stream'),
     };
   };
-  return {
+  const urlFetch = {
     routes,
     log,
+    drive: null,
     fetch: (url) => respond(url),
     fetchAll: (requests) => requests.map(respond),
   };
+  return urlFetch;
 }
 
 function createCache(clock) {
@@ -101,6 +106,9 @@ function createCache(clock) {
       const entry = map.get(key);
       if (!entry || entry.expires <= clock.now()) return null;
       return entry.value;
+    },
+    getAll(keys) {
+      return Object.fromEntries(keys.filter((k) => this.get(k) !== null).map((k) => [k, this.get(k)]));
     },
     put(key, value, seconds) {
       map.set(key, { value: String(value), expires: clock.now() + seconds });
@@ -149,7 +157,28 @@ function createSheets() {
     writes: [],
     calls: 0,
     failOnCall: 0,
+    gets: 0,
+    grown: [],
+    headings: {},
+    rowCount: 1000,
     Spreadsheets: {
+      get(spreadsheetId, options) {
+        sheets.gets += 1;
+        return {
+          sheets: options.ranges.map((range, index) => {
+            const title = range.split('!')[0].replace(/'/g, '');
+            const heads = sheets.headings[title] || [];
+            return {
+              properties: { sheetId: index, title, gridProperties: { rowCount: sheets.rowCount } },
+              data: [{ rowData: [{ values: heads.map((h) => ({ formattedValue: h })) }] }],
+            };
+          }),
+        };
+      },
+      batchUpdate(request) {
+        for (const r of request.requests) sheets.grown.push(r.appendDimension);
+        return {};
+      },
       Values: {
         batchUpdate(request, spreadsheetId) {
           sheets.calls += 1;
@@ -184,9 +213,11 @@ function createGoogle(options = {}) {
   const lock = createLock();
   const drive = createDrive();
   const urlFetch = createUrlFetch();
+  urlFetch.drive = drive;
   return {
     clock,
     UrlFetchApp: urlFetch,
+    ScriptApp: { getOAuthToken: () => 'fake-token' },
     Utilities: {
       DigestAlgorithm: { SHA_256: 'SHA_256' },
       Charset: { UTF_8: 'UTF_8' },

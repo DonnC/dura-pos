@@ -80,6 +80,34 @@ function fillOnce_(services, key, write) {
   services.store.set(key, services.now());
 }
 
+/**
+ * The month's workbook, creating and filling it if it doesn't exist yet. Used
+ * by setup, by the next-month job, and when a late sale needs an old month.
+ * @param {any} services @param {string} period e.g. "2026-11"
+ * @param {GoogleAppsScript.Base.Blob} [template] already fetched, if any
+ */
+function ensureMonthFile_(services, period, template) {
+  var store = services.store;
+  var key = 'file:month:' + period;
+  var year = period.slice(0, 4);
+  var id = ensureFile_(services, key, function () {
+    var blob = template ||
+      fetchTemplates_(services.templates[store.get('pricingCurrency')], ['month']).month;
+    var folder = ensureFile_(services, 'file:year:' + year, function () {
+      return createFolder_(year, store.get('file:business'));
+    });
+    var name = period + ' ' + MONTH_NAMES_[Number(period.slice(5)) - 1];
+    return createSheetFromXlsx_(name, folder, blob);
+  });
+  fillOnce_(services, 'filled:month:' + period, function () {
+    /** @type {Object<string, string | number>} */
+    var cells = {};
+    cells[TEMPLATE_CELLS_.month.period] = monthSerial_(period);
+    writeCells_(id, cells);
+  });
+  return id;
+}
+
 /** @param {any} request @param {any} services @param {any} device */
 function runSetup_(request, services, device) {
   requireOwner_(device);
@@ -110,14 +138,11 @@ function runSetup_(request, services, device) {
       return createFolder_(store.get('businessName'), root);
     });
     var journal = ensureFile_(services, 'file:journal', function () { return createFolder_('Journal', shop); });
-    var yearFolder = ensureFile_(services, 'file:year:' + year, function () { return createFolder_(year, shop); });
+    ensureFile_(services, 'file:year:' + year, function () { return createFolder_(year, shop); });
     var myShop = ensureFile_(services, 'file:myshop', function () {
       return createSheetFromXlsx_('My Shop', shop, templates.myShop);
     });
-    var monthName = period + ' ' + MONTH_NAMES_[Number(period.slice(5)) - 1];
-    var month = ensureFile_(services, monthKey, function () {
-      return createSheetFromXlsx_(monthName, yearFolder, templates.month);
-    });
+    var month = ensureMonthFile_(services, period, templates.month);
     ensureFile_(services, 'file:directory', function () {
       return createJsonFile_('business.json', shop, {
         format: 1,
@@ -135,12 +160,6 @@ function runSetup_(request, services, device) {
       cells[TEMPLATE_CELLS_.myShop.hubVersion] = HUB_VERSION_;
       cells[TEMPLATE_CELLS_.myShop.dataYear] = Number(year);
       writeCells_(myShop, cells);
-    });
-    fillOnce_(services, 'filled:month:' + period, function () {
-      /** @type {Object<string, string | number>} */
-      var cells = {};
-      cells[TEMPLATE_CELLS_.month.period] = monthSerial_(period);
-      writeCells_(month, cells);
     });
     return {
       status: 'ready',
