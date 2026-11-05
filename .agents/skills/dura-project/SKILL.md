@@ -81,7 +81,7 @@ Paynow <--- the hub, with the shop's keys
 
 | Part | State |
 |---|---|
-| `backend/hub` | All protocol actions are written and tested against fakes: pairing, journal, setup, views, master data, status, timers, Paynow, photos, exports. **It has never run on a real Google account** |
+| `backend/hub` | All protocol actions are written and tested against fakes: pairing, journal, setup, views, master data, status, timers, Paynow, photos, exports, plus the public shop page. **It has never run on a real Google account** |
 | `backend/templates` | Sample shop, clean templates per pricing currency, contract, checks. Not yet published, so the hub's template URLs are empty |
 | `client/packages/dura_core` | Money types and the cash-sale calculation |
 | `client/packages/dura_data` | Local preferences in Drift |
@@ -94,10 +94,10 @@ proven beyond what the tests show.
 
 ## The order of work
 
-1. **Prove the backend on a real account,** using the spikes in
-   `notes/15-apps-script-route.md`: consent, converting templates, `drive.file`
-   for Sheets, the advanced-service calls and Paynow's sandbox. This needs a
-   throwaway Google account and publicly hosted templates.
+1. **Prove the backend on a real account,** following
+   `handbook/engineering/10-real-account-test.md`: consent, converting templates,
+   `drive.file` for Sheets, the advanced-service calls, the shop page and Paynow's
+   sandbox. This needs a throwaway Google account and a public repository.
 2. **Flutter against the backend:** the port in `dura_core`, the `dura_hub`
    adapter, one-tap hub install, pairing, then the one-phone sale.
 3. **Then the roadmap phases** in `handbook/engineering/06-roadmap.md`:

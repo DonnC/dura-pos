@@ -31,7 +31,8 @@ open questions are in [note 15](../../notes/15-apps-script-route.md).
   - a health report for the owner's screen;
   - mobile payments through the shop's own Paynow keys;
   - product and supplier-invoice photos, and Excel and CSV exports;
-  - `Balances` rows and the Summary breakdowns, once a day.
+  - `Balances` rows and the Summary breakdowns, once a day;
+  - a public one-page shop page, which the owner can turn off.
 - **Planned:**
   - ZB Smile&Pay;
   - install and update, which the Flutter app drives.
@@ -94,6 +95,8 @@ backend/hub/
     views.js           journal rows into Sheets, exactly once, by heading
     master_data.js     changes.pull, and the Stock and Balances rows
     attachments.js     photos and exports in the shop's Drive
+    storefront.js      doGet: the shop page, from a fixed list of public fields
+    brand_mark.js      Dura's small mark, embedded for the shop page
     jobs.js            timers, the daily pass, the Months tab, status
     payments.js        keys, start, check, callbacks; provider-neutral
     paynow.js          the Paynow adapter: forms, SHA-512 hashes, statuses
@@ -109,6 +112,8 @@ backend/hub/
     canonical_json.js  the signing string
     protocol.js        version, limits, patterns, errors
     install_config.js  the install code's hash; replaced per shop by the installer
+  tools/
+    try_hub.js         acts as a phone against a real hub; see the real-account test
   test/
     *_test.js          one file per behaviour
     support/           fake Google services, an independent protocol client, fixtures
@@ -166,6 +171,8 @@ backend/hub/
 - **A new photo for the same product is a new file;** the old one stays.
 - **Google limits a Drive export to 10 MB.** A larger workbook answers
   `export_failed`; a CSV of one tab still works.
+- **The shop page has been rendered in a browser, not served by Google.** Its
+  buttons and any banner Google adds need the real-account test.
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
 - **The Sheets advanced service's manifest entry** (`sheets`, `v4`) follows
@@ -199,5 +206,7 @@ possible:
 - **Payments:** the reference is claimed under the lock, and the provider is
   called outside it, so a slow provider doesn't hold up uploads. Payment
   records are dropped after 3 days, since Script Properties hold 500 KB.
+- **The shop page:** a visit that finds the cached page reads no properties and no
+  sheet. A cold visit makes one `batchGet`.
 - **Replay checks** use `CacheService`, not properties.
 - **The script lock** is held only around writes.

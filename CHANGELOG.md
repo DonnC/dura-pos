@@ -10,6 +10,24 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: a shop page, payment docs and a brand set
+
+- **The hub's address now shows a one-page shop page:** the shop's name and
+  contacts, Call, WhatsApp and Directions buttons, and a searchable price list. Only
+  a fixed list of public fields can appear, and a new `Shop page` setting turns it
+  off (decision 0009). Visits served from the cache cost no quota.
+- **Rendered in a browser with sample data; not yet served by Google.**
+- **The payments guide** shows each flow in Mermaid: setup, a good payment, states,
+  callbacks and failures.
+- **The real-account test** is a step-by-step runbook, and `tools/try_hub.js` acts
+  as a phone against a real hub, keeping its secrets out of Git.
+- **Brand files:** the logo is cropped into a mark, a lockup and a banner. The
+  README is rebuilt around them, and the Android splash uses the logo on green.
+- **The committed sample** is regenerated, because it had fallen behind the
+  generator.
+- **Validation:** 135 hub tests and 16 template tests pass; against the generator
+  baseline, only `My Shop` changed.
+
 ### Added: agent skills for contributors
 
 - **`dura-project`** states the goal, settled decisions, architecture, what's

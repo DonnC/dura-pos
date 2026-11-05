@@ -374,6 +374,12 @@ result: {"file":"<Drive file ID>","name":"2026-11 November 2026-11-30.xlsx"}
 `+`, `-` or `@` gets a leading apostrophe, so it can't run as a formula when
 opened in Excel.
 
+## The shop page
+
+A GET to the hub's address isn't a protocol request. It returns the shop's public
+page as HTML, or a neutral page if it's turned off (decision 0009). Phones don't use
+it, and another backend needn't offer it.
+
 ## Versioning
 
 - **Within version 1,** fields may be added. Clients ignore fields they don't

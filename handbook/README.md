@@ -37,6 +37,8 @@ whichever engineering page matches your work.
 | [07 Coding and diagnostics](engineering/07-coding-and-diagnostics.md) | Writing Dart: file size, headers, constants, disposal, logging |
 | [08 Foundation validation](engineering/08-foundation-validation.md) | Checking what has actually been verified so far |
 | [09 Conventions](engineering/09-conventions.md) | Naming, headers, tests and verify commands in every language |
+| [10 Real-account test](engineering/10-real-account-test.md) | Trying the hub on a real Google account |
+| [11 Payments](engineering/11-payments.md) | Working on how a payment moves through the hub |
 
 ## Decisions
 
