@@ -143,6 +143,26 @@ function createDrive() {
   return drive;
 }
 
+/** The Sheets v4 advanced service. `failOnCall` makes the nth write throw. */
+function createSheets() {
+  const sheets = {
+    writes: [],
+    calls: 0,
+    failOnCall: 0,
+    Spreadsheets: {
+      Values: {
+        batchUpdate(request, spreadsheetId) {
+          sheets.calls += 1;
+          if (sheets.calls === sheets.failOnCall) throw new Error('Sheets is unavailable');
+          sheets.writes.push({ spreadsheetId, request: JSON.parse(JSON.stringify(request)) });
+          return { totalUpdatedCells: request.data.length };
+        },
+      },
+    },
+  };
+  return sheets;
+}
+
 /** Utilities.formatDate for the patterns the hub uses. */
 function formatDate(date, timeZone, pattern) {
   const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
@@ -196,6 +216,7 @@ function createGoogle(options = {}) {
       },
     },
     Drive: drive,
+    Sheets: createSheets(),
   };
 }
 

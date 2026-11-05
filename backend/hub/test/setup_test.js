@@ -9,6 +9,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
+const fs = require('node:fs');
+const path = require('node:path');
 const client = require('./support/test_client');
 const { installedHub, INSTALL_CODE } = require('./support/hub_fixture');
 
@@ -190,4 +192,61 @@ test('the pricing currency chooses which templates are used', () => {
   assert.equal(named(drive, 'My Shop').content, 'ZWG my shop bytes');
   assert.equal(named(drive, '2026-11 November').content, 'ZWG month bytes');
   assert.deepEqual([...google.UrlFetchApp.log].sort(), [TEMPLATES.ZWG.month.url, TEMPLATES.ZWG.myShop.url]);
+});
+
+const writeFor = (google, id) => google.Sheets.writes.find((w) => w.spreadsheetId === id);
+const cells = (write) => Object.fromEntries(write.request.data.map((d) => [d.range, d.values[0][0]]));
+
+test('setup writes the shop details and year into My Shop, in one call', () => {
+  const { setup, drive, google, hub } = setupHub();
+  setup();
+  const write = writeFor(google, named(drive, 'My Shop').id);
+  assert.equal(write.request.valueInputOption, 'RAW');
+  assert.deepEqual(cells(write), {
+    'Settings!B2': "Chipo's Corner Shop",
+    'Settings!B27': hub.HUB_VERSION_,
+    'Settings!B29': 2026,
+  });
+});
+
+test('setup writes the month into the month file as a date serial number', () => {
+  const { setup, drive, google } = setupHub();
+  setup();
+  const write = writeFor(google, named(drive, '2026-11 November').id);
+  assert.deepEqual(cells(write), { 'Summary!E1': 46327 }); // 1 November 2026
+});
+
+test('setup makes one Sheets call per file, and none on a repeat', () => {
+  const { setup, google } = setupHub();
+  setup();
+  assert.equal(google.Sheets.calls, 2);
+  setup();
+  assert.equal(google.Sheets.calls, 2);
+});
+
+test('a failed Sheets write resumes without recreating any file', () => {
+  const { setup, drive, google } = setupHub();
+  google.Sheets.failOnCall = 2;
+  const failed = setup();
+  assert.equal(failed.error.category, 'retryable_unavailable');
+  assert.equal(failed.error.code, 'storage_unavailable');
+  const made = drive.files.length;
+  assert.equal(setup().result.status, 'ready');
+  assert.equal(drive.files.length, made);
+  assert.equal(google.Sheets.writes.length, 2);
+});
+
+test('the hub writes the cells the template manifest names', () => {
+  const { hub } = setupHub();
+  const manifest = JSON.parse(fs.readFileSync(
+    path.join(__dirname, '..', '..', 'templates', 'dist', 'manifest.json'), 'utf8'));
+  assert.deepEqual(JSON.parse(JSON.stringify(hub.TEMPLATE_CELLS_)), manifest.cells);
+});
+
+test('the manifest asks for Drive and Sheets, but not every spreadsheet', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'src', 'appsscript.json'), 'utf8'));
+  const services = manifest.dependencies.enabledAdvancedServices.map((s) => s.userSymbol);
+  assert.deepEqual(services.sort(), ['Drive', 'Sheets']);
+  assert.ok(manifest.oauthScopes.includes('https://www.googleapis.com/auth/drive.file'));
+  assert.equal(manifest.oauthScopes.includes('https://www.googleapis.com/auth/spreadsheets'), false);
 });

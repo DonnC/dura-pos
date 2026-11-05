@@ -202,10 +202,14 @@ The owner's phone draws the QR itself.
 
 ## 6. The hub's permissions
 
+> **Update, 5 November 2026 (as built):** the `spreadsheets` scope is dropped.
+> The Sheets API's `values.batchUpdate` accepts `drive.file`, so the hub can
+> write its own files through the Sheets advanced service without access to the
+> owner's other spreadsheets. Spike 2 must confirm this on a real account.
+
 | Scope | Why |
 |---|---|
-| `spreadsheets` | Write the Sheets views. **Spike:** whether the Sheets service can be limited to the hub's own files; this scope covers all of the owner's spreadsheets |
-| `drive.file` | Create folders, files, photos and exports. It reaches only files the hub created |
+| `drive.file` | Create folders, files, photos and exports, and write Sheets through the Sheets advanced service. It reaches only files the hub created |
 | `script.external_request` | Fetch templates and updates; call payment providers |
 | `script.scriptapp` | Install time triggers |
 | `script.projects`, `script.deployments` | Optional: only if the hub updates itself (§10) |

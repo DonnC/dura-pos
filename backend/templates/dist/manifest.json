@@ -1,5 +1,15 @@
 {
   "layoutVersion": 3,
+  "cells": {
+    "myShop": {
+      "businessName": "Settings!B2",
+      "hubVersion": "Settings!B27",
+      "dataYear": "Settings!B29"
+    },
+    "month": {
+      "period": "Summary!E1"
+    }
+  },
   "templates": {
     "USD": {
       "myShop": {

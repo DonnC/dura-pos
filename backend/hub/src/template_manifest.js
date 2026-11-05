@@ -16,3 +16,10 @@ var TEMPLATE_MANIFEST_ = {
   ZWG: { myShop: { url: '', sha256: '' }, month: { url: '', sha256: '' } },
   ZAR: { myShop: { url: '', sha256: '' }, month: { url: '', sha256: '' } },
 };
+
+// The cells the hub fills after converting a template. They must match the
+// `cells` section of backend/templates/dist/manifest.json; a test compares them.
+var TEMPLATE_CELLS_ = {
+  myShop: { businessName: 'Settings!B2', hubVersion: 'Settings!B27', dataYear: 'Settings!B29' },
+  month: { period: 'Summary!E1' },
+};

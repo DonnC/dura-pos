@@ -217,6 +217,8 @@ body: {"name": "Chipo's Corner Shop", "timeZone": "Africa/Harare", "pricingCurre
     `Area/City`, or a missing or unknown pricing currency, is `validation` /
     `bad_setup`;
   - a Drive failure is `retryable_unavailable` / `storage_unavailable`.
+- **It fills in the new files:** My Shop's business name, hub version and data
+  year, and the month file's first day. A repeat doesn't write them again.
 - **Before setup,** `journal.put` answers `retryable_unavailable` /
   `not_set_up`. The phone keeps its batches until setup is done.
 

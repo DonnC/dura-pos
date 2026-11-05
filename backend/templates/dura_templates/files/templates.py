@@ -122,9 +122,22 @@ def normalise(path: Path) -> None:
             target.writestr(info, data)
 
 
+def template_cells() -> dict:
+    """The cells the hub fills after converting, as A1 ranges. Published in the
+    manifest, so the hub never has to read a sheet to find them.
+    """
+    labels = [row[0] for row in _settings()]
+    setting = lambda label: f"Settings!B{labels.index(label) + 2}"
+    return {
+        "myShop": {"businessName": setting("Business name"), "hubVersion": setting("Shop Hub"),
+                   "dataYear": setting("Data year")},
+        "month": {"period": "Summary!E1"},
+    }
+
+
 def write_manifest(out: Path, layout_version: int) -> Path:
-    """`out/manifest.json`: each template's path and SHA-256, per currency, for
-    the hub to pin in its template manifest.
+    """`out/manifest.json`: each template's path and SHA-256 per currency, and
+    the cells to fill, for the hub to pin.
     """
     import hashlib
     import json
@@ -136,7 +149,7 @@ def write_manifest(out: Path, layout_version: int) -> Path:
             templates[code][key] = {"file": f"{code}/{name}",
                                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     manifest = out / "manifest.json"
-    manifest.write_text(json.dumps({"layoutVersion": layout_version, "templates": templates}, indent=2) + "\n",
+    manifest.write_text(json.dumps({"layoutVersion": layout_version, "cells": template_cells(), "templates": templates}, indent=2) + "\n",
                         encoding="utf-8", newline="\n")  # LF on every platform; Git never converts dist/
     return manifest
 

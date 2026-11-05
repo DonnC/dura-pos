@@ -91,6 +91,7 @@ backend/hub/
     templates.js       parallel template download, checked against pinned SHA-256
     template_manifest.js  the release's template URLs and hashes
     drive_files.js     Drive v3 folder, conversion and JSON helpers; asks only for ids
+    sheet_cells.js     Sheets v4 cell writes in one call; month date serials
     crypto.js          SHA-256, HMAC, random hex, constant-time compare
     canonical_json.js  the signing string
     protocol.js        version, limits, patterns, errors
@@ -134,8 +135,10 @@ backend/hub/
 - **The template manifest's URLs are empty** until templates are published in
   a release, so `setup.run` answers `template_unavailable` on a real install
   until then. The hashes come from `backend/templates/dist/manifest.json`.
-- **After converting, the hub doesn't yet write** My Shop's identity rows and
-  `Data year`, or the month's `Summary!E1` (decision 0008).
+- **The Sheets advanced service's manifest entry** (`sheets`, `v4`) follows
+  Google's Drive example; the pages don't state it. Using `drive.file` alone
+  for Sheets writes follows the API reference. Spike 2 must confirm both on a
+  real account.
 
 ## Keeping inside Google's limits
 
@@ -150,5 +153,8 @@ possible:
 - **Templates:** fetched in parallel with one `fetchAll`, and only those still
   needed.
 - **Drive:** every create asks for `fields: 'id'` only.
+- **Sheets:** setup makes one `batchUpdate` per file, and none on a repeat. The
+  cell addresses come from the template manifest, so no sheet is read to find
+  them.
 - **Replay checks** use `CacheService`, not properties.
 - **The script lock** is held only around writes.

@@ -150,7 +150,7 @@ tab has realistic rows:
 
 ```text
 dist/
-├── manifest.json        each template's file and SHA-256, per currency
+├── manifest.json        each template's file and SHA-256, and the cells the hub fills
 ├── USD/
 │   ├── My Shop.xlsx
 │   └── Month.xlsx
@@ -173,8 +173,9 @@ dist/
   - a cash method per currency.
 - **What's not in them:** rows, or anything from the sample shop. A test scans
   every cell for the sample's names.
-- **What the hub fills in after converting:**
-  - My Shop's `Settings` identity rows and `Data year`;
+- **What the hub fills in after converting,** at the addresses `manifest.json`
+  names (a hub test checks they match):
+  - My Shop's business name, hub version and `Data year`, in `Settings`;
   - the month's `Summary!E1`, the month's first day. The Summary's 31 day
     rows work out their dates from that cell, and stay blank for days the
     month doesn't have.

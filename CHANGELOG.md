@@ -10,6 +10,22 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: the hub fills in new files after converting them
+
+- **`setup.run` now writes** My Shop's business name, hub version and data
+  year, and the month's first day into `Summary!E1`. So the Summary, Reports
+  and day rows work from the first open.
+- **Quota:** one Sheets `batchUpdate` per file, and none on a repeat. A failed
+  write resumes without recreating any file.
+- **`dist/manifest.json` now names the cells to fill.** A hub test requires the
+  hub's addresses to match, and a template test checks each address's label.
+- **Narrower permission:** the hub's manifest drops the `spreadsheets` scope,
+  which covered all the owner's spreadsheets. `drive.file` is enough for files
+  the hub created, per the Sheets API reference. Not yet proven on a real
+  account.
+- **Validation:** 59 hub tests, the six new ones seen failing first; the type
+  check is clean.
+
 ### Added: clean templates, one set per pricing currency
 
 - **Decision 0008:** `python -m dura_templates templates` builds

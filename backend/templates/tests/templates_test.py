@@ -65,6 +65,17 @@ class TemplatesTest(unittest.TestCase):
                 data = (self.out / entry["file"]).read_bytes()
                 self.assertEqual(hashlib.sha256(data).hexdigest(), entry["sha256"])
 
+    def test_the_manifest_names_the_cells_the_hub_fills(self):
+        cells = json.loads((self.out / "manifest.json").read_text(encoding="utf-8"))["cells"]
+        settings = self.book("USD", "My Shop.xlsx")["Settings"]
+        for key, label in (("businessName", "Business name"), ("hubVersion", "Shop Hub"),
+                           ("dataYear", "Data year")):
+            sheet, address = cells["myShop"][key].split("!")
+            self.assertEqual(sheet, "Settings")
+            self.assertEqual(settings[f"A{address[1:]}"].value, label)
+            self.assertEqual(address[0], "B")
+        self.assertEqual(cells["month"]["period"], "Summary!E1")
+
     def test_a_rebuild_gives_the_same_bytes(self):
         with tempfile.TemporaryDirectory() as other:
             again = Path(other) / "dist"

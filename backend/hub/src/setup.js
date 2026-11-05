@@ -16,6 +16,10 @@
 //       2026/
 //         2026-11 November   from the month template
 //
+// After converting, one Sheets call per file fills the cells named in
+// TEMPLATE_CELLS_: My Shop's name, hub version and data year, and the month's
+// first day. Each fill is recorded (filled:...) so a repeat doesn't write again.
+//
 // The registry is Script Properties keys (file:root, file:month:2026-11, ...)
 // holding Drive file IDs; files are never found by name. Each step records
 // its ID as soon as it succeeds, so a run that fails part-way resumes on the
@@ -66,6 +70,16 @@ function ensureFile_(services, key, make) {
   return id;
 }
 
+/**
+ * Runs `write` once for this key, recording that it's done.
+ * @param {any} services @param {string} key @param {() => void} write
+ */
+function fillOnce_(services, key, write) {
+  if (services.store.get(key)) return;
+  write();
+  services.store.set(key, services.now());
+}
+
 /** @param {any} request @param {any} services @param {any} device */
 function runSetup_(request, services, device) {
   requireOwner_(device);
@@ -113,6 +127,20 @@ function runSetup_(request, services, device) {
         pricingCurrency: store.get('pricingCurrency'),
         files: { root: root, business: shop, journal: journal, myShop: myShop },
       });
+    });
+    fillOnce_(services, 'filled:myshop', function () {
+      /** @type {Object<string, string | number>} */
+      var cells = {};
+      cells[TEMPLATE_CELLS_.myShop.businessName] = store.get('businessName');
+      cells[TEMPLATE_CELLS_.myShop.hubVersion] = HUB_VERSION_;
+      cells[TEMPLATE_CELLS_.myShop.dataYear] = Number(year);
+      writeCells_(myShop, cells);
+    });
+    fillOnce_(services, 'filled:month:' + period, function () {
+      /** @type {Object<string, string | number>} */
+      var cells = {};
+      cells[TEMPLATE_CELLS_.month.period] = monthSerial_(period);
+      writeCells_(month, cells);
     });
     return {
       status: 'ready',
