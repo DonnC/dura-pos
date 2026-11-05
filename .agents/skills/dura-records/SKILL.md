@@ -19,9 +19,8 @@ SPDX-License-Identifier: MIT
   `handbook/design/records-file-design.md`, with its file previews.
 - `backend/templates/README.md` (template-first, Excel compatibility, the contract) and
   `notes/04-data-files.md` (the current sample layout).
-- `backend/templates/dura_templates/`, the executable spec, run through its
-  CLI (`python -m dura_templates`). Use the spreadsheet
-  skill, if one is available, when creating or editing workbooks.
+- The `dura-templates` skill: `backend/templates/dura_templates/` is the
+  executable spec, run through its CLI (`python -m dura_templates`).
 
 ## Rules
 
@@ -31,10 +30,13 @@ SPDX-License-Identifier: MIT
 - **Template-only versus contract changes:** a wider column or a new owner
   notes column is a template change. A changed meaning is a contract change,
   with tests and a migration.
-- **Clean and demo pairs:** generate both for every workbook type. Clean
-  templates keep their formulas and lists but no records. Demo files are
-  labelled DEMO, use fixed dates, and must never provision a live shop.
-  Changes explored in Sheets or Excel go back into Python.
+- **Sample and clean templates:** every workbook type has both, from the same
+  writers. Clean templates exist per pricing currency, with formulas and lists
+  but no records, and are the only files the hub provisions a shop from. Changes
+  explored in Sheets or Excel go back into Python.
+- **Who writes what:** the hub is the only view writer. Most rows come from
+  journal events, and the hub makes `Stock`, `Balances`, `Months` and the Summary
+  labels itself. A new table says which of these it is.
 - **Every file, tab or column change states:**
   - a sample preview and dictionary entry;
   - its writer, creation stage and authority;

@@ -97,5 +97,8 @@ python -m dura_templates templates                         # rebuild dist/ if th
 The Flutter workspace is in `client/`. Run `dart run melos run verify` there
 before committing.
 
+Skills are written in `.agents/skills/`; `python .agents/sync_skills.py` keeps
+the pointers in `.claude/skills/` in step. Start with `dura-project`.
+
 `data/zimra_hs_codes.csv` is ZIMRA's HS code list. The Apps Script hub
 lives in `backend/hub/`. Shared conventions: `handbook/engineering/09-conventions.md`.

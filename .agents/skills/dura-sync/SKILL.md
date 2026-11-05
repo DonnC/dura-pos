@@ -16,8 +16,27 @@ SPDX-License-Identifier: MIT
 - `handbook/decisions/0003-records-journal-and-views.md`.
 - `handbook/engineering/01-architecture.md` (data and background work),
   `03-records-and-sheets.md` and `04-security-and-diagnostics.md`.
-- Confirm the mode first: is it single-owner or hub mode, and which device is
-  the active view writer?
+- `backend/hub/PROTOCOL.md` and the `dura-hub` skill: `journal.put` is the only
+  way a phone uploads.
+- There's one mode: every phone uploads through the Shop Hub, and the hub is the
+  only view writer (decision 0005). Phones never hold a Google token, so never
+  design a phone that writes to Drive or Sheets directly.
+
+## What the hub already guarantees
+
+- **A phone numbers its batches from 1.** `journal.put` answers `accepted` with
+  the highest number stored, or `gap` with the number it needs.
+- **Re-sending a stored batch is safe** and stores nothing twice. Re-sending that
+  number with different content is also acknowledged, so a phone must never reuse
+  a batch number.
+- **Views catch up on their own:** rows reach Sheets exactly once, by a queue a
+  timer drains. Failures stay queued and never fail an upload.
+- **`status`** reports each phone's `through`, `viewed` and `lastSeen`, for the
+  plain-state rule below.
+- **`changes.pull`** moves master data down by version hash.
+
+The phone's side of this (outbox, sealed batches, checkpoints, the `dura_hub`
+adapter) isn't built yet.
 
 ## Rules
 
@@ -43,7 +62,7 @@ SPDX-License-Identifier: MIT
 - **Tell people the state plainly:** pending count, oldest pending work, and
   per-device completeness. Offline shared stock and credit can't promise a
   real-time global limit.
-- **Never:** silent dual-writer failover, or destructive cleanup of history.
+- **Never:** a second view writer, or destructive cleanup of history.
 
 ## Start with failure-injection tests
 

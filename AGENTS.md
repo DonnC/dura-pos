@@ -41,8 +41,14 @@ Project workflows live in [`.agents/skills/`](.agents/skills/). Apply:
 
 - **`flutter-product-engineering`** for any Flutter work;
 - **`premium-mobile-product-design`** for mobile UX;
+- **`dura-project`** for the goal, architecture, status and plan;
+- **`dura-hub`** for `backend/hub`, and **`dura-templates`** for the generator;
 - **`dura-tdd`, `dura-ui`, `dura-records`, `dura-sync` or `dura-release`**
   for those workflows.
+
+Write skills only there. `python .agents/sync_skills.py` adds a pointer for each
+one in `.claude/skills/`, and `--check` also fails on a path a skill names that
+no longer exists.
 
 ## Rules
 

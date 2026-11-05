@@ -10,6 +10,20 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: agent skills for contributors
+
+- **`dura-project`** states the goal, settled decisions, architecture, what's
+  built and what isn't, the order of work and the future plan.
+- **`dura-hub` and `dura-templates`** cover the two backend parts: how they work,
+  their rules, and how to change them safely.
+- **`dura-sync` and `dura-records`** no longer describe a single-owner mode or
+  demo files, which decisions 0005 and 0008 replaced.
+- **Claude Code finds them too:** `sync_skills.py` writes pointers in
+  `.claude/skills/`, and CI fails if a pointer drifts or a skill names a path
+  that doesn't exist.
+- **The capability map** now shows what the hub has built, and that none of it
+  has run on a real Google account.
+
 ### Added: photos, exports and the last sheet gaps
 
 - **`attachment.put`** saves product and supplier-invoice photos where the
