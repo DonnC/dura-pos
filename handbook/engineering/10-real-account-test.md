@@ -194,8 +194,8 @@ Then delete the `.try` folder. You can keep the test account for the next round.
 | Photos, and Excel and CSV exports | Worked |
 | Shop page | Answered an anonymous request with HTTP 200 and the shop's title |
 
-Google wraps the page in its own frame, so a command-line request can't show whether
-a banner appears.
+In a private window the page rendered as designed, under Google's closable notice:
+"This application was created by a Google Apps Script user".
 
 The daily job ran by hand in 3 seconds and logged no failed step. Settings survived
 conversion, and owner edits to them reached the page Google served.

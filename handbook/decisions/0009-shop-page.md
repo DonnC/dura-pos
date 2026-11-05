@@ -49,8 +49,10 @@ Call, WhatsApp and Directions buttons, and a searchable list of products and pri
 
 - **Photos aren't shown.** They're private in the owner's Drive, and making them
   public is a separate decision.
-- **Google's frame:** the page runs in Google's sandbox, and consumer accounts are
-  expected to show a Google notice above it. The real-account test confirms this.
+- **Google's frame:** the page runs in Google's sandbox. On a Gmail account Google
+  shows a notice above it, "This application was created by a Google Apps Script
+  user", with Report abuse and Learn more links. Visitors can close it; the hub
+  can't remove it.
 - **The page shows prices in the pricing currency only.** Rates change daily, and a
   cached page shouldn't quote them.
 - **Browsers signed in to several Google accounts can fail.** Google may rewrite the
@@ -64,6 +66,6 @@ Call, WhatsApp and Directions buttons, and a searchable list of products and pri
 
 - Tests show that private fields never appear, that owner text is escaped, and that
   50 visits read nothing from Sheets or Script Properties.
-- Google has served it to an anonymous request. Its buttons, and any banner Google
-  adds, still need checking on a phone.
+- Google has served it in a private browser window, with the owner's details. Its
+  buttons, and a page with products, still need checking on a phone.
 - To reverse it, remove `doGet`; the web app then answers GET with an error.

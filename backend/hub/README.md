@@ -169,8 +169,8 @@ backend/hub/
 - **A new photo for the same product is a new file;** the old one stays.
 - **Google limits a Drive export to 10 MB.** A larger workbook answers
   `export_failed`; a CSV of one tab still works.
-- **The shop page's buttons, and any banner Google adds,** still need checking on
-  a phone. A browser signed in to several Google accounts can get Google's own error
+- **The shop page shows Google's notice** on Gmail accounts, and the hub can't remove
+  it. Its buttons still need checking on a phone. A browser signed in to several Google accounts can get Google's own error
   page instead (decision 0009).
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
