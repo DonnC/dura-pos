@@ -120,7 +120,8 @@ Now the shop page:
 1. In `My Shop`, fill `Address` and `Phone` in Settings, and add two rows to
    `Products`.
 2. Run `node tools/try_hub.js pull`.
-3. Open the hub's address on your phone, in any browser, without signing in.
+3. Open the hub's address on your phone, or in a private window. Don't use a browser
+   signed in to several Google accounts: see the table at the end.
 
 Check that the page loads, then try the search, Call, WhatsApp and Directions.
 Note any banner Google adds at the top.
@@ -170,6 +171,7 @@ Then delete the `.try` folder. You can keep the test account for the next round.
 | `The hub did not answer JSON` | Step 4 wasn't done, or the address is wrong |
 | `bad_code` when pairing | The install code ran out. Run `fresh` again. If the hub already has an owner, it needs a new script project |
 | `template_unavailable` during setup | Step 2: the template address isn't public, or `prepare` ran before the latest templates were pushed |
+| "Sorry, unable to open the file at present", with `/u/1/` in the address | Google's handling of several signed-in accounts, not the hub. Open it in a private window. The hub's code never ran |
 | `npx clasp` sits with no output | Press Ctrl+C and run it again |
 
 ## Results of the first run
@@ -195,15 +197,22 @@ Then delete the `.try` folder. You can keep the test account for the next round.
 Google wraps the page in its own frame, so a command-line request can't show whether
 a banner appears.
 
-**Still to confirm by eye:** the table in step 6, and the shop page on a phone.
+The daily job ran by hand in 3 seconds and logged no failed step. Settings survived
+conversion, and owner edits to them reached the page Google served.
 
-**Still to run:** the daily job, a timer firing by itself, Paynow's sandbox, and
-spikes 6 and 7.
+**Still to confirm by eye:** the rest of the table in step 6, and the shop page with
+products, on a phone.
+
+**Still to run:** a timer firing by itself, Paynow's sandbox, and spikes 6 and 7.
 
 **Learned:**
 
 - Authorising took about 11 minutes the first time, longer than the install code
   lasts, so the code must be issued after authorising. An app install has to do the
   same.
+- A browser signed in to two Google accounts got Google's own error page, while a
+  signed-out request got the shop page.
+- Sheets turned a typed phone number into a number, and the Call link needed `+`.
+  Both are handled now.
 - Google's screen lets an owner untick single permissions, and the app needs to
   explain that all three are needed. What the hub does with fewer isn't tested yet.

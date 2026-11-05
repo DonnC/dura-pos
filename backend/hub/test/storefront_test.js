@@ -39,11 +39,23 @@ test('the page shows the shop, its contacts and its prices with their currency',
   assert.match(html, /Bread loaf/);
   assert.match(html, /USD 1\.50/);
   assert.match(html, /USD 4\.00/);
-  assert.match(html, /href="tel:0771234567"/);
+  assert.match(html, /href="tel:\+263771234567"/);
   assert.match(html, /wa\.me\/263771234567/);
   assert.match(html, /google\.com\/maps\/search\/\?api=1&amp;query=12%20Market%20St%2C%20Harare/);
   assert.match(html, /<base target="_top">/);
 });
+
+for (const [typed, digits] of [['0771234567', '263771234567'], ['771234567', '263771234567'],
+  ['263771234567', '263771234567'], ['+263 77 123 4567', '263771234567'], ['+27 82 123 4567', '27821234567']]) {
+  test(`the phone number ${typed} dials as +${digits}`, () => {
+    const { hub, google } = readyShop();
+    shopData(google);
+    google.Sheets.cells.Settings[3][1] = typed;
+    const { html } = page(hub);
+    assert.equal(html.includes(`tel:+${digits}"`), true);
+    assert.equal(html.includes(`wa.me/${digits}"`), true);
+  });
+}
 
 test('nothing private reaches the page', () => {
   const { hub, google } = readyShop();

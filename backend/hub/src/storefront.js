@@ -26,10 +26,15 @@ function escapeHtml_(value) {
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-/** A Zimbabwean number in WhatsApp's form, or digits as given. @param {string} phone */
-function whatsappNumber_(phone) {
+/**
+ * A phone number in international digits, for Call and WhatsApp links. A sheet
+ * stores 0771234567 as a number if it's typed plainly, which drops the 0.
+ * @param {string} phone
+ */
+function internationalPhone_(phone) {
   var digits = phone.replace(/[^0-9]/g, '');
-  return /^0[0-9]{9}$/.test(digits) ? '263' + digits.slice(1) : digits;
+  if (/^0[0-9]{9}$/.test(digits)) return '263' + digits.slice(1);
+  return /^7[0-9]{8}$/.test(digits) ? '263' + digits : digits;
 }
 
 /**
@@ -63,9 +68,9 @@ function storefrontData_(services, master) {
 function storefrontActions_(shop) {
   var links = [];
   if (shop.phone) {
-    links.push('<a class="action" href="tel:' + escapeHtml_(shop.phone.replace(/[^0-9+]/g, '')) + '">Call</a>');
-    links.push('<a class="action" target="_blank" rel="noopener" href="https://wa.me/' +
-      whatsappNumber_(shop.phone) + '">WhatsApp</a>');
+    var phone = internationalPhone_(shop.phone);
+    links.push('<a class="action" href="tel:+' + phone + '">Call</a>');
+    links.push('<a class="action" target="_blank" rel="noopener" href="https://wa.me/' + phone + '">WhatsApp</a>');
   }
   if (shop.address) {
     links.push('<a class="action" target="_blank" rel="noopener" href="' +

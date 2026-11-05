@@ -19,7 +19,11 @@ SPDX-License-Identifier: MIT
   `sheets` manifest entry are right.
 - **`try_hub.js fresh`** issues the install code after authorising, which takes
   longer than the code lasts, and prints the hub's address.
-- **Not yet proven:** timers, the daily job, formulas written by the hub, and
+- **Fixed from the real run:** Call and WhatsApp links now use international numbers,
+  even when a sheet has dropped the leading 0.
+- **Found:** a browser signed in to several Google accounts can get Google's own
+  error page instead of the shop page. Dura can't fix that from the hub.
+- **Not yet proven:** a timer firing by itself, formulas written by the hub, and
   Paynow's sandbox.
 
 ### Added: a shop page, payment docs and a brand set

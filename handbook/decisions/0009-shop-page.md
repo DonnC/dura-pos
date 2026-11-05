@@ -53,6 +53,10 @@ Call, WhatsApp and Directions buttons, and a searchable list of products and pri
   expected to show a Google notice above it. The real-account test confirms this.
 - **The page shows prices in the pricing currency only.** Rates change daily, and a
   cached page shouldn't quote them.
+- **Browsers signed in to several Google accounts can fail.** Google may rewrite the
+  address to `/macros/u/1/s/...` and answer "Sorry, unable to open the file at
+  present", before the hub runs, so Dura can't fix it. It happened to an owner with
+  two accounts; whether it reaches customers still needs testing.
 - **The address is a long `script.google.com` link.** The app can share it as a QR
   code; a short name would need a service Dura doesn't run.
 

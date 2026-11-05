@@ -170,7 +170,8 @@ backend/hub/
 - **Google limits a Drive export to 10 MB.** A larger workbook answers
   `export_failed`; a CSV of one tab still works.
 - **The shop page's buttons, and any banner Google adds,** still need checking on
-  a phone.
+  a phone. A browser signed in to several Google accounts can get Google's own error
+  page instead (decision 0009).
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
 
