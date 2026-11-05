@@ -26,6 +26,33 @@ from dura_templates.workbook.styles import BAD, BOLD, FMT, GOOD, INFO, OFF, TITL
 from dura_templates.workbook.tables import add_table, col, mark_formula_tab, readme
 
 
+# A template's Summary reserves these rows; the hub writes each label in
+# column A, and the row's formulas take it from there. (key, rows)
+SUMMARY_BLOCKS = (("location", 10), ("phone", 10), ("seller", 20), ("method", 30), ("product", 100))
+SUMMARY_MONTH_ROW = 36  # heading in row 4, 31 day rows, then the Month row
+CHARTED_PRODUCTS = 15
+
+
+def summary_blocks() -> dict:
+    """Where a template's reserved rows are, for the hub."""
+    blocks, row = {}, SUMMARY_MONTH_ROW
+    for key, rows in SUMMARY_BLOCKS:
+        row += 2
+        blocks[key] = {"first": row + 1, "rows": rows}
+        row += rows
+    return blocks
+
+
+def _labels(template: bool, key: str, found) -> list:
+    """A block's labels: the sample's own, or a template's empty rows."""
+    return [None] * dict(SUMMARY_BLOCKS)[key] if template else sorted(found)
+
+
+def _when_labelled(formula: str, r: int, template: bool) -> str:
+    """Keeps a template's unused rows blank instead of a column of zeros."""
+    return f'=IF($A{r}="","",{formula[1:]})' if template else formula
+
+
 def month_summary(wb: Workbook, ym: str, data: dict, template: bool = False):
     """The month's Summary tab: totals by day, location, phone, seller, payment
     method and product, profit and VAT, and charts, all as formulas.
@@ -85,34 +112,34 @@ def month_summary(wb: Workbook, ym: str, data: dict, template: bool = False):
         r += 2
         for c, h in enumerate([field, "Sales", "USD", "ZWG", "ZAR"], start=1):
             ws.cell(row=r, column=c, value=h).font = BOLD
-        for v in sorted({row[idx] for row in data["sales"]}):
+        for v in _labels(template, field.lower(), {row[idx] for row in data["sales"]}):
             r += 1
             ws.cell(row=r, column=1, value=v)
-            ws.cell(row=r, column=2, value=f'=COUNTIFS(Sales!${S[field]}:${S[field]},$A{r},Sales!${S["Type"]}:${S["Type"]},"<>Return")')
+            ws.cell(row=r, column=2, value=_when_labelled(f'=COUNTIFS(Sales!${S[field]}:${S[field]},$A{r},Sales!${S["Type"]}:${S["Type"]},"<>Return")', r, template))
             for c, cur in enumerate(("USD", "ZWG", "ZAR"), start=3):
-                ws.cell(row=r, column=c, value=f'=SUMIFS(Sales!${S["Total"]}:${S["Total"]},Sales!${S[field]}:${S[field]},$A{r},Sales!${S["Currency"]}:${S["Currency"]},"{cur}")').number_format = FMT["money"]
+                ws.cell(row=r, column=c, value=_when_labelled(f'=SUMIFS(Sales!${S["Total"]}:${S["Total"]},Sales!${S[field]}:${S[field]},$A{r},Sales!${S["Currency"]}:${S["Currency"]},"{cur}")', r, template)).number_format = FMT["money"]
     # by payment method
     r += 2
     P = {h: col(H_PAYS, h) for h in ("Method", "Amount", "Status")}
     for c, h in enumerate(["Payment method", "Net received (in its own currency)"], start=1):
         ws.cell(row=r, column=c, value=h).font = BOLD
-    for method in sorted({row[7] for row in data["pays"]}):
+    for method in _labels(template, "method", {row[7] for row in data["pays"]}):
         r += 1
         ws.cell(row=r, column=1, value=method)
-        ws.cell(row=r, column=2, value=f'=SUMIFS(Payments!${P["Amount"]}:${P["Amount"]},Payments!${P["Method"]}:${P["Method"]},$A{r},Payments!${P["Status"]}:${P["Status"]},"<>Failed",Payments!${P["Status"]}:${P["Status"]},"<>Cancelled")').number_format = FMT["money"]
+        ws.cell(row=r, column=2, value=_when_labelled(f'=SUMIFS(Payments!${P["Amount"]}:${P["Amount"]},Payments!${P["Method"]}:${P["Method"]},$A{r},Payments!${P["Status"]}:${P["Status"]},"<>Failed",Payments!${P["Status"]}:${P["Status"]},"<>Cancelled")', r, template)).number_format = FMT["money"]
     # products
     r += 2
     I = {h: col(H_ITEMS, h) for h in ("Product ID", "Qty", "Line total", "Currency")}
     for c, h in enumerate(["Product ID", "Product", "Qty sold", "USD", "ZWG", "ZAR"], start=1):
         ws.cell(row=r, column=c, value=h).font = BOLD
     r_prod = r
-    for pid in sorted({row[6] for row in data["items"]}):
+    for pid in _labels(template, "product", {row[6] for row in data["items"]}):
         r += 1
         ws.cell(row=r, column=1, value=pid)
-        ws.cell(row=r, column=2, value=PROD[pid][1])
-        ws.cell(row=r, column=3, value=f"=SUMIFS('Items Sold'!${I['Qty']}:${I['Qty']},'Items Sold'!${I['Product ID']}:${I['Product ID']},$A{r})")
+        ws.cell(row=r, column=2, value=PROD[pid][1] if pid else None)
+        ws.cell(row=r, column=3, value=_when_labelled(f"=SUMIFS('Items Sold'!${I['Qty']}:${I['Qty']},'Items Sold'!${I['Product ID']}:${I['Product ID']},$A{r})", r, template))
         for c, cur in enumerate(("USD", "ZWG", "ZAR"), start=4):
-            ws.cell(row=r, column=c, value=f"=SUMIFS('Items Sold'!${I['Line total']}:${I['Line total']},'Items Sold'!${I['Product ID']}:${I['Product ID']},$A{r},'Items Sold'!${I['Currency']}:${I['Currency']},\"{cur}\")").number_format = FMT["money"]
+            ws.cell(row=r, column=c, value=_when_labelled(f"=SUMIFS('Items Sold'!${I['Line total']}:${I['Line total']},'Items Sold'!${I['Product ID']}:${I['Product ID']},$A{r},'Items Sold'!${I['Currency']}:${I['Currency']},\"{cur}\")", r, template)).number_format = FMT["money"]
     # cash-up differences
     r += 2
     for c, h in enumerate(["Cash-up differences", "USD", "ZWG", "ZAR"], start=1):
@@ -168,15 +195,15 @@ def month_summary(wb: Workbook, ym: str, data: dict, template: bool = False):
         ch.legend = None
         ch.x_axis.number_format = "d"
         ws.add_chart(ch, f"K{4 + i * 15}")
-    if not template:  # a template has no product rows yet to chart
-        ch = BarChart()
-        ch.type = "bar"
-        ch.title = "Items sold this month"
-        ch.height, ch.width = 12, 18
-        ch.add_data(Reference(ws, min_col=3, min_row=r_prod, max_row=r_prod_end), titles_from_data=True)
-        ch.set_categories(Reference(ws, min_col=2, min_row=r_prod + 1, max_row=r_prod_end))
-        ch.legend = None
-        ws.add_chart(ch, "K34")
+    chart_end = r_prod + CHARTED_PRODUCTS if template else r_prod_end  # the hub lists the best sellers first
+    ch = BarChart()
+    ch.type = "bar"
+    ch.title = "Items sold this month"
+    ch.height, ch.width = 12, 18
+    ch.add_data(Reference(ws, min_col=3, min_row=r_prod, max_row=chart_end), titles_from_data=True)
+    ch.set_categories(Reference(ws, min_col=2, min_row=r_prod + 1, max_row=chart_end))
+    ch.legend = None
+    ws.add_chart(ch, "K34")
     ws.column_dimensions["A"].width = 44
     ws.column_dimensions["B"].width = 22
     for c in "CDEFGHI":

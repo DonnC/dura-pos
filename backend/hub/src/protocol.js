@@ -20,6 +20,7 @@ var LIMITS_ = {
   maxEvents: 500,
   lockWaitMillis: 10000,
   deviceNameLength: 60,
+  attachmentBase64Length: 1400000, // about 1 MB of photo; phones send about 150 KB
 };
 
 var PATTERNS_ = {

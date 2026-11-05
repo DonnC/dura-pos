@@ -10,6 +10,20 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: photos, exports and the last sheet gaps
+
+- **`attachment.put`** saves product and supplier-invoice photos where the
+  sample shows them, and a retry doesn't make a second file.
+- **`export.request`,** owner only, saves an Excel copy of a workbook or one tab
+  as CSV to `Exports/`. CSV text can't run as a formula in Excel.
+- **Summary breakdowns now work in a real shop.** Templates reserve guarded
+  rows, the contract says where, and the hub writes the labels, best seller
+  first. The month template gains the items-sold chart.
+- **`Balances`** gets a row per contact and currency from the Money Ledger.
+- **`Payment Callbacks` and `Months` are hub-only** in the contract.
+- **Validation:** 124 hub tests, 16 template tests; all 102 sample files match
+  their fingerprints.
+
 ### Added: payments in the hub
 
 - **Paynow mobile checkout** (EcoCash, OneMoney, InnBucks, O'mari) with the

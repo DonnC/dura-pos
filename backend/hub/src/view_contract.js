@@ -973,5 +973,35 @@ var VIEW_CONTRACT_ = {
   "6": "=IF($D{r}<=0,\"\ud83d\udd34 Out\",IF($D{r}<=$E{r},\"\ud83d\udfe1 Low\",\"\ud83d\udfe2 OK\"))",
   "7": "=IFERROR($D{r}*INDEX(Products!$H:$H,MATCH($A{r},Products!$A:$A,0)),0)",
   "8": "=IF(MAX(MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Stock in\"),MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Moved in\"))=0,\"\",MAX(MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Stock in\"),MAXIFS('Stock Ledger'!$B:$B,'Stock Ledger'!$H:$H,$A{r},'Stock Ledger'!$F:$F,$C{r},'Stock Ledger'!$G:$G,\"Moved in\")))"
+ },
+ "balanceRow": {
+  "2": "=IFERROR(INDEX(Contacts!$B:$B,MATCH($A{r},Contacts!$A:$A,0)),\"\")",
+  "3": "=IFERROR(INDEX(Contacts!$C:$C,MATCH($A{r},Contacts!$A:$A,0)),\"\")",
+  "6": "=MAX(0,SUMIFS('Money Ledger'!$N:$N,'Money Ledger'!$L:$L,$A{r},'Money Ledger'!$H:$H,$E{r}))",
+  "7": "=MAX(0,-SUMIFS('Money Ledger'!$N:$N,'Money Ledger'!$L:$L,$A{r},'Money Ledger'!$H:$H,$E{r}))",
+  "9": "=IF(AND($H{r}<>\"\",MAX($F{r},$G{r})>$H{r}),\"\ud83d\udd34 Over limit\",IF($G{r}>0,\"\ud83d\udfe0 Owes the shop\",IF($F{r}>0,\"\ud83d\udd35 Shop owes them\",\"\u26aa Settled\")))",
+  "10": "=MAXIFS('Money Ledger'!$B:$B,'Money Ledger'!$L:$L,$A{r})"
+ },
+ "summaryBlocks": {
+  "location": {
+   "first": 39,
+   "rows": 10
+  },
+  "phone": {
+   "first": 51,
+   "rows": 10
+  },
+  "seller": {
+   "first": 63,
+   "rows": 20
+  },
+  "method": {
+   "first": 85,
+   "rows": 30
+  },
+  "product": {
+   "first": 117,
+   "rows": 100
+  }
  }
 };

@@ -103,6 +103,23 @@ class TemplatesTest(unittest.TestCase):
                       "Gross profit", "VAT in this month's sales, less returns"):
             self.assertIn(label, labels)
 
+    def test_the_summary_reserves_rows_the_hub_labels(self):
+        blocks = json.loads((self.out / "contract.json").read_text(encoding="utf-8"))["summaryBlocks"]
+        ws = self.book("USD", "Month.xlsx")["Summary"]
+        for key, heading in (("location", "Location"), ("phone", "Phone"), ("seller", "Seller"),
+                             ("method", "Payment method"), ("product", "Product ID")):
+            block = blocks[key]
+            self.assertEqual(ws.cell(row=block["first"] - 1, column=1).value, heading)
+            self.assertIsNone(ws.cell(row=block["first"], column=1).value)
+            formula = ws.cell(row=block["first"] + block["rows"] - 1, column=3 if key == "product" else 2).value
+            self.assertTrue(formula.startswith('=IF($A'), formula)
+
+    def test_the_contract_carries_the_balance_row_formulas(self):
+        row = json.loads((self.out / "contract.json").read_text(encoding="utf-8"))["balanceRow"]
+        self.assertEqual(set(row), {"2", "3", "6", "7", "9", "10"})
+        self.assertIn("$A{r}", row["6"])
+        self.assertNotIn("_xlfn", row["10"])
+
     def test_a_rebuild_gives_the_same_bytes(self):
         with tempfile.TemporaryDirectory() as other:
             again = Path(other) / "dist"

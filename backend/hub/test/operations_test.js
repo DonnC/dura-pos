@@ -107,6 +107,49 @@ test('status reports health and never a secret', () => {
   assert.equal(JSON.stringify(reply).includes(owner.secret), false);
 });
 
+test('the Summary breakdowns get their labels, best seller first', () => {
+  const { hub, services, google, drive } = readyShop();
+  google.Sheets.cells.Sales = [['Location', 'Phone', 'Seller'], ['Main', 'P1', 'Chipo'], ['Branch', 'P2', 'Tendai'], ['Main', 'P1', 'Chipo']];
+  google.Sheets.cells.Payments = [['Method', 'Currency', 'Amount', 'Status'], ['Cash USD', 'USD', 10, 'Paid']];
+  google.Sheets.cells['Items Sold'] = [['Product ID', 'Product', 'Qty'], ['P001', 'Bread', 1], ['P002', 'Sugar', 5], ['P001', 'Bread', 2]];
+  hub.runDaily_(services());
+  hub.runDaily_(services());
+  const month = named(drive, '2026-11 November').id;
+  const { location, method, product } = hub.VIEW_CONTRACT_.summaryBlocks;
+  const writes = google.Sheets.writes.filter((w) => w.spreadsheetId === month
+    && w.request.data[0].range.startsWith(`'Summary'!A${location.first}`));
+  assert.equal(writes.length, 1);
+  const data = writes[0].request.data;
+  assert.equal(data[0].range, `'Summary'!A${location.first}:A${location.first + location.rows - 1}`);
+  assert.deepEqual(data[0].values.slice(0, 3), [['Branch'], ['Main'], ['']]);
+  assert.equal(data[0].values.length, location.rows);
+  assert.deepEqual(data[3].values[0], ['Cash USD']);
+  assert.equal(data[3].range.startsWith(`'Summary'!A${method.first}:`), true);
+  assert.deepEqual(data[4].values.slice(0, 2), [['P002', 'Sugar'], ['P001', 'Bread']]);
+  assert.equal(data[4].range, `'Summary'!A${product.first}:B${product.first + product.rows - 1}`);
+});
+
+test('Balances gets a row per contact and currency, with what it is', () => {
+  const { hub, services, google, drive } = readyShop();
+  const shop = named(drive, 'My Shop').id;
+  google.Sheets.perFile[shop] = {
+    'Money Ledger': [['Contact ID', 'Currency', 'Balance change'], ['C1', 'USD', 2], ['C1', 'USD', 3], ['C1', 'ZWG', 9], ['C2', 'USD', 1], ['C3', 'USD', 4], ['', 'USD', 0]],
+    Contacts: [['Contact ID', 'Name', 'Type', 'On account', 'Credit limit (USD)'], ['C1', 'Ann', 'Customer', 'Yes', 150], ['C2', 'Ben', 'Customer', 'No', ''], ['C3', 'Mill', 'Supplier', 'No', '']],
+  };
+  hub.runDaily_(services());
+  hub.runDaily_(services());
+  const writes = google.Sheets.writes.filter((w) => w.request.data[0].range.startsWith("'Balances'"));
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].request.valueInputOption, 'USER_ENTERED');
+  const { range, values } = writes[0].request.data[0];
+  assert.equal(range, "'Balances'!A2:J5");
+  assert.deepEqual([values[0][0], values[0][3], values[0][4], values[0][7]], ['C1', 'Account (invoices)', 'USD', '150']);
+  assert.equal(values[1][4], 'ZWG');
+  assert.deepEqual([values[2][3], values[2][7]], ['Kept change', '']);
+  assert.equal(values[3][3], 'Supplier invoices');
+  assert.match(values[0][5], /^=MAX\(0,SUMIFS\('Money Ledger'.*\$A2/);
+});
+
 test('setup installs the two timers once', () => {
   const { setup, google } = readyShop();
   setup();

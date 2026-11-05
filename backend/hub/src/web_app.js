@@ -79,6 +79,8 @@ function handlerFor_(action) {
     case 'keys.set': return setPaymentKeys_;
     case 'payment.start': return startPayment_;
     case 'payment.check': return checkPayment_;
+    case 'attachment.put': return putAttachment_;
+    case 'export.request': return requestExport_;
     default: return null;
   }
 }

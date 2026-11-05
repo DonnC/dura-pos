@@ -63,6 +63,10 @@ function createBlob(data, contentType, name) {
     getBytes: () => bytes,
     getDataAsString: () => toBuffer(bytes).toString('utf8'),
     getContentType: () => blob.contentType,
+    setName(value) {
+      blob.name = value;
+      return blob;
+    },
     setContentType(type) {
       blob.contentType = type;
       return blob;
@@ -165,6 +169,7 @@ function createSheets() {
     grown: [],
     headings: {},
     cells: {},
+    perFile: {},
     rowCount: 1000,
     Spreadsheets: {
       get(spreadsheetId, options) {
@@ -190,7 +195,7 @@ function createSheets() {
           return {
             valueRanges: options.ranges.map((range) => ({
               range,
-              values: sheets.cells[range.split('!')[0].replace(/'/g, '')] || [],
+              values: (sheets.perFile[spreadsheetId] || sheets.cells)[range.split('!')[0].replace(/'/g, '')] || [],
             })),
           };
         },
@@ -266,6 +271,7 @@ function createGoogle(options = {}) {
       },
       getUuid: () => crypto.randomUUID(),
       newBlob: createBlob,
+      base64Decode: (text) => toSignedBytes(Buffer.from(text, 'base64')),
       formatDate,
     },
     PropertiesService: { getScriptProperties: () => properties },

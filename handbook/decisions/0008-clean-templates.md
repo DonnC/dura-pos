@@ -72,8 +72,9 @@ but the generator could only build the sample shop:
   - the hub didn't yet write the identity and period cells, and now does;
   - My Shop's Stock rows were missing, and the hub now writes them;
   - the Summary breakdowns by location, phone, seller, payment method and
-    product, and My Shop's Balances rows, fill only when the hub builds them.
-    The sample's writer computes those labels from data.
+    product, and My Shop's Balances rows, had nowhere to go. A template's
+    Summary now reserves guarded rows, the contract says where, and the hub
+    writes the labels; it writes Balances from the contract's formulas.
 - **The URLs in the hub's template manifest are empty** until templates are
   published in a release.
 

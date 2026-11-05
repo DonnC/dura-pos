@@ -57,6 +57,62 @@ function moneyIn_(grid) {
   return totals;
 }
 
+/** A column's distinct values, sorted. @param {any[][]} grid @param {string} heading */
+function distinct_(grid, heading) {
+  var at = (grid[0] || []).indexOf(heading);
+  if (at < 0) return [];
+  /** @type {Object<string, boolean>} */
+  var seen = {};
+  grid.slice(1).forEach(function (row) { if (row[at] !== '' && row[at] !== undefined) seen[row[at]] = true; });
+  return Object.keys(seen).sort();
+}
+
+/** Each product sold, best seller first, as [id, name]. @param {any[][]} grid */
+function productsSold_(grid) {
+  var heads = grid[0] || [];
+  /** @type {Object<string, {name: string, qty: number}>} */
+  var totals = {};
+  grid.slice(1).forEach(function (row) {
+    var id = row[heads.indexOf('Product ID')];
+    if (!id) return;
+    totals[id] = totals[id] || { name: row[heads.indexOf('Product')], qty: 0 };
+    totals[id].qty += Number(row[heads.indexOf('Qty')]) || 0;
+  });
+  return Object.keys(totals).sort(function (a, b) { return totals[b].qty - totals[a].qty || (a < b ? -1 : 1); })
+    .map(function (id) { return [id, totals[id].name]; });
+}
+
+/** One block's labels as a write, blank to its end. @param {any} block @param {any[][]} rows @param {number} width */
+function blockWrite_(block, rows, width) {
+  var values = rows.slice(0, block.rows);
+  while (values.length < block.rows) values.push(width === 1 ? [''] : ['', '']);
+  var last = block.first + block.rows - 1;
+  return { range: "'Summary'!A" + block.first + ':' + columnLetter_(width) + last, values: values };
+}
+
+/**
+ * Labels the month's Summary breakdowns; each row's formulas do the rest.
+ * Skipped when the labels haven't changed.
+ * @param {any} services @param {string} monthFile @param {string} period @param {any[]} ranges
+ */
+function writeSummaryLabels_(services, monthFile, period, ranges) {
+  var sales = ranges[2].values || [];
+  var one = function (value) { return [value]; };
+  var blocks = VIEW_CONTRACT_.summaryBlocks;
+  var data = [
+    blockWrite_(blocks.location, distinct_(sales, 'Location').map(one), 1),
+    blockWrite_(blocks.phone, distinct_(sales, 'Phone').map(one), 1),
+    blockWrite_(blocks.seller, distinct_(sales, 'Seller').map(one), 1),
+    blockWrite_(blocks.method, distinct_(ranges[1].values || [], 'Method').map(one), 1),
+    blockWrite_(blocks.product, productsSold_(ranges[3].values || []), 2),
+  ];
+  var key = 'summary:' + period;
+  var hash = sha256Hex_(JSON.stringify(data));
+  if (services.store.get(key) === hash) return;
+  Sheets.Spreadsheets.Values.batchUpdate({ valueInputOption: 'RAW', data: data }, monthFile);
+  services.store.set(key, hash);
+}
+
 /**
  * Writes one month's row in My Shop's Months tab, from the month file's own
  * formulas. The Reports tab reads Months, because formulas can't cross files.
@@ -67,7 +123,8 @@ function refreshMonthRow_(services, period, status) {
   var monthFile = store.get('file:month:' + period);
   if (!monthFile) return;
   var reply = Sheets.Spreadsheets.Values.batchGet(monthFile, {
-    ranges: ["'Summary'!A:E", "'Payments'!A:Z"], valueRenderOption: 'UNFORMATTED_VALUE',
+    ranges: ["'Summary'!A:E", "'Payments'!A:Z", "'Sales'!A:AZ", "'Items Sold'!A:Z"],
+    valueRenderOption: 'UNFORMATTED_VALUE',
   });
   /** @type {Object<string, any[]>} */
   var summary = {};
@@ -94,6 +151,7 @@ function refreshMonthRow_(services, period, status) {
   var pointer = 'row:' + shop + ':Months';
   var at = Number(store.get(rowKey) || store.get(pointer) || '2');
   writeRowAt_(services, shop, 'Months', at, row);
+  writeSummaryLabels_(services, monthFile, period, reply.valueRanges);
   if (!store.get(rowKey)) {
     /** @type {Object<string, string | number>} */
     var marks = {};
@@ -143,6 +201,9 @@ function runDaily_(services) {
     });
     dailyStep_('stock rows', function () {
       refreshStockRows_(services, readMasterData_(services));
+    });
+    dailyStep_('balances', function () {
+      refreshBalanceRows_(services);
     });
   });
 }

@@ -345,12 +345,34 @@ protocol requests: they carry no envelope and always get plain `ok`.
 - A good one is logged and makes the hub check with the provider. It never
   marks a payment paid by itself.
 
-### Planned
+### `attachment.put`
 
-| Action | Purpose |
-|---|---|
-| `attachment.put` | A product or supplier-invoice photo |
-| `export.request` | An Excel or CSV export of a period |
+A product or supplier-invoice photo, as base64 in the signed body: at most
+about 1 MB, and phones send about 150 KB.
+
+```text
+body:   {"kind":"product","id":"P001","contentType":"image/jpeg","data":"<base64>"}
+result: {"file":"<Drive file ID>","name":"P001.jpg"}
+```
+
+`kind` is `product` or `invoice`, and `contentType` is JPEG, PNG or WebP. Product
+photos go to `Product photos/`, invoices to `<year>/Supplier invoices/`. A retry
+of the same photo within hours returns the first file. A new photo for the same
+ID is a new file.
+
+### `export.request`: owner only
+
+Saves a copy to `Exports/` in the shop's Drive.
+
+```text
+body:   {"file":"2026-11","format":"xlsx"}                 a whole workbook
+body:   {"file":"myShop","format":"csv","table":"Products"}   one tab
+result: {"file":"<Drive file ID>","name":"2026-11 November 2026-11-30.xlsx"}
+```
+
+`file` is `myShop` or a month with a workbook. In CSV, text starting with `=`,
+`+`, `-` or `@` gets a leading apostrophe, so it can't run as a formula when
+opened in Excel.
 
 ## Versioning
 

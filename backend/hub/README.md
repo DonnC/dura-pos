@@ -29,11 +29,12 @@ open questions are in [note 15](../../notes/15-apps-script-route.md).
   - timers that catch views up, make next month's and next year's files, move
     `Data year` on and keep the `Months` tab current, with every phone off;
   - a health report for the owner's screen;
-  - mobile payments through the shop's own Paynow keys.
+  - mobile payments through the shop's own Paynow keys;
+  - product and supplier-invoice photos, and Excel and CSV exports;
+  - `Balances` rows and the Summary breakdowns, once a day.
 - **Planned:**
   - ZB Smile&Pay;
-  - photos and exports;
-  - install and update.
+  - install and update, which the Flutter app drives.
 
 ## Set up and verify
 
@@ -91,7 +92,8 @@ backend/hub/
     journal.js         batch acceptance and per-device batch numbers
     journal_drive.js   stores batches as JSON files in Drive
     views.js           journal rows into Sheets, exactly once, by heading
-    master_data.js     changes.pull: master data for phones, and the Stock rows
+    master_data.js     changes.pull, and the Stock and Balances rows
+    attachments.js     photos and exports in the shop's Drive
     jobs.js            timers, the daily pass, the Months tab, status
     payments.js        keys, start, check, callbacks; provider-neutral
     paynow.js          the Paynow adapter: forms, SHA-512 hashes, statuses
@@ -156,6 +158,14 @@ backend/hub/
   callback through Google's redirect.
 - **An `unknown` payment stays unknown.** Paynow's trace call could settle it;
   the hub doesn't use it yet.
+- **Summary breakdowns and Balances refresh daily,** so they can be a day
+  behind the rows they're built from. A Summary lists 10 locations and phones,
+  20 sellers, 30 payment methods and the 100 best-selling products.
+- **Kept change has no limit in `Balances`,** because Settings has no number
+  for it yet.
+- **A new photo for the same product is a new file;** the old one stays.
+- **Google limits a Drive export to 10 MB.** A larger workbook answers
+  `export_failed`; a CSV of one tab still works.
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
 - **The Sheets advanced service's manifest entry** (`sheets`, `v4`) follows
@@ -181,8 +191,8 @@ possible:
 - **Sheets:** setup makes one `batchUpdate` per file, and none on a repeat. The
   cell addresses come from the template manifest, so no sheet is read to find
   them.
-- **Master data:** one `batchGet` per pull. Stock rows are written only when
-  their hash changes.
+- **Master data:** one `batchGet` per pull. `Stock`, `Balances` and Summary
+  labels are written only when their hash changes.
 - **Timers:** `runViews` runs every 15 minutes and stops after one property
   read if the queue is empty, and `dailyJob` runs once. Timers share a daily
   runtime budget, 90 minutes on a Gmail account.

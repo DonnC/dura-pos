@@ -31,6 +31,14 @@ from dura_templates.workbook.tables import add_table, col, mark_formula_tab, rea
 TEMPLATE_LOCATION_ROWS = 10  # a template's Summary lists up to this many locations by formula
 
 
+H_CON = [("Contact ID", None, 10), ("Name", None, 24), ("Type", None, 11), ("Person or business", None, 9),
+         ("Phone no", None, 16), ("Email", None, 20), ("TIN", None, 11), ("VAT number", None, 11),
+         ("Address", None, 22), ("Usual location", None, 9), ("On account", None, 9),
+         (f"Credit limit ({PC})", "money", 9), ("Payment days", "int", 8), ("Supplies", None, 22),
+         ("Supplier terms", None, 34), ("Added by", None, 7), ("Added on", "date", 12), ("Updated on", "date", 12),
+         ("Active", None, 7), ("Merged into", None, 10), ("Note", None, 44)]
+
+
 def stock_row_formulas(r: int) -> dict[int, tuple[str, str | None]]:
     """One Stock row's formulas, by column: column 1 is the product and 3 the
     location. They're over this year's Stock Ledger. The hub writes the same
@@ -50,6 +58,28 @@ def stock_row_formulas(r: int) -> dict[int, tuple[str, str | None]]:
         6: (f'=IF($D{r}<=0,"🔴 Out",IF($D{r}<=$E{r},"🟡 Low","🟢 OK"))', None),
         7: (f"=IFERROR($D{r}*INDEX(Products!${PR[f'Cost ({PC})']}:${PR[f'Cost ({PC})']},MATCH($A{r},Products!$A:$A,0)),0)", "money"),
         8: (f'=IF({last_in}=0,"",{last_in})', "date"),
+    }
+
+
+def balance_row_formulas(r: int) -> dict[int, str]:
+    """One Balances row's formulas, by column. Column 1 is the contact, 4 what
+    the balance is, 5 its currency and 8 its limit. The hub writes the same
+    formulas for a real shop, from the template contract.
+    """
+    mled = "'Money Ledger'"
+    B = {h: col(H_MONEY, h) for h in ("Date", "Contact ID", "Balance change", "Currency")}
+    TY = col(H_CON, "Type")
+    total = (f"SUMIFS({mled}!${B['Balance change']}:${B['Balance change']},{mled}!${B['Contact ID']}:"
+             f"${B['Contact ID']},$A{r},{mled}!${B['Currency']}:${B['Currency']},$E{r})")
+    return {
+        2: f'=IFERROR(INDEX(Contacts!$B:$B,MATCH($A{r},Contacts!$A:$A,0)),"")',
+        3: f'=IFERROR(INDEX(Contacts!${TY}:${TY},MATCH($A{r},Contacts!$A:$A,0)),"")',
+        6: f"=MAX(0,{total})",
+        7: f"=MAX(0,-{total})",
+        9: (f'=IF(AND($H{r}<>"",MAX($F{r},$G{r})>$H{r}),"🔴 Over limit",IF($G{r}>0,"🟠 Owes the shop",'
+            f'IF($F{r}>0,"🔵 Shop owes them","⚪ Settled")))'),
+        10: (f"=_xlfn.MAXIFS({mled}!${B['Date']}:${B['Date']},{mled}!${B['Contact ID']}:"
+             f"${B['Contact ID']},$A{r})"),
     }
 
 
@@ -123,12 +153,6 @@ def write_my_shop(content: dict | None = None, path: Path | None = None):
     highlight(ws, f"A2:K{len(staff) + 1}", '$H2="No"', OFF)
 
     # Contacts: customers and suppliers in one list
-    H_CON = [("Contact ID", None, 10), ("Name", None, 24), ("Type", None, 11), ("Person or business", None, 9),
-             ("Phone no", None, 16), ("Email", None, 20), ("TIN", None, 11), ("VAT number", None, 11),
-             ("Address", None, 22), ("Usual location", None, 9), ("On account", None, 9),
-             (f"Credit limit ({PC})", "money", 9), ("Payment days", "int", 8), ("Supplies", None, 22),
-             ("Supplier terms", None, 34), ("Added by", None, 7), ("Added on", "date", 12), ("Updated on", "date", 12),
-             ("Active", None, 7), ("Merged into", None, 10), ("Note", None, 44)]
     contacts = content["contacts"]
     ws = add_table(wb, "Contacts", H_CON, contacts, kind="owner")
     for column, source in (("Type", "Contact type"), ("Person or business", "Person or business"),
@@ -219,20 +243,12 @@ def write_my_shop(content: dict | None = None, path: Path | None = None):
              ("Currency", None, 8), ("The shop owes them", "money", 11), ("They owe the shop", "money", 11),
              ("Limit", "money", 9), ("Status", None, 18), ("Last movement", "date", 12)]
     ws = add_table(wb, "Balances", H_BAL, [], kind="dura")
-    B = {h: col(H_MONEY, h) for h in ("Date", "Contact ID", "Balance change", "Currency")}
     r = 1
     for party, cur, what, limit in content["balances"]:
         r += 1
-        total = (f"SUMIFS({mled}!${B['Balance change']}:${B['Balance change']},{mled}!${B['Contact ID']}:"
-                 f"${B['Contact ID']},$A{r},{mled}!${B['Currency']}:${B['Currency']},$E{r})")
-        for c, v in enumerate([party, f'=IFERROR(INDEX(Contacts!$B:$B,MATCH($A{r},Contacts!$A:$A,0)),"")',
-                               f'=IFERROR(INDEX(Contacts!${TY}:${TY},MATCH($A{r},Contacts!$A:$A,0)),"")', what, cur,
-                               f"=MAX(0,{total})", f"=MAX(0,-{total})", limit,
-                               f'=IF(AND($H{r}<>"",MAX($F{r},$G{r})>$H{r}),"🔴 Over limit",IF($G{r}>0,"🟠 Owes the shop",'
-                               f'IF($F{r}>0,"🔵 Shop owes them","⚪ Settled")))',
-                               f"=_xlfn.MAXIFS({mled}!${B['Date']}:${B['Date']},{mled}!${B['Contact ID']}:"
-                               f"${B['Contact ID']},$A{r})"], start=1):
-            cell = ws.cell(row=r, column=c, value=v)
+        values = {1: party, 4: what, 5: cur, 8: limit, **balance_row_formulas(r)}
+        for c in range(1, 11):
+            cell = ws.cell(row=r, column=c, value=values[c])
             if c in (6, 7, 8):
                 cell.number_format = FMT["money"]
             if c == 10:

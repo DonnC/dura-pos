@@ -21,7 +21,11 @@ What the hub fills in after converting:
 - the month file's `Summary!E1`: the month's first day, which drives its day
   rows.
 
-Everything else fills as the shop trades.
+Then, as the shop trades, the hub adds rows the template can't know: `Stock`
+and `Balances` (formulas from the contract), and the labels of the Summary
+breakdowns. A template's Summary reserves guarded rows for those labels, and
+the contract's `summaryBlocks` says where. Everything else fills from the
+journal.
 """
 
 from __future__ import annotations
@@ -30,8 +34,8 @@ import re
 import zipfile
 from pathlib import Path
 
-from dura_templates.files.month_file import write_month
-from dura_templates.files.my_shop import stock_row_formulas, write_my_shop
+from dura_templates.files.month_file import summary_blocks, write_month
+from dura_templates.files.my_shop import balance_row_formulas, stock_row_formulas, write_my_shop
 from dura_templates.profile import CURRENCIES, PC
 from dura_templates.workbook.lists import starter_lists
 
@@ -41,7 +45,7 @@ MONTH_FILE = "Month.xlsx"
 CURRENCY_NAMES = {"USD": "US dollar", "ZWG": "Zimbabwe Gold (ZiG)", "ZAR": "South African rand"}
 ROUNDING = {"USD": "0.01", "ZWG": "0.50", "ZAR": "0.50"}
 
-STOCK_ROW_MARKER = 987654  # stands for the row number while writing the contract's formulas
+ROW_MARKER = 987654  # stands for the row number while writing the contract's formulas
 
 # Fixed times written into every template, so a rebuild gives identical bytes.
 _FIXED_ZIP_TIME = (2026, 1, 1, 0, 0, 0)
@@ -166,10 +170,15 @@ def table_contract() -> dict:
         contract[table] = {"file": file, "fields": fields}
     for table in ("Months", "Payment Callbacks"):
         contract[table]["hubOnly"] = True  # only the hub writes these
-    # The hub adds a Stock row per product and location, with `{r}` as its row.
-    formulas = stock_row_formulas(STOCK_ROW_MARKER)
-    stock_row = {str(c): f.replace(str(STOCK_ROW_MARKER), "{r}").replace("_xlfn.", "") for c, (f, _) in formulas.items()}
-    return {"tables": contract, "stockRow": stock_row}
+    # The hub writes these rows for a real shop, with `{r}` as the row number.
+    stock = {c: f for c, (f, _) in stock_row_formulas(ROW_MARKER).items()}
+    return {"tables": contract, "stockRow": _row_template(stock),
+            "balanceRow": _row_template(balance_row_formulas(ROW_MARKER)), "summaryBlocks": summary_blocks()}
+
+
+def _row_template(formulas: dict[int, str]) -> dict[str, str]:
+    """Formulas for the hub: no `_xlfn.` prefix, which only Excel's file format needs."""
+    return {str(c): f.replace(str(ROW_MARKER), "{r}").replace("_xlfn.", "") for c, f in formulas.items()}
 
 
 def write_contract(out: Path, hub_file: Path | None = None) -> None:

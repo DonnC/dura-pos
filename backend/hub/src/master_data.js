@@ -82,8 +82,48 @@ function plainText_(value) {
 }
 
 /**
- * Writes a Stock row per active product and location, from the contract's
- * formulas, and blanks rows no longer needed. Skipped when nothing changed.
+ * One row from a contract row template: `cells` by 1-based column, the
+ * contract's formulas for the rest.
+ * @param {Object<string, string>} template @param {number} r @param {number} width @param {Object<string, any>} cells
+ */
+function formulaRow_(template, r, width, cells) {
+  var row = [];
+  for (var column = 1; column <= width; column++) row.push(cells[column] === undefined ? '' : cells[column]);
+  Object.keys(template).forEach(function (column) {
+    row[Number(column) - 1] = template[column].replace(/\{r\}/g, String(r));
+  });
+  return row;
+}
+
+/**
+ * Writes a tab's whole hub-made rows from row 2, as formulas, and blanks rows
+ * no longer needed. Skipped when nothing changed.
+ * @param {any} services @param {string} table @param {number} width @param {any[][]} values
+ */
+function writeFormulaRows_(services, table, width, values) {
+  var hash = sha256Hex_(JSON.stringify(values));
+  if (services.store.get('hash:' + table) === hash) return;
+  var before = Number(services.store.get('rows:' + table) || '0');
+  var padded = values.slice();
+  while (padded.length < before) padded.push(new Array(width).fill(''));
+  if (padded.length > 0) {
+    var fileId = services.store.get('file:myshop');
+    var last = padded.length + 1;
+    growIfNeeded_(services, fileId, table, sheetInfo_(services, fileId, [table])[table], last);
+    Sheets.Spreadsheets.Values.batchUpdate({
+      valueInputOption: 'USER_ENTERED', // these are formulas, and they should calculate
+      data: [{ range: "'" + table + "'!A2:" + columnLetter_(width) + last, values: padded }],
+    }, fileId);
+  }
+  /** @type {Object<string, string | number>} */
+  var marks = {};
+  marks['hash:' + table] = hash;
+  marks['rows:' + table] = values.length;
+  services.store.setMany(marks);
+}
+
+/**
+ * A Stock row per active product and location, from the contract's formulas.
  * @param {any} services @param {any} master from readMasterData_
  */
 function refreshStockRows_(services, master) {
@@ -93,31 +133,47 @@ function refreshStockRows_(services, master) {
   var values = [];
   locations.forEach(function (location) {
     products.forEach(function (product) {
-      var r = values.length + 2;
-      var row = ['', '', '', '', '', '', '', ''];
-      row[0] = plainText_(product.product_id);
-      row[2] = plainText_(location.location);
-      Object.keys(VIEW_CONTRACT_.stockRow).forEach(function (column) {
-        row[Number(column) - 1] = VIEW_CONTRACT_.stockRow[column].replace(/\{r\}/g, String(r));
-      });
-      values.push(row);
+      values.push(formulaRow_(VIEW_CONTRACT_.stockRow, values.length + 2, 8,
+        { 1: plainText_(product.product_id), 3: plainText_(location.location) }));
     });
   });
-  var hash = sha256Hex_(JSON.stringify(values));
-  if (services.store.get('stock:hash') === hash) return;
-  var before = Number(services.store.get('stock:rows') || '0');
-  var count = values.length;
-  while (values.length < before) values.push(['', '', '', '', '', '', '', '']);
-  if (values.length > 0) {
-    var fileId = services.store.get('file:myshop');
-    var last = values.length + 1;
-    growIfNeeded_(services, fileId, 'Stock', sheetInfo_(services, fileId, ['Stock']).Stock, last);
-    Sheets.Spreadsheets.Values.batchUpdate({
-      valueInputOption: 'USER_ENTERED', // these are formulas, and they should calculate
-      data: [{ range: "'Stock'!A2:H" + last, values: values }],
-    }, fileId);
-  }
-  services.store.setMany({ 'stock:hash': hash, 'stock:rows': count });
+  writeFormulaRows_(services, 'Stock', 8, values);
+}
+
+/**
+ * A Balances row per contact and currency in the Money Ledger. Limits apply
+ * to accounts; Settings holds no numeric limit for kept change yet.
+ * @param {any} services
+ */
+function refreshBalanceRows_(services) {
+  var reply = Sheets.Spreadsheets.Values.batchGet(services.store.get('file:myshop'), {
+    ranges: ["'Money Ledger'!A:Z", "'Contacts'!A:AZ"], valueRenderOption: 'UNFORMATTED_VALUE',
+  });
+  var ledger = reply.valueRanges[0].values || [];
+  var pricing = services.store.get('pricingCurrency');
+  /** @type {Object<string, any>} */
+  var byId = {};
+  tableRows_('Contacts', reply.valueRanges[1].values || [], pricing, []).forEach(function (c) { byId[c.contact_id] = c; });
+  var heads = ledger[0] || [];
+  var idAt = heads.indexOf('Contact ID');
+  var currencyAt = heads.indexOf('Currency');
+  /** @type {Object<string, boolean>} */
+  var seen = {};
+  var values = [];
+  ledger.slice(1).forEach(function (row) {
+    var id = row[idAt];
+    var key = id + '|' + row[currencyAt];
+    if (!id || seen[key]) return;
+    seen[key] = true;
+    var contact = byId[id] || {};
+    var account = contact.type === 'Customer' && contact.on_account === 'Yes';
+    var what = account ? 'Account (invoices)' : contact.type === 'Supplier' ? 'Supplier invoices' : 'Kept change';
+    values.push(formulaRow_(VIEW_CONTRACT_.balanceRow, values.length + 2, 10, {
+      1: plainText_(String(id)), 4: what, 5: row[currencyAt],
+      8: account ? contact.credit_limit_pricing : undefined,
+    }));
+  });
+  writeFormulaRows_(services, 'Balances', 10, values);
 }
 
 /**
