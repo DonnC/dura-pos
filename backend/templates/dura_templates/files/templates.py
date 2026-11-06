@@ -38,6 +38,7 @@ from dura_templates.files.month_file import summary_blocks, write_month
 from dura_templates.files.my_shop import balance_row_formulas, stock_row_formulas, write_my_shop
 from dura_templates.profile import CURRENCIES, PC
 from dura_templates.workbook.lists import starter_lists
+from dura_templates.workbook.styles import FMT
 
 MY_SHOP_FILE = "My Shop.xlsx"
 MONTH_FILE = "Month.xlsx"
@@ -173,8 +174,13 @@ def table_contract() -> dict:
         contract[table]["hubOnly"] = True  # only the hub writes these
     # The hub writes these rows for a real shop, with `{r}` as the row number.
     stock = {c: f for c, (f, _) in stock_row_formulas(ROW_MARKER).items()}
+    # Clean templates have no rows to carry a number format, so the hub sets them.
+    used = {"int", "money", "date"} | {field["kind"] for spec in contract.values() for field in spec["fields"].values()}
     return {"tables": contract, "stockRow": _row_template(stock),
-            "balanceRow": _row_template(balance_row_formulas(ROW_MARKER)), "summaryBlocks": summary_blocks()}
+            "balanceRow": _row_template(balance_row_formulas(ROW_MARKER)), "summaryBlocks": summary_blocks(),
+            "formats": {kind: pattern for kind, pattern in FMT.items() if kind in used},
+            "columnFormats": {"Stock": {"4": "int", "5": "int", "7": "money", "8": "date"},
+                              "Balances": {"6": "money", "7": "money", "8": "money", "10": "date"}}}
 
 
 def _row_template(formulas: dict[int, str]) -> dict[str, str]:

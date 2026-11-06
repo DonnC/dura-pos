@@ -193,7 +193,9 @@ function createSheets() {
         };
       },
       batchUpdate(request) {
-        for (const r of request.requests) sheets.grown.push(r.appendDimension);
+        for (const r of request.requests) {
+          if (r.appendDimension) sheets.grown.push(r.appendDimension);
+        }
         return {};
       },
       Values: {

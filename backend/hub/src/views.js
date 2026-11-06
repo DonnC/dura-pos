@@ -106,6 +106,7 @@ function growIfNeeded_(services, fileId, table, sheet, lastRow) {
   Sheets.Spreadsheets.batchUpdate(
     { requests: [{ appendDimension: { sheetId: sheet.id, dimension: 'ROWS', length: length } }] }, fileId);
   sheet.rows += length;
+  services.store.remove(STORE_PREFIXES_.formatted + fileId);
   services.cache.put(sheetCacheKey_(fileId, table), JSON.stringify(sheet), SHEET_CACHE_SECONDS_);
 }
 
@@ -158,6 +159,7 @@ function rowCells_(table, row, headings, pricing) {
  * @param {any} services @param {string} fileId @param {string} table @param {number} at @param {any} row
  */
 function writeRowAt_(services, fileId, table, at, row) {
+  formatFile_(services, fileId, WORKBOOKS_.myShop);
   var sheet = sheetInfo_(services, fileId, [table])[table];
   growIfNeeded_(services, fileId, table, sheet, at);
   var built = rowCells_(table, row, sheet.headings, services.store.get(STORE_KEYS_.pricingCurrency));
@@ -184,6 +186,7 @@ function projectBatch_(services, events) {
     if (!fileId) {
       throw hubError_(ERRORS_.notSetUp, 'The shop is not set up yet.');
     }
+    formatFile_(services, fileId, target === MY_SHOP_TARGET_ ? WORKBOOKS_.myShop : WORKBOOKS_.month);
     var tables = Object.keys(grouped.targets[target]);
     var info = sheetInfo_(services, fileId, tables);
     var data = tables.map(function (table) {

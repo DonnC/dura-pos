@@ -102,7 +102,8 @@ backend/hub/
     sheet_cells.js     Sheets v4 cell writes in one call; month date serials
     crypto.js          SHA-256, HMAC, random hex, constant-time compare
     canonical_json.js  the signing string
-    names.js           every shared word: actions, errors, store keys, tabs
+    cell_formats.js    number formats for each column, set once per file
+  names.js           every shared word: actions, errors, store keys, tabs
   protocol.js        version, limits, patterns, errors
     install_config.js  the install code's hash; replaced per shop by the installer
   tools/

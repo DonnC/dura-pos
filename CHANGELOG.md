@@ -47,6 +47,10 @@
 
 ### Fixed
 
+- **Sheets:** dates, times and amounts the hub writes now read properly, not as raw
+  numbers such as `46332`. The hub sets each column's format once per file, so shops
+  that already exist are repaired on their next write.
+
 - **CI:** the debug APK build no longer fails on GitHub's Windows runners.
 
 ### Changed: one trial command, the shop's address and how Dura presents itself
@@ -252,6 +256,10 @@
 
 ### Fixed
 
+- **Sheets:** dates, times and amounts the hub writes now read properly, not as raw
+  numbers such as `46332`. The hub sets each column's format once per file, so shops
+  that already exist are repaired on their next write.
+
 - **`check` (formerly `check_samples.py`) exited with code 0 even when it
   found problems.** It now exits 1, so CI can fail.
 - **`sample --out` refuses a folder** that holds files the generator didn't
@@ -364,6 +372,10 @@
   Dependabot groups.
 
 ### Fixed
+
+- **Sheets:** dates, times and amounts the hub writes now read properly, not as raw
+  numbers such as `46332`. The hub sets each column's format once per file, so shops
+  that already exist are repaired on their next write.
 
 - **`check_samples.py` failed on Windows.** It read the HS code list without
   stating an encoding; it now reads it as UTF-8.
