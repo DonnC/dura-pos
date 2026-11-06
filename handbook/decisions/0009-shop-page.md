@@ -34,9 +34,14 @@ Call, WhatsApp and Directions buttons, and a searchable list of products and pri
 3. **Visits cost no quota.** The finished page is cached for six hours, and a visit
    that finds it reads no properties and no sheet. A `changes.pull` or the daily
    pass refreshes it.
-4. **It's a shop window, not a shop.** There's no ordering, payment or stock on it.
+4. **The page stays small however many products a shop has.** Up to 200 products,
+   the page holds them all and search runs on the phone, with no waiting and no data.
+   Above that, it opens with the first 50, and search, categories and "Show more" ask
+   the hub, which answers from the cache. Up to 5000 products are listed. A visitor on
+   mobile data never downloads a whole catalogue.
+5. **It's a shop window, not a shop.** There's no ordering, payment or stock on it.
    Those would need the hub to trust anonymous visitors, which it never does.
-5. **It's never needed to trade,** and a failure shows the neutral page, never an
+6. **It's never needed to trade,** and a failure shows the neutral page, never an
    error's text.
 
 ## Compatibility and migration

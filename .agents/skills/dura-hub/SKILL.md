@@ -55,8 +55,8 @@ plain `ok`.
 ## Code rules
 
 - **Internal functions end in `_`,** so Apps Script hides them from the editor
-  and from `google.script.run`. Only `doGet`, `doPost`, `runViews` and `dailyJob`
-  don't.
+  and from `google.script.run`. Only `doGet`, `doPost`, `shopProducts`, `runViews`
+  and `dailyJob` don't.
 - **Top-level constants use `var`.** Files may load in any order, so nothing at
   load time may depend on another file. That's why `handlerFor_` and
   `paymentAdapter_` build their answers at call time.
