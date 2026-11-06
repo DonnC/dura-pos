@@ -10,6 +10,16 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: the backend port and the Shop Hub adapter
+
+- **`ShopBackend` in `dura_core`** is the app's one view of any backend, in shop words
+  with typed failures. No Google type appears in it.
+- **`dura_hub`** implements it over `PROTOCOL.md`: signing, the hub's redirect, and a
+  typed reply for every action.
+- **A lost reply to `payment.start` is an unknown outcome,** never something to retry.
+- **Shared signing vectors** are checked by both the Dart client and the hub's tests,
+  so the two can't drift apart.
+
 ### Added: an ecosystem diagram and an illustrated setup guide
 
 - **`handbook/design/ecosystem/`** shows how Dura works in plain words, as an animated

@@ -91,8 +91,8 @@ flowchart LR
   account. All its usage counts against that account, not Dura's
   ([decision 0005](handbook/decisions/0005-shop-hub-as-the-backend.md)).
 - **Phones pair by QR code,** sign every request, and never hold a Google sign-in.
-- **The app is server-agnostic.** It's designed to reach any backend through one
-  port, so leaving Google means one new adapter, not a new app.
+- **The app is server-agnostic.** It reaches any backend through one port, so leaving
+  Google means one new adapter, not a new app.
 - **Workbooks start as Excel templates,** so they work in Sheets and in Excel.
 
 ### Mobile money
@@ -137,7 +137,8 @@ only what's meant to be public, and the owner can turn it off ([decision 0009](h
 | Workbook generator | Built: a complete sample shop, and clean templates for each pricing currency |
 | Shop Hub | Written and tested: pairing, journal, shop setup, Sheets views, timers, Paynow, photos, exports, shop page. The [first run on a real Google account](handbook/engineering/10-real-account-test.md#results-of-the-first-run) passed for install, setup, uploads, views, photos and exports. **Timers and Paynow's sandbox are still to try** |
 | App foundation | Built: Flutter workspace, shared UI, local storage, on-device diagnostics, money types |
-| Selling screens, backend port, hub install | Next |
+| Backend port and hub adapter | Built and tested against a live hub, with no screens using them yet |
+| Selling screens, hub install | Next |
 | Staff, stock, reports | [Designed](handbook/product/02-capabilities.md) |
 | ZIMRA fiscalisation | Planned, through [fzimra](https://github.com/DonnC/zimra-fdms-android), and optional for each business |
 
@@ -206,6 +207,7 @@ dura-pos/
 │   └── packages/
 │       ├── dura_core/      business rules in pure Dart
 │       ├── dura_data/      local storage and diagnostics
+│       ├── dura_hub/       the Shop Hub adapter, behind the backend port
 │       └── dura_ui/        theme and shared components
 ├── backend/                runs in, or is created in, the shop's Google account
 │   ├── hub/                Shop Hub (Apps Script, JavaScript)

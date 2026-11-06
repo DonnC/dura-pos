@@ -1,0 +1,19 @@
+# Copyright (c) 2026, DonnC & contributors.
+# Please see the AUTHORS file for details. All rights reserved.
+# Use of this source code is governed by the MIT license that can be
+# found in the LICENSE file at the repository root.
+# SPDX-License-Identifier: MIT
+
+name: dura_hub
+description: The Shop Hub adapter, speaking the hub protocol over HTTPS.
+version: 0.1.0-dev.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+dependencies:
+  crypto: ^3.0.8
+  dura_core: ^0.1.0-dev.1
+  http: ^1.6.0
+dev_dependencies:
+  test: ^1.31.0

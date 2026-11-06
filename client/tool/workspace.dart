@@ -11,6 +11,7 @@ import 'package:yaml/yaml.dart';
 const workspacePackages = [
   'packages/dura_core',
   'packages/dura_data',
+  'packages/dura_hub',
   'packages/dura_ui',
   'apps/dura',
 ];

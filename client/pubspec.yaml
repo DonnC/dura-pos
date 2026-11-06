@@ -12,6 +12,7 @@ workspace:
   - apps/dura
   - packages/dura_core
   - packages/dura_data
+  - packages/dura_hub
   - packages/dura_ui
 dev_dependencies:
   melos: ^8.10.0

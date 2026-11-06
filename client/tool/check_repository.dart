@@ -54,7 +54,7 @@ void main() {
       }
       if (name.contains('packages/dura_core/lib/') &&
           RegExp(
-            r'''import ['"]package:(flutter|flutter_riverpod|drift|dura_data|dura_ui)/''',
+            r'''import ['"]package:(flutter|flutter_riverpod|drift|dura_data|dura_hub|dura_ui)/''',
           ).hasMatch(text)) {
         errors.add('$name violates the core boundary');
       }

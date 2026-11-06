@@ -1,0 +1,93 @@
+{
+  "secret": "fixture-secret-0000000000000000000000000000000000000000000000000",
+  "vectors": [
+    {
+      "value": {
+        "v": 1,
+        "device": "P2",
+        "ts": 1793700000,
+        "nonce": "3f9c2a7b4d1e8f60a2b3c4d5e6f70819",
+        "action": "status",
+        "body": {}
+      },
+      "canonical": "{\"action\":\"status\",\"body\":{},\"device\":\"P2\",\"nonce\":\"3f9c2a7b4d1e8f60a2b3c4d5e6f70819\",\"ts\":1793700000,\"v\":1}",
+      "sig": "728e73cd8295efe026b6848fa72205b929007b41addd03fda726c26f08cd095d"
+    },
+    {
+      "value": {
+        "b": 1,
+        "a": {
+          "z": true,
+          "y": null,
+          "x": [
+            1,
+            "two",
+            {
+              "d": 0,
+              "c": false
+            }
+          ]
+        }
+      },
+      "canonical": "{\"a\":{\"x\":[1,\"two\",{\"c\":false,\"d\":0}],\"y\":null,\"z\":true},\"b\":1}",
+      "sig": "34c38b93204ed39989be34171c8b785244022452e82658c925b40f75db240f8f"
+    },
+    {
+      "value": {
+        "name": "Chipo's Corner Shop",
+        "note": "Line one\nTab\there \"quoted\" back\\slash"
+      },
+      "canonical": "{\"name\":\"Chipo's Corner Shop\",\"note\":\"Line one\\nTab\\there \\\"quoted\\\" back\\\\slash\"}",
+      "sig": "82677999452576e99284e0f54abe9409a21fcb7d5ee87996b68d18642f250fd1"
+    },
+    {
+      "value": {
+        "shop": "Café Mbare",
+        "symbol": "€ £ ¥",
+        "emoji": "Sale 🛒 done",
+        "control": "\u0001\u001f",
+        "separator": " "
+      },
+      "canonical": "{\"control\":\"\\u0001\\u001f\",\"emoji\":\"Sale 🛒 done\",\"separator\":\" \",\"shop\":\"Café Mbare\",\"symbol\":\"€ £ ¥\"}",
+      "sig": "5762f8339f9828e6787bbb2e2a47456598604c67e1b8d31c9ab4c835e54d3a7d"
+    },
+    {
+      "value": {
+        "9": 5,
+        "10": 4,
+        "Zebra": 1,
+        "apple": 2,
+        "_under": 3
+      },
+      "canonical": "{\"10\":4,\"9\":5,\"Zebra\":1,\"_under\":3,\"apple\":2}",
+      "sig": "4713cb42fe6cae17003b821d93e248db19ba9891a5d4633c8703e7012f53e0f4"
+    },
+    {
+      "value": {
+        "negative": -5,
+        "zero": 0,
+        "large": 9007199254740991,
+        "empty": [],
+        "none": {}
+      },
+      "canonical": "{\"empty\":[],\"large\":9007199254740991,\"negative\":-5,\"none\":{},\"zero\":0}",
+      "sig": "14142f75a666316c73655b5714fb6eb43d4e282494ad0b5c7e191a266e8243a8"
+    },
+    {
+      "value": {
+        "amount": "2.50",
+        "currency": "ZWG",
+        "events": [
+          {
+            "id": "P2-E261103-0001",
+            "data": {
+              "total": "12.00"
+            }
+          }
+        ]
+      },
+      "canonical": "{\"amount\":\"2.50\",\"currency\":\"ZWG\",\"events\":[{\"data\":{\"total\":\"12.00\"},\"id\":\"P2-E261103-0001\"}]}",
+      "sig": "dfff6b2218c93b499817d8e25733e1346646e7a9dcdcaa7efb8cd4a331b11c78"
+    }
+  ]
+}

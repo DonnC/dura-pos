@@ -13,6 +13,7 @@ updates:
       - /client/apps/dura
       - /client/packages/dura_core
       - /client/packages/dura_data
+      - /client/packages/dura_hub
       - /client/packages/dura_ui
     schedule:
       interval: monthly
