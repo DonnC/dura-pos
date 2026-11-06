@@ -1,0 +1,42 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "App: run on Android",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/client/apps/dura",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "App: run with small log limits",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/client/apps/dura",
+      "program": "lib/main.dart",
+      "toolArgs": [
+        "--dart-define=DURA_LOG_MAX_FILES=3",
+        "--dart-define=DURA_LOG_MAX_FILE_BYTES=65536"
+      ]
+    },
+    {
+      "name": "Hub: debug tests",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend/hub",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--test", "test/*_test.js"],
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Templates: debug the generator",
+      "type": "debugpy",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend/templates",
+      "module": "dura_templates",
+      "args": ["sample", "--out", "${workspaceFolder}/artifacts/debug_sample"],
+      "console": "integratedTerminal"
+    }
+  ]
+}

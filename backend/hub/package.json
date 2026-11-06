@@ -1,0 +1,22 @@
+{
+  "name": "dura-shop-hub",
+  "version": "0.1.0-dev.1",
+  "private": true,
+  "description": "The Dura POS Shop Hub: an Apps Script web app installed in each shop's own Google account.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*_test.js\"",
+    "check": "tsc --project tsconfig.json",
+    "verify": "npm run check && npm test",
+    "push": "clasp push",
+    "trial": "node tools/trial.js"
+  },
+  "devDependencies": {
+    "@google/clasp": "3.4.1",
+    "@types/google-apps-script": "2.0.14",
+    "typescript": "5.9.3"
+  }
+}

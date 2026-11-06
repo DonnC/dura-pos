@@ -1,6 +1,6 @@
 # Assessment: Apps Script as the shop's gateway
 
-28 October 2026. This assesses `../GeminiAppScriptResearchHistory.md` against the
+28 October 2026. This assesses `../research/gemini/01-apps-script-and-files.md` (follow-ups in `../research/gemini/02-flutter-onboarding-and-scripts.md`) against the
 current design (`03-feature-design.md`, `04-data-files.md`,
 `05-archiving-and-security.md`).
 

@@ -5,7 +5,7 @@
 > are superseded. See `03-feature-design.md`. The technical corrections
 > (section 2) and the ZIMRA questions still stand.
 
-27 October 2026. Reviews the brainstorm in `../Free Open-Source ZIMRA POS Architecture.md`.
+27 October 2026. Reviews the brainstorm in `../research/2026-10-27-first-brainstorm.md`.
 Facts were checked against ZIMRA's *Fiscal Device Gateway API v7.2* (the copy in
 `zw_compliance/docs/`) and against the public sources listed at the end. Anything
 that couldn't be verified is marked **unverified**.

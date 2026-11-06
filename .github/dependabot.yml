@@ -1,0 +1,85 @@
+# Copyright (c) 2026, DonnC & contributors.
+# Please see the AUTHORS file for details. All rights reserved.
+# Use of this source code is governed by the MIT license that can be
+# found in the LICENSE file at the repository root.
+# SPDX-License-Identifier: MIT
+
+# Routine updates only; security updates are governed separately by GitHub.
+version: 2
+updates:
+  - package-ecosystem: pub
+    directories:
+      - /client
+      - /client/apps/dura
+      - /client/packages/dura_core
+      - /client/packages/dura_data
+      - /client/packages/dura_ui
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      dart-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]
+      dart-major:
+        patterns: ['*']
+        update-types: [major]
+    commit-message:
+      prefix: 'build(deps)'
+  - package-ecosystem: gradle
+    directories:
+      - /client/apps/dura/android
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      android-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]
+      android-major:
+        patterns: ['*']
+        update-types: [major]
+    commit-message:
+      prefix: 'build(deps)'
+  - package-ecosystem: npm
+    directory: /backend/hub
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      hub-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]
+      hub-major:
+        patterns: ['*']
+        update-types: [major]
+    commit-message:
+      prefix: 'build(deps)'
+  - package-ecosystem: pip
+    directory: /backend/templates
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      python-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]
+      python-major:
+        patterns: ['*']
+        update-types: [major]
+    commit-message:
+      prefix: 'build(deps)'
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    groups:
+      actions-compatible:
+        patterns: ['*']
+        update-types: [minor, patch]
+      actions-major:
+        patterns: ['*']
+        update-types: [major]
+    commit-message:
+      prefix: 'build(deps)'

@@ -1,0 +1,24 @@
+# Copyright (c) 2026, DonnC & contributors.
+# Please see the AUTHORS file for details. All rights reserved.
+# Use of this source code is governed by the MIT license that can be
+# found in the LICENSE file at the repository root.
+# SPDX-License-Identifier: MIT
+
+name: dura_ui
+description: Theme tokens and focused reusable Flutter components for Dura POS.
+version: 0.1.0-dev.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: 8.2.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  assets:
+    - assets/fonts/

@@ -1,3 +1,13 @@
+# Copyright (c) 2026, DonnC & contributors.
+# Please see the AUTHORS file for details. All rights reserved.
+# Use of this source code is governed by the MIT license that can be
+# found in the LICENSE file at the repository root.
+# SPDX-License-Identifier: MIT
+
+# A trial hub: holds an install code and a device secret
+backend/hub/.try/
+backend/hub/screenshots/
+
 # Gradle files
 .gradle/
 build/
@@ -28,3 +38,24 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Flutter workspace and generated local state
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+coverage/
+artifacts/
+**/test/failures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/gradle/wrapper/gradle-wrapper.jar
+.release-signing/
+
+# Shop Hub (Node tooling and per-developer clasp settings)
+node_modules/
+.clasp.json
+.clasprc.json
+
+# Python virtual environments
+.venv/
+__pycache__/

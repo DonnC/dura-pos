@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Templates are release artifacts pinned by hash: never convert their bytes.
+backend/templates/dist/** -text

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/splash_background" />
+    <item>
+        <bitmap android:gravity="center" android:src="@drawable/splash_logo" />
+    </item>
+</layer-list>

@@ -1,13 +1,14 @@
 # Customers, big lists, onboarding, and updating a shop's sheets
 
 28 October 2026. Read with `04-data-files.md`. The sample now has a
-`Customers` tab in `My Shop`, and a customer on about 1 sale in 15.
+`Contacts` tab in `My Shop` (customers and suppliers together; see `04`), and a
+customer on about 1 sale in 15.
 
 ## Customers
 
 ### In the sheets
 
-- **`My Shop` → `Customers`** has one row per customer. It's permanent, like
+- **`My Shop` → `Contacts`** has one row per customer (and per supplier). It's permanent, like
   Products, and is not split by year.
 - **Every sale row** carries `Customer ID`, `Customer` and `Customer TIN`.
   Walk-ins, which are most sales, leave them blank.
@@ -44,7 +45,7 @@
   - The owner merges them with one tap: the extra row gets `Active = No` and
     `Merged into = <the kept ID>`.
   - Old sales keep the old ID, and reports follow `Merged into`.
-  - The sample shows this: Mai Tafadzwa, `P3-C0001` merged into `P1-C0004` on
+  - The sample shows this: Mai Tafadzwa, `P3-C0001` merged into `P1-C0006` on
     12 April 2026.
 - **History.** A customer's last 7 days of purchases are on the phone; older
   ones are read from the sheets when asked (`05`, "What a phone keeps").
@@ -63,7 +64,7 @@
 
 - **Size in the sheet:** 2,000 products × 15 columns is 30,000 cells. A
   Google Sheet holds 10 million, so even 20,000 products fit easily.
-- **One request:** the phone pulls Products, Customers, Staff, Settings and
+- **One request:** the phone pulls Products, Contacts, Staff, Settings and
   Exchange Rates in a single `values.batchGet`. For 2,000 products and 2,000
   customers that's a few hundred KB, compressed to well under 100 KB, and
   about a second.
@@ -147,7 +148,7 @@ Every shop has its own copy of every file, so an improvement must reach them
 
 ### The split that makes it safe
 
-- **Data tabs** hold what the shop typed or sold: Products, Customers, Ledger,
+- **Data tabs** hold what the shop typed or sold: Products, Contacts, the ledgers,
   Sales, Payments, Activity, and so on.
   - Dura changes them only by **adding**: a new column, or a new tab.
   - It never renames, moves or removes a column that holds data.
