@@ -2,13 +2,6 @@
 name: dura-project
 description: The facts about Dura POS: its goal, users, promises, settled business model, architecture, what is built today, the delivery order and the future plan. Use this before planning, scoping or explaining any Dura work, when a contributor asks what Dura is or what to do next, when a change might touch a product decision, and whenever you're unsure whether something is built or only designed.
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # Dura POS: goal, architecture and plan
 
 Status below is as of 5 November 2026. Before relying on it, check the code and
@@ -90,7 +83,8 @@ Paynow <--- the hub, with the shop's keys
 | `client/packages/dura_data` | Local preferences in Drift |
 | `client/packages/dura_ui` | Theme, shared controls, golden tests |
 | `client/apps/dura` | The app shell and on-device diagnostics. No selling screens yet |
-| Not started | The backend port, `dura_hub`, hub install and update, fiscalisation |
+| `client/packages/dura_hub` | The hub adapter behind the backend port in `dura_core`, tested against a live hub. No screen uses it yet |
+| Not started | Selling screens, the phone's outbox, hub install and update, fiscalisation |
 
 GitHub Actions has not been confirmed running. Don't report anything above as
 proven beyond what the tests show.
@@ -101,8 +95,8 @@ proven beyond what the tests show.
    `handbook/engineering/10-real-account-test.md`: consent, converting templates,
    `drive.file` for Sheets, the advanced-service calls, the shop page and Paynow's
    sandbox. This needs a throwaway Google account and a public repository.
-2. **Flutter against the backend:** the port in `dura_core`, the `dura_hub`
-   adapter, one-tap hub install, pairing, then the one-phone sale.
+2. **Flutter against the backend:** the outbox, one-tap hub install, pairing, then
+   the one-phone sale.
 3. **Then the roadmap phases** in `handbook/engineering/06-roadmap.md`:
 
 | Phase | Scope |

@@ -75,7 +75,7 @@ function paynowKeys_(body) {
     typeof body.integrationKey === 'string' && body.integrationKey.length >= 8 && body.integrationKey.length <= 100 &&
     typeof body.authEmail === 'string' && /^[^@\s]+@[^@\s]+$/.test(body.authEmail);
   if (!valid) {
-    throw hubError_('validation', 'bad_keys', 'Paynow needs the integration ID, the integration key and the merchant email.');
+    throw hubError_(ERRORS_.badKeys, 'Paynow needs the integration ID, the integration key and the merchant email.');
   }
   return { integrationId: String(body.integrationId), integrationKey: body.integrationKey, authEmail: body.authEmail };
 }
@@ -99,12 +99,12 @@ function paynowStart_(record, keys, hubUrl) {
   var reply = paynowPost_(PAYNOW_BASE_ + 'remotetransaction', payload);
   if (!reply) throw new Error('No reply');
   var status = formValue_(reply, 'status').toLowerCase();
-  if (status === 'error') return { state: 'failed', note: formValue_(reply, 'error') };
+  if (status === 'error') return { state: PAYMENT_STATES_.failed, note: formValue_(reply, 'error') };
   var pollUrl = formValue_(reply, 'pollurl');
   if (status !== 'ok' || !paynowFormValid_(reply, keys.integrationKey) || pollUrl.indexOf(PAYNOW_BASE_) !== 0) {
     throw new Error('Unusable reply');
   }
-  return { state: 'pending', pollUrl: pollUrl };
+  return { state: PAYMENT_STATES_.pending, pollUrl: pollUrl };
 }
 
 /**
@@ -114,14 +114,14 @@ function paynowStart_(record, keys, hubUrl) {
  */
 function paynowCheck_(record, keys) {
   var reply = paynowPost_(record.pollUrl, '');
-  if (!reply) throw hubError_('retryable_unavailable', 'provider_unavailable', 'Paynow did not answer; check again.');
-  if (!paynowFormValid_(reply, keys.integrationKey)) return { state: 'pending', status: 'Unverified' };
+  if (!reply) throw hubError_(ERRORS_.providerUnavailable, 'Paynow did not answer; check again.');
+  if (!paynowFormValid_(reply, keys.integrationKey)) return { state: PAYMENT_STATES_.pending, status: 'Unverified' };
   var status = formValue_(reply, 'status');
   var word = status.toLowerCase();
-  var state = 'pending';
-  if (PAYNOW_PAID_.indexOf(word) >= 0) state = 'paid';
-  if (PAYNOW_CANCELLED_.indexOf(word) >= 0) state = 'cancelled';
-  if (PAYNOW_FAILED_.indexOf(word) >= 0) state = 'failed';
+  var state = /** @type {string} */ (PAYMENT_STATES_.pending);
+  if (PAYNOW_PAID_.indexOf(word) >= 0) state = PAYMENT_STATES_.paid;
+  if (PAYNOW_CANCELLED_.indexOf(word) >= 0) state = PAYMENT_STATES_.cancelled;
+  if (PAYNOW_FAILED_.indexOf(word) >= 0) state = PAYMENT_STATES_.failed;
   return { state: state, status: status, amount: formValue_(reply, 'amount') };
 }
 

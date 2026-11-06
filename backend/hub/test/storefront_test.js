@@ -127,6 +127,84 @@ test('a phone pulling new prices refreshes the page', () => {
   assert.match(page(hub).html, /USD 2\.00/);
 });
 
+const many = (count) => Array.from({ length: count }, (_, i) =>
+  [`P${i}`, `Item ${i}`, i % 2 ? 'Bakery' : 'Groceries', 'each', 1 + i / 100, 0.5, 'Yes', '']);
+
+function bigShop(count) {
+  const fixture = readyShop();
+  shopData(fixture.google);
+  fixture.google.Sheets.cells.Products = [HEADS, ...many(count)];
+  return fixture;
+}
+
+test('a shop of up to 200 products carries them all, and searches on the phone', () => {
+  const { hub } = bigShop(200);
+  const { html } = page(hub);
+  assert.equal(html.split('class="price"').length - 1, 200);
+  assert.equal(html.includes('class="more"'), false);
+});
+
+test('a bigger shop opens with 50 products, so the first visit stays small', () => {
+  const { hub } = bigShop(1000);
+  const { html } = page(hub);
+  assert.equal(html.split('class="price"').length - 1, 50);
+  assert.match(html, /class="more"/);
+  assert.match(html, /\.more\[hidden\]\{display:none\}/);
+  assert.match(html, /Search 1000 products/);
+  assert.ok(html.length < 40000, `${html.length} characters`);
+});
+
+test('Show more walks through every product', () => {
+  const { hub } = bigShop(220);
+  page(hub);
+  const first = hub.shopProducts('', '', 0);
+  assert.equal(first.items.length, 50);
+  assert.equal(first.more, true);
+  assert.equal(hub.shopProducts('', '', 1).items[0].name, 'Item 50');
+  const last = hub.shopProducts('', '', 4);
+  assert.equal(last.items.length, 20);
+  assert.equal(last.more, false);
+});
+
+test('search and categories cover products beyond the first page', () => {
+  const { hub } = bigShop(1000);
+  page(hub);
+  assert.deepEqual([...hub.shopProducts('item 999', '', 0).items].map((p) => p.name), ['Item 999']);
+  assert.equal(hub.shopProducts('ITEM 999', 'Groceries', 0).items.length, 0);
+  assert.equal(hub.shopProducts('', 'Bakery', 0).items[0].category, 'Bakery');
+});
+
+test('5000 products fit in the cache, and searching them reads no sheet', () => {
+  const { hub, google } = bigShop(5000);
+  page(hub);
+  const reads = google.Sheets.gets;
+  assert.equal(hub.shopProducts('item 4999', '', 0).items.length, 1);
+  assert.equal(google.Sheets.gets, reads);
+});
+
+test('search answers hold only what the page shows', () => {
+  const { hub } = bigShop(300);
+  page(hub);
+  assert.deepEqual(Object.keys(hub.shopProducts('', '', 0).items[0]).sort(), ['category', 'name', 'price', 'unit']);
+});
+
+test('search survives a lost cache, and nonsense input', () => {
+  const { hub, google } = bigShop(300);
+  page(hub);
+  google.CacheService.getScriptCache().remove('storefront:list:0');
+  assert.equal(hub.shopProducts('item 299', '', 0).items.length, 1);
+  assert.equal(hub.shopProducts(null, undefined, 'x').items.length, 50);
+  assert.equal(hub.shopProducts('', '', -5).items.length, 50);
+});
+
+test('turning the page off empties the list search reads', () => {
+  const { hub, google, send, owner } = bigShop(300);
+  page(hub);
+  google.Sheets.cells.Settings.find((row) => row[0] === 'Shop page')[1] = 'Off';
+  send(owner, 'changes.pull');
+  assert.equal(hub.shopProducts('', '', 0).items.length, 0);
+});
+
 test('a broken read shows the neutral page, not an error', () => {
   const { hub, google } = readyShop();
   google.Sheets.Spreadsheets.Values.batchGet = () => { throw new Error('Sheets is unavailable: secret detail'); };

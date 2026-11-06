@@ -19,7 +19,6 @@
 //   is called, so a retry gets the same record. If there was no usable reply,
 //   the payment stays `unknown`: the seller looks at the customer's SMS.
 
-var PAYMENT_DONE_ = ['paid', 'failed', 'cancelled'];
 var PAYMENT_KEEP_SECONDS_ = 3 * 86400; // the Payment Callbacks tab is the lasting record
 var PAYMENT_RECHECK_SECONDS_ = 3600;
 var PAYMENT_PATTERNS_ = {
@@ -34,7 +33,7 @@ var PAYMENT_PATTERNS_ = {
  * @param {string} provider
  */
 function paymentAdapter_(provider) {
-  if (provider === 'paynow') {
+  if (provider === PROVIDERS_.paynow) {
     return {
       name: 'Paynow', methods: PAYNOW_METHODS_, keys: paynowKeys_, start: paynowStart_, check: paynowCheck_,
       callback: paynowCallback_, callbackReference: paynowCallbackReference_,
@@ -45,7 +44,7 @@ function paymentAdapter_(provider) {
 
 /** @param {any} services @param {string} provider @param {string} currency */
 function paymentKeys_(services, provider, currency) {
-  return readJson_(services, 'paykey:' + provider + ':' + currency);
+  return readJson_(services, paymentKeysKey_(provider, currency));
 }
 
 /**
@@ -57,9 +56,9 @@ function setPaymentKeys_(request, services, device) {
   var body = request.body;
   var adapter = paymentAdapter_(body.provider);
   if (!adapter || PRICING_CURRENCIES_.indexOf(body.currency) < 0) {
-    throw hubError_('validation', 'bad_keys', 'Keys need a known provider and currency.');
+    throw hubError_(ERRORS_.badKeys, 'Keys need a known provider and currency.');
   }
-  writeJson_(services, 'paykey:' + body.provider + ':' + body.currency, adapter.keys(body));
+  writeJson_(services, paymentKeysKey_(body.provider, body.currency), adapter.keys(body));
   return { provider: body.provider, currency: body.currency, set: true };
 }
 
@@ -79,7 +78,7 @@ function readPayment_(body) {
     PAYMENT_PATTERNS_.amount.test(body.amount) && Number(body.amount) > 0 &&
     PAYMENT_PATTERNS_.payer.test(body.payer);
   if (!valid) {
-    throw hubError_('validation', 'bad_payment',
+    throw hubError_(ERRORS_.badPayment,
       'A payment needs a reference, a provider and method, an amount like 2.50, a currency and the payer\'s number.');
   }
   return adapter;
@@ -92,7 +91,7 @@ function readPayment_(body) {
  */
 function claimPayment_(services, record) {
   return withLock_(services, function () {
-    var key = 'pay:' + record.reference;
+    var key = STORE_PREFIXES_.payment + record.reference;
     var existing = readJson_(services, key);
     if (existing) return existing;
     writeJson_(services, key, record);
@@ -109,17 +108,17 @@ function startPayment_(request, services, device) {
   var adapter = readPayment_(body);
   var keys = paymentKeys_(services, body.provider, body.currency);
   if (!keys) {
-    throw hubError_('validation', 'payments_not_set_up', 'This provider has no keys for this currency.');
+    throw hubError_(ERRORS_.paymentsNotSetUp, 'This provider has no keys for this currency.');
   }
   var record = {
     reference: body.reference, provider: body.provider, method: body.method, amount: body.amount,
     currency: body.currency, payer: body.payer, sale: typeof body.sale === 'string' ? body.sale.slice(0, 40) : '',
-    device: device.id, at: services.now(), state: 'unknown',
+    device: device.id, at: services.now(), state: PAYMENT_STATES_.unknown,
   };
   var existing = claimPayment_(services, record);
   if (existing) {
     if (existing.amount !== record.amount || existing.currency !== record.currency) {
-      throw hubError_('integrity_conflict', 'reference_reused', 'This reference is already a different payment.');
+      throw hubError_(ERRORS_.referenceReused, 'This reference is already a different payment.');
     }
     return paymentReply_(existing);
   }
@@ -127,11 +126,11 @@ function startPayment_(request, services, device) {
   try {
     Object.assign(record, adapter.start(record, keys, hubUrl));
   } catch (error) {
-    throw hubError_('unknown_external_outcome', 'payment_outcome_unknown',
+    throw hubError_(ERRORS_.paymentOutcomeUnknown,
       'The provider gave no usable reply. Do not charge again; check with the customer.');
   }
   delete record.payer; // the customer's number is needed only for the prompt
-  writeJson_(services, 'pay:' + record.reference, record);
+  writeJson_(services, STORE_PREFIXES_.payment + record.reference, record);
   return paymentReply_(record);
 }
 
@@ -144,11 +143,11 @@ function refreshPayment_(services, record) {
   var result = paymentAdapter_(record.provider).check(record, paymentKeys_(services, record.provider, record.currency));
   record.status = result.status;
   record.state = result.state;
-  if (result.state === 'paid' && Number(result.amount) !== Number(record.amount)) {
-    record.state = 'failed';
+  if (result.state === PAYMENT_STATES_.paid && Number(result.amount) !== Number(record.amount)) {
+    record.state = PAYMENT_STATES_.failed;
     record.note = 'Paid amount ' + result.amount + ' differs from ' + record.amount + '.';
   }
-  writeJson_(services, 'pay:' + record.reference, record);
+  writeJson_(services, STORE_PREFIXES_.payment + record.reference, record);
   return record;
 }
 
@@ -158,17 +157,17 @@ function refreshPayment_(services, record) {
  */
 function checkPayment_(request, services) {
   var reference = request.body.reference;
-  var record = PAYMENT_PATTERNS_.reference.test(reference) ? readJson_(services, 'pay:' + reference) : null;
-  if (!record) throw hubError_('validation', 'no_such_payment', 'No such payment.');
-  return paymentReply_(record.state === 'pending' ? refreshPayment_(services, record) : record);
+  var record = PAYMENT_PATTERNS_.reference.test(reference) ? readJson_(services, STORE_PREFIXES_.payment + reference) : null;
+  if (!record) throw hubError_(ERRORS_.noSuchPayment, 'No such payment.');
+  return paymentReply_(record.state === PAYMENT_STATES_.pending ? refreshPayment_(services, record) : record);
 }
 
 /** A row in My Shop's Payment Callbacks tab. Call inside the lock. @param {any} services @param {any} row */
 function logCallback_(services, row) {
   var store = services.store;
-  var shop = store.get('file:myshop');
-  var table = 'Payment Callbacks';
-  var key = 'row:' + shop + ':' + table;
+  var shop = store.get(STORE_KEYS_.fileMyShop);
+  var table = TABLES_.paymentCallbacks;
+  var key = rowPointerKey_(shop, table);
   var at = Number(store.get(key) || '2');
   writeRowAt_(services, shop, table, at, row);
   store.set(key, at + 1);
@@ -184,22 +183,22 @@ function handlePaymentCallback_(provider, raw, services) {
   var adapter = paymentAdapter_(provider);
   if (!adapter) return;
   var reference = adapter.callbackReference(raw);
-  var record = PAYMENT_PATTERNS_.reference.test(reference) ? readJson_(services, 'pay:' + reference) : null;
+  var record = PAYMENT_PATTERNS_.reference.test(reference) ? readJson_(services, STORE_PREFIXES_.payment + reference) : null;
   if (!record || record.provider !== provider) return;
   var update = adapter.callback(raw, paymentKeys_(services, provider, record.currency));
   if (update.valid && record.logged === update.status) return; // the provider sent it again
-  if (update.valid && record.state === 'pending') refreshPayment_(services, record);
+  if (update.valid && record.state === PAYMENT_STATES_.pending) refreshPayment_(services, record);
   var name = record.state.charAt(0).toUpperCase() + record.state.slice(1);
   withLock_(services, function () {
     logCallback_(services, {
-      received_at: Utilities.formatDate(new Date(services.now() * 1000), services.store.get('timeZone'), "yyyy-MM-dd'T'HH:mm:ss"),
+      received_at: Utilities.formatDate(new Date(services.now() * 1000), services.store.get(STORE_KEYS_.timeZone), "yyyy-MM-dd'T'HH:mm:ss"),
       provider: adapter.name, reference: reference, amount: update.amount, currency: record.currency,
-      provider_status: update.status, signature_valid: update.valid ? 'Yes' : 'No',
+      provider_status: update.status, signature_valid: update.valid ? SHEET_WORDS_.yes : SHEET_WORDS_.no,
       matched_sale: record.sale, result: update.valid ? name : 'Rejected', note: record.note || '',
     });
     if (update.valid) {
       record.logged = update.status;
-      writeJson_(services, 'pay:' + reference, record);
+      writeJson_(services, STORE_PREFIXES_.payment + reference, record);
     }
   });
 }
@@ -212,13 +211,13 @@ function handlePaymentCallback_(provider, raw, services) {
 function reviewPayments_(services) {
   var store = services.store;
   Object.keys(store.getAll()).forEach(function (key) {
-    if (key.indexOf('pay:') !== 0) return;
+    if (key.indexOf(STORE_PREFIXES_.payment) !== 0) return;
     var record = JSON.parse(store.get(key));
     var age = services.now() - record.at;
-    if (record.state === 'pending' && age > PAYMENT_RECHECK_SECONDS_) refreshPayment_(services, record);
+    if (record.state === PAYMENT_STATES_.pending && age > PAYMENT_RECHECK_SECONDS_) refreshPayment_(services, record);
     if (age <= PAYMENT_KEEP_SECONDS_) return;
-    if (record.state === 'pending') {
-      record.state = 'failed';
+    if (record.state === PAYMENT_STATES_.pending) {
+      record.state = PAYMENT_STATES_.failed;
       record.note = 'Never confirmed by the provider.';
       writeJson_(services, key, record);
     } else {

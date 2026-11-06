@@ -8,8 +8,6 @@ import 'dart:io';
 
 import 'package:image/image.dart' as image;
 
-import 'source_header.dart';
-
 /// Build-time resizing only; the approved artwork remains the source of identity.
 void main() {
   const sourcePath = 'apps/dura/assets/branding/launcher-source.png';
@@ -62,9 +60,6 @@ void main() {
   ].map((channel) => channel.toInt().toRadixString(16).padLeft(2, '0')).join();
   File('${adaptive.path}/ic_launcher.xml').writeAsStringSync('''
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-${sourceHeader.replaceAll('// ', '').trim()}
--->
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/launcher_background" />
     <foreground android:drawable="@drawable/ic_launcher_foreground" />
@@ -72,9 +67,6 @@ ${sourceHeader.replaceAll('// ', '').trim()}
 ''');
   File('$resourceRoot/values/launcher_colors.xml').writeAsStringSync('''
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-${sourceHeader.replaceAll('// ', '').trim()}
--->
 <resources>
     <color name="launcher_background">#$background</color>
 </resources>

@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Dura hub protocol, version 1
 
 The messages between a Dura phone and the shop's backend. They describe
@@ -13,18 +5,10 @@ business operations, not Google APIs, so any backend can implement them. The
 Apps Script Shop Hub is the first implementation; the Flutter `dura_hub`
 adapter is the client ([decision 0005](../../handbook/decisions/0005-shop-hub-as-the-backend.md)).
 
-Status of each part:
-
-- **Implemented in this folder:**
-  - the envelope;
-  - signing;
-  - errors;
-  - `pair`;
-  - `pairing.create`;
-  - `device.revoke`;
-  - `journal.put`;
-  - `setup.run`.
-- **Specified only:** the rest is marked *planned*.
+Every action below is implemented by the hub in this folder and by the
+[`dura_hub`](../../client/packages/dura_hub) client. They share signing test vectors
+in `client/packages/dura_hub/test/fixtures/signing_vectors.json`, so a change to
+signing on either side fails the other's tests.
 
 ## Transport
 

@@ -24,7 +24,7 @@ function loadHub(options = {}) {
     .readdirSync(SRC)
     .filter((name) => name.endsWith('.js'))
     .sort();
-  for (const name of files) {
+  for (const name of options.order ? options.order(files) : files) {
     const code = fs.readFileSync(path.join(SRC, name), 'utf8');
     vm.runInContext(code, context, { filename: name });
   }

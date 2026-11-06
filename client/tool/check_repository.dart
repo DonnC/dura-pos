@@ -10,6 +10,21 @@ import 'source_header.dart';
 import 'workspace.dart';
 
 const sourceLineLimit = 500;
+const headerSearchLines = 14;
+
+/// Tracked files that aren't source code and still carry the source header.
+Iterable<String> straySourceHeaders() sync* {
+  final tracked = Process.runSync('git', ['ls-files'], workingDirectory: '..');
+  final names = (tracked.stdout as String).split('\n');
+  for (final name in names.where(isHeaderFree)) {
+    final file = File('../$name');
+    if (!file.existsSync()) continue;
+    final head = file.readAsLinesSync().take(headerSearchLines);
+    if (head.any((line) => line.contains('SPDX-License-Identifier'))) {
+      yield '$name is not source code and must not carry the licence header';
+    }
+  }
+}
 
 void main() {
   final errors = <String>[];
@@ -54,7 +69,7 @@ void main() {
       }
       if (name.contains('packages/dura_core/lib/') &&
           RegExp(
-            r'''import ['"]package:(flutter|flutter_riverpod|drift|dura_data|dura_ui)/''',
+            r'''import ['"]package:(flutter|flutter_riverpod|drift|dura_data|dura_hub|dura_ui)/''',
           ).hasMatch(text)) {
         errors.add('$name violates the core boundary');
       }
@@ -70,6 +85,7 @@ void main() {
       }
     }
   }
+  errors.addAll(straySourceHeaders());
   for (final directory in workspacePackages) {
     if (packageManifest(directory)['resolution'] != 'workspace') {
       errors.add('$directory is not in workspace resolution');

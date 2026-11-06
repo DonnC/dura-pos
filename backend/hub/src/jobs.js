@@ -27,11 +27,11 @@ function dailyJob() {
 /** Creates each timer once. */
 function installTriggers_() {
   var existing = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); });
-  if (existing.indexOf('runViews') < 0) {
-    ScriptApp.newTrigger('runViews').timeBased().everyMinutes(15).create();
+  if (existing.indexOf(TRIGGERS_.runViews) < 0) {
+    ScriptApp.newTrigger(TRIGGERS_.runViews).timeBased().everyMinutes(15).create();
   }
-  if (existing.indexOf('dailyJob') < 0) {
-    ScriptApp.newTrigger('dailyJob').timeBased().everyDays(1).atHour(3).create();
+  if (existing.indexOf(TRIGGERS_.dailyJob) < 0) {
+    ScriptApp.newTrigger(TRIGGERS_.dailyJob).timeBased().everyDays(1).atHour(3).create();
   }
 }
 
@@ -48,10 +48,10 @@ function moneyIn_(grid) {
   /** @type {Object<string, number>} */
   var totals = { USD: 0, ZWG: 0, ZAR: 0 };
   grid.slice(1).forEach(function (row) {
-    var currency = row[column('Currency')];
-    var counted = MONEY_IN_STATUSES_.indexOf(row[column('Status')]) >= 0 &&
-      String(row[column('Method')]).indexOf('Kept change') !== 0;
-    if (counted && currency in totals) totals[currency] += Number(row[column('Amount')]) || 0;
+    var currency = row[column(HEADINGS_.currency)];
+    var counted = MONEY_IN_STATUSES_.indexOf(row[column(HEADINGS_.status)]) >= 0 &&
+      String(row[column(HEADINGS_.method)]).indexOf('Kept change') !== 0;
+    if (counted && currency in totals) totals[currency] += Number(row[column(HEADINGS_.amount)]) || 0;
   });
   Object.keys(totals).forEach(function (c) { totals[c] = Math.round(totals[c] * 100) / 100; });
   return totals;
@@ -73,10 +73,10 @@ function productsSold_(grid) {
   /** @type {Object<string, {name: string, qty: number}>} */
   var totals = {};
   grid.slice(1).forEach(function (row) {
-    var id = row[heads.indexOf('Product ID')];
+    var id = row[heads.indexOf(HEADINGS_.productId)];
     if (!id) return;
-    totals[id] = totals[id] || { name: row[heads.indexOf('Product')], qty: 0 };
-    totals[id].qty += Number(row[heads.indexOf('Qty')]) || 0;
+    totals[id] = totals[id] || { name: row[heads.indexOf(HEADINGS_.product)], qty: 0 };
+    totals[id].qty += Number(row[heads.indexOf(HEADINGS_.qty)]) || 0;
   });
   return Object.keys(totals).sort(function (a, b) { return totals[b].qty - totals[a].qty || (a < b ? -1 : 1); })
     .map(function (id) { return [id, totals[id].name]; });
@@ -87,7 +87,7 @@ function blockWrite_(block, rows, width) {
   var values = rows.slice(0, block.rows);
   while (values.length < block.rows) values.push(width === 1 ? [''] : ['', '']);
   var last = block.first + block.rows - 1;
-  return { range: "'Summary'!A" + block.first + ':' + columnLetter_(width) + last, values: values };
+  return { range: tabRange_(TABLES_.summary, 'A' + block.first + ':' + columnLetter_(width) + last), values: values };
 }
 
 /**
@@ -100,13 +100,13 @@ function writeSummaryLabels_(services, monthFile, period, ranges) {
   var one = function (value) { return [value]; };
   var blocks = VIEW_CONTRACT_.summaryBlocks;
   var data = [
-    blockWrite_(blocks.location, distinct_(sales, 'Location').map(one), 1),
-    blockWrite_(blocks.phone, distinct_(sales, 'Phone').map(one), 1),
-    blockWrite_(blocks.seller, distinct_(sales, 'Seller').map(one), 1),
-    blockWrite_(blocks.method, distinct_(ranges[1].values || [], 'Method').map(one), 1),
+    blockWrite_(blocks.location, distinct_(sales, HEADINGS_.location).map(one), 1),
+    blockWrite_(blocks.phone, distinct_(sales, HEADINGS_.phone).map(one), 1),
+    blockWrite_(blocks.seller, distinct_(sales, HEADINGS_.seller).map(one), 1),
+    blockWrite_(blocks.method, distinct_(ranges[1].values || [], HEADINGS_.method).map(one), 1),
     blockWrite_(blocks.product, productsSold_(ranges[3].values || []), 2),
   ];
-  var key = 'summary:' + period;
+  var key = STORE_PREFIXES_.summary + period;
   var hash = sha256Hex_(JSON.stringify(data));
   if (services.store.get(key) === hash) return;
   Sheets.Spreadsheets.Values.batchUpdate({ valueInputOption: 'RAW', data: data }, monthFile);
@@ -120,10 +120,11 @@ function writeSummaryLabels_(services, monthFile, period, ranges) {
  */
 function refreshMonthRow_(services, period, status) {
   var store = services.store;
-  var monthFile = store.get('file:month:' + period);
+  var monthFile = store.get(STORE_PREFIXES_.monthFile + period);
   if (!monthFile) return;
   var reply = Sheets.Spreadsheets.Values.batchGet(monthFile, {
-    ranges: ["'Summary'!A:E", "'Payments'!A:Z", "'Sales'!A:AZ", "'Items Sold'!A:Z"],
+    ranges: [tabRange_(TABLES_.summary, 'A:E'), tabRange_(TABLES_.payments, 'A:Z'), tabRange_(TABLES_.sales, 'A:AZ'),
+      tabRange_(TABLES_.itemsSold, 'A:Z')],
     valueRenderOption: 'UNFORMATTED_VALUE',
   });
   /** @type {Object<string, any[]>} */
@@ -146,11 +147,11 @@ function refreshMonthRow_(services, period, status) {
     money_in_usd: money.USD, money_in_zwg: money.ZWG, money_in_zar: money.ZAR,
     written_by: 'Shop Hub',
   };
-  var shop = store.get('file:myshop');
-  var rowKey = 'months:' + period;
-  var pointer = 'row:' + shop + ':Months';
+  var shop = store.get(STORE_KEYS_.fileMyShop);
+  var rowKey = STORE_PREFIXES_.monthRow + period;
+  var pointer = rowPointerKey_(shop, TABLES_.months);
   var at = Number(store.get(rowKey) || store.get(pointer) || '2');
-  writeRowAt_(services, shop, 'Months', at, row);
+  writeRowAt_(services, shop, TABLES_.months, at, row);
   writeSummaryLabels_(services, monthFile, period, reply.valueRanges);
   if (!store.get(rowKey)) {
     /** @type {Object<string, string | number>} */
@@ -174,8 +175,8 @@ function dailyStep_(name, work) {
 function runDaily_(services) {
   return withLock_(services, function () {
     var store = services.store;
-    if (!store.get('file:myshop')) return;
-    var today = Utilities.formatDate(new Date(services.now() * 1000), store.get('timeZone'), 'yyyy-MM-dd');
+    if (!store.get(STORE_KEYS_.fileMyShop)) return;
+    var today = Utilities.formatDate(new Date(services.now() * 1000), store.get(STORE_KEYS_.timeZone), 'yyyy-MM-dd');
     var period = today.slice(0, 7);
     var year = today.slice(0, 4);
     var date = Number(today.slice(8));
@@ -184,12 +185,12 @@ function runDaily_(services) {
       if (date >= FIRST_DAY_OF_NEXT_MONTH_FILE_) ensureMonthFile_(services, addMonths_(period, 1));
     });
     dailyStep_('data year', function () {
-      if (store.get('dataYear') === year) return;
+      if (store.get(STORE_KEYS_.dataYear) === year) return;
       /** @type {Object<string, string | number>} */
       var cells = {};
       cells[TEMPLATE_CELLS_.myShop.dataYear] = Number(year);
-      writeCells_(store.get('file:myshop'), cells);
-      store.set('dataYear', year);
+      writeCells_(store.get(STORE_KEYS_.fileMyShop), cells);
+      store.set(STORE_KEYS_.dataYear, year);
     });
     tryDrain_(services, {});
     dailyStep_('months', function () {
@@ -217,26 +218,26 @@ function runDaily_(services) {
 function readStatus_(request, services) {
   var store = services.store;
   var phones = Object.keys(store.getAll())
-    .filter(function (key) { return key.indexOf('device:') === 0; })
+    .filter(function (key) { return key.indexOf(STORE_PREFIXES_.device) === 0; })
     .map(function (key) { return JSON.parse(store.get(key)); })
     .filter(function (device) { return !device.revoked; })
     .map(function (device) {
       return {
         device: device.id, name: device.name, role: device.role,
-        through: Number(store.get('journal:' + device.id) || '0'),
-        viewed: Number(store.get('view:' + device.id) || '0'),
-        lastSeen: Number(store.get('seen:' + device.id) || '0'),
+        through: Number(store.get(STORE_PREFIXES_.journal + device.id) || '0'),
+        viewed: Number(store.get(STORE_PREFIXES_.view + device.id) || '0'),
+        lastSeen: Number(store.get(STORE_PREFIXES_.seen + device.id) || '0'),
       };
     });
   return {
     hub: HUB_VERSION_,
     protocols: [PROTOCOL_VERSION_],
-    business: store.get('businessId') || '',
-    pricingCurrency: store.get('pricingCurrency') || '',
-    views: { queued: viewQueue_(services).length, skipped: Number(store.get('view:skipped') || '0') },
+    business: store.get(STORE_KEYS_.businessId) || '',
+    pricingCurrency: store.get(STORE_KEYS_.pricingCurrency) || '',
+    views: { queued: viewQueue_(services).length, skipped: Number(store.get(STORE_KEYS_.viewSkipped) || '0') },
     payments: Object.keys(store.getAll())
-      .filter(function (key) { return key.indexOf('paykey:') === 0; })
-      .map(function (key) { return key.slice('paykey:'.length); }),
+      .filter(function (key) { return key.indexOf(STORE_PREFIXES_.paymentKeys) === 0; })
+      .map(function (key) { return key.slice(STORE_PREFIXES_.paymentKeys.length); }),
     phones: phones,
   };
 }

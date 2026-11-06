@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Testing the hub on a real Google account
 
 The hub's tests run on fake Google services, so they can't prove what Google really
@@ -23,6 +15,8 @@ time. Nothing here touches a real shop. The first run's results are at the end.
 3. Open <https://script.google.com/home/usersettings> and turn on **Google Apps
    Script API**. `clasp`, the upload tool, can't work without it.
 
+   ![The Apps Script settings page, with Google Apps Script API turned on](images/hub-trial/1-apps-script-api.png)
+
 ## 2. Check the templates are reachable
 
 The hub downloads its templates from the repository's `develop` branch, so this needs
@@ -38,14 +32,41 @@ npm ci
 npm run trial
 ```
 
-It stops twice for you:
+It stops twice for you.
 
-1. **Signing in:** a browser opens for `clasp`. Use the **test account**. The script
-   prints which account it's using, so check that.
-2. **Authorising:** it prints a link and three short steps. Google warns that the app
-   isn't verified; click **Advanced**, then **Go to Dura Shop Hub test (unsafe)**.
-   Leave every permission ticked, because the hub needs all three. The script notices
-   when you're done and carries on by itself.
+### Signing in
+
+A browser opens for `clasp`. Use the **test account**. The script prints which
+account it's using, so check that.
+
+### Authorising the hub
+
+The hub runs as the account's owner, so the owner has to approve it once. The script
+prints a link to the project. Then:
+
+1. Open `jobs.gs`, choose `runViews` in the function menu, and click **Run**.
+
+   ![The Apps Script editor with jobs.gs open and runViews chosen](images/hub-trial/2-choose-run-views.png)
+
+2. Click **Review permissions**, and choose the account.
+
+   ![The Authorisation required dialog](images/hub-trial/3-review-permissions.png)
+
+3. Google warns that it hasn't verified the app, which is expected for your own
+   script. Click **Advanced**, then **Go to Dura Shop Hub test (unsafe)**.
+
+   ![Google's unverified app warning, with Advanced opened](images/hub-trial/4-advanced-go-to-hub.png)
+
+4. Leave every permission ticked, because the hub needs all three, and click
+   **Continue**. The hub reaches only files it creates.
+
+   ![Google's permission screen with three permissions ticked](images/hub-trial/5-allow-permissions.png)
+
+5. The log shows the run finishing. The script notices and carries on by itself.
+
+   ![The execution log showing Execution started and Execution completed](images/hub-trial/6-execution-log.png)
+
+### The checks
 
 Then it pairs, sets up the shop, runs the checks and prints each one as `PASS` or
 `FAIL`. A failed check doesn't stop the rest.
@@ -54,12 +75,17 @@ Run `npm run trial` again at any time. It reuses the same hub and repeats the ch
 
 ## 4. Check what only a person can
 
+Your shop's folder in Drive should look like this:
+
+![The shop's folder in Google Drive, with 2026, Exports, Journal, Product photos, business.json and My Shop](images/hub-trial/7-drive-folder.png)
+
 | Check | Where | Expected |
 |---|---|---|
 | Folders | Drive | `Dura POS/Test Corner Shop/` with `Journal`, `2026`, `business.json` and `My Shop` |
 | Conversion | `My Shop` | Dropdowns, colours, formulas and charts survived |
 | Month file | `2026/`, `Summary` | Its dates show the current month |
-| The sale | The month file, `Sales` | Rows with totals of 1.00 |
+| The sale | The month file, `Sales`, `Items Sold` and `Payments` | One row in each per test sale, at the first product's price |
+| The stock leaving | `My Shop`, `Stock Ledger` | A `Sold` row per test sale, with a negative quantity |
 | Timers | Apps Script, Triggers | `runViews` and `dailyJob` |
 | Daily job | Apps Script: run `dailyJob` | No `Daily step failed` line in the log |
 
@@ -70,7 +96,10 @@ Then the shop page:
 2. Run `npm run trial` again. It refreshes the page, and writes the `Stock` formulas.
 3. Check that `Stock` calculates.
 4. Open the shop page address it printed on a phone, in your normal browser. Try the
-   search, Call, WhatsApp and Directions.
+   search, Call, WhatsApp and Directions. A Gmail account shows Google's notice at the
+   top, which visitors can close.
+
+   ![The shop page with a Call, WhatsApp and Directions button](images/hub-trial/8-shop-page.png)
 5. Set `Shop page` to `Off` in Settings, run the trial again and reload. The shop page
    check should now fail, because the page hides the shop.
 

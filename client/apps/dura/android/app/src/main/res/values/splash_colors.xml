@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 <resources>
     <color name="splash_background">#024d39</color>
 </resources>

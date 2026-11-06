@@ -7,7 +7,7 @@
 // @ts-check
 
 function badEnvelope_(message) {
-  return hubError_('validation', 'bad_envelope', message);
+  return hubError_(ERRORS_.badEnvelope, message);
 }
 
 /** @param {any} value */
@@ -27,7 +27,7 @@ function checkEnvelope_(request) {
   }
   if (!Number.isSafeInteger(request.ts)) throw badEnvelope_('ts must be an integer.');
   if (!isPlainObject_(request.body)) throw badEnvelope_('body must be an object.');
-  if (request.action !== 'pair') {
+  if (request.action !== ACTIONS_.pair) {
     if (typeof request.device !== 'string' || !PATTERNS_.device.test(request.device)) {
       throw badEnvelope_('device is missing or malformed.');
     }
@@ -39,7 +39,7 @@ function checkEnvelope_(request) {
     }
   }
   if (request.v !== PROTOCOL_VERSION_) {
-    throw hubError_('validation', 'unsupported_version', 'This hub speaks protocol version 1.');
+    throw hubError_(ERRORS_.unsupportedVersion, 'This hub speaks protocol version 1.');
   }
 }
 
@@ -53,10 +53,10 @@ function checkEnvelope_(request) {
 function authenticate_(request, services) {
   var device = findDevice_(services, request.device);
   if (!device) {
-    throw hubError_('authentication_required', 'unknown_device', 'This phone is not paired.');
+    throw hubError_(ERRORS_.unknownDevice, 'This phone is not paired.');
   }
   if (Math.abs(services.now() - request.ts) > LIMITS_.clockSkewSeconds) {
-    throw hubError_('authentication_required', 'stale_request', 'Check the phone clock.');
+    throw hubError_(ERRORS_.staleRequest, 'Check the phone clock.');
   }
   var signingString;
   try {
@@ -68,11 +68,11 @@ function authenticate_(request, services) {
     throw badEnvelope_('The body holds a value that cannot be signed.');
   }
   if (!constantTimeEqual_(hmacSha256Hex_(signingString, device.secret), request.sig)) {
-    throw hubError_('authentication_required', 'bad_signature', 'The signature does not match.');
+    throw hubError_(ERRORS_.badSignature, 'The signature does not match.');
   }
-  var nonceKey = 'nonce:' + request.device + ':' + request.nonce;
+  var nonceKey = CACHE_KEYS_.nonce + request.device + ':' + request.nonce;
   if (services.cache.get(nonceKey) !== null) {
-    throw hubError_('authentication_required', 'replayed_request', 'This request was already received.');
+    throw hubError_(ERRORS_.replayedRequest, 'This request was already received.');
   }
   services.cache.put(nonceKey, '1', LIMITS_.nonceSeconds);
   return device;

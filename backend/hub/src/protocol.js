@@ -33,14 +33,13 @@ var PATTERNS_ = {
 };
 
 /**
- * An error the client should see. Its category is one of PROTOCOL.md's six;
- * anything else thrown is reported only as an internal error.
- * @param {string} category
- * @param {string} code
+ * An error the client should see, named in ERRORS_. Anything else thrown is
+ * reported only as an internal error.
+ * @param {{category: string, code: string}} kind
  * @param {string} message plain words for logs; never secrets or payloads
  */
-function hubError_(category, code, message) {
+function hubError_(kind, message) {
   var error = new Error(message);
-  /** @type {any} */ (error).hub = { category: category, code: code, message: message };
+  /** @type {any} */ (error).hub = { category: kind.category, code: kind.code, message: message };
   return error;
 }

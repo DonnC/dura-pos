@@ -119,7 +119,14 @@ function createCache(clock) {
       return Object.fromEntries(keys.filter((k) => this.get(k) !== null).map((k) => [k, this.get(k)]));
     },
     put(key, value, seconds) {
+      if (String(value).length > 100 * 1024) throw new Error('Argument too large');
       map.set(key, { value: String(value), expires: clock.now() + seconds });
+    },
+    putAll(values, seconds) {
+      for (const [key, value] of Object.entries(values)) this.put(key, value, seconds);
+    },
+    remove(key) {
+      map.delete(key);
     },
   };
 }

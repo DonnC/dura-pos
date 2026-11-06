@@ -1,14 +1,53 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Changelog
 
 ## Unreleased — 0.1.0-dev.1 foundation
+
+### Changed: shared words have one home
+
+- **`backend/hub/src/names.js`** holds the hub's actions, errors, Script Property and
+  cache keys, and workbook and tab names. A misspelt name now fails `npm run check`.
+- **Each error is one named entry,** so a code can't be paired with the wrong category.
+- **`HubAction`** does the same in `dura_hub`, and a fixture read by both test suites
+  keeps the protocol's words identical on each side.
+- **Saved keys and wire words are unchanged,** so installed hubs keep working.
+
+### Changed: test sales touch every tab a real sale does
+
+- **`try_hub.js sale`** and `npm run trial` now write `Sales`, `Items Sold`, `Payments`
+  and a `Sold` row in the `Stock Ledger`.
+- **`try_hub.js stock <qty>`** receives stock, so the `Stock` tab has something to add up.
+
+### Changed: the licence header is for source code only
+
+- **`.dart`, `.js`, `.py`, `.kt` and `.kts` files carry it.** Docs, config, GitHub
+  templates and Android resources no longer do, and `melos run check` refuses it there.
+
+### Added: the backend port and the Shop Hub adapter
+
+- **`ShopBackend` in `dura_core`** is the app's one view of any backend, in shop words
+  with typed failures. No Google type appears in it.
+- **`dura_hub`** implements it over `PROTOCOL.md`: signing, the hub's redirect, and a
+  typed reply for every action.
+- **A lost reply to `payment.start` is an unknown outcome,** never something to retry.
+- **Shared signing vectors** are checked by both the Dart client and the hub's tests,
+  so the two can't drift apart.
+
+### Added: an ecosystem diagram and an illustrated setup guide
+
+- **`handbook/design/ecosystem/`** shows how Dura works in plain words, as an animated
+  page, a GIF, a video and a still image.
+- **The real-account test** now has a screenshot for each Google step.
+
+### Changed: the shop page handles large catalogues
+
+- **Up to 200 products,** the page holds them all and searches on the phone.
+- **Above that,** it opens with the first 50 products, and search, categories and "Show
+  more" load from the hub's cache, so a visit stays small on mobile data.
+- **Up to 5000 products** are listed.
+
+### Fixed
+
+- **CI:** the debug APK build no longer fails on GitHub's Windows runners.
 
 ### Changed: one trial command, the shop's address and how Dura presents itself
 

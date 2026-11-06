@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 ## Problem and resulting behaviour
 
 Describe a concrete shop workflow and what changes for the user.
@@ -39,5 +31,3 @@ limits. CI repeats the checks on this PR, but say what you ran yourself.
 
 - [ ] Changelog updated for meaningful change.
 - [ ] Docs, sample previews and schemas agree with the final implementation.
-- [ ] No live credentials or private business data in this PR.
-- [ ] No AI attribution lines in commits or files.

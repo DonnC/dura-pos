@@ -11,8 +11,6 @@
 // The version is a hash of what was read, so a phone already up to date gets
 // a short reply and spends almost no data.
 
-var MASTER_TABLES_ = ['Products', 'Locations', 'Staff', 'Contacts', 'Currencies', 'Payment Methods',
-  'Settings', 'Exchange Rates'];
 
 /**
  * A heading's field ID, the same rule as the generator's: `Price (USD)` is
@@ -26,7 +24,7 @@ function fieldId_(heading, pricing) {
 
 /** The reason a row can't be used, or null. @param {string} table @param {any} row */
 function rowProblem_(table, row) {
-  if (table !== 'Products') return null;
+  if (table !== TABLES_.products) return null;
   var price = row.price_pricing;
   if (!row.product_id || !row.name || price === '' || price === undefined || isNaN(Number(price))) {
     return 'A product needs an ID, a name and a price.';
@@ -58,14 +56,14 @@ function tableRows_(table, grid, pricing, skipped) {
 
 /** One read of every tab. Dates come back formatted, numbers as numbers. */
 function readMasterData_(services) {
-  var fileId = services.store.get('file:myshop');
-  if (!fileId) throw hubError_('retryable_unavailable', 'not_set_up', 'The shop is not set up yet.');
+  var fileId = services.store.get(STORE_KEYS_.fileMyShop);
+  if (!fileId) throw hubError_(ERRORS_.notSetUp, 'The shop is not set up yet.');
   var reply = Sheets.Spreadsheets.Values.batchGet(fileId, {
     ranges: MASTER_TABLES_.map(function (table) { return "'" + table + "'!A:AZ"; }),
     valueRenderOption: 'UNFORMATTED_VALUE',
     dateTimeRenderOption: 'FORMATTED_STRING',
   });
-  var pricing = services.store.get('pricingCurrency');
+  var pricing = services.store.get(STORE_KEYS_.pricingCurrency);
   /** @type {Object<string, any[]>} */
   var tables = {};
   /** @type {any[]} */
@@ -102,12 +100,12 @@ function formulaRow_(template, r, width, cells) {
  */
 function writeFormulaRows_(services, table, width, values) {
   var hash = sha256Hex_(JSON.stringify(values));
-  if (services.store.get('hash:' + table) === hash) return;
-  var before = Number(services.store.get('rows:' + table) || '0');
+  if (services.store.get(STORE_PREFIXES_.masterHash + table) === hash) return;
+  var before = Number(services.store.get(STORE_PREFIXES_.masterRows + table) || '0');
   var padded = values.slice();
   while (padded.length < before) padded.push(new Array(width).fill(''));
   if (padded.length > 0) {
-    var fileId = services.store.get('file:myshop');
+    var fileId = services.store.get(STORE_KEYS_.fileMyShop);
     var last = padded.length + 1;
     growIfNeeded_(services, fileId, table, sheetInfo_(services, fileId, [table])[table], last);
     Sheets.Spreadsheets.Values.batchUpdate({
@@ -117,8 +115,8 @@ function writeFormulaRows_(services, table, width, values) {
   }
   /** @type {Object<string, string | number>} */
   var marks = {};
-  marks['hash:' + table] = hash;
-  marks['rows:' + table] = values.length;
+  marks[STORE_PREFIXES_.masterHash + table] = hash;
+  marks[STORE_PREFIXES_.masterRows + table] = values.length;
   services.store.setMany(marks);
 }
 
@@ -127,8 +125,8 @@ function writeFormulaRows_(services, table, width, values) {
  * @param {any} services @param {any} master from readMasterData_
  */
 function refreshStockRows_(services, master) {
-  var locations = master.tables.Locations.filter(function (l) { return l.active !== 'No'; });
-  var products = master.tables.Products.filter(function (p) { return p.active !== 'No'; });
+  var locations = master.tables[TABLES_.locations].filter(function (l) { return l.active !== SHEET_WORDS_.no; });
+  var products = master.tables[TABLES_.products].filter(function (p) { return p.active !== SHEET_WORDS_.no; });
   /** @type {any[][]} */
   var values = [];
   locations.forEach(function (location) {
@@ -137,7 +135,7 @@ function refreshStockRows_(services, master) {
         { 1: plainText_(product.product_id), 3: plainText_(location.location) }));
     });
   });
-  writeFormulaRows_(services, 'Stock', 8, values);
+  writeFormulaRows_(services, TABLES_.stock, 8, values);
 }
 
 /**
@@ -146,14 +144,14 @@ function refreshStockRows_(services, master) {
  * @param {any} services
  */
 function refreshBalanceRows_(services) {
-  var reply = Sheets.Spreadsheets.Values.batchGet(services.store.get('file:myshop'), {
-    ranges: ["'Money Ledger'!A:Z", "'Contacts'!A:AZ"], valueRenderOption: 'UNFORMATTED_VALUE',
+  var reply = Sheets.Spreadsheets.Values.batchGet(services.store.get(STORE_KEYS_.fileMyShop), {
+    ranges: [tabRange_(TABLES_.moneyLedger, 'A:Z'), tabRange_(TABLES_.contacts, 'A:AZ')], valueRenderOption: 'UNFORMATTED_VALUE',
   });
   var ledger = reply.valueRanges[0].values || [];
-  var pricing = services.store.get('pricingCurrency');
+  var pricing = services.store.get(STORE_KEYS_.pricingCurrency);
   /** @type {Object<string, any>} */
   var byId = {};
-  tableRows_('Contacts', reply.valueRanges[1].values || [], pricing, []).forEach(function (c) { byId[c.contact_id] = c; });
+  tableRows_(TABLES_.contacts, reply.valueRanges[1].values || [], pricing, []).forEach(function (c) { byId[c.contact_id] = c; });
   var heads = ledger[0] || [];
   var idAt = heads.indexOf('Contact ID');
   var currencyAt = heads.indexOf('Currency');
@@ -166,14 +164,14 @@ function refreshBalanceRows_(services) {
     if (!id || seen[key]) return;
     seen[key] = true;
     var contact = byId[id] || {};
-    var account = contact.type === 'Customer' && contact.on_account === 'Yes';
-    var what = account ? 'Account (invoices)' : contact.type === 'Supplier' ? 'Supplier invoices' : 'Kept change';
+    var account = contact.type === SHEET_WORDS_.customer && contact.on_account === SHEET_WORDS_.yes;
+    var what = account ? 'Account (invoices)' : contact.type === SHEET_WORDS_.supplier ? 'Supplier invoices' : 'Kept change';
     values.push(formulaRow_(VIEW_CONTRACT_.balanceRow, values.length + 2, 10, {
       1: plainText_(String(id)), 4: what, 5: row[currencyAt],
       8: account ? contact.credit_limit_pricing : undefined,
     }));
   });
-  writeFormulaRows_(services, 'Balances', 10, values);
+  writeFormulaRows_(services, TABLES_.balances, 10, values);
 }
 
 /**

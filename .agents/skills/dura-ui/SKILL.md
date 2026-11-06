@@ -2,13 +2,6 @@
 name: dura-ui
 description: Create or modify Dura POS Flutter screens and reusable components while preserving controller contracts, accessibility and reviewed visual baselines. Use for Dura UI implementation and visual regressions.
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # Dura UI contributions
 
 ## Read first

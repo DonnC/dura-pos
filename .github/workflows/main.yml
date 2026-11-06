@@ -1,9 +1,3 @@
-# Copyright (c) 2026, DonnC & contributors.
-# Please see the AUTHORS file for details. All rights reserved.
-# Use of this source code is governed by the MIT license that can be
-# found in the LICENSE file at the repository root.
-# SPDX-License-Identifier: MIT
-
 # Pull requests run verification only, with a read-only token. A push to main
 # verifies again and then runs the release job, which publishes only when
 # release.json declares release intent. See handbook/decisions/0004.
@@ -47,7 +41,9 @@ jobs:
       - run: dart run melos run verify
       - run: dart run melos run generate
       - run: git diff --exit-code -- pubspec.lock packages/dura_data/lib/src/storage/local_database.g.dart
-      - run: flutter build apk --debug
+      # Kotlin's incremental cache fails when the pub cache and the repository
+      # are on different drives, as they are on GitHub's Windows runners.
+      - run: flutter build apk --debug -Pkotlin.incremental=false
         working-directory: client/apps/dura
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

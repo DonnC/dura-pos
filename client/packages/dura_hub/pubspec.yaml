@@ -1,0 +1,13 @@
+name: dura_hub
+description: The Shop Hub adapter, speaking the hub protocol over HTTPS.
+version: 0.1.0-dev.1
+publish_to: none
+resolution: workspace
+environment:
+  sdk: '>=3.13.0 <4.0.0'
+dependencies:
+  crypto: ^3.0.8
+  dura_core: ^0.1.0-dev.1
+  http: ^1.6.0
+dev_dependencies:
+  test: ^1.31.0

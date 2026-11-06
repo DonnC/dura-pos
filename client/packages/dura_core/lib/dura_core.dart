@@ -4,6 +4,25 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
+export 'src/backend/attachment_kind.dart';
+export 'src/backend/backend_failure.dart';
+export 'src/backend/backend_failure_kind.dart';
+export 'src/backend/backend_status.dart';
+export 'src/backend/export_format.dart';
+export 'src/backend/journal_ack.dart';
+export 'src/backend/journal_batch.dart';
+export 'src/backend/master_data.dart';
+export 'src/backend/paired_device.dart';
+export 'src/backend/pairing_code.dart';
+export 'src/backend/payment_request.dart';
+export 'src/backend/payment_state.dart';
+export 'src/backend/payment_status.dart';
+export 'src/backend/phone_status.dart';
+export 'src/backend/shop_backend.dart';
+export 'src/backend/shop_ready.dart';
+export 'src/backend/shop_setup.dart';
+export 'src/backend/skipped_row.dart';
+export 'src/backend/stored_file.dart';
 export 'src/diagnostic_file.dart';
 export 'src/diagnostic_policy.dart';
 export 'src/diagnostic_store.dart';

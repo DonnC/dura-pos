@@ -16,9 +16,9 @@ function driveJournalWriter_(store) {
   return {
     /** @param {any} entry */
     write: function (entry) {
-      var folderId = store.get('file:journal');
+      var folderId = store.get(STORE_KEYS_.fileJournal);
       if (!folderId) {
-        throw hubError_('retryable_unavailable', 'not_set_up',
+        throw hubError_(ERRORS_.notSetUp,
           'The shop is not set up yet; run setup first.');
       }
       var name = entry.device + '-' + ('00000' + entry.batch).slice(-6) + '.json';

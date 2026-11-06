@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # The Shop Hub
 
 The shop's own backend: a standalone Apps Script web app that the Dura app
@@ -95,7 +87,7 @@ backend/hub/
     views.js           journal rows into Sheets, exactly once, by heading
     master_data.js     changes.pull, and the Stock and Balances rows
     attachments.js     photos and exports in the shop's Drive
-    storefront.js      doGet: the shop page, from a fixed list of public fields
+    storefront.js      doGet and shopProducts: the shop page, from a fixed list of public fields
     brand_mark.js      Dura's small mark, embedded for the shop page
     jobs.js            timers, the daily pass, the Months tab, status
     payments.js        keys, start, check, callbacks; provider-neutral
@@ -110,7 +102,8 @@ backend/hub/
     sheet_cells.js     Sheets v4 cell writes in one call; month date serials
     crypto.js          SHA-256, HMAC, random hex, constant-time compare
     canonical_json.js  the signing string
-    protocol.js        version, limits, patterns, errors
+    names.js           every shared word: actions, errors, store keys, tabs
+  protocol.js        version, limits, patterns, errors
     install_config.js  the install code's hash; replaced per shop by the installer
   tools/
     trial.js           npm run trial: installs a real hub and runs every check
@@ -203,6 +196,7 @@ possible:
   called outside it, so a slow provider doesn't hold up uploads. Payment
   records are dropped after 3 days, since Script Properties hold 500 KB.
 - **The shop page:** a visit that finds the cached page reads no properties and no
-  sheet. A cold visit makes one `batchGet`.
+  sheet. A cold visit makes one `batchGet`. In a shop with over 200 products, searches
+  are answered from the cached list, kept in pieces under CacheService's value limit.
 - **Replay checks** use `CacheService`, not properties.
 - **The script lock** is held only around writes.

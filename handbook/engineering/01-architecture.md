@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Architecture and contributor boundaries
 
 ## Workspace
@@ -30,6 +22,7 @@ dura-pos/
     apps/dura/                  Flutter composition root and screens
     packages/dura_core/         pure Dart contracts and policies
     packages/dura_data/         persistence and platform adapters
+  packages/dura_hub/          the Shop Hub adapter, behind ShopBackend
     packages/dura_ui/           shared theme and components
     tool/                      Dart verification/release/icon tooling
     test/                      workspace tooling tests
@@ -51,7 +44,7 @@ owner viewing and desktop selling have different capability/recovery gates.
 ```text
 client/apps/dura → dura_ui
 client/apps/dura → dura_core
-client/apps/dura → dura_data → dura_core
+client/apps/dura → dura_data, dura_hub → dura_core
 client/apps/dura → dura_fiscal → dura_core
 ```
 

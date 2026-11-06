@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Instructions for AI coding assistants
 
 These apply to any AI agent working in this repository. Human contributors
@@ -75,12 +67,13 @@ no longer exists.
   - launcher icons use the approved branding.
 - **Resources:** dispose owned controllers, subscriptions, timers, routers and
   database handles. Check `mounted` after awaits.
-- **Headers:** original handwritten files start with the copyright, AUTHORS,
-  MIT and SPDX header in `client/tool/source_header.dart`, in the language's
-  comment syntax.
+- **Headers:** handwritten source code (`.dart`, `.js`, `.py`, `.kt`, `.kts`)
+  starts with the copyright, AUTHORS, MIT and SPDX header in
+  `client/tool/source_header.dart`, in the language's comment syntax.
   - Use the current year for new work, and keep earlier years and third-party
     notices.
-  - Generated files, JSON and lockfiles are exempt.
+  - Docs, config, templates and resources don't carry it, nor do generated
+    files, JSON and lockfiles.
 - **Local first:** persist before side effects, and bound caches and storage.
   Diagnostic limits are injected configuration; UI copy derives them from the
   active policy.

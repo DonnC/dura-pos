@@ -17,11 +17,13 @@ const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const client = require('../test/support/test_client');
+const { ACTIONS_, ATTACHMENT_KINDS_, EXPORT_FORMATS_, PROVIDERS_, SHEET_WORDS_, TABLES_, WORKBOOKS_ } = require('../test/support/hub_names');
 
 const HUB = path.join(__dirname, '..');
 const TRY = path.join(HUB, '.try');
 const DEVICE = path.join(TRY, 'device.json');
 const DIST = path.join(HUB, '..', 'templates', 'dist');
+const EVENT_TYPES = { sale: 'sale.completed', stockIn: 'stock.received' };
 const RAW = 'https://raw.githubusercontent.com/DonnC/dura-pos/develop/backend/templates/dist';
 
 /** Copies the hub into `folder`, with an install code and the template URLs filled in. */
@@ -68,61 +70,134 @@ async function send(action, body) {
   return post(device.url, client.signed({ device: device.device, secret: device.secret, action, body, ts }));
 }
 
-/** A batch body of `count` sales, each with a Sales row. */
-function saleBatch(deviceId, number, count = 1) {
+/** Used when a shop has no products yet. */
+const SAMPLE_ITEM = { product_id: 'P001', product: 'Test product', location: 'Main', price: '1.00', cost: '0.50' };
+
+/** The first active product and location, so stock rows land on real ones. */
+function itemFrom(tables = {}) {
+  const active = (row) => row.active !== SHEET_WORDS_.no;
+  const product = (tables[TABLES_.products] ?? []).find(active);
+  const location = (tables[TABLES_.locations] ?? []).find(active);
+  if (!product || !location) return SAMPLE_ITEM;
+  return {
+    product_id: product.product_id, product: product.name, location: location.location,
+    price: Number(product.price_pricing).toFixed(2), cost: Number(product.cost_pricing).toFixed(2),
+  };
+}
+
+const money = (value) => value.toFixed(2);
+const clock = (at) => ({ date: at.slice(0, 10), time: at.slice(11, 19) });
+
+/**
+ * One cash sale, as a phone records it: the sale, its line and its payment in
+ * the month file, and the stock leaving in the Stock Ledger.
+ */
+function saleEvent(id, deviceId, at, item = SAMPLE_ITEM, qty = 1) {
+  const { date, time } = clock(at);
+  const total = money(Number(item.price) * qty);
+  const cost = money(Number(item.cost) * qty);
+  const shared = { sale_id: id, date, phone: deviceId, location: item.location, type: 'Sale', currency: 'USD' };
+  return {
+    id, type: EVENT_TYPES.sale, at,
+    data: { total, currency: 'USD' },
+    rows: {
+      Sales: [{
+        ...shared, time, items: qty, subtotal: total, discount: '0.00', total, vat: '0.00',
+        paid_by: 'Cash USD', payment_status: 'Paid', note: 'Test sale', total_pricing: total, vat_pricing: '0.00',
+      }],
+      'Items Sold': [{
+        ...shared, line: 1, product_id: item.product_id, product: item.product, qty, unit_price: item.price,
+        discount: '0.00', line_total: total, vat: '0.00', unit_cost_pricing: item.cost, line_cost_pricing: cost,
+      }],
+      Payments: [{
+        payment_id: `${id}-1`, sale_id: id, date, time, phone: deviceId, kind: 'Payment', method: 'Cash USD',
+        currency: 'USD', amount: total, rate_used: '1', sale_currency: 'USD', amount_in_sale_currency: total,
+        status: 'Paid', confirmed_by: 'Test', zimra_money_type: 'Cash',
+      }],
+      'Stock Ledger': [{
+        row_id: `${id}-L1`, date, time, phone: deviceId, location: item.location, type: 'Sold',
+        product_id: item.product_id, product: item.product, qty: -qty, unit_cost_pricing: item.cost,
+        stock_value_pricing: money(-Number(cost)), cost_currency: 'USD', reference: id, note: 'Test sale',
+      }],
+    },
+  };
+}
+
+/** Stock arriving, the other half of what a shop's Stock tab adds up. */
+function stockInEvent(id, deviceId, at, item, qty) {
+  const { date, time } = clock(at);
+  return {
+    id, type: EVENT_TYPES.stockIn, at,
+    data: { qty },
+    rows: {
+      'Stock Ledger': [{
+        row_id: id, date, time, phone: deviceId, location: item.location, type: 'Stock in',
+        product_id: item.product_id, product: item.product, qty, unit_cost_pricing: item.cost,
+        stock_value_pricing: money(Number(item.cost) * qty), cost_currency: 'USD', note: 'Test stock',
+      }],
+    },
+  };
+}
+
+/** A batch body of `count` sales. */
+function saleBatch(deviceId, number, count = 1, item = SAMPLE_ITEM) {
   const at = new Date().toISOString();
-  const events = Array.from({ length: count }, (_, i) => {
-    const id = `${deviceId}-S${at.slice(2, 10).replace(/-/g, '')}-B${number}-${i + 1}`;
-    return {
-      id, type: 'sale.completed', at,
-      data: { total: '1.00', currency: 'USD' },
-      rows: { Sales: [{ sale_id: id, date: at.slice(0, 10), phone: deviceId, currency: 'USD', total: '1.00' }] },
-    };
-  });
+  const events = Array.from({ length: count }, (_, i) =>
+    saleEvent(`${deviceId}-S${at.slice(2, 10).replace(/-/g, '')}-B${number}-${i + 1}`, deviceId, at, item));
   return client.batch(number, events);
 }
 
-/** One sale, with rows for the Sales tab, as the next batch. */
-async function sale() {
+async function liveItem() {
+  const reply = await send(ACTIONS_.changesPull, {});
+  return itemFrom(reply.result?.tables);
+}
+
+/**
+ * The next batch number, from the hub. The hub acknowledges any number it has
+ * passed as a re-send and stores nothing, so a stale number here loses the batch.
+ */
+async function nextBatch(device) {
+  const reply = await send(ACTIONS_.status, {});
+  return reply.result.phones.find((phone) => phone.device === device.device).through + 1;
+}
+
+const stamp = (device, number, kind, at) => `${device.device}-${kind}${at.slice(2, 10).replace(/-/g, '')}-${String(number).padStart(4, '0')}`;
+
+/** One sale of the shop's first product, on every tab a real sale touches. */
+async function sale(qty = '1') {
   const device = loadDevice();
-  device.batch = (device.batch || 0) + 1;
+  const item = await liveItem();
+  const number = await nextBatch(device);
   const at = new Date().toISOString();
-  const id = `${device.device}-S${at.slice(2, 10).replace(/-/g, '')}-${String(device.batch).padStart(4, '0')}`;
-  const event = {
-    id, type: 'sale.completed', at,
-    data: { total: '2.00', currency: 'USD' },
-    rows: { Sales: [{ sale_id: id, date: at.slice(0, 10), phone: device.device, currency: 'USD', total: '2.00' }] },
-  };
-  const reply = await send('journal.put', client.batch(device.batch, [event]));
-  if (reply.ok) fs.writeFileSync(DEVICE, JSON.stringify(device, null, 2));
-  return reply;
+  const event = saleEvent(stamp(device, number, 'S', at), device.device, at, item, Number(qty));
+  return { item: item.product, qty: Number(qty), reply: await send(ACTIONS_.journalPut, client.batch(number, [event])) };
+}
+
+/** Receives stock of the shop's first product. */
+async function stockIn(qty = '20') {
+  const device = loadDevice();
+  const item = await liveItem();
+  const number = await nextBatch(device);
+  const at = new Date().toISOString();
+  const event = stockInEvent(stamp(device, number, 'L', at), device.device, at, item, Number(qty));
+  return { item: item.product, qty: Number(qty), reply: await send(ACTIONS_.journalPut, client.batch(number, [event])) };
 }
 
 /** Times one batch of many sales, then re-sends it, as a phone does after a lost reply. */
 async function load(count = '200') {
   const device = loadDevice();
-  device.batch = (device.batch || 0) + 1;
-  const at = new Date().toISOString();
-  const events = Array.from({ length: Number(count) }, (_, i) => {
-    const id = `${device.device}-S${at.slice(2, 10).replace(/-/g, '')}-L${device.batch}-${i + 1}`;
-    return {
-      id, type: 'sale.completed', at,
-      data: { total: '1.00', currency: 'USD' },
-      rows: { Sales: [{ sale_id: id, date: at.slice(0, 10), phone: device.device, currency: 'USD', total: '1.00' }] },
-    };
-  });
-  const body = client.batch(device.batch, events);
+  const item = await liveItem();
+  const body = saleBatch(device.device, await nextBatch(device), Number(count), item);
   const started = Date.now();
-  const first = await send('journal.put', body);
+  const first = await send(ACTIONS_.journalPut, body);
   const seconds = (Date.now() - started) / 1000;
-  if (first.ok) fs.writeFileSync(DEVICE, JSON.stringify(device, null, 2));
-  return { seconds, first: first.result ?? first.error, again: (await send('journal.put', body)).result };
+  return { seconds, first: first.result ?? first.error, again: (await send(ACTIONS_.journalPut, body)).result };
 }
 
 /** Sends the very same signed request twice. The second must be refused. */
 async function sendTwice() {
   const device = loadDevice();
-  const request = client.signed({ device: device.device, secret: device.secret, action: 'status', body: {}, ts: Math.floor(Date.now() / 1000) });
+  const request = client.signed({ device: device.device, secret: device.secret, action: ACTIONS_.status, body: {}, ts: Math.floor(Date.now() / 1000) });
   return [await post(device.url, request), await post(device.url, request)];
 }
 
@@ -180,7 +255,7 @@ function fresh(base = RAW) {
 }
 
 async function pair(url, code) {
-  const reply = await post(url, { v: 1, ts: Math.floor(Date.now() / 1000), action: 'pair', body: { code, name: 'Test phone' } });
+  const reply = await post(url, { v: 1, ts: Math.floor(Date.now() / 1000), action: ACTIONS_.pair, body: { code, name: 'Test phone' } });
   if (reply.ok) {
     fs.writeFileSync(DEVICE, JSON.stringify({ url, ...reply.result }, null, 2));
     return { ok: true, device: reply.result.device, role: reply.result.role };
@@ -195,24 +270,25 @@ const COMMANDS = {
   },
   fresh,
   pair,
-  setup: (name, timeZone = 'Africa/Harare', pricingCurrency = 'USD') => send('setup.run', { name, timeZone, pricingCurrency }),
-  status: () => send('status', {}),
-  pull: () => send('changes.pull', {}),
+  setup: (name, timeZone = 'Africa/Harare', pricingCurrency = 'USD') => send(ACTIONS_.setupRun, { name, timeZone, pricingCurrency }),
+  status: () => send(ACTIONS_.status, {}),
+  pull: () => send(ACTIONS_.changesPull, {}),
   sale,
-  keys: (currency, integrationId, integrationKey, authEmail) => send('keys.set',
-    { provider: 'paynow', currency, integrationId, integrationKey, authEmail }),
+  stock: stockIn,
+  keys: (currency, integrationId, integrationKey, authEmail) => send(ACTIONS_.keysSet,
+    { provider: PROVIDERS_.paynow, currency, integrationId, integrationKey, authEmail }),
   pay: (payer, method = 'ecocash', amount = '1.00', currency = 'USD') => {
     const stamp = new Date().toISOString().slice(2, 19).replace(/\D/g, '');
-    return send('payment.start', { reference: `T-PAY${stamp}`, provider: 'paynow', method, amount, currency, payer });
+    return send(ACTIONS_.paymentStart, { reference: `T-PAY${stamp}`, provider: PROVIDERS_.paynow, method, amount, currency, payer });
   },
-  check: (reference) => send('payment.check', { reference }),
+  check: (reference) => send(ACTIONS_.paymentCheck, { reference }),
   load,
   retry,
-  photo: () => send('attachment.put', {
-    kind: 'product', id: 'TRY-PHOTO', contentType: 'image/png',
+  photo: () => send(ACTIONS_.attachmentPut, {
+    kind: ATTACHMENT_KINDS_.product, id: 'TRY-PHOTO', contentType: 'image/png',
     data: fs.readFileSync(path.join(HUB, 'src', 'appsscript.json')).toString('base64'),
   }),
-  export: (file = 'myShop', format = 'xlsx', table) => send('export.request', { file, format, ...(table ? { table } : {}) }),
+  export: (file = WORKBOOKS_.myShop, format = EXPORT_FORMATS_.xlsx, table) => send(ACTIONS_.exportRequest, { file, format, ...(table ? { table } : {}) }),
 };
 
 async function main() {
@@ -229,6 +305,6 @@ if (require.main === module) {
 }
 
 module.exports = {
-  TRY, DEVICE, RAW, prepare, fresh, pair, send, sendTwice, saleBatch, clasp, claspLive,
+  TRY, DEVICE, RAW, prepare, fresh, pair, send, sendTwice, saleBatch, saleEvent, itemFrom, clasp, claspLive,
   deploymentId, deploymentFrom, hubAddress, shopPageAddress, isAuthorised,
 };
