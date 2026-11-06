@@ -10,6 +10,23 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: an ecosystem diagram and an illustrated setup guide
+
+- **`handbook/design/ecosystem/`** shows how Dura works in plain words, as an animated
+  page, a GIF, a video and a still image.
+- **The real-account test** now has a screenshot for each Google step.
+
+### Changed: the shop page handles large catalogues
+
+- **Up to 200 products,** the page holds them all and searches on the phone.
+- **Above that,** it opens with the first 50 products, and search, categories and "Show
+  more" load from the hub's cache, so a visit stays small on mobile data.
+- **Up to 5000 products** are listed.
+
+### Fixed
+
+- **CI:** the debug APK build no longer fails on GitHub's Windows runners.
+
 ### Changed: one trial command, the shop's address and how Dura presents itself
 
 - **`npm run trial`** runs the whole real-account test: it installs a hub, waits for

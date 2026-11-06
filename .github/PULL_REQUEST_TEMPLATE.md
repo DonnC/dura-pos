@@ -39,5 +39,3 @@ limits. CI repeats the checks on this PR, but say what you ran yourself.
 
 - [ ] Changelog updated for meaningful change.
 - [ ] Docs, sample previews and schemas agree with the final implementation.
-- [ ] No live credentials or private business data in this PR.
-- [ ] No AI attribution lines in commits or files.

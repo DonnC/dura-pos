@@ -146,8 +146,6 @@ output.
   meaningful change.
 - **Use conventional commit prefixes** where they fit: `feat`, `fix`, `docs`,
   `test`, `refactor`, `build`, `chore`.
-- **No AI attribution lines** (such as `Co-Authored-By` trailers for an AI
-  tool) in commits, PRs or files.
 
 ## 7. Safety
 

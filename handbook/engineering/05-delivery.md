@@ -30,8 +30,7 @@ SECURITY.md, CHANGELOG.md, root AGENTS.md, architecture/roadmap/testing/records
 policies, decision records, PR/issue templates and release-note template. These
 are installed, along with CODE_OF_CONDUCT.md and SUPPORT.md. Original work is
 MIT (decision 0002). Preserve third-party licence/NOTICE requirements when
-distributing. No AI attribution trailers are added. Do not mistake planned test
-commands for an implemented test suite.
+distributing. Do not mistake planned test commands for an implemented test suite.
 
 ## Version model
 
