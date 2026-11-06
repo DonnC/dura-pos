@@ -47,7 +47,9 @@ jobs:
       - run: dart run melos run verify
       - run: dart run melos run generate
       - run: git diff --exit-code -- pubspec.lock packages/dura_data/lib/src/storage/local_database.g.dart
-      - run: flutter build apk --debug
+      # Kotlin's incremental cache fails when the pub cache and the repository
+      # are on different drives, as they are on GitHub's Windows runners.
+      - run: flutter build apk --debug -Pkotlin.incremental=false
         working-directory: client/apps/dura
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
