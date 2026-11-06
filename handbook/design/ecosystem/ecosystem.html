@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2026, DonnC & contributors.
+Please see the AUTHORS file for details. All rights reserved.
+Use of this source code is governed by the MIT license that can be
+found in the LICENSE file at the repository root.
+SPDX-License-Identifier: MIT
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How Dura POS works</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #fefef8; }
+  svg { display: block; width: 100vw; height: 100vh; font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; }
+  .title { font-size: 44px; font-weight: 700; fill: #024d39; }
+  .sub { font-size: 23px; fill: #5d6b66; }
+  .name { font-size: 24px; font-weight: 600; fill: #14241f; }
+  .note { font-size: 19px; fill: #5d6b66; }
+  .panel-title { font-size: 28px; font-weight: 700; fill: #14241f; }
+  .caption { font-size: 31px; font-weight: 600; fill: #fff; }
+  .chip { font-size: 18px; font-weight: 600; fill: #024d39; }
+  .small { font-size: 15px; fill: #8a9690; }
+  .promise { font-size: 22px; font-weight: 600; fill: #024d39; }
+  .link { fill: none; stroke: #c9d3cc; stroke-width: 4; stroke-linecap: round; }
+  .link.on { stroke: #e0ae4b; }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1600 900" role="img" aria-label="A phone running Dura POS sends each sale to the shop owner's own free Google account. Records live in Google Drive and appear in Google Sheets, where the owner can share them or open them in Excel and other apps. Mobile money goes straight to the owner's own merchant account.">
+  <defs>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="7" flood-color="#024d39" flood-opacity=".12"/></filter>
+    <symbol id="drive" viewBox="0 0 87.3 78">
+      <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+      <path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"/>
+      <path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"/>
+      <path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+      <path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"/>
+      <path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"/>
+    </symbol>
+    <symbol id="google" viewBox="0 0 48 48">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </symbol>
+    <symbol id="sheets" viewBox="0 0 64 88">
+      <path d="M6 0h36l22 22v60a6 6 0 0 1-6 6H6a6 6 0 0 1-6-6V6a6 6 0 0 1 6-6z" fill="#0f9d58"/>
+      <path d="M42 0l22 22H48a6 6 0 0 1-6-6z" fill="#87ceac"/>
+      <path d="M14 38h36v32H14zm5 5v6h11v-6zm15 0v6h11v-6zM19 54v5h11v-5zm15 0v5h11v-5zM19 63v2h11v-2zm15 0v2h11v-2z" fill="#fff" fill-rule="evenodd"/>
+    </symbol>
+    <symbol id="excel" viewBox="0 0 80 72">
+      <rect x="22" width="58" height="72" rx="6" fill="#21a366"/>
+      <rect x="51" y="0" width="29" height="24" fill="#33c481"/><rect x="51" y="24" width="29" height="24" fill="#21a366"/>
+      <rect x="51" y="48" width="29" height="24" fill="#107c41"/>
+      <rect y="14" width="44" height="44" rx="5" fill="#185c37"/>
+      <path d="M12 25h7.4l3.2 6.6 3.4-6.6H33l-6.6 11L33 47h-7.4l-3.3-6.8-3.5 6.8H12l6.7-11z" fill="#fff"/>
+    </symbol>
+    <symbol id="people" viewBox="0 0 64 56">
+      <circle cx="24" cy="15" r="13" fill="#4285f4"/><path d="M0 56c0-14 11-23 24-23s24 9 24 23z" fill="#4285f4"/>
+      <circle cx="49" cy="19" r="10" fill="#8ab4f8"/><path d="M36 35c16-7 28 5 28 21H52c0-8-5-16-16-21z" fill="#8ab4f8"/>
+    </symbol>
+    <symbol id="apps" viewBox="0 0 64 64">
+      <rect width="28" height="28" rx="7" fill="#024d39"/><rect x="36" width="28" height="28" rx="7" fill="#e0ae4b"/>
+      <rect y="36" width="28" height="28" rx="7" fill="#e0ae4b"/><rect x="36" y="36" width="28" height="28" rx="7" fill="#024d39"/>
+    </symbol>
+  </defs>
+
+  <text class="title" x="60" y="72">Your shop. Your Google account. Your records.</text>
+  <text class="sub" x="60" y="110">How Dura POS works: free, and built on what you already have.</text>
+
+  <!-- links -->
+  <path id="l-share" class="link" d="M1010 330 C1090 330 1090 228 1192 228"/>
+  <path id="l-excel" class="link" d="M1010 382 H1192"/>
+  <path id="l-apps" class="link" d="M1010 434 C1090 434 1090 536 1192 536"/>
+  <path id="l-pay" class="link" d="M300 470 V680 H432"/>
+
+  <!-- phone -->
+  <g id="s-phone">
+    <rect x="130" y="196" width="170" height="306" rx="28" fill="#024d39" filter="url(#soft)"/>
+    <rect x="144" y="214" width="142" height="262" rx="12" fill="#fefef8"/>
+    <image href="../branding/dura-mark.png" x="172" y="228" width="86" height="92"/>
+    <text x="215" y="350" text-anchor="middle" style="font-size:19px;font-weight:700;fill:#024d39">Dura POS</text>
+    <rect x="158" y="368" width="114" height="32" rx="8" fill="#e8f1ec"/>
+    <text x="215" y="390" text-anchor="middle" style="font-size:15px;font-weight:600;fill:#024d39">Sale saved</text>
+    <rect x="158" y="410" width="114" height="10" rx="5" fill="#e6e8df"/><rect x="158" y="428" width="80" height="10" rx="5" fill="#e6e8df"/>
+    <text class="name" x="215" y="540" text-anchor="middle">Your phone</text>
+    <text class="note" x="215" y="568" text-anchor="middle">Sells offline</text>
+  </g>
+
+  <!-- the Google account -->
+  <g id="s-account">
+    <rect id="account-box" x="434" y="170" width="622" height="400" rx="28" fill="#fff" stroke="#dfe3dc" stroke-width="3" filter="url(#soft)"/>
+    <use href="#google" x="466" y="196" width="40" height="40"/>
+    <text class="panel-title" x="520" y="226">Your own free Google account</text>
+    <rect x="520" y="240" width="364" height="34" rx="17" fill="#e8f1ec"/>
+    <text class="chip" x="702" y="263" text-anchor="middle">15 GB free · the one you already have</text>
+    <rect x="456" y="350" width="44" height="64" rx="10" fill="#024d39"/>
+    <text x="478" y="388" text-anchor="middle" style="font-size:24px;font-weight:700;fill:#e0ae4b">D</text>
+    <text class="small" x="478" y="440" text-anchor="middle">Dura helper</text>
+  </g>
+  <path id="l-phone" class="link" d="M300 382 H456"/>
+  <path id="l-drive" class="link" d="M500 382 H590"/>
+  <path id="l-sheets" class="link" d="M736 382 H868"/>
+  <g id="s-drive">
+    <use href="#drive" x="596" y="322" width="134" height="120"/>
+    <text class="name" x="664" y="480" text-anchor="middle">Google Drive</text>
+    <text class="note" x="664" y="508" text-anchor="middle">Where your records live</text>
+    <text class="note" x="664" y="533" text-anchor="middle">Every month, kept safe</text>
+  </g>
+  <g id="s-sheets">
+    <use href="#sheets" x="876" y="316" width="96" height="132"/>
+    <text class="name" x="924" y="480" text-anchor="middle">Google Sheets</text>
+    <text class="note" x="924" y="508" text-anchor="middle">Records you can read</text>
+    <text class="note" x="924" y="533" text-anchor="middle">and edit yourself</text>
+  </g>
+
+  <!-- yours to use -->
+  <g id="s-share">
+    <use href="#people" x="1200" y="196" width="70" height="62"/>
+    <text class="name" x="1290" y="222">Share a file</text>
+    <text class="note" x="1290" y="250">with your accountant</text>
+  </g>
+  <g id="s-excel">
+    <use href="#excel" x="1200" y="346" width="74" height="68"/>
+    <text class="name" x="1290" y="374">Open in Microsoft Excel</text>
+    <text class="note" x="1290" y="402">or download a copy</text>
+  </g>
+  <g id="s-apps">
+    <use href="#apps" x="1204" y="502" width="64" height="64"/>
+    <text class="name" x="1290" y="530">Use any other app</text>
+    <text class="note" x="1290" y="558">Your files go where you go</text>
+  </g>
+
+  <!-- payments -->
+  <g id="s-pay">
+    <rect x="434" y="608" width="1106" height="130" rx="24" fill="#fff" stroke="#dfe3dc" stroke-width="3" filter="url(#soft)"/>
+    <text class="panel-title" x="466" y="654">Your payments, your merchant account</text>
+    <text class="note" x="466" y="688">Mobile money goes straight to you, never through Dura.</text>
+    <g transform="translate(1040 642)">
+      <rect width="104" height="38" rx="19" fill="#e8f1ec"/><text class="chip" x="52" y="25" text-anchor="middle">EcoCash</text>
+      <rect x="114" width="118" height="38" rx="19" fill="#e8f1ec"/><text class="chip" x="173" y="25" text-anchor="middle">OneMoney</text>
+      <rect x="242" width="104" height="38" rx="19" fill="#e8f1ec"/><text class="chip" x="294" y="25" text-anchor="middle">InnBucks</text>
+      <rect x="0" y="-12" width="0" height="0"/>
+    </g>
+    <rect x="1040" y="690" width="346" height="0"/>
+    <text class="small" x="1040" y="708">through Paynow, with your own keys</text>
+  </g>
+
+  <!-- caption -->
+  <rect x="0" y="762" width="1600" height="82" fill="#024d39"/>
+  <text id="caption" class="caption" x="800" y="813" text-anchor="middle"></text>
+  <text class="small" x="60" y="876">Free and open source. All product names and logos belong to their owners. Dura POS isn't affiliated with Google, Microsoft or the payment providers.</text>
+
+  <circle id="dot" r="11" fill="#e0ae4b" stroke="#fff" stroke-width="3" opacity="0"/>
+</svg>
+<script>
+  // One timeline, drawn by seek(t), so the same page plays live and renders frames.
+  const LENGTH = 22;
+  const clamp = (v) => Math.max(0, Math.min(1, v));
+  const ease = (v) => v * v * (3 - 2 * v);
+  const el = (id) => document.getElementById(id);
+  const CAPTIONS = [
+    [0, 'A sale happens on your phone, even with no signal.'],
+    [3, 'When there is signal, it goes to your own Google account. Not ours.'],
+    [6.5, 'Your records live in your Google Drive.'],
+    [9.5, 'They appear as spreadsheets you can read and edit.'],
+    [12.5, 'Share them, or open them in Excel. They are your files.'],
+    [15.5, 'Mobile money goes straight to your own merchant account.'],
+    [18.5, 'Free to use. Your data. Your money.'],
+  ];
+  const ENTER = { 's-phone': 0.2, 's-account': 3, 's-drive': 6.5, 's-sheets': 9.5, 's-share': 12.5, 's-excel': 13.3, 's-apps': 14.1, 's-pay': 15.5 };
+  const TRIPS = [
+    ['l-phone', 1.8, 3.1], ['l-drive', 5.2, 6.5], ['l-sheets', 8.2, 9.5],
+    ['l-share', 11.6, 12.5], ['l-excel', 12.4, 13.3], ['l-apps', 13.2, 14.1], ['l-pay', 14.6, 15.5],
+  ];
+
+  function seek(t) {
+    for (const [id, at] of Object.entries(ENTER)) {
+      const show = ease(clamp((t - at) / 0.7));
+      el(id).style.opacity = 0.14 + 0.86 * show;
+      el(id).style.transform = `translateY(${(1 - show) * 10}px)`;
+    }
+    el('account-box').style.stroke = t > 3 && t < 6.2 ? '#e0ae4b' : '#dfe3dc';
+    let moving = null;
+    for (const [id, from, to] of TRIPS) {
+      el(id).classList.toggle('on', t >= from);
+      if (t >= from && t < to) moving = [id, ease((t - from) / (to - from))];
+    }
+    const dot = el('dot');
+    dot.setAttribute('opacity', moving ? 1 : 0);
+    if (moving) {
+      const path = el(moving[0]);
+      const point = path.getPointAtLength(path.getTotalLength() * moving[1]);
+      dot.setAttribute('cx', point.x);
+      dot.setAttribute('cy', point.y);
+    }
+    const line = CAPTIONS.filter(([at]) => t >= at).pop();
+    const caption = el('caption');
+    caption.textContent = line[1];
+    caption.style.opacity = ease(clamp((t - line[0]) / 0.4));
+  }
+
+  if (new URLSearchParams(location.search).has('capture')) {
+    seek(LENGTH - 0.01);
+  } else {
+    const start = performance.now();
+    (function tick(now) {
+      seek(((now - start) / 1000) % LENGTH);
+      requestAnimationFrame(tick);
+    })(start);
+  }
+</script>
+</body>
+</html>

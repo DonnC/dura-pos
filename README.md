@@ -35,6 +35,10 @@ The project was born in Zimbabwe, and that's who it serves first: it handles USD
 and ZAR, and its fiscalisation plans follow ZIMRA. Nothing limits it to one market, so
 if it could work for shops where you are, you're welcome here.
 
+<p align="center">
+  <img src="handbook/design/ecosystem/ecosystem.gif" alt="A phone running Dura POS sends each sale to the owner's own free Google account. Records live in Google Drive and appear in Google Sheets, where the owner can share them or open them in Excel. Mobile money goes straight to the owner's merchant account." width="820">
+</p>
+
 > **Early development: not ready for live trading.** The backend is written and
 > tested, and its main path has run on a real Google account. The app has its
 > foundation, with no selling screens yet. See [where it stands](#where-it-stands).
@@ -118,8 +122,8 @@ sequenceDiagram
 ### A page for every shop
 
 The hub's address doubles as a free one-page shop page, with the shop's contacts and
-a searchable price list. It shows only what's meant to be public, and the owner can
-turn it off ([decision 0009](handbook/decisions/0009-shop-page.md)).
+a searchable price list that stays quick however many products a shop has. It shows
+only what's meant to be public, and the owner can turn it off ([decision 0009](handbook/decisions/0009-shop-page.md)).
 
 <p align="center">
   <img src="handbook/design/shop-page-preview.png" alt="The shop page on a phone, for a fictional shop: name, address, Call, WhatsApp and Directions buttons, then products with prices in USD" width="280">
