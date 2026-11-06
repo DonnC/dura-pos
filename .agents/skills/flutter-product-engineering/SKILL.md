@@ -2,13 +2,6 @@
 name: flutter-product-engineering
 description: Engineer, review, debug and test Dura POS Flutter code with local-first persistence, bounded diagnostics, modular contracts and measured performance. Use for architecture, implementation and refactoring.
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # Flutter product engineering
 
 ## Read first

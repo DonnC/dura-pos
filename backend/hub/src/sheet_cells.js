@@ -21,7 +21,7 @@ function writeCells_(spreadsheetId, cells) {
   try {
     Sheets.Spreadsheets.Values.batchUpdate({ valueInputOption: 'RAW', data: data }, spreadsheetId);
   } catch (error) {
-    throw hubError_('retryable_unavailable', 'storage_unavailable',
+    throw hubError_(ERRORS_.storageUnavailable,
       'Google Sheets did not accept the update; try again.');
   }
 }

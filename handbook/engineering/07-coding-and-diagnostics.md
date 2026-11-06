@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Coding conventions and on-device diagnostics
 
 Handwritten source/test files are capped at 500 lines. Dart format uses 80
@@ -23,9 +15,9 @@ theme tokens in application/widget code; widgets read ColorScheme/TextTheme.
 Do not put every constant in one unrelated global file. Test fixture literals
 are intentionally local so examples remain readable.
 
-Each original handwritten file uses the copyright/AUTHORS/MIT/SPDX header in
-client/tool/source_header.dart: // for Dart/Kotlin, # for YAML, and HTML/XML
-comments where appropriate. New files use the current year; retain existing
+Handwritten source code uses the copyright/AUTHORS/MIT/SPDX header in
+client/tool/source_header.dart: // for Dart, JavaScript and Kotlin, # for
+Python. Docs, config and resources don't carry it. New files use the current year; retain existing
 copyright years and third-party notices. Metadata/frontmatter/prologs may precede
 the first comment. JSON, lockfiles, binaries and generated code are exempt.
 Use concise Dartdoc on public contracts, invariants and non-obvious behaviour;

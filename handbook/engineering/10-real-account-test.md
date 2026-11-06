@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Testing the hub on a real Google account
 
 The hub's tests run on fake Google services, so they can't prove what Google really
@@ -92,7 +84,8 @@ Your shop's folder in Drive should look like this:
 | Folders | Drive | `Dura POS/Test Corner Shop/` with `Journal`, `2026`, `business.json` and `My Shop` |
 | Conversion | `My Shop` | Dropdowns, colours, formulas and charts survived |
 | Month file | `2026/`, `Summary` | Its dates show the current month |
-| The sale | The month file, `Sales` | Rows with totals of 1.00 |
+| The sale | The month file, `Sales`, `Items Sold` and `Payments` | One row in each per test sale, at the first product's price |
+| The stock leaving | `My Shop`, `Stock Ledger` | A `Sold` row per test sale, with a negative quantity |
 | Timers | Apps Script, Triggers | `runViews` and `dailyJob` |
 | Daily job | Apps Script: run `dailyJob` | No `Daily step failed` line in the log |
 

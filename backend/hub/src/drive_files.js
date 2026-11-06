@@ -21,7 +21,7 @@ function driveCreate_(resource, media) {
   try {
     return Drive.Files.create(resource, media, { fields: 'id' }).id;
   } catch (error) {
-    throw hubError_('retryable_unavailable', 'storage_unavailable',
+    throw hubError_(ERRORS_.storageUnavailable,
       'Google Drive did not accept the file; try again.');
   }
 }

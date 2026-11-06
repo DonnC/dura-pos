@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 <p align="center">
   <img src="handbook/design/branding/dura-banner.png" alt="Dura POS: a free, offline point of sale for vendors and small shops" width="820">
 </p>

@@ -19,20 +19,20 @@ var XLSX_MIME_ = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sh
 
 /** Today in the shop's time zone. @param {any} services */
 function shopToday_(services) {
-  return Utilities.formatDate(new Date(services.now() * 1000), services.store.get('timeZone'), 'yyyy-MM-dd');
+  return Utilities.formatDate(new Date(services.now() * 1000), services.store.get(STORE_KEYS_.timeZone), 'yyyy-MM-dd');
 }
 
 /** The folder a kind of photo goes in. Call inside the lock. @param {any} services @param {string} kind */
 function attachmentFolder_(services, kind) {
   var store = services.store;
-  var shop = store.get('file:business');
-  if (!shop) throw hubError_('retryable_unavailable', 'not_set_up', 'The shop is not set up yet.');
-  if (kind === 'product') {
-    return ensureFile_(services, 'file:photos', function () { return createFolder_('Product photos', shop); });
+  var shop = store.get(STORE_KEYS_.fileBusiness);
+  if (!shop) throw hubError_(ERRORS_.notSetUp, 'The shop is not set up yet.');
+  if (kind === ATTACHMENT_KINDS_.product) {
+    return ensureFile_(services, STORE_KEYS_.filePhotos, function () { return createFolder_('Product photos', shop); });
   }
   var year = shopToday_(services).slice(0, 4);
-  var parent = ensureFile_(services, 'file:year:' + year, function () { return createFolder_(year, shop); });
-  return ensureFile_(services, 'file:invoices:' + year, function () { return createFolder_('Supplier invoices', parent); });
+  var parent = ensureFile_(services, STORE_PREFIXES_.yearFile + year, function () { return createFolder_(year, shop); });
+  return ensureFile_(services, STORE_PREFIXES_.invoicesFile + year, function () { return createFolder_('Supplier invoices', parent); });
 }
 
 /**
@@ -44,20 +44,20 @@ function attachmentFolder_(services, kind) {
 function putAttachment_(request, services) {
   var body = request.body;
   var extension = ATTACHMENT_TYPES_[body.contentType];
-  var valid = (body.kind === 'product' || body.kind === 'invoice') && ATTACHMENT_ID_.test(body.id) && extension &&
+  var valid = (body.kind === ATTACHMENT_KINDS_.product || body.kind === ATTACHMENT_KINDS_.invoice) && ATTACHMENT_ID_.test(body.id) && extension &&
     typeof body.data === 'string' && body.data.length > 0 && body.data.length <= LIMITS_.attachmentBase64Length;
   if (!valid) {
-    throw hubError_('validation', 'bad_attachment', 'A photo needs a kind, an ID, a JPEG, PNG or WebP type, and at most 1 MB of data.');
+    throw hubError_(ERRORS_.badAttachment, 'A photo needs a kind, an ID, a JPEG, PNG or WebP type, and at most 1 MB of data.');
   }
   var name = body.id + extension;
-  var retryKey = 'attachment:' + sha256Hex_(body.kind + body.id + body.data);
+  var retryKey = CACHE_KEYS_.attachment + sha256Hex_(body.kind + body.id + body.data);
   var seen = services.cache.get(retryKey);
   if (seen) return JSON.parse(seen);
   var bytes;
   try {
     bytes = Utilities.base64Decode(body.data);
   } catch (error) {
-    throw hubError_('validation', 'bad_attachment', 'The photo is not valid base64.');
+    throw hubError_(ERRORS_.badAttachment, 'The photo is not valid base64.');
   }
   var folder = withLock_(services, function () { return attachmentFolder_(services, body.kind); });
   var file = driveCreate_({ name: name, parents: [folder] }, Utilities.newBlob(bytes, body.contentType, name));
@@ -81,14 +81,14 @@ function exportXlsx_(fileId) {
     muteHttpExceptions: true,
   });
   if (reply.getResponseCode() !== 200) {
-    throw hubError_('retryable_unavailable', 'export_failed', 'Google Drive could not export the workbook.');
+    throw hubError_(ERRORS_.exportFailed, 'Google Drive could not export the workbook.');
   }
   return reply.getBlob().setContentType(XLSX_MIME_);
 }
 
 /** One tab as CSV, as the sheet shows it. @param {string} fileId @param {string} table */
 function exportCsv_(fileId, table) {
-  var reply = Sheets.Spreadsheets.Values.batchGet(fileId, { ranges: ["'" + table + "'!A:AZ"] });
+  var reply = Sheets.Spreadsheets.Values.batchGet(fileId, { ranges: [tabRange_(table, 'A:AZ')] });
   var rows = (reply.valueRanges[0].values || []).map(function (row) { return row.map(csvCell_).join(','); });
   return Utilities.newBlob(rows.join('\r\n'), 'text/csv', table + '.csv');
 }
@@ -104,16 +104,16 @@ function requestExport_(request, services, device) {
   var body = request.body;
   var store = services.store;
   var isMonth = /^\d{4}-\d{2}$/.test(body.file);
-  var fileId = body.file === 'myShop' ? store.get('file:myshop') : isMonth ? store.get('file:month:' + body.file) : null;
-  var csv = body.format === 'csv' && typeof body.table === 'string' && /^[A-Za-z -]{1,40}$/.test(body.table);
-  if (!fileId || !(csv || body.format === 'xlsx')) {
-    throw hubError_('validation', 'bad_export', 'An export needs myShop or a month with a file, and xlsx, or csv with a tab name.');
+  var fileId = body.file === WORKBOOKS_.myShop ? store.get(STORE_KEYS_.fileMyShop) : isMonth ? store.get(STORE_PREFIXES_.monthFile + body.file) : null;
+  var csv = body.format === EXPORT_FORMATS_.csv && typeof body.table === 'string' && /^[A-Za-z -]{1,40}$/.test(body.table);
+  if (!fileId || !(csv || body.format === EXPORT_FORMATS_.xlsx)) {
+    throw hubError_(ERRORS_.badExport, 'An export needs myShop or a month with a file, and xlsx, or csv with a tab name.');
   }
   var title = isMonth ? body.file + ' ' + MONTH_NAMES_[Number(body.file.slice(5)) - 1] : 'My Shop';
   var name = title + (csv ? ' ' + body.table : '') + ' ' + shopToday_(services) + (csv ? '.csv' : '.xlsx');
   var blob = csv ? exportCsv_(fileId, body.table) : exportXlsx_(fileId);
   var folder = withLock_(services, function () {
-    return ensureFile_(services, 'file:exports', function () { return createFolder_('Exports', store.get('file:business')); });
+    return ensureFile_(services, STORE_KEYS_.fileExports, function () { return createFolder_('Exports', store.get(STORE_KEYS_.fileBusiness)); });
   });
   var file = driveCreate_({ name: name, parents: [folder] }, blob);
   return { file: file, name: name };

@@ -17,11 +17,11 @@ function checkBatch_(body) {
     body.events.length <= LIMITS_.maxEvents &&
     typeof body.hash === 'string' && PATTERNS_.hash.test(body.hash);
   if (!valid) {
-    throw hubError_('validation', 'bad_batch',
+    throw hubError_(ERRORS_.badBatch,
       'A batch needs a number from 1, 1 to 500 events and a SHA-256 hash.');
   }
   if (!constantTimeEqual_(sha256Hex_(canonicalJson_(body.events)), body.hash)) {
-    throw hubError_('integrity_conflict', 'hash_mismatch', 'The events do not match their hash.');
+    throw hubError_(ERRORS_.hashMismatch, 'The events do not match their hash.');
   }
 }
 
@@ -36,10 +36,10 @@ function putJournal_(request, services, device) {
   var body = request.body;
   checkBatch_(body);
   return withLock_(services, function () {
-    var key = 'journal:' + device.id;
+    var key = STORE_PREFIXES_.journal + device.id;
     var through = Number(services.store.get(key) || '0');
-    if (body.batch <= through) return { status: 'accepted', through: through };
-    if (body.batch > through + 1) return { status: 'gap', need: through + 1 };
+    if (body.batch <= through) return { status: JOURNAL_REPLIES_.accepted, through: through };
+    if (body.batch > through + 1) return { status: JOURNAL_REPLIES_.gap, need: through + 1 };
     var stored;
     try {
       stored = services.journalWriter.write({
@@ -48,20 +48,20 @@ function putJournal_(request, services, device) {
       });
     } catch (error) {
       if (/** @type {any} */ (error).hub) throw error;
-      throw hubError_('retryable_unavailable', 'storage_unavailable',
+      throw hubError_(ERRORS_.storageUnavailable,
         'The batch could not be stored; send it again.');
     }
-    var queued = 'viewq:' + device.id + ':' + ('00000' + body.batch).slice(-6);
+    var queued = viewQueueKey_(device.id, body.batch);
     /** @type {Object<string, string | number>} */
     var marks = {};
     marks[key] = body.batch;
     marks[queued] = stored.id;
-    marks['seen:' + device.id] = services.now();
+    marks[STORE_PREFIXES_.seen + device.id] = services.now();
     services.store.setMany(marks); // accepted and queued for views, in one write
     /** @type {Object<string, any[]>} */
     var known = {};
     known[queued] = body.events;
     tryDrain_(services, known);
-    return { status: 'accepted', through: body.batch };
+    return { status: JOURNAL_REPLIES_.accepted, through: body.batch };
   });
 }

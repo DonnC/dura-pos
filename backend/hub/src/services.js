@@ -39,7 +39,7 @@ function withLock_(services, work) {
   try {
     services.lock.waitLock(LIMITS_.lockWaitMillis);
   } catch (error) {
-    throw hubError_('retryable_unavailable', 'busy', 'The hub is busy; try again.');
+    throw hubError_(ERRORS_.busy, 'The hub is busy; try again.');
   }
   try {
     services.store.reload();

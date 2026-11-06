@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Uniform conventions
 
 The same rules apply in every part of the repository, whatever the language.
@@ -48,10 +40,15 @@ Each component has:
 
 ## Files
 
-- **Header:** every original handwritten file starts with the copyright,
-  AUTHORS, MIT and SPDX header, in the language's comment syntax. The
-  canonical text is in `client/tool/source_header.dart`. Generated files,
-  JSON and lockfiles are exempt.
+- **Header:** handwritten source code (`.dart`, `.js`, `.py`, `.kt`, `.kts`)
+  starts with the copyright, AUTHORS, MIT and SPDX header, in the language's
+  comment syntax. The canonical text is in `client/tool/source_header.dart`.
+  Docs, config, GitHub templates, Android resources, generated files, JSON and
+  lockfiles don't carry it, and `melos run check` refuses it there.
+- **Names:** a word that two places must spell the same is a named constant,
+  never repeated free text. In the hub that's `src/names.js`; in Dart it's an
+  enum or constant owned by its package. Protocol words shared with the phone
+  are also pinned in `protocol_names.json`, which both test suites read.
 - **Size:** at most 500 lines per handwritten source or test file, with one
   responsibility per file.
   - The old exception, `generate_samples.py`, is now the `dura_templates`

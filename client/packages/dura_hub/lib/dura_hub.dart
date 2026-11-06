@@ -6,5 +6,6 @@
 
 export 'src/canonical_json.dart';
 export 'src/http_hub_transport.dart';
+export 'src/hub_action.dart';
 export 'src/hub_backend.dart';
 export 'src/hub_transport.dart';

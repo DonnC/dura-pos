@@ -6,6 +6,16 @@
 
 import 'package:dura_core/dura_core.dart';
 
+/// The reply that says the hub wants an earlier batch first.
+const journalGap = 'gap';
+
+const attachmentKindNames = {
+  AttachmentKind.product: 'product',
+  AttachmentKind.supplierInvoice: 'invoice',
+};
+
+const exportFormatNames = {ExportFormat.excel: 'xlsx', ExportFormat.csv: 'csv'};
+
 /// The protocol's error categories, by their wire names.
 const failureKinds = {
   'validation': BackendFailureKind.validation,
@@ -23,7 +33,8 @@ PairedDevice pairedDevice(Map<String, Object?> result) => PairedDevice(
   business: result['business']! as String,
 );
 
-JournalAck journalAck(Map<String, Object?> result) => result['status'] == 'gap'
+JournalAck journalAck(Map<String, Object?> result) =>
+    result['status'] == journalGap
     ? JournalAck.gap(result['need']! as int)
     : JournalAck.accepted(result['through']! as int);
 

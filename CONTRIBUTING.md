@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Contributing to Dura POS
 
 Thank you for helping. Dura is for vendors who can't afford for their POS to
@@ -114,9 +106,11 @@ Put the red and green evidence in the pull request. The full method is in
 - Format Dart to 80 columns.
 - One widget, model or service per file.
 - Colours come from theme tokens; constants belong to their owning package.
-- New handwritten files start with the copyright, AUTHORS, MIT and SPDX
-  header in [`client/tool/source_header.dart`](client/tool/source_header.dart),
-  in the file's comment syntax. Generated files, JSON and lockfiles are exempt.
+- New source code files (`.dart`, `.js`, `.py`, `.kt`, `.kts`) start with the
+  copyright, AUTHORS, MIT and SPDX header in
+  [`client/tool/source_header.dart`](client/tool/source_header.dart), in the
+  file's comment syntax. Docs, config, templates, resources and generated files
+  don't carry it.
 - Comment contracts and the "why", not the obvious.
 
 `dart run melos run check` enforces the header, size, boundary and colour

@@ -12,6 +12,7 @@ import 'package:crypto/crypto.dart';
 import 'package:dura_core/dura_core.dart';
 
 import 'canonical_json.dart';
+import 'hub_action.dart';
 import 'hub_replies.dart';
 import 'hub_transport.dart';
 
@@ -44,7 +45,7 @@ final class HubBackend implements ShopBackend {
     final reply = await _exchange({
       'v': _protocolVersion,
       'ts': _seconds(),
-      'action': 'pair',
+      'action': HubAction.pair.wire,
       'body': {'code': code, 'name': deviceName},
     });
     return pairedDevice(reply);
@@ -52,7 +53,7 @@ final class HubBackend implements ShopBackend {
 
   @override
   Future<ShopReady> setUpShop(ShopSetup setup) async {
-    final result = await _signed('setup.run', {
+    final result = await _signed(HubAction.setupRun, {
       'name': setup.name,
       'timeZone': setup.timeZone,
       'pricingCurrency': setup.pricingCurrency.code,
@@ -67,7 +68,7 @@ final class HubBackend implements ShopBackend {
   Future<JournalAck> putJournal(JournalBatch batch) async {
     final digest = sha256.convert(utf8.encode(canonicalJson(batch.events)));
     return journalAck(
-      await _signed('journal.put', {
+      await _signed(HubAction.journalPut, {
         'batch': batch.number,
         'events': batch.events,
         'hash': digest.toString(),
@@ -77,11 +78,11 @@ final class HubBackend implements ShopBackend {
 
   @override
   Future<MasterData> pullChanges({String? since}) async =>
-      masterData(await _signed('changes.pull', {'since': ?since}));
+      masterData(await _signed(HubAction.changesPull, {'since': ?since}));
 
   @override
   Future<PairingCode> createPairingCode() async {
-    final result = await _signed('pairing.create', {});
+    final result = await _signed(HubAction.pairingCreate, {});
     return PairingCode(
       code: result['code']! as String,
       expiresAt: secondsToDate(result['expires']! as int),
@@ -90,7 +91,7 @@ final class HubBackend implements ShopBackend {
 
   @override
   Future<void> revokeDevice(String deviceId) async {
-    await _signed('device.revoke', {'device': deviceId});
+    await _signed(HubAction.deviceRevoke, {'device': deviceId});
   }
 
   @override
@@ -100,8 +101,8 @@ final class HubBackend implements ShopBackend {
     String contentType,
     Uint8List bytes,
   ) async => storedFile(
-    await _signed('attachment.put', {
-      'kind': kind == AttachmentKind.product ? 'product' : 'invoice',
+    await _signed(HubAction.attachmentPut, {
+      'kind': attachmentKindNames[kind],
       'id': id,
       'contentType': contentType,
       'data': base64Encode(bytes),
@@ -114,9 +115,9 @@ final class HubBackend implements ShopBackend {
     ExportFormat format, {
     String? table,
   }) async => storedFile(
-    await _signed('export.request', {
+    await _signed(HubAction.exportRequest, {
       'file': file,
-      'format': format == ExportFormat.excel ? 'xlsx' : 'csv',
+      'format': exportFormatNames[format],
       'table': ?table,
     }),
   );
@@ -127,7 +128,7 @@ final class HubBackend implements ShopBackend {
     Currency currency,
     Map<String, String> keys,
   ) async {
-    await _signed('keys.set', {
+    await _signed(HubAction.keysSet, {
       ...keys,
       'provider': provider,
       'currency': currency.code,
@@ -138,7 +139,7 @@ final class HubBackend implements ShopBackend {
   Future<PaymentStatus> startPayment(PaymentRequest request) async {
     final amount = request.amount;
     return paymentStatus(
-      await _signed('payment.start', {
+      await _signed(HubAction.paymentStart, {
         'reference': request.reference,
         'provider': request.provider,
         'method': request.method,
@@ -151,15 +152,16 @@ final class HubBackend implements ShopBackend {
   }
 
   @override
-  Future<PaymentStatus> checkPayment(String reference) async =>
-      paymentStatus(await _signed('payment.check', {'reference': reference}));
+  Future<PaymentStatus> checkPayment(String reference) async => paymentStatus(
+    await _signed(HubAction.paymentCheck, {'reference': reference}),
+  );
 
   @override
   Future<BackendStatus> status() async =>
-      backendStatus(await _signed('status', {}));
+      backendStatus(await _signed(HubAction.status, {}));
 
   Future<Map<String, Object?>> _signed(
-    String action,
+    HubAction action,
     Map<String, Object?> body, {
     bool chargesMoney = false,
   }) {
@@ -175,7 +177,7 @@ final class HubBackend implements ShopBackend {
       'device': me.id,
       'ts': _seconds(),
       'nonce': _nonce(),
-      'action': action,
+      'action': action.wire,
       'body': body,
     };
     final key = utf8.encode(me.secret);

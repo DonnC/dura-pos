@@ -2,13 +2,6 @@
 name: dura-tdd
 description: Implement or fix Dura POS business behaviour through TDD, durable workflow boundaries and reusable adapter contracts. Use for Dura feature or regression work, not unrelated repositories.
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # Dura behaviour changes
 
 ## Read first

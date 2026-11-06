@@ -20,9 +20,7 @@
 // make every visit slow and costly on mobile data, so the page then carries the
 // first 50, and shopProducts answers searches and "Show more" from the cache.
 
-var STOREFRONT_KEY_ = 'storefront:page';
 var STOREFRONT_SECONDS_ = 21600;
-var STOREFRONT_LIST_KEY_ = 'storefront:list:';
 var STOREFRONT_ALL_IN_PAGE_ = 200; // up to here, the page holds every product, and search is instant
 var STOREFRONT_PAGE_SIZE_ = 50; // above that, the page holds this many, and asks for more
 var STOREFRONT_MAX_PRODUCTS_ = 5000;
@@ -53,19 +51,19 @@ function internationalPhone_(phone) {
 function storefrontData_(services, master) {
   /** @type {Object<string, string>} */
   var settings = {};
-  master.tables.Settings.forEach(function (row) { settings[row.setting] = row.value; });
-  if (settings['Shop page'] === 'Off') return STOREFRONT_OFF_;
-  var currency = services.store.get('pricingCurrency');
-  var name = settings['Business name'] || services.store.get('businessName');
+  master.tables[TABLES_.settings].forEach(function (row) { settings[row.setting] = row.value; });
+  if (settings[SETTINGS_.shopPage] === SHEET_WORDS_.off) return STOREFRONT_OFF_;
+  var currency = services.store.get(STORE_KEYS_.pricingCurrency);
+  var name = settings[SETTINGS_.businessName] || services.store.get(STORE_KEYS_.businessName);
   return {
     title: name,
     name: name,
     address: settings.Address || '',
     phone: settings.Phone || '',
-    accepts: settings['Accepted currencies'] || currency,
+    accepts: settings[SETTINGS_.acceptedCurrencies] || currency,
     currency: currency,
-    products: master.tables.Products
-      .filter(function (p) { return p.active !== 'No'; })
+    products: master.tables[TABLES_.products]
+      .filter(function (p) { return p.active !== SHEET_WORDS_.no; })
       .slice(0, STOREFRONT_MAX_PRODUCTS_)
       .map(function (p) {
         return { name: p.name, category: p.category || '', unit: p.unit || '', price: Number(p.price_pricing).toFixed(2) };
@@ -185,7 +183,7 @@ function storefrontHtml_(shop) {
 function publishStorefront_(services, master) {
   var shop = storefrontData_(services, master);
   var page = { title: shop.title, html: storefrontHtml_(shop) };
-  services.cache.put(STOREFRONT_KEY_, JSON.stringify(page), STOREFRONT_SECONDS_);
+  services.cache.put(CACHE_KEYS_.storefrontPage, JSON.stringify(page), STOREFRONT_SECONDS_);
   cacheProductList_(services.cache, shop.products || []);
   return page;
 }
@@ -197,18 +195,18 @@ function cacheProductList_(cache, products) {
   var values = {};
   var pieces = Math.ceil(text.length / STOREFRONT_CHUNK_CHARS_);
   for (var i = 0; i < pieces; i++) {
-    values[STOREFRONT_LIST_KEY_ + i] = text.slice(i * STOREFRONT_CHUNK_CHARS_, (i + 1) * STOREFRONT_CHUNK_CHARS_);
+    values[CACHE_KEYS_.storefrontList + i] = text.slice(i * STOREFRONT_CHUNK_CHARS_, (i + 1) * STOREFRONT_CHUNK_CHARS_);
   }
-  values[STOREFRONT_LIST_KEY_ + 'pieces'] = String(pieces);
+  values[CACHE_KEYS_.storefrontList + 'pieces'] = String(pieces);
   cache.putAll(values, STOREFRONT_SECONDS_);
 }
 
 /** The cached list, or null if any piece has gone. @param {any} cache */
 function readProductList_(cache) {
-  var count = cache.get(STOREFRONT_LIST_KEY_ + 'pieces');
+  var count = cache.get(CACHE_KEYS_.storefrontList + 'pieces');
   if (count === null) return null;
   var keys = [];
-  for (var i = 0; i < Number(count); i++) keys.push(STOREFRONT_LIST_KEY_ + i);
+  for (var i = 0; i < Number(count); i++) keys.push(CACHE_KEYS_.storefrontList + i);
   var found = cache.getAll(keys);
   if (Object.keys(found).length !== keys.length) return null;
   return JSON.parse(keys.map(function (key) { return found[key]; }).join('') || '[]');
@@ -242,11 +240,11 @@ function shopProducts(query, category, page) {
  * @param {boolean} [rebuild] ignore the cached page
  */
 function loadStorefront_(rebuild) {
-  var cached = rebuild ? null : CacheService.getScriptCache().get(STOREFRONT_KEY_);
+  var cached = rebuild ? null : CacheService.getScriptCache().get(CACHE_KEYS_.storefrontPage);
   if (cached) return JSON.parse(cached);
   try {
     var services = createServices_();
-    if (!services.store.get('file:myshop')) throw new Error('Not set up');
+    if (!services.store.get(STORE_KEYS_.fileMyShop)) throw new Error('Not set up');
     return publishStorefront_(services, readMasterData_(services));
   } catch (error) {
     console.error('Shop page not built: ' + (error && error.name));

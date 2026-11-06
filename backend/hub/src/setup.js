@@ -40,7 +40,7 @@ function readSetupInput_(body) {
   var currency = body.pricingCurrency;
   if (name.length < 1 || name.length > 80 || !TIME_ZONE_PATTERN_.test(timeZone) ||
       PRICING_CURRENCIES_.indexOf(currency) < 0) {
-    throw hubError_('validation', 'bad_setup',
+    throw hubError_(ERRORS_.badSetup,
       'Setup needs a shop name of 1 to 80 characters, a time zone like Africa/Harare, ' +
       'and the pricing currency the owner chose: USD, ZWG or ZAR.');
   }
@@ -88,18 +88,18 @@ function fillOnce_(services, key, write) {
  */
 function ensureMonthFile_(services, period, template) {
   var store = services.store;
-  var key = 'file:month:' + period;
+  var key = STORE_PREFIXES_.monthFile + period;
   var year = period.slice(0, 4);
   var id = ensureFile_(services, key, function () {
     var blob = template ||
-      fetchTemplates_(services.templates[store.get('pricingCurrency')], ['month']).month;
-    var folder = ensureFile_(services, 'file:year:' + year, function () {
-      return createFolder_(year, store.get('file:business'));
+      fetchTemplates_(services.templates[store.get(STORE_KEYS_.pricingCurrency)], [WORKBOOKS_.month]).month;
+    var folder = ensureFile_(services, STORE_PREFIXES_.yearFile + year, function () {
+      return createFolder_(year, store.get(STORE_KEYS_.fileBusiness));
     });
     var name = period + ' ' + MONTH_NAMES_[Number(period.slice(5)) - 1];
     return createSheetFromXlsx_(name, folder, blob);
   });
-  fillOnce_(services, 'filled:month:' + period, function () {
+  fillOnce_(services, STORE_PREFIXES_.filledMonth + period, function () {
     /** @type {Object<string, string | number>} */
     var cells = {};
     cells[TEMPLATE_CELLS_.month.period] = monthSerial_(period);
@@ -114,7 +114,7 @@ function runSetup_(request, services, device) {
   var input = readSetupInput_(request.body);
   return withLock_(services, function () {
     var store = services.store;
-    if (!store.get('businessId')) {
+    if (!store.get(STORE_KEYS_.businessId)) {
       var day = Utilities.formatDate(new Date(services.now() * 1000), input.timeZone, 'yyMMdd');
       store.setMany({
         businessId: makeBusinessId_(input.name, day),
@@ -123,49 +123,49 @@ function runSetup_(request, services, device) {
         pricingCurrency: input.pricingCurrency,
       });
     }
-    var timeZone = store.get('timeZone');
+    var timeZone = store.get(STORE_KEYS_.timeZone);
     var period = Utilities.formatDate(new Date(services.now() * 1000), timeZone, 'yyyy-MM');
     var year = period.slice(0, 4);
-    var monthKey = 'file:month:' + period;
+    var monthKey = STORE_PREFIXES_.monthFile + period;
 
     var needed = [];
-    if (!store.get('file:myshop')) needed.push('myShop');
-    if (!store.get(monthKey)) needed.push('month');
-    var templates = fetchTemplates_(services.templates[store.get('pricingCurrency')], needed);
+    if (!store.get(STORE_KEYS_.fileMyShop)) needed.push(WORKBOOKS_.myShop);
+    if (!store.get(monthKey)) needed.push(WORKBOOKS_.month);
+    var templates = fetchTemplates_(services.templates[store.get(STORE_KEYS_.pricingCurrency)], needed);
 
-    var root = ensureFile_(services, 'file:root', function () { return createFolder_('Dura POS', null); });
-    var shop = ensureFile_(services, 'file:business', function () {
-      return createFolder_(store.get('businessName'), root);
+    var root = ensureFile_(services, STORE_KEYS_.fileRoot, function () { return createFolder_('Dura POS', null); });
+    var shop = ensureFile_(services, STORE_KEYS_.fileBusiness, function () {
+      return createFolder_(store.get(STORE_KEYS_.businessName), root);
     });
-    var journal = ensureFile_(services, 'file:journal', function () { return createFolder_('Journal', shop); });
-    ensureFile_(services, 'file:year:' + year, function () { return createFolder_(year, shop); });
-    var myShop = ensureFile_(services, 'file:myshop', function () {
+    var journal = ensureFile_(services, STORE_KEYS_.fileJournal, function () { return createFolder_('Journal', shop); });
+    ensureFile_(services, STORE_PREFIXES_.yearFile + year, function () { return createFolder_(year, shop); });
+    var myShop = ensureFile_(services, STORE_KEYS_.fileMyShop, function () {
       return createSheetFromXlsx_('My Shop', shop, templates.myShop);
     });
     var month = ensureMonthFile_(services, period, templates.month);
-    ensureFile_(services, 'file:directory', function () {
+    ensureFile_(services, STORE_KEYS_.fileDirectory, function () {
       return createJsonFile_('business.json', shop, {
         format: 1,
-        businessId: store.get('businessId'),
-        businessName: store.get('businessName'),
+        businessId: store.get(STORE_KEYS_.businessId),
+        businessName: store.get(STORE_KEYS_.businessName),
         timeZone: timeZone,
-        pricingCurrency: store.get('pricingCurrency'),
+        pricingCurrency: store.get(STORE_KEYS_.pricingCurrency),
         files: { root: root, business: shop, journal: journal, myShop: myShop },
       });
     });
-    fillOnce_(services, 'filled:myshop', function () {
+    fillOnce_(services, STORE_KEYS_.filledMyShop, function () {
       /** @type {Object<string, string | number>} */
       var cells = {};
-      cells[TEMPLATE_CELLS_.myShop.businessName] = store.get('businessName');
+      cells[TEMPLATE_CELLS_.myShop.businessName] = store.get(STORE_KEYS_.businessName);
       cells[TEMPLATE_CELLS_.myShop.hubVersion] = HUB_VERSION_;
       cells[TEMPLATE_CELLS_.myShop.dataYear] = Number(year);
       writeCells_(myShop, cells);
-      store.set('dataYear', year);
+      store.set(STORE_KEYS_.dataYear, year);
     });
     installTriggers_();
     return {
-      status: 'ready',
-      business: store.get('businessId'),
+      status: SETUP_READY_,
+      business: store.get(STORE_KEYS_.businessId),
       period: period,
       files: { business: shop, journal: journal, myShop: myShop, month: month },
     };

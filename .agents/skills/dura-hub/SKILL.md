@@ -2,13 +2,6 @@
 name: dura-hub
 description: Change, debug or review the Dura POS Shop Hub in backend/hub: the Apps Script backend for protocol actions, request signing, journal uploads, Sheets views, timers, Paynow payments, photos and exports. Use this for any change under backend/hub, for anything touching PROTOCOL.md, Script Properties, quotas or Apps Script APIs, and when adding a payment provider, even if the request only says "the backend" or "the script".
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # The Shop Hub
 
 A standalone Apps Script web app in the shop's own Google account, running as
@@ -63,7 +56,14 @@ plain `ok`.
 - **Handlers take `(request, services, device)`.** Reach Google through
   `services` or the thin wrappers, so tests can replace them.
 - **Amounts travel as decimal strings** and become numbers only in a sheet cell.
-- **Errors** use `hubError_` with one of the six categories in `PROTOCOL.md`.
+- **Shared words live in `src/names.js`:** actions, error entries, Script
+  Property and cache keys, tab names and sheet words. Never repeat one as free
+  text; `test/names_test.js` refuses it. Add new objects with `Object.freeze`,
+  because that's what makes a misspelt name a type error. Never change a stored
+  key's value: installed hubs already hold it. Protocol words also go in
+  `protocol_names.json`, which the Dart tests read.
+- **Errors** use `hubError_` with an entry from `ERRORS_`; each entry fixes its
+  category, one of the six in `PROTOCOL.md`.
 - **No secrets, payloads or error messages in logs:** log `error.name` at most.
 
 ## Saving quota is a design rule

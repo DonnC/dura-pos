@@ -20,7 +20,7 @@ function fetchTemplates_(set, names) {
   var entries = names.map(function (name) {
     var entry = set && set[name];
     if (!entry || !entry.url || !PATTERNS_.hash.test(entry.sha256)) {
-      throw hubError_('retryable_unavailable', 'template_unavailable',
+      throw hubError_(ERRORS_.templateUnavailable,
         'This hub version has no released template for ' + name + '.');
     }
     return entry;
@@ -32,13 +32,13 @@ function fetchTemplates_(set, names) {
   var blobs = {};
   responses.forEach(function (response, i) {
     if (response.getResponseCode() !== 200) {
-      throw hubError_('retryable_unavailable', 'template_unavailable',
+      throw hubError_(ERRORS_.templateUnavailable,
         'A template could not be downloaded; try again.');
     }
     var digest = bytesToHex_(Utilities.computeDigest(
       Utilities.DigestAlgorithm.SHA_256, response.getContent()));
     if (!constantTimeEqual_(digest, entries[i].sha256)) {
-      throw hubError_('integrity_conflict', 'template_mismatch',
+      throw hubError_(ERRORS_.templateMismatch,
         'A template does not match its pinned hash.');
     }
     blobs[names[i]] = response.getBlob().setContentType(XLSX_MIME_);

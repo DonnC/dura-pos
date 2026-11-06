@@ -2,13 +2,6 @@
 name: dura-templates
 description: Change or check the Dura POS workbook generator in backend/templates: the sample shop, the clean Excel templates per pricing currency, the contract the Shop Hub reads, and the fingerprint and Excel-compatibility checks. Use this for any change under backend/templates, for a new tab, column, formula, dropdown, colour rule or chart, and when a sheet layout has to change, even if the request only mentions "the spreadsheet" or "the Excel file".
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # The workbook generator
 
 `dura_templates` is the executable spec for every file a shop owns. It builds two

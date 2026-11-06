@@ -1,14 +1,26 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # Changelog
 
 ## Unreleased — 0.1.0-dev.1 foundation
+
+### Changed: shared words have one home
+
+- **`backend/hub/src/names.js`** holds the hub's actions, errors, Script Property and
+  cache keys, and workbook and tab names. A misspelt name now fails `npm run check`.
+- **Each error is one named entry,** so a code can't be paired with the wrong category.
+- **`HubAction`** does the same in `dura_hub`, and a fixture read by both test suites
+  keeps the protocol's words identical on each side.
+- **Saved keys and wire words are unchanged,** so installed hubs keep working.
+
+### Changed: test sales touch every tab a real sale does
+
+- **`try_hub.js sale`** and `npm run trial` now write `Sales`, `Items Sold`, `Payments`
+  and a `Sold` row in the `Stock Ledger`.
+- **`try_hub.js stock <qty>`** receives stock, so the `Stock` tab has something to add up.
+
+### Changed: the licence header is for source code only
+
+- **`.dart`, `.js`, `.py`, `.kt` and `.kts` files carry it.** Docs, config, GitHub
+  templates and Android resources no longer do, and `melos run check` refuses it there.
 
 ### Added: the backend port and the Shop Hub adapter
 

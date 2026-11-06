@@ -51,11 +51,11 @@ function answerCallback_(e) {
 function handleRequest_(request, services) {
   try {
     checkEnvelope_(request);
-    if (request.action === 'pair') return okReply_(pair_(request, services));
+    if (request.action === ACTIONS_.pair) return okReply_(pair_(request, services));
     var device = authenticate_(request, services);
     var handler = handlerFor_(request.action);
     if (!handler) {
-      throw hubError_('validation', 'unknown_action', 'This hub does not know that action.');
+      throw hubError_(ERRORS_.unknownAction, 'This hub does not know that action.');
     }
     return okReply_(handler(request, services, device));
   } catch (error) {
@@ -70,17 +70,17 @@ function handleRequest_(request, services) {
  */
 function handlerFor_(action) {
   switch (action) {
-    case 'pairing.create': return createPairingCode_;
-    case 'device.revoke': return revokeDevice_;
-    case 'journal.put': return putJournal_;
-    case 'setup.run': return runSetup_;
-    case 'changes.pull': return pullChanges_;
-    case 'status': return readStatus_;
-    case 'keys.set': return setPaymentKeys_;
-    case 'payment.start': return startPayment_;
-    case 'payment.check': return checkPayment_;
-    case 'attachment.put': return putAttachment_;
-    case 'export.request': return requestExport_;
+    case ACTIONS_.pairingCreate: return createPairingCode_;
+    case ACTIONS_.deviceRevoke: return revokeDevice_;
+    case ACTIONS_.journalPut: return putJournal_;
+    case ACTIONS_.setupRun: return runSetup_;
+    case ACTIONS_.changesPull: return pullChanges_;
+    case ACTIONS_.status: return readStatus_;
+    case ACTIONS_.keysSet: return setPaymentKeys_;
+    case ACTIONS_.paymentStart: return startPayment_;
+    case ACTIONS_.paymentCheck: return checkPayment_;
+    case ACTIONS_.attachmentPut: return putAttachment_;
+    case ACTIONS_.exportRequest: return requestExport_;
     default: return null;
   }
 }
@@ -98,8 +98,8 @@ function errorReply_(error) {
     v: PROTOCOL_VERSION_,
     ok: false,
     error: {
-      category: 'retryable_unavailable',
-      code: 'internal_error',
+      category: ERRORS_.internalError.category,
+      code: ERRORS_.internalError.code,
       message: 'Unexpected hub error.',
     },
   };

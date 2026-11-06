@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -95,6 +96,23 @@ class TemplatesTest(unittest.TestCase):
         self.assertEqual(sorted(stock_row), ["2", "4", "5", "6", "7", "8"])
         self.assertIn("$A{r}", stock_row["4"])
         self.assertNotIn("_xlfn", stock_row["8"])
+
+    def test_the_names_the_hub_spells_are_in_the_templates(self):
+        names = (Path(__file__).parents[2] / "hub" / "src" / "names.js").read_text(encoding="utf-8")
+
+        def listed(table: str) -> list[str]:
+            block = names.split(f"var {table} = {{")[1].split("}")[0]
+            return re.findall(r"\w+: '([^']+)'", block)
+
+        my_shop, month = self.book("USD", "My Shop.xlsx"), self.book("USD", "Month.xlsx")
+        for tab in listed("TABLES_"):
+            self.assertTrue(tab in my_shop.sheetnames or tab in month.sheetnames, tab)
+        settings = {row[0] for row in my_shop["Settings"].iter_rows(values_only=True)}
+        for setting in listed("SETTINGS_"):
+            self.assertIn(setting, settings)
+        headings = {cell.value for tab in ("Sales", "Items Sold", "Payments") for cell in month[tab][1]}
+        for heading in listed("HEADINGS_"):
+            self.assertIn(heading, headings)
 
     def test_the_month_summary_has_the_labels_the_hub_reads(self):
         summary = self.book("USD", "Month.xlsx")["Summary"]

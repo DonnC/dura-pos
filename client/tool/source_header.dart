@@ -4,7 +4,8 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
-/// Canonical header for original project sources and generated launcher XML.
+/// Canonical header for handwritten source code. Docs, config and resources
+/// don't carry it.
 const sourceHeader = r'''
 // Copyright (c) 2026, DonnC & contributors.
 // Please see the AUTHORS file for details. All rights reserved.
@@ -12,6 +13,11 @@ const sourceHeader = r'''
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 ''';
+
+/// Text files that must not carry the header.
+bool isHeaderFree(String path) =>
+    RegExp(r'(\.md|\.ya?ml|\.xml|\.html|\.properties|\.txt|\.gitignore)$')
+        .hasMatch(path);
 
 bool hasSourceHeader(List<String> lines) {
   final expected = sourceHeader.trim().split('\n');

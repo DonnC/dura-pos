@@ -23,6 +23,8 @@ var SERIAL_EPOCH_ = 25569; // 1970-01-01 as a spreadsheet date serial
 var SHEET_CACHE_SECONDS_ = 21600; // the longest CacheService keeps a value
 var ROWS_TO_ADD_ = 2000;
 var VIEW_BATCHES_PER_RUN_ = 20;
+var MY_SHOP_TARGET_ = 'myshop';
+var MONTH_TARGET_ = 'month:';
 
 /** @param {string} day e.g. "2026-11-03" */
 function dateSerial_(day) {
@@ -44,14 +46,14 @@ function timeFraction_(time) {
  */
 function cellValue_(kind, value) {
   if (value === null || value === undefined || value === '') return null;
-  if (kind === 'text') return String(value);
+  if (kind === FIELD_KINDS_.text) return String(value);
   var text = String(value);
-  if (kind === 'date' && /^\d{4}-\d{2}-\d{2}$/.test(text)) return dateSerial_(text);
-  if (kind === 'time' && /^\d{2}:\d{2}(:\d{2})?$/.test(text)) return timeFraction_(text);
-  if (kind === 'datetime' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(text)) {
+  if (kind === FIELD_KINDS_.date && /^\d{4}-\d{2}-\d{2}$/.test(text)) return dateSerial_(text);
+  if (kind === FIELD_KINDS_.time && /^\d{2}:\d{2}(:\d{2})?$/.test(text)) return timeFraction_(text);
+  if (kind === FIELD_KINDS_.datetime && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(text)) {
     return dateSerial_(text.slice(0, 10)) + timeFraction_(text.slice(11, 19).replace(/[^0-9:].*$/, ''));
   }
-  if (kind === 'date' || kind === 'time' || kind === 'datetime') return text;
+  if (kind === FIELD_KINDS_.date || kind === FIELD_KINDS_.time || kind === FIELD_KINDS_.datetime) return text;
   var number = Number(text);
   return isNaN(number) ? text : number;
 }
@@ -71,7 +73,7 @@ function columnLetter_(column) {
  * @param {any} services @param {string} fileId @param {string[]} tables
  */
 function sheetInfo_(services, fileId, tables) {
-  var keys = tables.map(function (table) { return 'sheet:' + fileId + ':' + table; });
+  var keys = tables.map(function (table) { return sheetCacheKey_(fileId, table); });
   var cached = services.cache.getAll(keys);
   /** @type {Object<string, any>} */
   var info = {};
@@ -81,7 +83,7 @@ function sheetInfo_(services, fileId, tables) {
   });
   if (missing.length === 0) return info;
   var reply = Sheets.Spreadsheets.get(fileId, {
-    ranges: missing.map(function (table) { return "'" + table + "'!1:1"; }),
+    ranges: missing.map(function (table) { return tabRange_(table, '1:1'); }),
     fields: 'sheets(properties(sheetId,title,gridProperties.rowCount),data.rowData.values.formattedValue)',
   });
   reply.sheets.forEach(function (sheet) {
@@ -92,7 +94,7 @@ function sheetInfo_(services, fileId, tables) {
       rows: sheet.properties.gridProperties.rowCount,
       headings: first.map(function (cell) { return cell.formattedValue || ''; }),
     };
-    services.cache.put('sheet:' + fileId + ':' + title, JSON.stringify(info[title]), SHEET_CACHE_SECONDS_);
+    services.cache.put(sheetCacheKey_(fileId, title), JSON.stringify(info[title]), SHEET_CACHE_SECONDS_);
   });
   return info;
 }
@@ -104,7 +106,7 @@ function growIfNeeded_(services, fileId, table, sheet, lastRow) {
   Sheets.Spreadsheets.batchUpdate(
     { requests: [{ appendDimension: { sheetId: sheet.id, dimension: 'ROWS', length: length } }] }, fileId);
   sheet.rows += length;
-  services.cache.put('sheet:' + fileId + ':' + table, JSON.stringify(sheet), SHEET_CACHE_SECONDS_);
+  services.cache.put(sheetCacheKey_(fileId, table), JSON.stringify(sheet), SHEET_CACHE_SECONDS_);
 }
 
 /**
@@ -121,11 +123,11 @@ function groupRows_(events) {
     Object.keys(event.rows || {}).forEach(function (table) {
       var spec = VIEW_CONTRACT_.tables[table];
       var period = /^(\d{4}-\d{2})-/.exec(String(event.at));
-      if (!spec || spec.hubOnly || (spec.file === 'month' && !period)) {
+      if (!spec || spec.hubOnly || (spec.file === WORKBOOKS_.month && !period)) {
         skipped += 1;
         return;
       }
-      var target = spec.file === 'month' ? 'month:' + period[1] : 'myshop';
+      var target = spec.file === WORKBOOKS_.month ? MONTH_TARGET_ + period[1] : MY_SHOP_TARGET_;
       targets[target] = targets[target] || {};
       targets[target][table] = (targets[target][table] || []).concat(event.rows[table]);
     });
@@ -158,10 +160,10 @@ function rowCells_(table, row, headings, pricing) {
 function writeRowAt_(services, fileId, table, at, row) {
   var sheet = sheetInfo_(services, fileId, [table])[table];
   growIfNeeded_(services, fileId, table, sheet, at);
-  var built = rowCells_(table, row, sheet.headings, services.store.get('pricingCurrency'));
+  var built = rowCells_(table, row, sheet.headings, services.store.get(STORE_KEYS_.pricingCurrency));
   Sheets.Spreadsheets.Values.batchUpdate({
     valueInputOption: 'RAW',
-    data: [{ range: "'" + table + "'!A" + at + ':' + columnLetter_(sheet.headings.length) + at, values: [built.cells] }],
+    data: [{ range: tabRange_(table, 'A' + at + ':' + columnLetter_(sheet.headings.length) + at), values: [built.cells] }],
   }, fileId);
 }
 
@@ -172,21 +174,21 @@ function writeRowAt_(services, fileId, table, at, row) {
  */
 function projectBatch_(services, events) {
   var grouped = groupRows_(events);
-  var pricing = services.store.get('pricingCurrency');
+  var pricing = services.store.get(STORE_KEYS_.pricingCurrency);
   /** @type {Object<string, string | number>} */
   var pointers = {};
   var skipped = grouped.skipped;
   Object.keys(grouped.targets).forEach(function (target) {
-    var fileId = target === 'myshop' ? services.store.get('file:myshop')
-      : ensureMonthFile_(services, target.slice('month:'.length));
+    var fileId = target === MY_SHOP_TARGET_ ? services.store.get(STORE_KEYS_.fileMyShop)
+      : ensureMonthFile_(services, target.slice(MONTH_TARGET_.length));
     if (!fileId) {
-      throw hubError_('retryable_unavailable', 'not_set_up', 'The shop is not set up yet.');
+      throw hubError_(ERRORS_.notSetUp, 'The shop is not set up yet.');
     }
     var tables = Object.keys(grouped.targets[target]);
     var info = sheetInfo_(services, fileId, tables);
     var data = tables.map(function (table) {
       var sheet = info[table];
-      var key = 'row:' + fileId + ':' + table;
+      var key = rowPointerKey_(fileId, table);
       var next = Number(services.store.get(key) || '2');
       var values = grouped.targets[target][table].map(function (row) {
         var built = rowCells_(table, row, sheet.headings, pricing);
@@ -197,13 +199,13 @@ function projectBatch_(services, events) {
       growIfNeeded_(services, fileId, table, sheet, last);
       pointers[key] = last + 1;
       return {
-        range: "'" + table + "'!A" + next + ':' + columnLetter_(sheet.headings.length) + last,
+        range: tabRange_(table, 'A' + next + ':' + columnLetter_(sheet.headings.length) + last),
         values: values,
       };
     });
     Sheets.Spreadsheets.Values.batchUpdate({ valueInputOption: 'RAW', data: data }, fileId);
   });
-  if (skipped) pointers['view:skipped'] = Number(services.store.get('view:skipped') || '0') + skipped;
+  if (skipped) pointers[STORE_KEYS_.viewSkipped] = Number(services.store.get(STORE_KEYS_.viewSkipped) || '0') + skipped;
   return pointers;
 }
 
@@ -213,7 +215,7 @@ function projectBatch_(services, events) {
  */
 function viewQueue_(services) {
   return Object.keys(services.store.getAll())
-    .filter(function (key) { return key.indexOf('viewq:') === 0; }).sort();
+    .filter(function (key) { return key.indexOf(STORE_PREFIXES_.viewQueue) === 0; }).sort();
 }
 
 /** A stored batch's events, read back from Drive. @param {string} fileId */
@@ -224,7 +226,7 @@ function readBatchEvents_(fileId) {
     muteHttpExceptions: true,
   });
   if (reply.getResponseCode() !== 200) {
-    throw hubError_('retryable_unavailable', 'storage_unavailable', 'A journal file could not be read.');
+    throw hubError_(ERRORS_.storageUnavailable, 'A journal file could not be read.');
   }
   return JSON.parse(reply.getContentText()).events;
 }
@@ -241,7 +243,7 @@ function drainQueue_(services, known) {
   for (var i = 0; i < Math.min(queue.length, VIEW_BATCHES_PER_RUN_); i++) {
     var key = queue[i];
     var parts = key.split(':');
-    var done = 'view:' + parts[1];
+    var done = STORE_PREFIXES_.view + parts[1];
     var batch = Number(parts[2]);
     if (batch > Number(services.store.get(done) || '0')) {
       var events = known[key] || readBatchEvents_(services.store.get(key));

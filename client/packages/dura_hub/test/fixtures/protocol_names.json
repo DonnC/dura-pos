@@ -1,0 +1,27 @@
+{
+  "actions": [
+    "attachment.put",
+    "changes.pull",
+    "device.revoke",
+    "export.request",
+    "journal.put",
+    "keys.set",
+    "pair",
+    "pairing.create",
+    "payment.check",
+    "payment.start",
+    "setup.run",
+    "status"
+  ],
+  "errorCategories": [
+    "authentication_required",
+    "integrity_conflict",
+    "permission",
+    "retryable_unavailable",
+    "unknown_external_outcome",
+    "validation"
+  ],
+  "paymentStates": ["cancelled", "failed", "paid", "pending", "unknown"],
+  "attachmentKinds": ["invoice", "product"],
+  "exportFormats": ["csv", "xlsx"]
+}

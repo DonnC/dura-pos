@@ -17,6 +17,7 @@ const path = require('node:path');
 const hub = require('./try_hub');
 
 const { TRY, DEVICE } = hub;
+const { ACTIONS_, ATTACHMENT_KINDS_, ERRORS_, EXPORT_FORMATS_, SETUP_READY_, TABLES_, WORKBOOKS_ } = require('../test/support/hub_names');
 const SHOP = { name: 'Test Corner Shop', timeZone: 'Africa/Harare', pricingCurrency: 'USD' };
 const WAIT_MILLIS = 5000;
 const WAIT_LIMIT_MILLIS = 30 * 60 * 1000;
@@ -37,12 +38,14 @@ function resultOf(reply) {
  */
 function hubChecks(client) {
   const call = async (action, body = {}) => resultOf(await client.send(action, body));
-  const phone = async () => (await call('status')).phones.find((p) => p.device === client.device);
+  const phone = async () => (await call(ACTIONS_.status)).phones.find((p) => p.device === client.device);
+  let item;
   const upload = async (count) => {
+    item ??= hub.itemFrom((await call(ACTIONS_.changesPull)).tables);
     const number = (await phone()).through + 1;
-    const body = hub.saleBatch(client.device, number, count);
+    const body = hub.saleBatch(client.device, number, count, item);
     const started = Date.now();
-    const first = resultOf(await client.send('journal.put', body));
+    const first = resultOf(await client.send(ACTIONS_.journalPut, body));
     return { number, body, first, seconds: (Date.now() - started) / 1000 };
   };
   const expect = (condition, message) => {
@@ -51,20 +54,23 @@ function hubChecks(client) {
 
   return [
     ['Setup is ready', async () => {
-      const result = await call('setup.run', SHOP);
-      expect(result.status === 'ready', `status ${result.status}`);
+      const result = await call(ACTIONS_.setupRun, SHOP);
+      expect(result.status === SETUP_READY_, `status ${result.status}`);
       return result.business;
     }],
     ['Status answers, with no views behind', async () => {
-      const result = await call('status');
+      const result = await call(ACTIONS_.status);
       expect(result.views.queued === 0, `${result.views.queued} batches queued`);
       return `hub ${result.hub}`;
     }],
     ['A sale reaches the journal and the views', async () => {
+      const skippedBefore = (await call(ACTIONS_.status)).views.skipped;
       const { number, first } = await upload(1);
       expect(first.through === number, `through ${first.through}`);
       const after = await phone();
       expect(after.viewed === number, `viewed ${after.viewed} of ${number}`);
+      const { views } = await call(ACTIONS_.status);
+      expect(views.skipped === skippedBefore, `${views.skipped - skippedBefore} cells had no column`);
       return `batch ${number}`;
     }],
     ['200 sales in one batch', async () => {
@@ -74,7 +80,7 @@ function hubChecks(client) {
     }],
     ['A batch sent twice is stored once', async () => {
       const { number, body } = await upload(1);
-      const again = resultOf(await client.send('journal.put', body));
+      const again = resultOf(await client.send(ACTIONS_.journalPut, body));
       expect(again.through === number, `through ${again.through}`);
       expect((await phone()).through === number, 'the batch number moved');
       return 'acknowledged';
@@ -82,20 +88,20 @@ function hubChecks(client) {
     ['A replayed request is refused', async () => {
       const [first, second] = await client.sendTwice();
       expect(first.ok, 'the first request failed');
-      expect(second.error?.code === 'replayed_request', `second: ${JSON.stringify(second.error ?? second.ok)}`);
+      expect(second.error?.code === ERRORS_.replayedRequest.code, `second: ${JSON.stringify(second.error ?? second.ok)}`);
       return 'refused';
     }],
     ['Master data can be pulled', async () => {
-      const result = await call('changes.pull');
-      expect(result.tables.Settings.length > 0, 'no Settings');
-      return `${result.tables.Products.length} products, ${result.skipped.length} skipped`;
+      const result = await call(ACTIONS_.changesPull);
+      expect(result.tables[TABLES_.settings].length > 0, 'no Settings');
+      return `${result.tables[TABLES_.products].length} products, ${result.skipped.length} skipped`;
     }],
-    ['A photo is saved', async () => (await call('attachment.put',
-      { kind: 'product', id: 'TRIAL-PHOTO', contentType: 'image/png', data: PHOTO })).name],
-    ['A tab exports as CSV', async () => (await call('export.request',
-      { file: 'myShop', format: 'csv', table: 'Products' })).name],
-    ['A workbook exports as Excel', async () => (await call('export.request',
-      { file: 'myShop', format: 'xlsx' })).name],
+    ['A photo is saved', async () => (await call(ACTIONS_.attachmentPut,
+      { kind: ATTACHMENT_KINDS_.product, id: 'TRIAL-PHOTO', contentType: 'image/png', data: PHOTO })).name],
+    ['A tab exports as CSV', async () => (await call(ACTIONS_.exportRequest,
+      { file: WORKBOOKS_.myShop, format: EXPORT_FORMATS_.csv, table: TABLES_.products })).name],
+    ['A workbook exports as Excel', async () => (await call(ACTIONS_.exportRequest,
+      { file: WORKBOOKS_.myShop, format: EXPORT_FORMATS_.xlsx })).name],
     ['The shop page opens with no sign-in', async () => {
       const page = await client.page();
       expect(page.status === 200, `HTTP ${page.status}`);

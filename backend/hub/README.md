@@ -1,11 +1,3 @@
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
-
 # The Shop Hub
 
 The shop's own backend: a standalone Apps Script web app that the Dura app
@@ -110,7 +102,8 @@ backend/hub/
     sheet_cells.js     Sheets v4 cell writes in one call; month date serials
     crypto.js          SHA-256, HMAC, random hex, constant-time compare
     canonical_json.js  the signing string
-    protocol.js        version, limits, patterns, errors
+    names.js           every shared word: actions, errors, store keys, tabs
+  protocol.js        version, limits, patterns, errors
     install_config.js  the install code's hash; replaced per shop by the installer
   tools/
     trial.js           npm run trial: installs a real hub and runs every check

@@ -2,13 +2,6 @@
 name: dura-project
 description: The facts about Dura POS: its goal, users, promises, settled business model, architecture, what is built today, the delivery order and the future plan. Use this before planning, scoping or explaining any Dura work, when a contributor asks what Dura is or what to do next, when a change might touch a product decision, and whenever you're unsure whether something is built or only designed.
 ---
-<!--
-Copyright (c) 2026, DonnC & contributors.
-Please see the AUTHORS file for details. All rights reserved.
-Use of this source code is governed by the MIT license that can be
-found in the LICENSE file at the repository root.
-SPDX-License-Identifier: MIT
--->
 # Dura POS: goal, architecture and plan
 
 Status below is as of 5 November 2026. Before relying on it, check the code and
