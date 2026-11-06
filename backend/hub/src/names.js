@@ -162,6 +162,7 @@ var STORE_KEYS_ = Object.freeze({
 var STORE_PREFIXES_ = Object.freeze({
   device: 'device:',
   filledMonth: 'filled:month:',
+  formatted: 'formatted:',
   invoicesFile: 'file:invoices:',
   journal: 'journal:',
   masterHash: 'hash:',

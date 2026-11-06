@@ -86,7 +86,11 @@ function itemFrom(tables = {}) {
 }
 
 const money = (value) => value.toFixed(2);
-const clock = (at) => ({ date: at.slice(0, 10), time: at.slice(11, 19) });
+/** A date and time as the shop's clock shows them, which is what a phone records. */
+function clock(at) {
+  const [date, time] = new Date(at).toLocaleString('sv-SE', { timeZone: 'Africa/Harare' }).split(' ');
+  return { date, time };
+}
 
 /**
  * One cash sale, as a phone records it: the sale, its line and its payment in

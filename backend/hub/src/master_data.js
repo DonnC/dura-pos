@@ -106,11 +106,12 @@ function writeFormulaRows_(services, table, width, values) {
   while (padded.length < before) padded.push(new Array(width).fill(''));
   if (padded.length > 0) {
     var fileId = services.store.get(STORE_KEYS_.fileMyShop);
+    formatFile_(services, fileId, WORKBOOKS_.myShop);
     var last = padded.length + 1;
     growIfNeeded_(services, fileId, table, sheetInfo_(services, fileId, [table])[table], last);
     Sheets.Spreadsheets.Values.batchUpdate({
       valueInputOption: 'USER_ENTERED', // these are formulas, and they should calculate
-      data: [{ range: "'" + table + "'!A2:" + columnLetter_(width) + last, values: padded }],
+      data: [{ range: tabRange_(table, 'A2:' + columnLetter_(width) + last), values: padded }],
     }, fileId);
   }
   /** @type {Object<string, string | number>} */

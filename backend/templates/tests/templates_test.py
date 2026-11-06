@@ -101,7 +101,7 @@ class TemplatesTest(unittest.TestCase):
         names = (Path(__file__).parents[2] / "hub" / "src" / "names.js").read_text(encoding="utf-8")
 
         def listed(table: str) -> list[str]:
-            block = names.split(f"var {table} = {{")[1].split("}")[0]
+            block = names.split(f"var {table} = Object.freeze({{")[1].split("}")[0]
             return re.findall(r"\w+: '([^']+)'", block)
 
         my_shop, month = self.book("USD", "My Shop.xlsx"), self.book("USD", "Month.xlsx")

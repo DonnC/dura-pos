@@ -1001,5 +1001,27 @@
    "first": 117,
    "rows": 100
   }
+ },
+ "formats": {
+  "money": "#,##0.00;[Red]-#,##0.00",
+  "date": "d mmm yyyy",
+  "time": "hh:mm",
+  "datetime": "d mmm yyyy hh:mm",
+  "rate": "0.00",
+  "int": "0;[Red]-0"
+ },
+ "columnFormats": {
+  "Stock": {
+   "4": "int",
+   "5": "int",
+   "7": "money",
+   "8": "date"
+  },
+  "Balances": {
+   "6": "money",
+   "7": "money",
+   "8": "money",
+   "10": "date"
+  }
  }
 }
