@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT
 -->
 
 <p align="center">
-  <img src="handbook/design/branding/dura-banner.png" alt="Dura POS: a free, offline point of sale for Zimbabwean shops" width="820">
+  <img src="handbook/design/branding/dura-banner.png" alt="Dura POS: a free, offline point of sale for vendors and small shops" width="820">
 </p>
 
 <p align="center">
@@ -24,13 +24,16 @@ SPDX-License-Identifier: MIT
   <a href="#contribute">Contribute</a>
 </p>
 
-Dura POS is a free, open-source point of sale for street vendors and small shops
-in Zimbabwe. It sells offline on an Android phone, handles USD, ZWG and ZAR, and
-keeps every record in the owner's own Google account, as Sheets they can open,
-edit and take with them.
+Dura POS is a free, open-source point of sale for street vendors and small shops.
+It sells offline on an Android phone, and keeps every record in the owner's own
+Google account, as Sheets they can open, edit and take with them.
 
 *Dura* is the Shona word for a granary, where a household stores its harvest. Dura
 POS is that store for a shop's sales, stock and money.
+
+The project was born in Zimbabwe, and that's who it serves first: it handles USD, ZWG
+and ZAR, and its fiscalisation plans follow ZIMRA. Nothing limits it to one market, so
+if it could work for shops where you are, you're welcome here.
 
 > **Early development: not ready for live trading.** The backend is written and
 > tested, and its main path has run on a real Google account. The app has its
@@ -38,18 +41,18 @@ POS is that store for a shop's sales, stock and money.
 
 ## Why Dura
 
-Point-of-sale systems sold in Zimbabwe usually charge a monthly or yearly fee and
-keep the shop's data on the vendor's servers. When the payments stop, the records
-can go too. Dura works the other way round:
+Commercial point-of-sale systems serve many businesses well, with support and
+hardware behind them. Dura is another option, for the smallest shops that want to run
+things themselves, at no cost, in an account they already own:
 
 | Dura's promise | What it means |
 |---|---|
-| **No subscription, no Dura server** | The app is free. Everything shared lives in the shop's own Google account |
+| **Free, with no Dura server** | The app is free and open source. Everything shared lives in the shop's own Google account |
 | **The records belong to the shop** | Ordinary Sheets the owner or accountant can read, edit, export to Excel, or leave with |
 | **Selling never waits** | A sale is saved on the phone first and uploaded when there's a connection. Nothing optional can stop a cash sale |
-| **The shop's own keys** | Mobile money and ZIMRA use the shop's own accounts, so payments go straight to the business |
+| **The shop's own keys** | Mobile money and tax systems use the shop's own accounts, so payments go straight to the business |
 | **Honest numbers** | Amounts always show their currency, and currencies are never added together |
-| **Built for local trading** | Three currencies, the owner's own pricing currency, change kept for customers, credit for regulars, expenses from the till |
+| **Built for how small shops trade** | Several currencies, the owner's own pricing currency, change kept for customers, credit for regulars, expenses from the till |
 
 It's for street vendors, market traders, tuck shops and small shops, from one phone
 to about ten. Businesses that want help with setup, migration or a custom
@@ -173,8 +176,9 @@ npm ci
 npm run verify                 # type check, then every test
 ```
 
-To try it on a real Google account, follow the
-[real-account test](handbook/engineering/10-real-account-test.md).
+To try it on a real Google account, `npm run trial` installs a hub, runs every check
+and writes a report. The [real-account test](handbook/engineering/10-real-account-test.md)
+explains what it needs.
 
 ### Change a workbook
 

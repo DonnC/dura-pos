@@ -17,9 +17,12 @@ mean it exists.
 
 ## The goal
 
-Give every Zimbabwean vendor and small shop a point of sale that is free, works
-offline, and keeps the shop's records in the shop's own Google account, so the
+Give vendors and small shops, starting in Zimbabwe, a point of sale that is free,
+works offline, and keeps the shop's records in the shop's own Google account, so the
 owner never has to pay, trust or ask anyone to keep trading.
+
+Dura was born from Zimbabwean trading conditions, which set its first priorities. The
+design isn't limited to them, and contributors elsewhere are welcome.
 
 *Dura* is the Shona word for a granary. The reasons are in
 `handbook/product/01-vision.md`.

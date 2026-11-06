@@ -1,7 +1,7 @@
 # Dura POS
 
-A free, open-source POS for Zimbabwean street vendors and small shops,
-Android first, in Flutter. It sells offline in USD, ZWG and ZAR, fiscalises
+A free, open-source POS for street vendors and small shops, born in Zimbabwe
+and serving it first, Android first, in Flutter. It sells offline in USD, ZWG and ZAR, fiscalises
 with ZIMRA on the phone (via fzimra), and keeps every record in the owner's
 own Google Drive, with Google Sheets as the face of the records.
 
@@ -70,6 +70,9 @@ research. Also follow `AGENTS.md` and the skills in `.agents/skills/`.
   - `notes/13` covers which financial records Dura produces;
   - `notes/14` is the future paid "Ask Dura" assistant: the phone works out
     the numbers with tools; the model only explains.
+- **Public writing:** present Dura as open to any market, with Zimbabwe as where
+  it started and who it serves first. Respect other POS vendors; never run down
+  subscriptions or commercial systems.
 - **Public posts:**
   - no code blocks;
   - don't claim ZIMRA certification;

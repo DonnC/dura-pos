@@ -380,6 +380,10 @@ A GET to the hub's address isn't a protocol request. It returns the shop's publi
 page as HTML, or a neutral page if it's turned off (decision 0009). Phones don't use
 it, and another backend needn't offer it.
 
+People get the form `https://script.google.com/a/~/macros/s/<ID>/exec`, because the
+plain address can fail in a browser signed in to several Google accounts. Phones keep
+using the plain address for requests.
+
 ## Versioning
 
 - **Within version 1,** fields may be added. Clients ignore fields they don't

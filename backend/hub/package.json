@@ -11,7 +11,8 @@
     "test": "node --test \"test/*_test.js\"",
     "check": "tsc --project tsconfig.json",
     "verify": "npm run check && npm test",
-    "push": "clasp push"
+    "push": "clasp push",
+    "trial": "node tools/trial.js"
   },
   "devDependencies": {
     "@google/clasp": "3.4.1",

@@ -139,8 +139,12 @@ npm run verify
 
 ## Trying it for real
 
-`handbook/engineering/10-real-account-test.md` is the runbook, and
-`backend/hub/tools/try_hub.js` acts as a phone.
+`npm run trial` from `backend/hub` installs a hub on the signed-in Google account and
+runs every check; `handbook/engineering/10-real-account-test.md` is the guide. When a
+new action matters on real Google, add a check to `backend/hub/tools/trial.js`.
+
+Give people the `/a/~/macros/s/<ID>/exec` address for the shop page: the plain one can
+fail in a browser signed in to several Google accounts.
 
 ## Done when
 

@@ -10,6 +10,18 @@ SPDX-License-Identifier: MIT
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Changed: one trial command, the shop's address and how Dura presents itself
+
+- **`npm run trial`** runs the whole real-account test: it installs a hub, waits for
+  sign-in and authorisation, pairs, runs every check, and writes a report that's safe
+  to share. Run it again at any time. Its checks are also tested on the hub's own code.
+- **The shop page's address is now `/a/~/macros/s/<ID>/exec`.** It opens in browsers
+  signed in to several Google accounts, on a computer and a phone. Google doesn't
+  document this form.
+- **Dura is presented as open to any market,** born in Zimbabwe and serving it first.
+  The banner, README, vision and project summary are reworded, and other POS systems
+  are described with respect.
+
 ### Proven: the hub's first run on a real Google account
 
 - **Worked on real Google:** install, consent, pairing, signed requests, setup in

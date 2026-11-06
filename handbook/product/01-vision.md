@@ -15,9 +15,14 @@ built the way it is. The engineering rules that follow from it are in
 
 ## The goal in one sentence
 
-**Give every Zimbabwean vendor and small shop a point of sale that is free,
-works offline, and keeps the shop's records in the shop's own Google account,
-so the owner never has to pay, trust or ask anyone to keep trading.**
+**Give vendors and small shops, starting in Zimbabwe, a point of sale that is
+free, works offline, and keeps the shop's records in the shop's own Google
+account, so the owner never has to pay, trust or ask anyone to keep trading.**
+
+Dura was born from Zimbabwean trading conditions, and they set its first
+priorities. Nothing in the design limits it to Zimbabwe: a shop anywhere that
+trades the same way may find it useful, and contributors are welcome from
+everywhere.
 
 *Dura* is the Shona word for a granary: the store where a household keeps
 what it has harvested. Dura POS is the shop's granary for its sales, stock and
@@ -25,13 +30,13 @@ money.
 
 ## The problem
 
-- **Point-of-sale systems in Zimbabwe are rented.** Most off-the-shelf systems,
-  including the ones bundled with Sunmi-style handhelds, charge a monthly or
-  yearly fee and keep the shop's data on the vendor's servers.
-- **Small traders don't want that.** They're cost-conscious and sceptical of
-  subscriptions, and many keep records in an exercise book, a WhatsApp chat
-  or a spreadsheet. If they stop paying, they lose the system and often the
-  records with it.
+- **The smallest traders are often left out.** Commercial systems, many sold
+  with handhelds and support, serve a lot of businesses well. Their running
+  cost can be out of reach for a vendor on thin margins, so many still keep
+  records in an exercise book, a WhatsApp chat or a spreadsheet.
+- **There's room for a different model:** free software, with records kept in
+  an account the shop already owns. It sits alongside commercial systems, for
+  shops that want to run things themselves.
 - **Trading conditions are hard:**
   - a cheap Android phone;
   - patchy internet and expensive data;
@@ -41,7 +46,7 @@ money.
   - informal credit;
   - expenses paid straight out of the day's takings.
 - **Compliance is coming.** ZIMRA fiscalisation reaches more businesses each
-  year, and is often what vendors charge the most for.
+  year.
 
 ## Who it's for
 

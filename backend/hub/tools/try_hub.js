@@ -4,10 +4,11 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
-// Tries a real hub without the app, for the steps in
-// handbook/engineering/10-real-account-test.md. It acts as a phone, using the
-// same signing as the tests. Everything it makes stays in .try/, which Git
-// ignores: the copy of the hub, the install code and the device secret.
+// Single commands against a real hub, without the app. `npm run trial` uses
+// these for the whole test; run them by hand to look into one thing. It acts
+// as a phone, using the same signing as the tests. Everything it makes stays in
+// .try/, which Git ignores: the copy of the hub, the install code and the
+// device secret.
 
 'use strict';
 
@@ -67,6 +68,20 @@ async function send(action, body) {
   return post(device.url, client.signed({ device: device.device, secret: device.secret, action, body, ts }));
 }
 
+/** A batch body of `count` sales, each with a Sales row. */
+function saleBatch(deviceId, number, count = 1) {
+  const at = new Date().toISOString();
+  const events = Array.from({ length: count }, (_, i) => {
+    const id = `${deviceId}-S${at.slice(2, 10).replace(/-/g, '')}-B${number}-${i + 1}`;
+    return {
+      id, type: 'sale.completed', at,
+      data: { total: '1.00', currency: 'USD' },
+      rows: { Sales: [{ sale_id: id, date: at.slice(0, 10), phone: deviceId, currency: 'USD', total: '1.00' }] },
+    };
+  });
+  return client.batch(number, events);
+}
+
 /** One sale, with rows for the Sales tab, as the next batch. */
 async function sale() {
   const device = loadDevice();
@@ -105,29 +120,72 @@ async function load(count = '200') {
 }
 
 /** Sends the very same signed request twice. The second must be refused. */
-async function retry() {
+async function sendTwice() {
   const device = loadDevice();
   const request = client.signed({ device: device.device, secret: device.secret, action: 'status', body: {}, ts: Math.floor(Date.now() / 1000) });
-  const first = await post(device.url, request);
-  const second = await post(device.url, request);
+  return [await post(device.url, request), await post(device.url, request)];
+}
+
+async function retry() {
+  const [first, second] = await sendTwice();
   return { first: first.ok, second: second.error ?? second.ok };
 }
 
+const CLASP = path.join(HUB, 'node_modules', '.bin', 'clasp');
+
 /** Runs clasp in .try and returns what it printed. */
 function clasp(args) {
-  const bin = path.join(HUB, 'node_modules', '.bin', 'clasp');
-  return execSync(`"${bin}" ${args}`, { cwd: TRY, encoding: 'utf8' });
+  return execSync(`"${CLASP}" ${args}`, { cwd: TRY, encoding: 'utf8' });
+}
+
+/** Runs clasp in .try where the person can see it and answer it. */
+function claspLive(args) {
+  execSync(`"${CLASP}" ${args}`, { cwd: TRY, stdio: 'inherit' });
+}
+
+/** The versioned deployment in clasp's list, never @HEAD. */
+function deploymentFrom(list) {
+  const line = list.split('\n').filter((text) => /@\d+/.test(text)).pop();
+  return line?.match(/AKfy[A-Za-z0-9_-]+/)?.[0];
+}
+
+const deploymentId = () => deploymentFrom(clasp('list-deployments'));
+const hubAddress = (id) => `https://script.google.com/macros/s/${id}/exec`;
+
+/**
+ * The address to give people. Browsers signed in to several Google accounts get
+ * Google's error page at the plain address, but open this form (decision 0009).
+ */
+const shopPageAddress = (address) => address.replace('/macros/s/', '/a/~/macros/s/');
+
+/** Whether the owner has authorised the hub: it answers JSON once they have. */
+async function isAuthorised(url) {
+  try {
+    await post(url, {});
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** A new install code on the same hub, and the address to pair with. */
 function fresh(base = RAW) {
   const code = prepare(TRY, base, Math.floor(Date.now() / 1000));
   clasp('push --force');
-  const ids = clasp('list-deployments').match(/AKfy[A-Za-z0-9_-]+/g) ?? [];
-  const id = ids[ids.length - 1];
+  const id = deploymentId();
   if (!id) throw new Error('No deployment yet. Run clasp create-deployment in .try first.');
   clasp(`create-deployment --deploymentId ${id} --description "Fresh install code"`);
-  return { address: `https://script.google.com/macros/s/${id}/exec`, code, note: 'Valid for 15 minutes.' };
+  const address = hubAddress(id);
+  return { address, shopPage: shopPageAddress(address), code, note: 'Valid for 15 minutes.' };
+}
+
+async function pair(url, code) {
+  const reply = await post(url, { v: 1, ts: Math.floor(Date.now() / 1000), action: 'pair', body: { code, name: 'Test phone' } });
+  if (reply.ok) {
+    fs.writeFileSync(DEVICE, JSON.stringify({ url, ...reply.result }, null, 2));
+    return { ok: true, device: reply.result.device, role: reply.result.role };
+  }
+  return reply;
 }
 
 const COMMANDS = {
@@ -136,14 +194,7 @@ const COMMANDS = {
     return { code, note: 'Valid for 15 minutes. Push and deploy now.' };
   },
   fresh,
-  pair: async (url, code) => {
-    const reply = await post(url, { v: 1, ts: Math.floor(Date.now() / 1000), action: 'pair', body: { code, name: 'Test phone' } });
-    if (reply.ok) {
-      fs.writeFileSync(DEVICE, JSON.stringify({ url, ...reply.result }, null, 2));
-      return { ok: true, device: reply.result.device, role: reply.result.role };
-    }
-    return reply;
-  },
+  pair,
   setup: (name, timeZone = 'Africa/Harare', pricingCurrency = 'USD') => send('setup.run', { name, timeZone, pricingCurrency }),
   status: () => send('status', {}),
   pull: () => send('changes.pull', {}),
@@ -177,4 +228,7 @@ if (require.main === module) {
   });
 }
 
-module.exports = { prepare };
+module.exports = {
+  TRY, DEVICE, RAW, prepare, fresh, pair, send, sendTwice, saleBatch, clasp, claspLive,
+  deploymentId, deploymentFrom, hubAddress, shopPageAddress, isAuthorised,
+};

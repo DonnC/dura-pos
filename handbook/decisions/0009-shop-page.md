@@ -55,10 +55,12 @@ Call, WhatsApp and Directions buttons, and a searchable list of products and pri
   can't remove it.
 - **The page shows prices in the pricing currency only.** Rates change daily, and a
   cached page shouldn't quote them.
-- **Browsers signed in to several Google accounts can fail.** Google may rewrite the
-  address to `/macros/u/1/s/...` and answer "Sorry, unable to open the file at
-  present", before the hub runs, so Dura can't fix it. It happened to an owner with
-  two accounts; whether it reaches customers still needs testing.
+- **Share `/a/~/macros/s/<ID>/exec`, never the plain address.** With several Google
+  accounts signed in, the plain address fails with Google's "Sorry, unable to open
+  the file at present", before the hub runs. The `/a/~/` form opened on a computer
+  and a phone that both failed. Google doesn't document this form, so it could
+  change. If it does, the fallback is a static page that holds no shop data, which
+  would need its own decision.
 - **The address is a long `script.google.com` link.** The app can share it as a QR
   code; a short name would need a service Dura doesn't run.
 

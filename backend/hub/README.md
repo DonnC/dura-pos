@@ -113,7 +113,8 @@ backend/hub/
     protocol.js        version, limits, patterns, errors
     install_config.js  the install code's hash; replaced per shop by the installer
   tools/
-    try_hub.js         acts as a phone against a real hub; see the real-account test
+    trial.js           npm run trial: installs a real hub and runs every check
+    try_hub.js         single commands against a real hub
   test/
     *_test.js          one file per behaviour
     support/           fake Google services, an independent protocol client, fixtures
@@ -170,8 +171,8 @@ backend/hub/
 - **Google limits a Drive export to 10 MB.** A larger workbook answers
   `export_failed`; a CSV of one tab still works.
 - **The shop page shows Google's notice** on Gmail accounts, and the hub can't remove
-  it. Its buttons still need checking on a phone. A browser signed in to several Google accounts can get Google's own error
-  page instead (decision 0009).
+  it. Share it as `/a/~/macros/s/<ID>/exec`: at the plain address, a browser signed in
+  to several Google accounts gets Google's own error page (decision 0009).
 - **A daily step that fails** is logged and tried again the next day. Nothing
   reports it to the owner yet.
 
