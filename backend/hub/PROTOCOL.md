@@ -254,7 +254,7 @@ result when up to date: {"unchanged":true,"version":"<sha-256>"}
 The backend's health. Any paired phone may ask; it holds no secrets.
 
 ```text
-result: {"hub":"0.1.0-dev.1","protocols":[1],"business":"...","pricingCurrency":"USD",
+result: {"hub":"0.1.0-dev.2","protocols":[1],"business":"...","pricingCurrency":"USD",
          "views":{"queued":0,"skipped":0},
          "phones":[{"device":"P1","name":"Owner phone","role":"owner",
                     "through":124,"viewed":124,"lastSeen":1793700000}]}

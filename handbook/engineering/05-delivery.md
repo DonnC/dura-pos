@@ -45,6 +45,17 @@ breaking supported contract. Before 1.0, minor changes may break contracts only
 with prominently documented migration and tests; patch remains compatible.
 Never infer compatibility from the product version alone.
 
+**What moves when:**
+
+- Change the workbook layout: raise `LAYOUT_VERSION`, regenerate, and record it in
+  the release notes.
+- Change a local table: raise `schemaVersion` and add a tested migration.
+- Break the hub protocol: raise `PROTOCOL_VERSION_`. A new error code or optional
+  field doesn't.
+- Release-intent commit: raise the version and build in `release.json`, the app, the
+  packages and the hub together, and add its release notes. `melos run check` fails
+  if any of them differ.
+
 ## Meaningful pushes and changelog
 
 Every meaningful pushed change adds a concise entry under Unreleased: user

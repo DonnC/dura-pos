@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased — 0.1.0-dev.1 foundation
+## Unreleased — 0.1.0-dev.2
+
+### Changed: versions can't drift apart
+
+- **`melos run check` compares every repeated version with `release.json`:** the app,
+  the packages, their constraints and the hub.
 
 ### Added: the phone's outbox
 
@@ -29,6 +34,8 @@
 - **`Summary` in `My Shop` is folded into `Reports`.**
 - **`Fiscal Days`, `HS Codes`, `Quotes` and `Payment Callbacks` stay hidden** in a new
   shop until the feature is on. Nothing is deleted.
+
+## 0.1.0-dev.1 foundation
 
 ### Changed: shared words have one home
 

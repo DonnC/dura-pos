@@ -4,9 +4,11 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'source_header.dart';
+import 'version_drift.dart';
 import 'workspace.dart';
 
 const sourceLineLimit = 500;
@@ -24,6 +26,48 @@ Iterable<String> straySourceHeaders() sync* {
       yield '$name is not source code and must not carry the licence header';
     }
   }
+}
+
+/// Compares each file that repeats the product version with `release.json`.
+List<String> repositoryVersionDrift() {
+  final release = jsonDecode(
+    File('../release.json').readAsStringSync(),
+  ) as Map<String, Object?>;
+  final version = release['version']! as String;
+  final hub = jsonDecode(
+    File('../backend/hub/package.json').readAsStringSync(),
+  ) as Map<String, Object?>;
+  final hubSource = File('../backend/hub/src/protocol.js').readAsStringSync();
+  final versions = <String, String?>{
+    'backend/hub/package.json': hub['version'] as String?,
+    'backend/hub/src/protocol.js': RegExp("HUB_VERSION_ = '([^']+)'")
+        .firstMatch(hubSource)
+        ?.group(1),
+  };
+  final dependencies = <String, String>{};
+  var appVersion = '';
+  for (final directory in workspacePackages) {
+    final manifest = packageManifest(directory);
+    final declared = manifest['version'] as String?;
+    if (directory.startsWith('packages/')) {
+      versions[directory] = declared;
+    } else if (declared != null) {
+      appVersion = declared;
+    }
+    final needs = manifest['dependencies'] as Map? ?? const {};
+    for (final MapEntry(:key, :value) in needs.entries) {
+      if ('$key'.startsWith('dura_') && value is String) {
+        dependencies['$directory: $key'] = value;
+      }
+    }
+  }
+  return versionDrift(
+    version: version,
+    build: release['buildNumber']! as int,
+    appVersion: appVersion,
+    versions: versions,
+    dependencies: dependencies,
+  );
 }
 
 void main() {
@@ -86,6 +130,7 @@ void main() {
     }
   }
   errors.addAll(straySourceHeaders());
+  errors.addAll(repositoryVersionDrift());
   for (final directory in workspacePackages) {
     if (packageManifest(directory)['resolution'] != 'workspace') {
       errors.add('$directory is not in workspace resolution');
