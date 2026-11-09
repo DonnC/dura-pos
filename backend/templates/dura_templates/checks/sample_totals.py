@@ -5,7 +5,8 @@ Checks:
 - ZIMRA numbering and fiscal days;
 - stock against the ledger;
 - balances, purchases, invoices and quotes;
-- HS codes against ZIMRA's list.
+- HS codes against ZIMRA's list;
+- double entry: every posting, the trial balance and the control accounts.
 """
 import csv
 import sys
@@ -16,6 +17,7 @@ from pathlib import Path
 
 from openpyxl import load_workbook
 
+from dura_templates.checks import double_entry
 from dura_templates.paths import HS_CODES_CSV
 
 ROOT = Path(sys.argv[1]).resolve()  # the "Dura POS" folder
@@ -245,6 +247,26 @@ for sid in sale_ids:
 for s_ in rows(TEST / "2026" / "2026-10 October.xlsx", "Sales"):
     if s_["ZIMRA device ID"] in globals_by_device:
         problems.append(f"test sale {s_['Sale ID']} used a live ZIMRA device")
+
+# double entry: every posting, the trial balance, and each control account
+pays_26 = [p for path in months if path.name.startswith("2026") for p in rows(path, "Payments")]
+sales_26 = [s for path in months if path.name.startswith("2026") for s in rows(path, "Sales")]
+for path in months:
+    double_entry.check_rows(rows(path, "Payments"), path.name, problems)
+    double_entry.check_sales_post_their_total(rows(path, "Sales"), rows(path, "Payments"), problems)
+money_26 = rows(BIZ / "My Shop.xlsx", "Money Ledger")
+stock_26 = rows(BIZ / "My Shop.xlsx", "Stock Ledger")
+double_entry.check_rows(money_26, "Money Ledger", problems)
+double_entry.check_rows(stock_26, "Stock Ledger", problems)
+sample_today = max(s["Date"] for s in sales_26).date()
+accounts = double_entry.check_controls({
+    "sales": sales_26, "pays": pays_26, "stock": stock_26, "money": money_26, "all_money": MONEY,
+    "purchases": rows(BIZ / "My Shop.xlsx", "Purchases"), "months": rows(BIZ / "My Shop.xlsx", "Months"),
+    "cashups": [c for path in months for c in rows(path, "Cash-ups")], "today": sample_today,
+    "suppliers_owed": owed_bakery, "customers_owe": -bal[CLINIC],
+    "kept_change": sum(v for k, v in bal.items() if CONTACTS[k]["Type"] == "Customer" and k != CLINIC),
+}, problems)
+print("accounts: " + ", ".join(f"{k} {v}" for k, v in sorted(accounts.items())))
 
 print(f"test shop rows checked: {len(test_ids)}; months with profit checked: {len(pc_by_month)}")
 print(f"invoices: {sum(1 for s in all_sales.values() if s['Type'] == 'Invoice')}, quotes: {len(quotes)} "

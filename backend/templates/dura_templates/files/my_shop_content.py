@@ -25,6 +25,7 @@ from dura_templates.sample.period import START, TODAY
 from dura_templates.sample.records import (
     callbacks_y, counts_y, money_ledger_y, purchases_y, rates_rows_y, stock_ledger_y)
 from dura_templates.sample.sales import fiscal_day_open
+from dura_templates.workbook.accounts import method_account
 from dura_templates.workbook.lists import shop_lists
 
 
@@ -84,6 +85,11 @@ def _currencies() -> list[list]:
 
 
 def _payment_methods() -> list[list]:
+    """Each method, with the account its money lands in as the last column."""
+    return [[*row, method_account(row[0])] for row in _methods()]
+
+
+def _methods() -> list[list]:
     paynow_note = "Manual (SMS) before 4 May 2026; keys on the phones until the hub, 15 Aug 2026"
     return [["Cash USD", "USD", "Cash", "", "", "Cash count", "", "Yes", ""],
             ["Cash ZWG", "ZWG", "Cash", "", "", "Cash count", "", "Yes", ""],
@@ -127,7 +133,7 @@ def _settings() -> list[list]:
         ("Sync", "Background, after each sale, Sync now, end of day", ""), ("Backups", "Daily, to hidden app data", ""),
         ("Shop Hub", "Installed 15 Aug 2026, layout 3", "Apps Script in this account: payment keys and gateways, callbacks, month and year files, daily summary"),
         ("Receipt footer", "Thank you! Tatenda! Siyabonga!", ""),
-        ("Data year", 2026, "The year the ledger tabs and Summary show. Dura moves it on at the year-end archive"),
+        ("Data year", 2026, "The year the ledger tabs and Reports show. Dura moves it on at the year-end archive"),
         ("Shop page", "On", "On: anyone with the hub's address sees your name, address, phone, products and prices. Never costs, stock, staff or customers"),
     ]]
 

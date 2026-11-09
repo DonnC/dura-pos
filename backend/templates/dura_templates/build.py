@@ -68,6 +68,7 @@ def build_sample(out: Path | None = None) -> dict[str, int]:
     from dura_templates.sample import records
     from dura_templates.sample.business import business_dir, test_dir
     from dura_templates.sample.events import record_one_off_events
+    from dura_templates.sample.postings import post_all
     from dura_templates.sample.simulate import simulate
 
     root = output_root()
@@ -75,6 +76,7 @@ def build_sample(out: Path | None = None) -> dict[str, int]:
 
     record_one_off_events()
     simulate()
+    post_all()
 
     _clear(root)
     for ym in sorted(records.sales_m):

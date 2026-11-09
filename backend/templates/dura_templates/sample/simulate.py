@@ -18,7 +18,7 @@ from dura_templates.sample.business import ON_ACCOUNT_FROM, PHONES, PROD, QUOTES
 from dura_templates.sample.day_end import CLOSE_OVERRIDE, close_day, close_time, fiscal_day_today, last_weekday, stock_count
 from dura_templates.sample.period import START, TODAY, crng, rng
 from dura_templates.sample.rates import RATES
-from dura_templates.sample.records import closing_2025, ledger, log, rates_rows_y, visible
+from dura_templates.sample.records import closing_2025, ledger, log, rates_rows_y, visible, with_providers
 from dura_templates.sample.sales import book_return, book_sale, pick_lines, sale_times
 from dura_templates.sample.stock import daily_demand, pay_bakery, restock, stock
 
@@ -43,6 +43,12 @@ def simulate() -> None:
                     closing_2025.append([pid, PROD[pid][1], loc, qty, cost, q2(cost * qty)])
                     ledger(day, time(0, 0), "P1", "Dura", loc, "Opening", pid, qty, ref="CLOSE-2025",
                            note="Closing stock of 2025")
+        for phone, (_, loc, joined, _, _, _, opens, _, float_) in PHONES.items():
+            if joined == day:  # a new till starts with its float, from the owner
+                for cur, amount in float_.items():
+                    if amount:
+                        ledger(day, opens, phone, "Chipo Moyo", loc, "Float added", cash=amount, cur=cur, drawer="No",
+                               note="Starting cash for this till")
         zwg, zar = RATES[day]
         rates_rows_y[day.year].append([day, time(6, 2), "All day", zwg, zar, "Chipo Moyo", "Owner (street rate checked)", ""])
         log(day, time(6, 2), "P1", "Chipo Moyo", "Exchange rate set", f"1 USD = {zwg} ZWG = {zar} ZAR")
@@ -129,7 +135,12 @@ def simulate() -> None:
         pay_bakery(day)
         # weekly banking on Monday
         if day.weekday() == 0 and day != START:
-            banked = D(rng.randint(15, 30) * 10)
+            for (kind, cur), amount in sorted(with_providers.items()):
+                if amount > 0:
+                    ledger(day, time(10, 30), "P1", "Chipo Moyo", "Main", kind, cash=-amount, cur=cur, drawer="No",
+                           ref=f"MV-{day:%y%m%d}", note="The week's payments, moved by the owner")
+                    with_providers[(kind, cur)] = D(0)
+            banked = D(rng.randint(15, 30) * 2)
             ledger(day, time(11, 0), "P1", "Chipo Moyo", "Main", "Banked", cash=-banked, cur="USD", drawer="No",
                    ref=f"BNK-{day:%y%m%d}", note="Cash deposited at the bank")
         # monthly stock counts

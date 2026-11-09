@@ -117,11 +117,13 @@ function saleEvent(id, deviceId, at, item = SAMPLE_ITEM, qty = 1) {
         payment_id: `${id}-1`, sale_id: id, date, time, phone: deviceId, kind: 'Payment', method: 'Cash USD',
         currency: 'USD', amount: total, rate_used: '1', sale_currency: 'USD', amount_in_sale_currency: total,
         status: 'Paid', confirmed_by: 'Test', zimra_money_type: 'Cash',
+        amount_pricing: total, debit_account: 'Till cash', credit_account: 'Sales',
       }],
       'Stock Ledger': [{
         row_id: `${id}-L1`, date, time, phone: deviceId, location: item.location, type: 'Sold',
         product_id: item.product_id, product: item.product, qty: -qty, unit_cost_pricing: item.cost,
         stock_value_pricing: money(-Number(cost)), cost_currency: 'USD', reference: id, note: 'Test sale',
+        amount_pricing: cost, debit_account: 'Cost of goods sold', credit_account: 'Stock',
       }],
     },
   };
@@ -138,6 +140,7 @@ function stockInEvent(id, deviceId, at, item, qty) {
         row_id: id, date, time, phone: deviceId, location: item.location, type: 'Stock in',
         product_id: item.product_id, product: item.product, qty, unit_cost_pricing: item.cost,
         stock_value_pricing: money(Number(item.cost) * qty), cost_currency: 'USD', note: 'Test stock',
+        amount_pricing: money(Number(item.cost) * qty), debit_account: 'Stock', credit_account: 'Suppliers owed',
       }],
     },
   };

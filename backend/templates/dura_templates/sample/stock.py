@@ -17,6 +17,7 @@ from decimal import Decimal as D
 from dura_templates.money import q2
 from dura_templates.sample.business import PHONES, PROD, SUP, SUPPLIER_FOR, TAXES, active_product, phones_on, price_cost
 from dura_templates.sample.period import crng
+from dura_templates.sample.rates import rate_for
 from dura_templates.sample.records import drawer_out, ledger, log, next_id, purchases_y, visible
 
 
@@ -69,7 +70,7 @@ def purchase(day: date, t: time, phone: str, who: str, loc: str, sup: str, lines
     row = [bid, day, t, phone, loc, sup, SUP[sup][1], inv_no, len(lines), "USD", total, vat,
            {"Owner": "Owner's cash", "Drawer": "From the till", "On account": "On account"}[paid],
            "Unpaid" if paid == "On account" else "Paid", None if paid == "On account" else day,
-           f"{day:%Y}/Supplier invoices/{bid}.jpg" if sup == "P1-C0003" else "", who, note]
+           f"{day:%Y}/Supplier invoices/{bid}.jpg" if sup == "P1-C0003" else "", who, note, q2(vat / rate_for("USD", day))]
     if visible(phone, day, t):
         purchases_y[day.year].append(row)
     if paid == "On account":
@@ -86,7 +87,7 @@ def pay_bakery(day: date):
     t = time(18, 0)
     ref = f"PAY-{day:%y%m%d}-BAKERY"
     ledger(day, t, "P1", "Chipo Moyo", "Main", "Supplier paid", cash=-total, cur="USD", drawer="No", ref=ref,
-           note=f"EcoCash to Glen View Bakery for {len(owed)} deliveries", party="P1-C0001", balance=-total)
+           note=f"Cash to Glen View Bakery for {len(owed)} deliveries", party="P1-C0001", balance=-total)
     log(day, t, "P1", "Chipo Moyo", "Supplier paid", f"Glen View Bakery: USD {total:.2f} for {len(owed)} deliveries", ref)
     for r in owed:
         r[13], r[14] = "Paid", day  # the owner's phone updates the payment status cells

@@ -2,6 +2,21 @@
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: double-entry records, with no new tabs
+
+- **One row, two sides.** `Payments`, the `Stock Ledger` and the `Money Ledger` now name
+  a debit account, a credit account and an amount, so every row balances.
+- **`Reports` gains a trial balance and a full balance sheet,** and the sample's checks
+  prove them against the shop's own records of stock, tills and who owes what.
+- **Till shortages now reach profit,** and new Money Ledger types record the movements
+  that had no row: till top-ups, floats, mobile money withdrawn and card paid into bank.
+
+### Changed: fewer tabs
+
+- **`Summary` in `My Shop` is folded into `Reports`.**
+- **`Fiscal Days`, `HS Codes`, `Quotes` and `Payment Callbacks` stay hidden** in a new
+  shop until the feature is on. Nothing is deleted.
+
 ### Changed: shared words have one home
 
 - **`backend/hub/src/names.js`** holds the hub's actions, errors, Script Property and

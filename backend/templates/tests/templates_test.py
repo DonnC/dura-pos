@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from decimal import Decimal as D
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -25,6 +26,7 @@ from openpyxl import load_workbook
 from dura_templates.checks import excel_compat
 from dura_templates.fingerprint import folder_fingerprints
 from dura_templates.paths import DEFAULT_TEMPLATES_DIR
+from dura_templates.workbook.accounts import ACCOUNTS, money_posting, payment_posting, stock_posting
 
 CURRENCIES = ("USD", "ZWG", "ZAR")
 SAMPLE_MARKERS = ("Chipo", "Mbare", "Glen View", "SAMPLE DATA", "Rudo", "P1-", "Harare")
@@ -113,6 +115,33 @@ class TemplatesTest(unittest.TestCase):
         headings = {cell.value for tab in ("Sales", "Items Sold", "Payments") for cell in month[tab][1]}
         for heading in listed("HEADINGS_"):
             self.assertIn(heading, headings)
+
+    def test_the_posting_rules_match_the_phones(self):
+        cases = json.loads((Path(__file__).parents[3] / "client" / "packages" / "dura_core" / "test" / "fixtures"
+                            / "posting_rules.json").read_text(encoding="utf-8"))
+
+        def expected(case: dict) -> tuple:
+            sides = case["expect"]
+            return (None, "", "") if sides is None else (D(sides[0]), sides[1], sides[2])
+
+        for case in cases["payments"]:
+            self.assertEqual(payment_posting(case["method"], case["status"], D(case["value"])), expected(case), case)
+        for case in cases["stock"]:
+            self.assertEqual(stock_posting(case["type"], D(case["value"])), expected(case), case)
+        for case in cases["money"]:
+            self.assertEqual(money_posting(case["type"], case["fromTill"], D(case["value"])), expected(case), case)
+
+    def test_new_shops_hide_the_tabs_they_do_not_use_yet(self):
+        hidden = {name: [ws.title for ws in self.book("USD", name) if ws.sheet_state == "hidden"]
+                  for name in ("My Shop.xlsx", "Month.xlsx")}
+        self.assertEqual(hidden, {"My Shop.xlsx": ["HS Codes", "Payment Callbacks"], "Month.xlsx": ["Fiscal Days", "Quotes"]})
+
+    def test_my_shop_has_no_summary_tab_and_reports_holds_the_trial_balance(self):
+        book = self.book("USD", "My Shop.xlsx")
+        self.assertNotIn("Summary", book.sheetnames)
+        labels = {row[0].value for row in book["Reports"].iter_rows()}
+        for account, _ in ACCOUNTS:
+            self.assertIn(account, labels)
 
     def test_the_month_summary_has_the_labels_the_hub_reads(self):
         summary = self.book("USD", "Month.xlsx")["Summary"]
