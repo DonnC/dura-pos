@@ -43,6 +43,7 @@ var ERROR_CATEGORIES_ = Object.freeze({
 
 /** One entry per error, so a code can't be paired with the wrong category. */
 var ERRORS_ = Object.freeze({
+  batchReused: { category: ERROR_CATEGORIES_.integrityConflict, code: 'batch_reused' },
   badAttachment: { category: ERROR_CATEGORIES_.validation, code: 'bad_attachment' },
   badBatch: { category: ERROR_CATEGORIES_.validation, code: 'bad_batch' },
   badEnvelope: { category: ERROR_CATEGORIES_.validation, code: 'bad_envelope' },

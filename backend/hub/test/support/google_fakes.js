@@ -161,6 +161,10 @@ function createDrive() {
         files.push(file);
         return { id: file.id };
       },
+      list(options) {
+        const name = /name = '([^']+)'/.exec(options.q)[1];
+        return { files: files.filter((f) => f.name === name).map((f) => ({ id: f.id })) };
+      },
     },
   };
   return drive;

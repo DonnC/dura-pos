@@ -2,6 +2,19 @@
 
 ## Unreleased — 0.1.0-dev.1 foundation
 
+### Added: the phone's outbox
+
+- **`saleEvent`** builds a cash sale's records in one place, and sealing a batch adds
+  its stock rows, so a sale can't reach the records with only one side.
+- **`SqliteOutbox`** keeps waiting events and sealed batches through a restart.
+- **`OutboxUploader`** sends them oldest first. A lost reply resends the same batch, and
+  a batch stays unsent until the hub confirms it.
+
+### Fixed: a reused batch number can no longer lose sales
+
+- **The hub compares a re-sent batch with the one it stored,** and refuses different
+  events as `integrity_conflict` / `batch_reused`.
+
 ### Added: double-entry records, with no new tabs
 
 - **One row, two sides.** `Payments`, the `Stock Ledger` and the `Money Ledger` now name
