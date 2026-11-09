@@ -157,6 +157,7 @@ body: {
 | `batch` was already accepted | Nothing stored again; `{"status":"accepted","through":<highest accepted>}` |
 | `batch` skips ahead | Nothing stored; `{"status":"gap","need":<next expected>}` |
 | `hash` doesn't match `events` | `integrity_conflict` / `hash_mismatch` |
+| A number already stored, with different events | `integrity_conflict` / `batch_reused` |
 | `events` is empty, or over 500 events | `validation` / `bad_batch` |
 
 - **Numbering:** batches start at 1 for each device. The batch is stored
@@ -253,7 +254,7 @@ result when up to date: {"unchanged":true,"version":"<sha-256>"}
 The backend's health. Any paired phone may ask; it holds no secrets.
 
 ```text
-result: {"hub":"0.1.0-dev.1","protocols":[1],"business":"...","pricingCurrency":"USD",
+result: {"hub":"0.1.0-dev.2","protocols":[1],"business":"...","pricingCurrency":"USD",
          "views":{"queued":0,"skipped":0},
          "phones":[{"device":"P1","name":"Owner phone","role":"owner",
                     "through":124,"viewed":124,"lastSeen":1793700000}]}

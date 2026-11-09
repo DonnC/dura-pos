@@ -16,7 +16,7 @@ from decimal import Decimal as D
 from dura_templates.money import q2
 from dura_templates.sample.business import DEVICE_ID, LAST_SYNC_TODAY, PHONES, PROD, active_product, price_cost, seller_for
 from dura_templates.sample.period import TODAY, rng
-from dura_templates.sample.records import cashups_m, counts_y, drawer_out, fdays_m, ledger, log, visible
+from dura_templates.sample.records import cashups_m, counts_y, drawer_out, fdays_m, ledger, log, visible, with_providers
 from dura_templates.sample.sales import fiscal_day_open, sales_by_phone_day
 from dura_templates.sample.stock import stock
 
@@ -69,6 +69,11 @@ def close_day(phone: str, day: date):
                 expected[p[8]] += p[9]
             else:
                 mobile[p[7]] += p[9]
+    for method, amount in mobile.items():
+        name, cur = method.rsplit(" ", 1)
+        kind = {"Card": "Card paid into bank", "EcoCash": "Mobile money withdrawn", "InnBucks": "Mobile money withdrawn"}.get(name)
+        if kind:
+            with_providers[(kind, cur)] += amount
     for cur, amount, _ in expenses:
         expected[cur] += amount
     for cur, amount in drawer_out.get((phone, day), []):  # supplier on delivery, kept change paid out
@@ -99,6 +104,13 @@ def close_day(phone: str, day: date):
         if take > 0:
             ledger(day, t_take, phone, seller, loc, "Takings collected", cash=-take, cur=cur, drawer="Yes",
                    note="Handed to owner after cash-up")
+        elif take < 0:  # more went out than came in, such as change given in this currency
+            ledger(day, t_take, phone, seller, loc, "Till topped up", cash=-take, cur=cur, drawer="No",
+                   note="Owner brought the till back to its float")
+    for cur, diff in diffs.items():
+        if diff:
+            ledger(day, t_take, phone, seller, loc, "Cash difference", cash=diff, cur=cur, drawer="No",
+                   note="Counted against expected at cash-up")
     # fiscal day
     fd = fiscal_day_open.get(phone)
     if fd and fd["date"] == day:

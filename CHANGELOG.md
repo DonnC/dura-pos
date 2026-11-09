@@ -1,6 +1,41 @@
 # Changelog
 
-## Unreleased — 0.1.0-dev.1 foundation
+## Unreleased — 0.1.0-dev.2
+
+### Changed: versions can't drift apart
+
+- **`melos run check` compares every repeated version with `release.json`:** the app,
+  the packages, their constraints and the hub.
+
+### Added: the phone's outbox
+
+- **`saleEvent`** builds a cash sale's records in one place, and sealing a batch adds
+  its stock rows, so a sale can't reach the records with only one side.
+- **`SqliteOutbox`** keeps waiting events and sealed batches through a restart.
+- **`OutboxUploader`** sends them oldest first. A lost reply resends the same batch, and
+  a batch stays unsent until the hub confirms it.
+
+### Fixed: a reused batch number can no longer lose sales
+
+- **The hub compares a re-sent batch with the one it stored,** and refuses different
+  events as `integrity_conflict` / `batch_reused`.
+
+### Added: double-entry records, with no new tabs
+
+- **One row, two sides.** `Payments`, the `Stock Ledger` and the `Money Ledger` now name
+  a debit account, a credit account and an amount, so every row balances.
+- **`Reports` gains a trial balance and a full balance sheet,** and the sample's checks
+  prove them against the shop's own records of stock, tills and who owes what.
+- **Till shortages now reach profit,** and new Money Ledger types record the movements
+  that had no row: till top-ups, floats, mobile money withdrawn and card paid into bank.
+
+### Changed: fewer tabs
+
+- **`Summary` in `My Shop` is folded into `Reports`.**
+- **`Fiscal Days`, `HS Codes`, `Quotes` and `Payment Callbacks` stay hidden** in a new
+  shop until the feature is on. Nothing is deleted.
+
+## 0.1.0-dev.1 foundation
 
 ### Changed: shared words have one home
 

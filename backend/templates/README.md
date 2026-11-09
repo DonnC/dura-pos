@@ -86,7 +86,7 @@ That's 102 files: 16 workbooks and 86 photos.
 
 | File | Tabs | Who writes it |
 |---|---|---|
-| **My Shop** (one per shop, permanent) | Read Me, Products, Lists, Stock, Locations, Phones, Staff, Contacts, Taxes, HS Codes, Currencies, Payment Methods, Settings, Exchange Rates, Stock Ledger, Money Ledger, Stock Counts, Purchases, Payment Callbacks, Balances, Months, Reports, Files, Summary | The owner edits the green input tabs; phones add ledger rows; reports are formulas |
+| **My Shop** (one per shop, permanent) | Read Me, Products, Lists, Stock, Locations, Phones, Staff, Contacts, Taxes, HS Codes, Currencies, Payment Methods, Settings, Exchange Rates, Stock Ledger, Money Ledger, Stock Counts, Purchases, Payment Callbacks, Balances, Months, Reports, Files | The owner edits the green input tabs; phones add ledger rows; reports are formulas |
 | **Month file**, e.g. `2026-10 October` | Read Me, Sales, Items Sold, Payments, Cash-ups, Fiscal Days, Quotes, Activity, Summary | Phones add rows; Summary is formulas and charts |
 | **Ledger 2025** (the archive) | Read Me, Stock Ledger 2025, Money Ledger 2025, Stock Counts 2025, Purchases 2025, Exchange Rates 2025, Months 2025, Closing Stock 2025 | Written once at year end, then read-only |
 

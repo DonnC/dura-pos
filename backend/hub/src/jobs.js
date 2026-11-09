@@ -57,6 +57,28 @@ function moneyIn_(grid) {
   return totals;
 }
 
+/**
+ * What a month's Payments moved in each account, debit positive. Each posted row
+ * names both sides, so these add up to what the Sales tab says came in.
+ * @param {any[][]} grid @param {string} pricing
+ */
+function accountMovements_(grid, pricing) {
+  var heads = grid[0] || [];
+  var debit = heads.indexOf(HEADINGS_.debitAccount);
+  var credit = heads.indexOf(HEADINGS_.creditAccount);
+  var amount = heads.indexOf(HEADINGS_.amount + ' (' + pricing + ')');
+  /** @type {Object<string, number>} */
+  var moved = {};
+  grid.slice(1).forEach(function (row) {
+    var value = Number(row[amount]) || 0;
+    if (!value) return;
+    moved[row[debit]] = (moved[row[debit]] || 0) + value;
+    moved[row[credit]] = (moved[row[credit]] || 0) - value;
+  });
+  Object.keys(moved).forEach(function (name) { moved[name] = Math.round(moved[name] * 100) / 100; });
+  return moved;
+}
+
 /** A column's distinct values, sorted. @param {any[][]} grid @param {string} heading */
 function distinct_(grid, heading) {
   var at = (grid[0] || []).indexOf(heading);
@@ -147,6 +169,10 @@ function refreshMonthRow_(services, period, status) {
     money_in_usd: money.USD, money_in_zwg: money.ZWG, money_in_zar: money.ZAR,
     written_by: 'Shop Hub',
   };
+  var moved = accountMovements_(reply.valueRanges[1].values || [], store.get(STORE_KEYS_.pricingCurrency));
+  Object.keys(VIEW_CONTRACT_.monthAccounts).forEach(function (name) {
+    row[VIEW_CONTRACT_.monthAccounts[name]] = moved[name] || 0;
+  });
   var shop = store.get(STORE_KEYS_.fileMyShop);
   var rowKey = STORE_PREFIXES_.monthRow + period;
   var pointer = rowPointerKey_(shop, TABLES_.months);
@@ -204,6 +230,7 @@ function runDaily_(services) {
       var master = readMasterData_(services);
       refreshStockRows_(services, master);
       publishStorefront_(services, master);
+      refreshTabVisibility_(services, master, period);
     });
     dailyStep_('balances', function () {
       refreshBalanceRows_(services);

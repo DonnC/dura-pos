@@ -37,6 +37,7 @@ from pathlib import Path
 from dura_templates.files.month_file import summary_blocks, write_month
 from dura_templates.files.my_shop import balance_row_formulas, stock_row_formulas, write_my_shop
 from dura_templates.profile import CURRENCIES, PC
+from dura_templates.workbook.accounts import ACCOUNTS, MONTH_ACCOUNTS
 from dura_templates.workbook.lists import starter_lists
 from dura_templates.workbook.styles import FMT
 
@@ -66,7 +67,7 @@ def _currencies() -> list[list]:
 
 
 def _payment_methods() -> list[list]:
-    return [[f"Cash {code}", code, "Cash", "", "", "Cash count", "", "Yes" if code == PC else "No", ""]
+    return [[f"Cash {code}", code, "Cash", "", "", "Cash count", "", "Yes" if code == PC else "No", "", "Till cash"]
             for code in CURRENCIES]
 
 
@@ -97,7 +98,7 @@ def _settings() -> list[list]:
         ("Suppliers and purchases", "On", "Supplier invoice photos go to <year>/Supplier invoices"),
         ("Shop Hub", "", "The hub records its version here"),
         ("Receipt footer", "Thank you!", ""),
-        ("Data year", "", "The year the ledger tabs and Summary show. The hub sets it"),
+        ("Data year", "", "The year the ledger tabs and Reports show. The hub sets it"),
         ("Shop page", "On", "On: anyone with the hub's address sees your name, address, phone, products and prices. Never costs, stock, staff or customers"),
     ]]
 
@@ -176,7 +177,9 @@ def table_contract() -> dict:
     stock = {c: f for c, (f, _) in stock_row_formulas(ROW_MARKER).items()}
     # Clean templates have no rows to carry a number format, so the hub sets them.
     used = {"int", "money", "date"} | {field["kind"] for spec in contract.values() for field in spec["fields"].values()}
-    return {"tables": contract, "stockRow": _row_template(stock),
+    return {"tables": contract, "accounts": [{"name": name, "type": kind} for name, kind in ACCOUNTS],
+            "monthAccounts": {name: _field_id(f"{name} ({PC})") for name in MONTH_ACCOUNTS},
+            "stockRow": _row_template(stock),
             "balanceRow": _row_template(balance_row_formulas(ROW_MARKER)), "summaryBlocks": summary_blocks(),
             "formats": {kind: pattern for kind, pattern in FMT.items() if kind in used},
             "columnFormats": {"Stock": {"4": "int", "5": "int", "7": "money", "8": "date"},

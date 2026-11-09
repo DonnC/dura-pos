@@ -43,6 +43,7 @@ var ERROR_CATEGORIES_ = Object.freeze({
 
 /** One entry per error, so a code can't be paired with the wrong category. */
 var ERRORS_ = Object.freeze({
+  batchReused: { category: ERROR_CATEGORIES_.integrityConflict, code: 'batch_reused' },
   badAttachment: { category: ERROR_CATEGORIES_.validation, code: 'bad_attachment' },
   badBatch: { category: ERROR_CATEGORIES_.validation, code: 'bad_batch' },
   badEnvelope: { category: ERROR_CATEGORIES_.validation, code: 'bad_envelope' },
@@ -95,6 +96,8 @@ var TABLES_ = Object.freeze({
   contacts: 'Contacts',
   currencies: 'Currencies',
   exchangeRates: 'Exchange Rates',
+  fiscalDays: 'Fiscal Days',
+  hsCodes: 'HS Codes',
   itemsSold: 'Items Sold',
   locations: 'Locations',
   moneyLedger: 'Money Ledger',
@@ -103,6 +106,7 @@ var TABLES_ = Object.freeze({
   paymentMethods: 'Payment Methods',
   payments: 'Payments',
   products: 'Products',
+  quotes: 'Quotes',
   sales: 'Sales',
   settings: 'Settings',
   staff: 'Staff',
@@ -116,7 +120,9 @@ var MASTER_TABLES_ = [TABLES_.products, TABLES_.locations, TABLES_.staff, TABLES
 
 var HEADINGS_ = Object.freeze({
   amount: 'Amount',
+  creditAccount: 'Credit account',
   currency: 'Currency',
+  debitAccount: 'Debit account',
   location: 'Location',
   method: 'Method',
   phone: 'Phone',
@@ -131,7 +137,9 @@ var SETTINGS_ = Object.freeze({
   acceptedCurrencies: 'Accepted currencies',
   address: 'Address',
   businessName: 'Business name',
+  fiscalisation: 'Fiscalisation',
   phone: 'Phone',
+  quotes: 'Quotes',
   shopPage: 'Shop page',
 });
 
@@ -175,6 +183,7 @@ var STORE_PREFIXES_ = Object.freeze({
   rowPointer: 'row:',
   seen: 'seen:',
   summary: 'summary:',
+  tabsShown: 'tabs:',
   view: 'view:',
   viewQueue: 'viewq:',
   yearFile: 'file:year:',

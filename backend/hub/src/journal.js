@@ -26,6 +26,25 @@ function checkBatch_(body) {
 }
 
 /**
+ * A number the hub has passed is a re-send, or a phone reusing a number. Treating
+ * the second as a re-send would lose its events without an error, so the batch
+ * must match what's stored. Only re-sends pay for this one Drive read.
+ * @param {any} services @param {any} device @param {any} body
+ */
+function confirmSameBatch_(services, device, body) {
+  var stored;
+  try {
+    stored = services.journalWriter.read(device.id, body.batch);
+  } catch (error) {
+    if (/** @type {any} */ (error).hub) throw error;
+    throw hubError_(ERRORS_.storageUnavailable, 'The stored batch could not be read; send it again.');
+  }
+  if (!stored || !constantTimeEqual_(stored.hash, body.hash)) {
+    throw hubError_(ERRORS_.batchReused, 'This batch number already holds different events.');
+  }
+}
+
+/**
  * `journal.put`: stores the next batch durably, then acknowledges it. A batch
  * already stored is acknowledged again without being stored twice.
  * @param {any} request
@@ -38,7 +57,10 @@ function putJournal_(request, services, device) {
   return withLock_(services, function () {
     var key = STORE_PREFIXES_.journal + device.id;
     var through = Number(services.store.get(key) || '0');
-    if (body.batch <= through) return { status: JOURNAL_REPLIES_.accepted, through: through };
+    if (body.batch <= through) {
+      confirmSameBatch_(services, device, body);
+      return { status: JOURNAL_REPLIES_.accepted, through: through };
+    }
     if (body.batch > through + 1) return { status: JOURNAL_REPLIES_.gap, need: through + 1 };
     var stored;
     try {

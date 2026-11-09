@@ -19,17 +19,18 @@ description: Implement or assess Dura POS offline sync, journal acknowledgements
 
 - **A phone numbers its batches from 1.** `journal.put` answers `accepted` with
   the highest number stored, or `gap` with the number it needs.
-- **Re-sending a stored batch is safe** and stores nothing twice. Re-sending that
-  number with different content is also acknowledged, so a phone must never reuse
-  a batch number.
+- **Re-sending a stored batch is safe** and stores nothing twice. Sending that
+  number with different content is refused as `integrity_conflict` /
+  `batch_reused`.
 - **Views catch up on their own:** rows reach Sheets exactly once, by a queue a
   timer drains. Failures stay queued and never fail an upload.
 - **`status`** reports each phone's `through`, `viewed` and `lastSeen`, for the
   plain-state rule below.
 - **`changes.pull`** moves master data down by version hash.
 
-The phone's side of this (outbox, sealed batches, checkpoints, the `dura_hub`
-adapter) isn't built yet.
+The phone's side is in `dura_core` (`OutboxUploader`, `sealedEvents`,
+`saleEvent`), `dura_data` (`SqliteOutbox`) and `dura_hub`. Nothing runs the uploader
+yet: scheduling and download checkpoints come with the selling screens.
 
 ## Rules
 

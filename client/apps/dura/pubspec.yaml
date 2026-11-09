@@ -1,7 +1,7 @@
 name: dura_pos
 description: Local-first Dura POS application foundation.
 publish_to: 'none'
-version: 0.1.0-dev.1+1
+version: 0.1.0-dev.2+2
 resolution: workspace
 
 environment:
@@ -10,9 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  dura_core: ^0.1.0-dev.1
-  dura_data: ^0.1.0-dev.1
-  dura_ui: ^0.1.0-dev.1
+  dura_core: ^0.1.0-dev.2
+  dura_data: ^0.1.0-dev.2
+  dura_ui: ^0.1.0-dev.2
   flutter_riverpod: ^3.4.3
   go_router: ^18.1.2
   path_provider: ^2.1.6

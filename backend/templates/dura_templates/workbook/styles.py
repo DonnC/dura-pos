@@ -55,4 +55,4 @@ GOOD, WARN, BAD, INFO, OFF = "C6EFCE", "FFE699", "F8CBAD", "DDEBF7", "EDEDED"
 
 # The workbook layout version, recorded in each file so upgrades know what
 # they're upgrading from.
-LAYOUT_VERSION = 3
+LAYOUT_VERSION = 4

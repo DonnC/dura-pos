@@ -183,6 +183,7 @@ function pullChanges_(request, services) {
   return withLock_(services, function () {
     var master = readMasterData_(services);
     refreshStockRows_(services, master);
+  refreshTabVisibility_(services, master, shopToday_(services).slice(0, 7));
     publishStorefront_(services, master);
     if (request.body.since === master.version) return { unchanged: true, version: master.version };
     return { unchanged: false, version: master.version, tables: master.tables, skipped: master.skipped };

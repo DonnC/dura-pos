@@ -1,5 +1,5 @@
 {
-  "layoutVersion": 3,
+  "layoutVersion": 4,
   "cells": {
     "myShop": {
       "businessName": "Settings!B2",
@@ -14,31 +14,31 @@
     "USD": {
       "myShop": {
         "file": "USD/My Shop.xlsx",
-        "sha256": "1c8378d19ea2dd55e6b90b7fe88cd32d5a2f910ffc84428d95164048b132b0d6"
+        "sha256": "031c03dd08d9452872c0f3d83c7aaf45d70aa212581afd19ad7fa36b2b9759c8"
       },
       "month": {
         "file": "USD/Month.xlsx",
-        "sha256": "6b02ae3cef1c7ff41cc8edf2fc8c25cca1fd3e2d2bb3d29a34a8e66548da7209"
+        "sha256": "ac3ef0a0ac963ac83953f552d405521a642659203c26487ce40a1649f0e798cf"
       }
     },
     "ZWG": {
       "myShop": {
         "file": "ZWG/My Shop.xlsx",
-        "sha256": "935aa863a2d3bf6792afc4ce7d66e3a37c3160620abd03d8e9162c32dd60ec83"
+        "sha256": "de12b09cee3a86ceac52947e06e642c51f79c146e30e123a3d1a7c9835d4ee8b"
       },
       "month": {
         "file": "ZWG/Month.xlsx",
-        "sha256": "fb535f84acc8c4b479e951a7f35f1b17e013296d8a3d783faddeb42ebf9d3cbb"
+        "sha256": "625786d38470c63fac961ea2bd5ac831feb36ebd3eccd36eae2056738ace4512"
       }
     },
     "ZAR": {
       "myShop": {
         "file": "ZAR/My Shop.xlsx",
-        "sha256": "24686f07c33051cebf40f1c2781a3ebcfd8b4e816c37d8a18312a98f22ba0d49"
+        "sha256": "ada7fd4442b6f07313b6c586c4f781a0e6d0842dee9150d4652e745d5c93f0c8"
       },
       "month": {
         "file": "ZAR/Month.xlsx",
-        "sha256": "0849cd7a5948cbe152e872c5005417b73f0935b01ae3190ee641199de72510b4"
+        "sha256": "283a55b658ad0760eca8b4cf8ab77edcb82dec458170ceb9c9bcb785990765ad"
       }
     }
   }

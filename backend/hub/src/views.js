@@ -221,8 +221,13 @@ function viewQueue_(services) {
     .filter(function (key) { return key.indexOf(STORE_PREFIXES_.viewQueue) === 0; }).sort();
 }
 
-/** A stored batch's events, read back from Drive. @param {string} fileId */
+/** A stored batch's events. @param {string} fileId */
 function readBatchEvents_(fileId) {
+  return readJournalFile_(fileId).events;
+}
+
+/** A stored batch, read back from Drive. @param {string} fileId */
+function readJournalFile_(fileId) {
   var url = 'https://www.googleapis.com/drive/v3/files/' + fileId + '?alt=media';
   var reply = UrlFetchApp.fetch(url, {
     headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() },
@@ -231,7 +236,7 @@ function readBatchEvents_(fileId) {
   if (reply.getResponseCode() !== 200) {
     throw hubError_(ERRORS_.storageUnavailable, 'A journal file could not be read.');
   }
-  return JSON.parse(reply.getContentText()).events;
+  return JSON.parse(reply.getContentText());
 }
 
 /**

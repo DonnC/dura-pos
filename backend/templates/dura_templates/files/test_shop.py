@@ -21,6 +21,7 @@ from dura_templates.sample.business import BUSINESS, PROD, active_product, price
 from dura_templates.sample.records import items_m, pays_m, sales_m
 from dura_templates.sample.sales import vcode
 from dura_templates.sample.stock import stock
+from dura_templates.workbook.accounts import stock_posting
 from dura_templates.workbook.headers import H_LEDGER, H_PRODUCTS
 from dura_templates.workbook.tables import add_table, readme
 
@@ -76,12 +77,14 @@ def write_test_shop():
             qty = stock[("Main", pid)] + sold[pid]
             cost = price_cost(pid, day)[1]
             ledger_rows.append([f"T-P4-L{day:%y%m%d}-{k:04d}", day, time(5, 41), "P4", "Dura", "Main", "Opening", pid,
-                                PROD[pid][1], qty, cost, q2(cost * qty), PC, "", "", "TEST-START", "Copied from the live stock"])
+                                PROD[pid][1], qty, cost, q2(cost * qty), PC, "", "", "TEST-START", "Copied from the live stock",
+                                *stock_posting("Opening", q2(cost * qty))])
     for pid, qty in sorted(sold.items()):
         k += 1
         cost = price_cost(pid, day)[1]
         ledger_rows.append([f"T-P4-L{day:%y%m%d}-{k:04d}", day, time(6, 20), "P4", "Tendai Ncube", "Main", "Sold", pid,
-                            PROD[pid][1], -qty, cost, q2(cost * -qty), PC, "", "", "T-P4-261027", "Practice sales"])
+                            PROD[pid][1], -qty, cost, q2(cost * -qty), PC, "", "", "T-P4-261027", "Practice sales",
+                            *stock_posting("Sold", q2(cost * -qty))])
     add_table(wb, "Stock Ledger", H_LEDGER, ledger_rows)
     add_table(wb, "Settings", [("Setting", None, 26), ("Value", None, 52), ("Note", None, 60)], [
         ["Mode", "TEST", "Nothing here touches the live shop, ZIMRA's live system or real money"],

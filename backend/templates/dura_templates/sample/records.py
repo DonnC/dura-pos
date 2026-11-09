@@ -38,6 +38,7 @@ quotes_m = defaultdict(list)
 closing_2025 = []
 kept = defaultdict(D)  # customer -> USD kept change the shop owes them
 drawer_out: dict[tuple[str, date], list[tuple[str, D]]] = defaultdict(list)  # paid from a till before cash-up
+with_providers = defaultdict(D)  # (Money Ledger type, currency) -> what mobile money and card hold this week
 
 seq = defaultdict(int)
 

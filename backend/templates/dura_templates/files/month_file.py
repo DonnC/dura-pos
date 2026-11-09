@@ -287,10 +287,10 @@ def write_month(ym: str, data: dict | None = None, folder: Path | None = None, t
     ], tabs=[
         ("Sales", "phones", "One row per sale, invoice or return. Returns are pink and have negative totals; invoices on account are blue."),
         ("Items Sold", "phones", "One row per item line, at the price on the day."),
-        ("Payments", "phones", "What was actually handed over: each payment, change given, change kept, refund, and later payment of an invoice."),
+        ("Payments", "phones", "What was actually handed over: each payment, change given, change kept, refund, and later payment of an invoice, with its debit and credit."),
         ("Cash-ups", "phones", "One row per phone per day: cash expected against counted, per currency. Short is red, over is yellow."),
-        ("Fiscal Days", "phones", "One row per ZIMRA fiscal day per phone, with its totals per currency."),
-        ("Quotes", "phones", "Quotes shared with customers: open (blue), accepted (green, with its sale) or expired (grey). Not fiscal."),
+        ("Fiscal Days", "phones", "One row per ZIMRA fiscal day per phone, with its totals per currency. Hidden until fiscalisation is on."),
+        ("Quotes", "phones", "Quotes shared with customers: open (blue), accepted (green, with its sale) or expired (grey). Not fiscal. Hidden until quotes are on."),
         ("Activity", "phones", "Who did what, on which phone, and when. Pink: refunds, pay-outs, rejections. Yellow: stock alerts. Green: cash-ups."),
         ("Summary", "dura", "The month at a glance: by day, location, phone, seller, payment method and product; profit and VAT; charts."),
     ], questions=[
@@ -304,6 +304,9 @@ def write_month(ym: str, data: dict | None = None, folder: Path | None = None, t
     ])
     path = template_path or folder / y / f"{month_name(ym)}.xlsx"
     path.parent.mkdir(parents=True, exist_ok=True)
+    if template:
+        for tab in ("Fiscal Days", "Quotes"):  # shown when fiscalisation or quotes are on
+            wb[tab].sheet_state = "hidden"
     wb.save(path)
 
 

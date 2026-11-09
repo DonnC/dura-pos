@@ -74,8 +74,8 @@ approved administrative command.
 | Cash Handovers | SH014; USD 74.00 received by Chipo; USD 10.00 float retained |
 | Provider Settlements | SET001; gross USD 100.00; fee 3.00; expected bank 97.00 |
 | Settlement Matches | SET001 linked to payment IDs, fees and actual bank evidence |
-| Accounting Entries | J001; Provider clearing; debit USD 10.00; sale reference |
-| Trial Balance | Account balances including the period's opening position |
+| Accounting postings | Debit account, credit account and amount on each `Payments`, Stock Ledger and Money Ledger row ([decision 0010](../decisions/0010-double-entry-records.md)) |
+| Trial balance | A section of `Reports`, with opening balances carried in the Money Ledger |
 | Fiscal Days | Device/day references and external status; blank if not applicable |
 | Activity | Requested by, approved by, reason and affected record |
 | Summary | Human-readable period totals, charts, outstanding work and differences |

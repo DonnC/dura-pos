@@ -37,6 +37,10 @@ function installedHub(overrides = {}) {
         written.push(JSON.parse(JSON.stringify(entry)));
         return { id: `file-${written.length}` };
       },
+      read(device, batch) {
+        if (overrides.failReads && overrides.failReads()) throw new Error('Drive unavailable');
+        return written.find((entry) => entry.device === device && entry.batch === batch) ?? null;
+      },
     };
   }
   google.PropertiesService.getScriptProperties().setProperty('businessId', BUSINESS);

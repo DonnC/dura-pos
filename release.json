@@ -1,7 +1,7 @@
 {
-  "version": "0.1.0-dev.1",
-  "buildNumber": 1,
+  "version": "0.1.0-dev.2",
+  "buildNumber": 2,
   "publish": false,
   "prerelease": true,
-  "notes": "release-notes/0.1.0-dev.1.md"
+  "notes": "release-notes/0.1.0-dev.2.md"
 }

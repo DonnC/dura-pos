@@ -1,0 +1,50 @@
+{
+  "payments": [
+    { "method": "Cash USD", "status": "Paid", "value": "2.00", "expect": ["2.00", "Till cash", "Sales"] },
+    { "method": "Cash ZWG", "status": "Given", "value": "-1.00", "expect": ["1.00", "Sales", "Till cash"] },
+    { "method": "Cash USD", "status": "Refunded", "value": "-3.50", "expect": ["3.50", "Sales", "Till cash"] },
+    { "method": "EcoCash USD", "status": "Paid", "value": "5.00", "expect": ["5.00", "Mobile money", "Sales"] },
+    { "method": "InnBucks USD", "status": "Paid", "value": "5.00", "expect": ["5.00", "Mobile money", "Sales"] },
+    { "method": "Card USD", "status": "Paid", "value": "9.00", "expect": ["9.00", "Card payments", "Sales"] },
+    { "method": "Bank transfer USD", "status": "Paid", "value": "9.00", "expect": ["9.00", "Bank", "Sales"] },
+    { "method": "On account USD", "status": "On account", "value": "20.00", "expect": ["20.00", "Customers owe", "Sales"] },
+    { "method": "Bank transfer USD", "status": "Paid later", "value": "20.00", "expect": ["20.00", "Bank", "Customers owe"] },
+    { "method": "Kept change USD", "status": "Kept", "value": "-0.50", "expect": ["0.50", "Sales", "Kept change owed"] },
+    { "method": "Kept change USD", "status": "Paid", "value": "0.50", "expect": ["0.50", "Kept change owed", "Sales"] },
+    { "method": "EcoCash USD", "status": "Failed", "value": "5.00", "expect": null },
+    { "method": "EcoCash USD", "status": "Cancelled", "value": "5.00", "expect": null },
+    { "method": "Cash USD", "status": "Paid", "value": "0.00", "expect": null }
+  ],
+  "stock": [
+    { "type": "Opening", "value": "50.00", "expect": ["50.00", "Stock", "Opening balances"] },
+    { "type": "Stock in", "value": "30.00", "expect": ["30.00", "Stock", "Suppliers owed"] },
+    { "type": "Sold", "value": "-1.64", "expect": ["1.64", "Cost of goods sold", "Stock"] },
+    { "type": "Returned", "value": "0.82", "expect": ["0.82", "Stock", "Cost of goods sold"] },
+    { "type": "Written off", "value": "-1.64", "expect": ["1.64", "Stock losses", "Stock"] },
+    { "type": "Counted", "value": "-0.82", "expect": ["0.82", "Stock losses", "Stock"] },
+    { "type": "Counted", "value": "0.82", "expect": ["0.82", "Stock", "Stock losses"] },
+    { "type": "Moved out", "value": "-5.00", "expect": null },
+    { "type": "Moved in", "value": "5.00", "expect": null },
+    { "type": "Sold", "value": "0.00", "expect": null }
+  ],
+  "money": [
+    { "type": "Float added", "fromTill": false, "value": "20.00", "expect": ["20.00", "Till cash", "Owner's capital"] },
+    { "type": "Expense", "fromTill": true, "value": "-1.00", "expect": ["1.00", "Expenses", "Till cash"] },
+    { "type": "Expense", "fromTill": false, "value": "-3.00", "expect": ["3.00", "Expenses", "Cash with owner"] },
+    { "type": "Supplier paid", "fromTill": true, "value": "-30.00", "expect": ["30.00", "Suppliers owed", "Till cash"] },
+    { "type": "Supplier paid", "fromTill": false, "value": "-30.00", "expect": ["30.00", "Suppliers owed", "Cash with owner"] },
+    { "type": "Takings collected", "fromTill": true, "value": "-80.00", "expect": ["80.00", "Cash with owner", "Till cash"] },
+    { "type": "Banked", "fromTill": false, "value": "-40.00", "expect": ["40.00", "Bank", "Cash with owner"] },
+    { "type": "Change paid out", "fromTill": true, "value": "-1.20", "expect": ["1.20", "Kept change owed", "Till cash"] },
+    { "type": "Till topped up", "fromTill": false, "value": "6.00", "expect": ["6.00", "Till cash", "Cash with owner"] },
+    { "type": "Mobile money withdrawn", "fromTill": false, "value": "-70.00", "expect": ["70.00", "Cash with owner", "Mobile money"] },
+    { "type": "Card paid into bank", "fromTill": false, "value": "-15.00", "expect": ["15.00", "Bank", "Card payments"] },
+    { "type": "Cash difference", "fromTill": false, "value": "-2.00", "expect": ["2.00", "Cash differences", "Till cash"] },
+    { "type": "Cash difference", "fromTill": false, "value": "0.50", "expect": ["0.50", "Till cash", "Cash differences"] },
+    { "type": "Purchase", "fromTill": false, "value": "30.00", "expect": null },
+    { "type": "Invoiced on account", "fromTill": false, "value": "20.00", "expect": null },
+    { "type": "Account paid", "fromTill": false, "value": "20.00", "expect": null },
+    { "type": "Change kept", "fromTill": false, "value": "0.50", "expect": null },
+    { "type": "Change used", "fromTill": false, "value": "0.50", "expect": null }
+  ]
+}

@@ -70,7 +70,7 @@ and the code.
 | Customer credit, invoices on account, quotes, statements | Designed | 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
 | Expenses by category; owner drawings and contributions; transfers | Designed | 7 | [`notes/13`](../../notes/13-financial-records.md) |
 | Council levies, market rent and permits, with evidence status | Planned | 7 | [`../../research/codex-product-brief.md`](../../research/codex-product-brief.md) |
-| Double-entry postings behind the scenes; trial balance | Planned | 7 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
+| Double-entry postings behind the scenes; trial balance | Built in the workbooks, hub and posting rules; awaits selling screens | 2 | [`../decisions/0010-double-entry-records.md`](../decisions/0010-double-entry-records.md) |
 | Reports that answer questions; day-end summary | Designed | 7 | [`notes/09`](../../notes/09-locations-phones-staff.md), [`notes/13`](../../notes/13-financial-records.md) |
 
 ## Optional connections

@@ -4,6 +4,11 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
+export 'src/accounting/account.dart';
+export 'src/accounting/money_move.dart';
+export 'src/accounting/posting.dart';
+export 'src/accounting/posting_rules.dart';
+export 'src/accounting/stock_move.dart';
 export 'src/backend/attachment_kind.dart';
 export 'src/backend/backend_failure.dart';
 export 'src/backend/backend_failure_kind.dart';
@@ -34,4 +39,11 @@ export 'src/money/quantity.dart';
 export 'src/preference_store.dart';
 export 'src/sale/cash_payment.dart';
 export 'src/sale/cash_sale.dart';
+export 'src/sale/sale_details.dart';
+export 'src/sale/sale_event.dart';
 export 'src/sale/sale_line.dart';
+export 'src/sync/outbox.dart';
+export 'src/sync/outbox_uploader.dart';
+export 'src/sync/sealed_events.dart';
+export 'src/sync/upload_result.dart';
+export 'src/sync/upload_state.dart';

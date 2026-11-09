@@ -278,6 +278,18 @@ var VIEW_CONTRACT_ = {
     "zimra_money_type": {
      "heading": "ZIMRA money type",
      "kind": "text"
+    },
+    "amount_pricing": {
+     "heading": "Amount ({pricing})",
+     "kind": "money"
+    },
+    "debit_account": {
+     "heading": "Debit account",
+     "kind": "text"
+    },
+    "credit_account": {
+     "heading": "Credit account",
+     "kind": "text"
     }
    }
   },
@@ -643,6 +655,18 @@ var VIEW_CONTRACT_ = {
     "note": {
      "heading": "Note",
      "kind": "text"
+    },
+    "amount_pricing": {
+     "heading": "Amount ({pricing})",
+     "kind": "money"
+    },
+    "debit_account": {
+     "heading": "Debit account",
+     "kind": "text"
+    },
+    "credit_account": {
+     "heading": "Credit account",
+     "kind": "text"
     }
    }
   },
@@ -711,6 +735,18 @@ var VIEW_CONTRACT_ = {
     },
     "note": {
      "heading": "Note",
+     "kind": "text"
+    },
+    "amount_pricing": {
+     "heading": "Amount ({pricing})",
+     "kind": "money"
+    },
+    "debit_account": {
+     "heading": "Debit account",
+     "kind": "text"
+    },
+    "credit_account": {
+     "heading": "Credit account",
      "kind": "text"
     }
    }
@@ -846,6 +882,10 @@ var VIEW_CONTRACT_ = {
     "note": {
      "heading": "Note",
      "kind": "text"
+    },
+    "vat_pricing": {
+     "heading": "VAT ({pricing})",
+     "kind": "money"
     }
    }
   },
@@ -958,6 +998,30 @@ var VIEW_CONTRACT_ = {
      "heading": "Money in ZAR",
      "kind": "money"
     },
+    "till_cash_pricing": {
+     "heading": "Till cash ({pricing})",
+     "kind": "money"
+    },
+    "mobile_money_pricing": {
+     "heading": "Mobile money ({pricing})",
+     "kind": "money"
+    },
+    "card_payments_pricing": {
+     "heading": "Card payments ({pricing})",
+     "kind": "money"
+    },
+    "bank_pricing": {
+     "heading": "Bank ({pricing})",
+     "kind": "money"
+    },
+    "customers_owe_pricing": {
+     "heading": "Customers owe ({pricing})",
+     "kind": "money"
+    },
+    "kept_change_owed_pricing": {
+     "heading": "Kept change owed ({pricing})",
+     "kind": "money"
+    },
     "written_by": {
      "heading": "Written by",
      "kind": "text"
@@ -965,6 +1029,88 @@ var VIEW_CONTRACT_ = {
    },
    "hubOnly": true
   }
+ },
+ "accounts": [
+  {
+   "name": "Till cash",
+   "type": "Asset"
+  },
+  {
+   "name": "Cash with owner",
+   "type": "Asset"
+  },
+  {
+   "name": "Bank",
+   "type": "Asset"
+  },
+  {
+   "name": "Mobile money",
+   "type": "Asset"
+  },
+  {
+   "name": "Card payments",
+   "type": "Asset"
+  },
+  {
+   "name": "Customers owe",
+   "type": "Asset"
+  },
+  {
+   "name": "Stock",
+   "type": "Asset"
+  },
+  {
+   "name": "Suppliers owed",
+   "type": "Liability"
+  },
+  {
+   "name": "Kept change owed",
+   "type": "Liability"
+  },
+  {
+   "name": "VAT owed",
+   "type": "Liability"
+  },
+  {
+   "name": "Owner's capital",
+   "type": "Equity"
+  },
+  {
+   "name": "Opening balances",
+   "type": "Equity"
+  },
+  {
+   "name": "Sales",
+   "type": "Income"
+  },
+  {
+   "name": "Cost of goods sold",
+   "type": "Expense"
+  },
+  {
+   "name": "VAT recovered on stock",
+   "type": "Expense"
+  },
+  {
+   "name": "Stock losses",
+   "type": "Expense"
+  },
+  {
+   "name": "Cash differences",
+   "type": "Expense"
+  },
+  {
+   "name": "Expenses",
+   "type": "Expense"
+  }
+ ],
+ "monthAccounts": {
+  "Till cash": "till_cash_pricing",
+  "Mobile money": "mobile_money_pricing",
+  "Card payments": "card_payments_pricing",
+  "Bank": "bank_pricing",
+  "Customers owe": "customers_owe_pricing",
+  "Kept change owed": "kept_change_owed_pricing"
  },
  "stockRow": {
   "2": "=IFERROR(INDEX(Products!$B:$B,MATCH($A{r},Products!$A:$A,0)),\"\")",

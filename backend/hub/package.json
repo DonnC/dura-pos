@@ -1,6 +1,6 @@
 {
   "name": "dura-shop-hub",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "private": true,
   "description": "The Dura POS Shop Hub: an Apps Script web app installed in each shop's own Google account.",
   "license": "MIT",

@@ -10,7 +10,7 @@
 // file sees them in Apps Script's shared global scope whatever the load order.
 
 var PROTOCOL_VERSION_ = 1;
-var HUB_VERSION_ = '0.1.0-dev.1';
+var HUB_VERSION_ = '0.1.0-dev.2';
 
 var LIMITS_ = {
   clockSkewSeconds: 300,

@@ -33,6 +33,33 @@ test('a resent batch is acknowledged again without storing it twice', () => {
   assert.equal(written.length, 2);
 });
 
+test('a used number with different events is refused, not acknowledged', () => {
+  const { send, owner, written } = hubWithOwner();
+  send(owner, 'journal.put', client.batch(1, events('P1-E000001')));
+  const reply = send(owner, 'journal.put', client.batch(1, events('P1-E999999')));
+  assert.equal(reply.ok, false);
+  assert.equal(`${reply.error.category}/${reply.error.code}`, 'integrity_conflict/batch_reused');
+  assert.equal(written.length, 1);
+});
+
+test('a used number the hub has no file for is refused', () => {
+  const { send, owner, written } = hubWithOwner();
+  send(owner, 'journal.put', client.batch(1, events('P1-E000001')));
+  written.length = 0;
+  assert.equal(send(owner, 'journal.put', client.batch(1, events('P1-E000001'))).error.code, 'batch_reused');
+});
+
+test('a re-send the hub cannot check is retried, never assumed stored', () => {
+  let failing = false;
+  const { send, owner } = hubWithOwner({ failReads: () => failing });
+  const body = client.batch(1, events('P1-E000001'));
+  send(owner, 'journal.put', body);
+  failing = true;
+  assert.equal(send(owner, 'journal.put', body).error.category, 'retryable_unavailable');
+  failing = false;
+  assert.equal(send(owner, 'journal.put', body).result.status, 'accepted');
+});
+
 test('a batch that skips ahead asks for the missing one', () => {
   const { send, owner, written } = hubWithOwner();
   send(owner, 'journal.put', client.batch(1, events('P1-E000001')));

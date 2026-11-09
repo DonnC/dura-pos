@@ -14,6 +14,7 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
 from dura_templates.sample.business import LOCATIONS, PRODUCTS, SUPPLIERS, TAXES
+from dura_templates.workbook.accounts import METHOD_ACCOUNTS
 from dura_templates.workbook.styles import BOLD, KINDS, fill, highlight
 from dura_templates.workbook.tables import col
 
@@ -43,6 +44,7 @@ def shop_lists() -> list[tuple[str, list[str], bool]]:
                               "Other (ask ZIMRA)"], False),
         ("Mode", ["Sandbox", "Live"], False),
         ("Phone status", ["Active", "Retired"], False),
+        ("Money account", sorted(set(METHOD_ACCOUNTS.values())), False),
     ]
 
 
