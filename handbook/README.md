@@ -49,13 +49,18 @@ Numbered, never rewritten: a later decision supersedes an earlier one.
 
 Use the [template](decisions/0000-template.md) for a new decision.
 
+The owner-approved [Shop Sign identity](decisions/0011-shop-sign-identity.md)
+supersedes foundation branding: custom wordmark and d, charcoal/chalk/sign red.
+
 ## Design references
 
 - [Records file design](design/records-file-design.md): every file in the
   owner's Drive, with example rows.
 - [Mobile concept](design/mobile-concept.md): the first screens, with an
   interactive [HTML prototype](design/prototype/).
-- [Branding](design/branding/03-logo-directions.md): the silo-and-phone mark.
+- [Current mobile design](design/prototype/cdx/-cdx-preview.html): interactive
+  daily journeys for the owner and seller.
+- [Branding](design/branding/04-shop-sign.md): the Shop Sign wordmark and d.
 
 ## Outside the handbook
 

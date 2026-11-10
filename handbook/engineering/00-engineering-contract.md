@@ -22,10 +22,10 @@ UX standard, read `../product/` first; `../README.md` maps every document.
 | CI | Verify on pull requests and pushes to main; release only from main after all gates pass (decision 0004) |
 | Dependency updates | Monthly grouped routine updates; no automatic merging |
 | Release policy | Meaningful changes update the changelog; release-intent main commits carry a new version and reviewed notes |
-| Branding | Unified tapered silo/phone; dollar sign inside screen; not a USD-only product |
+| Branding | Shop Sign wordmark and d; charcoal, chalk and sign red ([0011](../decisions/0011-shop-sign-identity.md)) |
 
-The owner can still select the pricing currency. The dollar logo is a payment
-symbol and must not introduce a currency default into onboarding.
+The owner selects the pricing currency. Branding never supplies a currency
+default during onboarding.
 
 ## Documents to follow
 

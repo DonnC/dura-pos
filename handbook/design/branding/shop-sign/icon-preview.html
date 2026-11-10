@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dura / Shop Sign app identity</title>
+<style>
+@font-face{font-family:Roboto;src:url('../../../../client/packages/dura_ui/assets/fonts/Roboto-Regular.ttf')}
+*{box-sizing:border-box}body{margin:0;padding:48px 64px;background:#f4f0e8;color:#252525;
+  font:16px/1.5 Roboto,Arial,sans-serif}header{display:flex;align-items:center;
+  justify-content:space-between;padding-bottom:28px;border-bottom:1px solid #d9d1c8}
+header img{width:170px;height:66px;object-fit:contain}h1{font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;margin:0}h2{font-size:14px;margin:18px 0 4px}
+p{font-size:12px;color:#615b55;margin:0}.icons{display:flex;justify-content:space-between;
+  gap:36px;margin:44px 0}article{flex:1;min-width:0;text-align:center}.icon{width:148px;
+  height:148px;background:#c3452d;overflow:hidden;position:relative;margin:auto}
+.icon img{width:100%;height:100%;display:block}.circle{border-radius:50%}
+.rounded{border-radius:30px}.adaptive img{width:150%;height:150%;max-width:none;
+  position:absolute;top:-25%;left:-25%}.themed{background:#e2d9ce}
+.themed img{filter:brightness(0)}.sizes{display:flex;gap:32px;align-items:flex-end;
+  margin-top:35px;padding-top:25px;border-top:1px solid #d9d1c8}
+.sizes img{object-fit:contain;image-rendering:auto}.sizes div{text-align:center}
+.sizes small{display:block;font-size:11px;margin-top:10px;color:#615b55}
+footer{font-size:12px;display:flex;justify-content:space-between;border-top:1px solid #d9d1c8;
+  margin-top:30px;padding-top:20px}.swatches{display:flex;align-items:center;gap:12px}
+.swatches i{width:16px;height:16px;background:#252525;display:inline-block}
+.swatches i:last-child{background:#c3452d}a{color:inherit}
+</style>
+</head>
+<body>
+<header><img src="../../../../client/apps/dura/assets/branding/shop-sign-wordmark.svg" alt="Dura">
+  <div><h1>The Shop Sign / App identity</h1><p>Shared letterforms · Android launcher and startup</p></div></header>
+<section class="icons" aria-label="Icon mask previews">
+  <article><div class="icon"><img src="../../../../client/apps/dura/assets/branding/launcher-source.png" alt="Legacy square icon"></div>
+    <h2>Legacy square</h2><p>Full red field · White d</p></article>
+  <article><div class="icon circle adaptive"><img src="../../../../client/apps/dura/assets/branding/launcher-foreground.png" alt="Circular adaptive icon"></div>
+    <h2>Adaptive circle</h2><p>108 dp layer / 72 dp viewport</p></article>
+  <article><div class="icon rounded adaptive"><img src="../../../../client/apps/dura/assets/branding/launcher-foreground.png" alt="Rounded adaptive icon"></div>
+    <h2>Adaptive rounded</h2><p>The same inset foreground</p></article>
+  <article><div class="icon circle adaptive themed"><img src="../../../../client/apps/dura/assets/branding/launcher-foreground.png" alt="Example themed icon"></div>
+    <h2>Themed / example</h2><p>The system supplies the colours</p></article>
+</section>
+<section class="sizes" aria-label="Generated legacy density assets">
+  <div><img width="48" height="48" src="../../../../client/apps/dura/android/app/src/main/res/mipmap-mdpi/ic_launcher.png" alt="48 pixels"><small>48 px</small></div>
+  <div><img width="72" height="72" src="../../../../client/apps/dura/android/app/src/main/res/mipmap-hdpi/ic_launcher.png" alt="72 pixels"><small>72 px</small></div>
+  <div><img width="96" height="96" src="../../../../client/apps/dura/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png" alt="96 pixels"><small>96 px</small></div>
+  <div><img width="144" height="144" src="../../../../client/apps/dura/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" alt="144 pixels"><small>144 px</small></div>
+  <div><img width="192" height="192" src="../../../../client/apps/dura/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="192 pixels"><small>192 px</small></div>
+  <p>Generated from the approved artwork.<br>Mask previews are illustrations;<br>physical-device transitions remain unverified.</p>
+</section>
+<footer><div class="swatches"><i></i> INK #252525 <i></i> SIGN RED #C3452D</div>
+  <span>CHALK #F4F0E8 · <a href="../04-shop-sign.md">Asset guide</a></span></footer>
+</body>
+</html>

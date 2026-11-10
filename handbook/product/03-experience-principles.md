@@ -87,9 +87,9 @@ the screen is wrong.**
 
 - **Sell is the home screen.** Setup and reports never slow the next customer.
 - **Bottom navigation,** few destinations: Sell, Stock, Money, My shop.
-- **Identity:** evergreen, a restrained grain-gold, and the tapered
-  silo-and-phone mark ([branding](../design/branding/03-logo-directions.md)).
-  The dollar sign in the mark is a payment symbol, not a USD default.
+- **Identity:** the Shop Sign wordmark and d, charcoal, chalk and sign red
+  ([branding](../design/branding/04-shop-sign.md)). Red directs primary actions;
+  neutral surfaces and explicit status words keep its meaning clear.
 - **Large touch targets** (at least 48 dp), big numbers, high contrast for
   sunlight.
 - **Calm, not decorative.** No gradients, glass, gratuitous shadows or

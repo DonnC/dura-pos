@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dura · A quieter counter</title>
+<style>
+@font-face{font-family:Roboto;src:url('../../../../client/packages/dura_ui/assets/fonts/Roboto-Regular.ttf')}
+@font-face{font-family:Roboto;src:url('../../../../client/packages/dura_ui/assets/fonts/Roboto-Bold.ttf');font-weight:700}
+*{box-sizing:border-box}body{margin:0;background:#f4f0e8;color:#252525;font-family:Roboto,Arial,sans-serif}
+a{color:inherit;text-underline-offset:4px}button,select{font:inherit}button,a,select{touch-action:manipulation}
+.wrap{max-width:1460px;margin:auto;padding:35px 60px 44px}.masthead{display:flex;align-items:center;
+  justify-content:space-between;gap:20px;border-bottom:1px solid #d9d1c8;padding-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;font-size:24px;font-weight:700;letter-spacing:-1px}
+.brand img{width:92px;height:36px;object-fit:contain}.brand span{font-weight:400;font-size:13px;
+  letter-spacing:.01em;border-left:1px solid #d9d1c8;padding-left:15px;margin-left:5px;color:#615b55}
+.version{font-size:10px;letter-spacing:.16em;font-weight:700}.intro{display:flex;justify-content:space-between;
+  gap:45px;margin:32px 0 30px;align-items:flex-end}h1{font:700 54px/1.06 Roboto,Arial,sans-serif;
+  letter-spacing:-2.8px;margin:0}h1 em{color:#c3452d;font-style:normal}.lede{max-width:345px;font-size:13px;line-height:1.7;
+  color:#615b55;margin:0 0 2px}.eyebrow{font-size:9px;font-weight:700;letter-spacing:.18em;
+  margin:0 0 12px;color:#615b55}.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px}
+.phone{border:5px solid #252525;border-radius:29px;overflow:hidden;background:white;
+  height:900px;position:relative}.phone iframe{width:100%;height:100%;border:0;display:block}
+.caption{display:flex;gap:12px;margin-top:15px;align-items:flex-start}.number{border:1px solid #d9d1c8;
+  min-width:26px;height:26px;display:grid;place-items:center;border-radius:50%;font-size:10px;color:#252525}
+.caption h2{font-size:14px;letter-spacing:-.25px;margin:1px 0 5px}.caption p{margin:0;color:#615b55;
+  font-size:11px;line-height:1.6}.footer{display:flex;justify-content:space-between;gap:20px;
+  border-top:1px solid #d9d1c8;margin-top:28px;padding-top:18px;font-size:10px;color:#615b55}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11px;margin:23px 0}
+.tools select,.tools a,.tools button{min-height:44px;border:1px solid #c1b7aa;border-radius:8px;
+  background:#fffdf8;padding:10px 12px;color:#252525}.tools label{display:flex;align-items:center;gap:8px}
+.focus .board{grid-template-columns:minmax(0,390px);justify-content:center}.focus .board article:not(:first-child){display:none}
+.focus .phone{height:844px}.focus .intro{margin-bottom:20px}
+.journeys{display:flex;gap:8px;overflow:auto;padding-bottom:5px;margin:24px 0 0}
+.journeys button{white-space:nowrap;border:1px solid #c1b7aa;min-height:44px;border-radius:24px;
+  padding:10px 17px;background:transparent;color:#252525;font-size:12px;cursor:pointer}
+.journeys button[aria-pressed=true]{background:#c3452d;color:white;border-color:#252525}
+.tools{padding-bottom:18px;border-bottom:1px solid #d9d1c8}.tools select{max-width:210px}
+.role-note{font-size:10px;color:#615b55;margin:15px 0 5px;line-height:1.6}
+@media(min-width:1450px){.phone{height:900px}}
+@media(max-width:1050px){.wrap{padding:25px}.board{gap:18px}h1{font-size:48px}.lede{max-width:300px}
+  .phone{height:850px}.brand span{display:none}}
+@media(max-width:800px){.board{grid-template-columns:minmax(0,390px);justify-content:center;gap:35px}
+  .intro{display:block}h1{font-size:45px}.lede{margin-top:22px}.phone{height:844px}
+  .version{font-size:8px}.wrap{padding:22px 16px}.footer{line-height:1.6}.tools{margin:18px 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead"><div class="brand"><img src="../../../../client/apps/dura/assets/branding/shop-sign-wordmark.svg" alt="Dura">
+    <span>The everyday shop companion</span></div><div class="version">COUNTER / EVERYDAY FLOWS · CDX</div></header>
+  <section class="intro"><div><p class="eyebrow">DESIGNED AROUND THE NEXT CUSTOMER</p>
+    <h1>A quieter counter.<br><em>A better day.</em></h1></div>
+    <p class="lede">From the first float to the final count.<br>
+      Simple for the person serving. Clear for the owner.<br>One shop, with everyone’s work in its place.</p></section>
+  <div class="journeys" aria-label="Daily journeys">
+    <button data-journey="sell" aria-pressed="true">Serve a customer</button>
+    <button data-journey="shift" aria-pressed="false">Open & hand over</button>
+    <button data-journey="stock" aria-pressed="false">Keep the shelf full</button>
+    <button data-journey="owner" aria-pressed="false">Run the shop</button>
+    <button data-journey="start" aria-pressed="false">Start a new shop</button>
+  </div>
+  <div class="tools" aria-label="Prototype review controls">
+    <button id="focus">Focus on one phone</button>
+    <label>Person <select id="role"><option value="owner">Chipo · Owner</option>
+      <option value="worker">Rudo · Seller</option></select></label>
+    <label>Screen <select id="scene">
+      <optgroup label="Serving"><option value="sell">Sell</option><option value="pay">Take payment</option>
+      <option value="quick">Unlisted item</option><option value="history">Recent sales</option>
+      <option value="receipt">Receipt</option><option value="refund">Return a sale</option>
+      <option value="mobile">Mobile money</option><option value="pending">Payment pending</option>
+      <option value="mixed">Split cash · USD + ZWG</option><option value="credit">On account</option></optgroup>
+      <optgroup label="A shift"><option value="opening">Opening float</option><option value="money">Money / My till</option>
+      <option value="cashup">Count cash</option><option value="locked">Locked till</option>
+      <option value="switch-person">Hand over</option></optgroup>
+      <optgroup label="Stock"><option value="stock">Stock</option><option value="product">Product detail</option>
+      <option value="receive">Receive a delivery</option><option value="stock-count">Count stock</option>
+      <option value="product-edit">Edit product</option></optgroup>
+      <optgroup label="Owner"><option value="expense">Money out</option><option value="customers">Customers</option>
+      <option value="suppliers">Suppliers</option><option value="reports">Day summary</option>
+      <option value="shop">My shop</option><option value="settings">Optional features</option>
+      <option value="people">People & phones</option><option value="staff">Staff access</option>
+      <option value="pair">Pair a phone</option><option value="records">Records</option>
+      <option value="export">Export preview</option><option value="restore">Restore checks</option></optgroup>
+      <optgroup label="Start / connection"><option value="welcome">Welcome</option><option value="setup">Shop setup</option>
+      <option value="sync">Saved records & upload</option><option value="connect">Connect Google</option>
+      <option value="fiscal">Fiscal readiness</option><option value="help">Help</option></optgroup>
+      </select></label>
+    <label>Condition <select id="condition"><option value="populated">Everyday</option>
+      <option value="offline">Offline</option><option value="empty">Empty shelf</option>
+      <option value="loading">Loading</option><option value="error">Load error</option>
+      <option value="interrupted">Restored basket</option><option value="confirmed">Payment confirmed</option>
+      <option value="failed">Payment failed</option></select></label>
+    <label>Appearance <select id="appearance"><option value="light">Light</option>
+      <option value="dark">Dark</option><option value="large">200% text</option></select></label>
+    <a href="-cdx-counter.html" target="_blank">Open full prototype ↗</a>
+    <button id="reset">Reset practice day</button>
+  </div>
+  <section class="board" aria-label="Three interactive mobile concepts">
+    <article><div class="phone"><iframe id="primary" title="Interactive sell prototype"
+      src="-cdx-counter.html?seed=1&amp;fresh=1"></iframe></div>
+      <div class="caption"><span class="number">01</span><div><h2>Recognise. Tap. Sell.</h2>
+        <p>Your everyday sellers up front.<br>The basket and payment always within reach.</p></div></div></article>
+    <article><div class="phone"><iframe title="Cash checkout prototype"
+      src="-cdx-counter.html?screen=pay&amp;seed=1&amp;cash=500&amp;fresh=1&amp;role=worker"></iframe></div>
+      <div class="caption"><span class="number">02</span><div><h2>No mental arithmetic.</h2>
+        <p>A clear amount, quick cash choices and change.<br>Go straight to the next customer.</p></div></div></article>
+    <article><div class="phone"><iframe title="Owner money prototype"
+      src="-cdx-counter.html?screen=money&amp;fresh=1"></iframe></div>
+      <div class="caption"><span class="number">03</span><div><h2>Know where you stand.</h2>
+        <p>Sales, drawer cash and money owed.<br>Separate currencies. Honest completeness.</p></div></div></article>
+  </section>
+  <p class="role-note">All phones are interactive practice sessions. Person and condition controls affect the first phone.
+    Optional payment flows are available from the screen picker; enable them in My shop for the normal journey.
+    Loading / empty / load error / restored apply to Sell. Confirmed / failed apply to Payment pending.</p>
+  <footer class="footer"><span>INK + CHALK + SIGN RED · BUILT FOR CLARITY, NOT CLUTTER</span>
+    <span>Design prototype · Fictional data · No live services · 10 November 2026</span></footer>
+</div>
+<script>
+const first=document.querySelector('#primary');
+const focusButton=document.querySelector('#focus');
+focusButton.onclick=()=>{document.body.classList.toggle('focus');
+  focusButton.textContent=document.body.classList.contains('focus')?'Show three phones':'Focus on one phone';};
+function update(){
+  const state=document.querySelector('#condition').value;
+  const theme=document.querySelector('#appearance').value;
+  const params=new URLSearchParams({screen:document.querySelector('#scene').value,seed:'1',fresh:'1',
+    role:document.querySelector('#role').value});
+  if(state==='offline')params.set('offline','1');else params.set('state',state);
+  if(theme==='dark')params.set('theme','dark');if(theme==='large')params.set('text','large');
+  if(state==='empty')params.delete('seed');
+  first.src='-cdx-counter.html?'+params;
+}
+document.querySelectorAll('select').forEach(el=>el.onchange=update);
+const journeys={
+  sell:[['sell','owner','Recognise. Tap. Sell.','Everyday goods and a payment total within reach.'],
+    ['pay','worker','Take cash with confidence.','Clear amounts and change. Back returns to the basket.'],
+    ['money','owner','Know where you stand.','Separate sales, cash and incomplete shop records.']],
+  shift:[['opening','worker','Start with a count.','Rudo takes responsibility for the starting float.'],
+    ['money','worker','Only what I need.','Own shift, own drawer and recent receipts.'],
+    ['cashup','worker','Count before comparing.','Review differences, explain them, then hand over.']],
+  stock:[['stock','owner','Keep the shelf full.','Low stock and selling packs, not warehouse complexity.'],
+    ['receive','owner','Count what arrived.','Review before adding stock. Pay the supplier separately.'],
+    ['stock-count','owner','Count what is there.','Blank means not counted; zero means none left.']],
+  owner:[['money','owner','Check the day.','The drawer is not the same as sales or profit.'],
+    ['expense','owner','Know where cash went.','Expense, owner drawing or supplier payment.'],
+    ['people','owner','People and phones.','A seller has access. A phone has a drawer.']],
+  start:[['welcome','owner','Start small.','Free, offline and in your own account.'],
+    ['setup','owner','Choose your currency.','No currency selected on the owner’s behalf.'],
+    ['settings','owner','Grow when needed.','Optional features stay away from a first cash sale.']]
+};
+function journey(name){
+  const frames=[...document.querySelectorAll('iframe')];
+  journeys[name].forEach(([scene,role,title,copy],i)=>{
+    frames[i].src=`-cdx-counter.html?screen=${scene}&role=${role}&seed=1&fresh=1${scene==='pay'?'&cash=500':''}`;
+    const article=frames[i].closest('article');article.querySelector('h2').textContent=title;
+    article.querySelector('.caption p').textContent=copy;
+  });
+  document.querySelector('#scene').value=journeys[name][0][0];
+  document.querySelector('#role').value=journeys[name][0][1];
+  document.querySelectorAll('[data-journey]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.journey===name));
+}
+document.querySelectorAll('[data-journey]').forEach(b=>b.onclick=()=>journey(b.dataset.journey));
+document.querySelector('#reset').onclick=()=>{localStorage.removeItem('dura-cdx-day-v2');journey('sell');};
+</script>
+</body>
+</html>

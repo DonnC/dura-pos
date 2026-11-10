@@ -2,6 +2,15 @@
 
 ## Unreleased — 0.1.0-dev.2
 
+### Changed: the Shop Sign identity
+
+- Apply the owner-approved B wordmark and d, charcoal, chalk and sign red to
+  every `cdx` design screen and its preview captures.
+- Update only the actual app's central theme colours, Android launcher icons
+  and matching splash. Adaptive/themed artwork has a transparent safe-area
+  foreground. App screens, workflows and business logic stay unchanged.
+- Review light/dark control goldens and add theme-contrast and launcher checks.
+
 ### Changed: versions can't drift apart
 
 - **`melos run check` compares every repeated version with `release.json`:** the app,

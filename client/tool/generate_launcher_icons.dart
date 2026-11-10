@@ -11,6 +11,7 @@ import 'package:image/image.dart' as image;
 /// Build-time resizing only; the approved artwork remains the source of identity.
 void main() {
   const sourcePath = 'apps/dura/assets/branding/launcher-source.png';
+  const foregroundPath = 'apps/dura/assets/branding/launcher-foreground.png';
   const resourceRoot = 'apps/dura/android/app/src/main/res';
   const sizes = {
     'mdpi': 48,
@@ -22,6 +23,13 @@ void main() {
   final source = image.decodePng(File(sourcePath).readAsBytesSync());
   if (source == null || source.width != source.height) {
     throw StateError('Launcher source must be a readable square PNG.');
+  }
+  final mark = image.decodePng(File(foregroundPath).readAsBytesSync());
+  if (mark == null ||
+      mark.width != mark.height ||
+      mark.numChannels != 4 ||
+      mark.getPixel(0, 0).a != 0) {
+    throw StateError('Adaptive mark must be a square, transparent RGBA PNG.');
   }
   for (final entry in sizes.entries) {
     final directory = Directory('$resourceRoot/mipmap-${entry.key}')
@@ -37,15 +45,25 @@ void main() {
       ),
     );
   }
-  // Full-bleed background and inset source mark tolerate adaptive launcher masks.
+  // The inset mark remains transparent so launcher masks and tinting can work.
   final foreground = Directory('$resourceRoot/drawable-nodpi')
     ..createSync(recursive: true);
   File('${foreground.path}/ic_launcher_foreground.png').writeAsBytesSync(
     image.encodePng(
       image.copyResize(
-        source,
+        mark,
         width: 432,
         height: 432,
+        interpolation: image.Interpolation.average,
+      ),
+    ),
+  );
+  File('${foreground.path}/splash_logo.png').writeAsBytesSync(
+    image.encodePng(
+      image.copyResize(
+        mark,
+        width: 640,
+        height: 640,
         interpolation: image.Interpolation.average,
       ),
     ),
@@ -63,6 +81,7 @@ void main() {
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/launcher_background" />
     <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
 </adaptive-icon>
 ''');
   File('$resourceRoot/values/launcher_colors.xml').writeAsStringSync('''
@@ -71,7 +90,13 @@ void main() {
     <color name="launcher_background">#$background</color>
 </resources>
 ''');
+  File('$resourceRoot/values/splash_colors.xml').writeAsStringSync('''
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="splash_background">#$background</color>
+</resources>
+''');
   stdout.writeln(
-    'Generated five legacy launcher sizes and adaptive resources.',
+    'Generated legacy, adaptive, monochrome and splash resources.',
   );
 }

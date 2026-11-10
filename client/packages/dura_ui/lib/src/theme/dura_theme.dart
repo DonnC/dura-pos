@@ -33,11 +33,71 @@ abstract final class DuraTheme {
 
   static ThemeData _build(Brightness brightness) {
     GoogleFonts.config.allowRuntimeFetching = false;
+    final dark = brightness == Brightness.dark;
+    final surface = dark ? DuraPalette.darkSurface : DuraPalette.paper;
+    final chrome = dark ? DuraPalette.ink : DuraPalette.chalk;
+    final ink = dark ? DuraPalette.chalk : DuraPalette.ink;
+    final soft = dark ? DuraPalette.darkSoft : DuraPalette.soft;
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: DuraPalette.signRed,
+          brightness: brightness,
+        ).copyWith(
+          primary: dark ? DuraPalette.darkAccent : DuraPalette.signRed,
+          onPrimary: dark ? DuraPalette.ink : DuraPalette.paper,
+          primaryContainer: dark
+              ? DuraPalette.darkAccentContainer
+              : DuraPalette.accentContainer,
+          onPrimaryContainer: dark
+              ? DuraPalette.chalk
+              : DuraPalette.onAccentContainer,
+          secondary: ink,
+          onSecondary: surface,
+          secondaryContainer: soft,
+          onSecondaryContainer: ink,
+          tertiary: ink,
+          onTertiary: surface,
+          tertiaryContainer: soft,
+          onTertiaryContainer: ink,
+          surface: surface,
+          onSurface: ink,
+          surfaceDim: soft,
+          surfaceBright: chrome,
+          surfaceContainerLowest: surface,
+          surfaceContainerLow: chrome,
+          surfaceContainer: chrome,
+          surfaceContainerHigh: soft,
+          surfaceContainerHighest: soft,
+          onSurfaceVariant: dark ? DuraPalette.darkMuted : DuraPalette.muted,
+          outline: dark ? DuraPalette.darkOutline : DuraPalette.outline,
+          outlineVariant: dark ? DuraPalette.darkLine : DuraPalette.line,
+          inverseSurface: dark ? DuraPalette.chalk : DuraPalette.ink,
+          onInverseSurface: dark ? DuraPalette.ink : DuraPalette.chalk,
+          inversePrimary: dark ? DuraPalette.signRed : DuraPalette.darkAccent,
+          surfaceTint: DuraPalette.transparent,
+          error: dark ? DuraPalette.darkError : DuraPalette.error,
+          onError: dark ? DuraPalette.onErrorContainer : DuraPalette.paper,
+          errorContainer: dark
+              ? DuraPalette.darkErrorContainer
+              : DuraPalette.errorContainer,
+          onErrorContainer: dark
+              ? DuraPalette.errorContainer
+              : DuraPalette.onErrorContainer,
+        );
     final base = ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: DuraPalette.evergreen,
-        brightness: brightness,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: surface,
+      appBarTheme: AppBarTheme(
+        backgroundColor: chrome,
+        foregroundColor: ink,
+        surfaceTintColor: DuraPalette.transparent,
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: DuraPalette.signRed,
+          foregroundColor: DuraPalette.paper,
+        ),
       ),
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(),

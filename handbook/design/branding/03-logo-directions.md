@@ -1,5 +1,9 @@
 # Dura POS logo directions
 
+> Historical exploration. On 10 November 2026 the owner replaced this direction
+> with [The Shop Sign](04-shop-sign.md), recorded in decision 0011. The artwork
+> and earlier selection below are retained as history.
+
 2 November 2026. Early concept exploration; no direction is approved yet.
 
 > Subsequent selection: the owner chose the unified tapered silo/phone direction

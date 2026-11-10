@@ -1,24 +1,28 @@
-# Android launcher artwork
+# Android launcher artwork / The Shop Sign
 
-Source reference: handbook/design/branding/dura-silo-phone-dollar-v3.png, the owner's approved
-unified silo/phone mark with a dollar symbol. launcher-source.png is its standalone
-launcher adaptation of that approved mark.
+The owner selected B / The Shop Sign and approved its charcoal/chalk/sign-red
+application on 10 November 2026. This supersedes the silo/phone/dollar artwork
+for the app. The original exploration remains in the handbook as history.
 
-Edit prompt (line-wrapped for readability):
+Source reference: `handbook/design/branding/shop-sign/approved-direction-b.png`.
+The path-only `shop-sign-wordmark.svg` traces the large approved wordmark;
+`shop-sign-mark.svg` isolates that same d, rather than substituting a font.
 
-Use case: precise-object-edit. Extract the APPROVED bottom-right app icon tile
-from the reference brand board into ONE standalone square Android launcher
-source asset. Preserve its existing tapered silo rising from wide base to narrow
-roof, unified mobile phone on the right with clear $ sign, the white silo and
-grain-gold phone on solid dark evergreen background. Keep the approved mark's
-geometry and identity, no redesign. Remove all surrounding brand-board material,
-all headings and wordmarks. Output square 1024x1024 full-bleed solid evergreen
-background without pre-rounded corners. The mark centered and fully contained
-in the middle 60% of the canvas so Android adaptive circular masks cannot cut
-any part off. Crisp flat clean edges, no texture, no gradients, no shadows.
-Only the $ symbol on the phone, no other text.
+- `shop-sign-launcher.svg` / `launcher-source.png`: full-square sign-red
+  (`#C3452D`) background and white d; PNG is 1024 × 1024.
+- `shop-sign-foreground.svg` / `launcher-foreground.png`: 1024 × 1024 transparent
+  white mark, inset to fit Android's 66 dp safe circle on a 108 dp layer.
+  The smaller adaptive geometry accounts for masking; it is not a different d.
 
-Run dart run tool/generate_launcher_icons.dart from client/ to resize
-this source into Android legacy and adaptive resources. No Flutter placeholder
-icons remain. This is launcher artwork, not a completed store media asset set.
-Physical-device launcher mask appearance remains to be verified.
+The raster sources are SVG exports. No headings, rounded outer mask, textures,
+gradients or shadows are part of the artwork. Regenerate Android resources from
+`client/` using `dart run tool/generate_launcher_icons.dart`. The locked image
+dependency produces five legacy sizes, transparent adaptive foreground,
+monochrome wiring, splash and red colour resources. PNG sources are committed;
+SVG rendering is only needed when editing the approved artwork.
+
+The [brand guide](../../../../../handbook/design/branding/04-shop-sign.md)
+and [decision 0011](../../../../../handbook/decisions/0011-shop-sign-identity.md)
+document application and scope. Launcher tests check density, alpha and mask
+containment. Physical-device launcher caching, masks and startup transitions
+remain unverified. This is not a completed store-media asset set.

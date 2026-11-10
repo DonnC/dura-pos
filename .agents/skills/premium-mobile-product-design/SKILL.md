@@ -37,9 +37,9 @@ description: Design or review Dura POS mobile journeys, Flutter or Android scree
     tokens;
   - compose existing components;
   - business rules stay behind controllers.
-- **Identity:** evergreen, a restrained grain-gold, and the approved tapered
-  silo-and-phone mark. The dollar sign isn't a currency default. Don't
-  redesign the mark.
+- **Identity:** the approved Shop Sign wordmark and d; charcoal, chalk and
+  sign red. Follow `handbook/design/branding/04-shop-sign.md` and decision 0011.
+  Preserve the approved letterforms; don't redesign the mark.
 - **Accessibility:** check SafeArea and insets, 320 px width, 200% text,
   semantic labels, focus order, feedback that doesn't rely on colour, and
   reduced motion.
