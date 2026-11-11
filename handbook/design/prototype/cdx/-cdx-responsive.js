@@ -30,7 +30,7 @@ function renderContext(blocked=false){
       content=`<p class="eyebrow">You’re taking payment for</p><h2>Order summary</h2>`+
         contextItems(saleSnapshot())+line('Total',money(total()))+
         note('Check the items before saving. Back returns to the same basket.');
-    }else if(['done','receipt','history'].includes(page)){
+    }else if(page==='history'){
       const receipt=lastSale&&(s.role==='owner'||lastSale.who===s.name)?lastSale:
         receiptList().find(r=>s.role==='owner'||r.who===s.name);
       if(receipt)content=`<p class="eyebrow">Saved practice receipt</p><h2>${money(receipt.amount,receipt.currency)}</h2>

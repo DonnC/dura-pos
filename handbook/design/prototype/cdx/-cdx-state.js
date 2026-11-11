@@ -33,6 +33,8 @@ if(q.get('seed')==='1')s.basket={bread:2,milk:1};
 if(q.get('features')==='1')s.features={credit:true,mobile:true,multi:true};
 if(['account','practice'].includes(q.get('appearance')))s.previewAppearance=q.get('appearance');
 const screens={},actions={},inputActions={};
+const mainDestinations=new Set(['sell','stock','money','shop']);
+const taskIdentity=()=>`<span class="task-identity">${esc(s.name)} · ${s.role==='owner'?'Owner':'Cashier'}</span>`;
 const ownerScreens=new Set(['receive','receive-review','stock-count','count-stock-review','product-edit','customers',
   'invoice-items','invoice-payment','invoice-review','invoice-detail',
   'customer','suppliers','supplier-statement','records','export','people','staff','pair','settings','setup','reports',
@@ -58,7 +60,8 @@ const btn=(action,label,cls='secondary',extra='')=>
 const line=(title,value,sub='')=>`<div class="ledger-row"><div>${title}
   ${sub?`<small>${sub}</small>`:''}</div><strong>${value}</strong></div>`;
 const heading=(title,sub='',back='')=>`${back?btn(back,icon('back')+' Back','back'):''}
-  <div class="heading"><h1>${title}</h1>${sub?`<p class="sub">${sub}</p>`:''}</div>`;
+  <div class="heading"><h1>${title}</h1>${sub?`<p class="sub">${sub}</p>`:''}
+  ${title&&!mainDestinations.has(page)&&!['welcome','setup','first-product','join','join-review','join-status'].includes(page)?taskIdentity():''}</div>`;
 const field=(id,label,value='',opts='')=>`<label class="form-label" for="${id}">${label}
   <input class="form-input" id="${id}" value="${esc(value)}" ${opts}></label>`;
 const select=(id,label,options)=>`<label class="form-label" for="${id}">${label}
@@ -111,6 +114,7 @@ function result(title,body,next,label){
   screen.innerHTML=`<div class="page-content"><div class="result-top"><div class="success-icon">${icon('check')}</div>
     <p class="eyebrow">Practice record saved on this device</p><h1>${title}</h1></div>${body}</div>`;
   primary(next,label);
+  if(typeof applyScreenLayout==='function')applyScreenLayout();
 }
 function enable(action,yes){const el=document.querySelector(`[data-action="${action}"]`);
   if(el)el.disabled=!yes;}

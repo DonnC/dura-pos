@@ -11,7 +11,7 @@ const {pathToFileURL}=require('node:url');
 const path=require('node:path');
 const assert=require('node:assert/strict');
 const addedChecks=process.argv.includes('--existing-only')?[]:
-  ['-cdx-sell-density-check.cjs','-cdx-language-ui-check.cjs','-cdx-discounts-check.cjs',
+  ['-cdx-workspace-check.cjs','-cdx-sell-density-check.cjs','-cdx-language-ui-check.cjs','-cdx-discounts-check.cjs',
    '-cdx-owner-reports-check.cjs','-cdx-walkthrough-check.cjs',
    '-cdx-review-drafts-check.cjs','-cdx-coverage-check.cjs'];
 const checks=[...addedChecks,'-cdx-audit-check.cjs','-cdx-workflows-check.cjs','-cdx-journeys-check.cjs',

@@ -68,6 +68,7 @@ a{color:inherit;text-underline-offset:4px}button,select{font:inherit}button,a,se
     <button data-journey="quantities" aria-pressed="false">Weigh & return items</button>
     <button data-journey="access" aria-pressed="false">Manage cashier access</button>
     <button data-journey="reports" aria-pressed="false">Understand the figures</button>
+    <button data-journey="workspace" aria-pressed="false">Review tablet task layouts</button>
     <button data-journey="recovery" aria-pressed="false">Connect & recover devices</button>
     <button data-journey="fiscal" aria-pressed="false">Fiscal status & recovery</button>
     <button data-journey="start" aria-pressed="false">Start a new shop</button>
@@ -208,7 +209,7 @@ function update(){
   const params=new URLSearchParams({screen:document.querySelector('#scene').value,seed:'1',fresh:'1',
     role:document.querySelector('#role').value});
   params.set('appearance',document.querySelector('#account-appearance').value);
-  if(params.get('screen')==='sell')params.set('shelf','full');
+  if(['sell','stock'].includes(params.get('screen')))params.set('shelf','full');
   if(params.get('screen').startsWith('invoice-'))params.set('invoice','sample');
   if(params.get('screen').startsWith('kept-')){params.set('kept','sample');params.set('cash','500');}
   if(params.get('screen')==='quantity'||params.get('screen').startsWith('return-')){
@@ -241,6 +242,9 @@ const initialDevice=new URLSearchParams(location.search).get('device');
 if(['phone','narrow','portrait','landscape','wide'].includes(initialDevice))devicePicker.value=initialDevice;
 applyDevice();
 const journeys={
+  workspace:[['pay','worker','Payment gets the space.','Task title and Cashier identity, with the order alongside.'],
+    ['invoice-review','owner','Items and money together.','Review received stock beside totals and approval.'],
+    ['report-products','owner','Read the product detail.','Compact filters, product graph and exact figures.']],
   fiscal:[['fiscal-queue','owner','Know what each receipt means.','Saved locally, uncertain result and accepted are separate facts.'],
     ['fiscal-owner-review','owner','Keep the original reference.','Review the cause before any further fiscal action.'],
     ['fiscal-close','owner','A close request has its own answer.','Waiting for confirmation stays visible.']],
@@ -282,7 +286,7 @@ function journey(name){
   document.querySelector('#fiscal-control').hidden=name!=='fiscal';
   const frames=[...document.querySelectorAll('iframe')];
   journeys[name].forEach(([scene,role,title,copy],i)=>{
-    frames[i].src=`-cdx-counter.html?screen=${scene}&role=${role}&seed=1&fresh=1${scene==='sell'?'&shelf=full':''}${scene==='pay'||scene==='kept-keep'?'&cash=500':''}${scene.startsWith('invoice-')?'&invoice=sample':''}${scene.startsWith('kept-')?'&kept=sample':''}${scene==='quantity'||scene.startsWith('return-')?'&measure=sample':''}${scene.startsWith('return-')?'&returns=sample':''}${scene==='staff'||scene==='my-access'?'&access=sample':''}${scene==='access-status'?'&access=pending':''}${scene==='reports'||scene.startsWith('report-')?'&reports=sample':''}${name==='reports'?'&period=last7':''}${['connection-review','pair-code','restore-review'].includes(scene)?'&recovery=ready':''}${scene==='fiscal-queue'?'&fiscal=unknown':scene==='fiscal-owner-review'?'&fiscal=refused':scene==='fiscal-close'?'&fiscal=closing':''}`;
+    frames[i].src=`-cdx-counter.html?screen=${scene}&role=${role}&seed=1&fresh=1${['sell','stock'].includes(scene)?'&shelf=full':''}${scene==='pay'||scene==='kept-keep'?'&cash=500':''}${scene.startsWith('invoice-')?'&invoice=sample':''}${scene.startsWith('kept-')?'&kept=sample':''}${scene==='quantity'||scene.startsWith('return-')?'&measure=sample':''}${scene.startsWith('return-')?'&returns=sample':''}${scene==='staff'||scene==='my-access'?'&access=sample':''}${scene==='access-status'?'&access=pending':''}${scene==='reports'||scene.startsWith('report-')?'&reports=sample':''}${name==='reports'||scene.startsWith('report-')?'&period=last7':''}${['connection-review','pair-code','restore-review'].includes(scene)?'&recovery=ready':''}${scene==='fiscal-queue'?'&fiscal=unknown':scene==='fiscal-owner-review'?'&fiscal=refused':scene==='fiscal-close'?'&fiscal=closing':''}`;
     const article=frames[i].closest('article');article.querySelector('h2').textContent=title;
     article.querySelector('.caption p').textContent=copy;
   });

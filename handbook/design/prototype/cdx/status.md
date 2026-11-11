@@ -130,6 +130,16 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Verify resizing, filtering and the interactive preview controls.
 - [x] Final category-label, catalog and source checks.
 
+## Completed — tablet space and task headers
+
+- [x] Review shared header and repeated/narrow tablet layouts.
+- [x] Full shop header on main destinations; inline identity for task/detail views.
+- [x] Useful paired money, shop, invoice, approval, receipt and pending layouts.
+- [x] Remove duplicate receipt panels; align report filters and chart/detail areas.
+- [x] Audit all routes and verify mobile/tablet/dark/large-text layouts.
+- [x] Verify existing journeys, refresh previews/catalog and inspect captures.
+- [x] Record decisions, checks and next work.
+
 ## Next design work
 
 - [x] Kept-change journey and its use/refund at checkout.
@@ -223,35 +233,43 @@ no Figma file, import package, upload or conversion was created in this pass.
 
 ## Latest summary
 
-Sell now uses the available shelf space: adaptive tablet/wide columns, compact
-product cards and a 280–380 px basket. The four-product Favourites cutoff is
-removed. Category labels include counts and scroll without squeezing their text.
-Tablet search/categories remain available while scrolling; portrait keeps a
-separate search row so the search field is usable. Mobile retains two columns.
+Reviewed the other screens for tablet space and removed the repeated shop
+header from task/detail screens. The full header remains on Sell, Stock,
+Money/My till and My shop/Me. Tasks retain Back, their title and a small signed-in
+name/role within the scrolling content. The normal tablet task canvas starts
+76 px higher. Relevant offline status and the Preview/Practice marker remain.
 
-The review preview opens a fictional 24-product shop on All items, with 12
-Favourites and Food / Drinks / Household categories. A new Wide counter option
-uses 1440 × 900. At normal text the checked layouts show 9 full cards on a
-1024 × 768 tablet, 20 at 1440 × 900, and all 24 at the supplied screenshot's
-1913 × 915 size. Cards do not stretch to fill a short category.
+Money and shop summaries now sit beside useful actions. Invoice entry/review,
+approval/float review and existing account/kept-change/return forms use paired
+layouts where appropriate. Receipt screens show one receipt beside actions,
+instead of duplicating it in a side panel. Stock gains useful row columns and a
+bounded detail panel. Report titles/filters share a row; wide report graphs sit
+beside exact figures. Large text and mobile preserve their readable order.
 
-Passed: 18 layout combinations across six sizes in light/dark/large text;
-category counts and label fit; search/filtering; unchanged basket on resizing;
-the existing responsive interaction suite; source headers, UTF-8, 500-line
-limits and whitespace checks. The refreshed catalog passed 96 routes, 149
-state examples and 27 dialog examples, including 108 dialog layouts. Eight
-captures cover mobile, portrait/landscape tablets, two wide sizes, an empty
-basket, payment and an owner report. Actual renders were inspected.
+Passed: geometry/header audit of all 96 routes; 156 responsive combinations at
+320/768/1024/1440 px in light/dark/large text; role labels, reachable actions,
+basket/tender resize preservation and blind cash counting. The catalog passed
+96 routes, 149 state examples, 27 dialogs and 108 dialog layouts. Existing
+workflow, journey, responsive, restored-review, discount, kept-change,
+quantity/return, report, access, interruption, continuity and vocabulary checks
+passed. Source headers, UTF-8, 500-line limits and whitespace checks passed.
+Twenty-three review captures and four additional Cashier captures were created;
+representative actual mobile/tablet/wide renders were inspected.
 
-Decisions / assumptions: the 24 products are fictional review data, not a
-prescribed shop catalogue. Additional items without pictures use letter
-placeholders. The larger sample is opt-in through shelf=full and enabled by
-the main Sell preview; original small fixtures remain available. Visible card
-counts vary with text size and names. All edits stayed in cdx; app/backend code
-and project skills were not changed.
+Decisions / assumptions: full identity belongs on the main destinations, not
+above every task. Profile/lock controls remain there, reachable after Back.
+Focused counting/setup forms retain readable widths rather than invented
+panels. Expected cash remains hidden before the blind count. Extra tablet space
+never grants Owner permissions. Stock previews use the existing fictional
+24-product example. All edits stayed in cdx; app/backend code and skills were
+not changed. No production data, migration or restore contract changes.
 
-Open [-cdx-preview.html](-cdx-preview.html) to verify the updated journeys, or see
-[-cdx-sell-space.md](-cdx-sell-space.md) for captures and exact layout notes.
-Next: owner review of these layouts and the complete catalog. Physical Android,
-keyboard/insets, TalkBack, vendor observations and real-service recovery remain
-unverified. Figma remains deferred; no conversion or upload was created.
+Open [-cdx-preview.html](-cdx-preview.html) and choose **Review tablet task
+layouts**, or use the device/screen controls. All updated mobile/tablet examples
+and the detailed review are linked in
+[-cdx-tablet-space-review.md](-cdx-tablet-space-review.md). The route audit is
+[-cdx-workspace-audit.json](-cdx-workspace-audit.json).
+
+Next: owner review of the revised header rule and tablet layouts. Physical
+Android, keyboard/insets, TalkBack, vendor observations and real-service recovery
+remain unverified. Figma remains deferred; no conversion or upload was created.

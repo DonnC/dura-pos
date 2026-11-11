@@ -17,7 +17,8 @@ function ownerReportFilters(){
       field('report-end','To',f.end,'type="date"')+'</div>':'');
 }
 function ownerDetailScreen(route,title){
-  screen.innerHTML=heading(title,reportPeriod()+' · '+reportPlace(),'reports')+ownerReportFilters()+
+  screen.innerHTML=btn('reports',icon('back')+' Back','back')+
+    '<div class="report-topline">'+heading(title,reportPeriod()+' · '+reportPlace())+ownerReportFilters()+'</div>'+
     '<div id="owner-report-body"></div>';drawOwnerReport(route);primary('report-coverage','Check included records');
 }
 function drawOwnerReport(route){
@@ -53,6 +54,7 @@ function drawOwnerReport(route){
     if(!reportExample)content+=note('Item detail covers saved receipts available on this device. Earlier seeded figures may have no item records.');
   }
   body.innerHTML=content;
+  if(typeof applyScreenLayout==='function')applyScreenLayout();
 }
 for(const [route,title] of [['report-trend','Sales trend.'],['report-products','Products.'],
   ['report-cashiers','Cashiers.'],['report-discounts','Discounts.']]){

@@ -7,6 +7,7 @@
 function render(){
   page=accessPageFor(page);
   const app=document.querySelector('#app');app.dataset.page=page;
+  app.classList.remove('has-workspace');
   const blocked=s.role==='worker'&&ownerScreens.has(page);
   const onboarding=['welcome','setup','first-product','join','join-review','join-status'].includes(page);
   const full=['pay','done','opening','cashup','count-review','handover','locked','welcome','join',
@@ -23,7 +24,9 @@ function render(){
   avatar.dataset.action='profile';avatar.setAttribute('aria-label',
     `Signed in as ${s.name}, ${s.role==='owner'?'Owner':'Cashier'}. Open profile`);
   const connection=document.querySelector('#connection');
-  document.querySelector('.appbar').hidden=onboarding;connection.hidden=onboarding||!offline;
+  const taskView=!mainDestinations.has(page)&&!onboarding;
+  app.classList.toggle('task-view',taskView);
+  document.querySelector('.appbar').hidden=onboarding||taskView;connection.hidden=onboarding||!offline;
   const appearance=s.previewAppearance||'account';
   s.previewAppearance=appearance;
   document.querySelector('#mode-marker').textContent=appearance==='practice'?'Practice':'Preview';
@@ -63,6 +66,7 @@ function render(){
   for(const amount of screen.querySelectorAll('.amount-due')){
     amount.classList.toggle('long-amount',amount.textContent.replace(/\D/g,'').length>8);
   }
+  applyScreenLayout();
   renderContext();
 }
 actions.close=()=>sheet.close();

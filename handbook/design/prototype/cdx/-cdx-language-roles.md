@@ -32,6 +32,14 @@ name with **Owner** or **Cashier**. The avatar opens that person's profile. Fron
 counter / Device 1 detail belongs there and in the relevant task context.
 The four main destinations keep their positions across roles.
 
+The full shop header belongs to Sell, Stock, Money/My till and My shop/Me.
+Task and detail screens use Back, their own title and a small signed-in name/role
+within the content. The shop logo/account row is not repeated above payment,
+approval, invoice, receipt or report detail. Task identity scrolls with the page;
+it is not another fixed header. Onboarding retains its own minimal treatment.
+Returning to a main destination restores the shop header. See
+`-cdx-tablet-space-review.md` for the responsive space review and exceptions.
+
 Healthy local saving does not require a persistent second status bar. Offline
 status can show when relevant; saved/upload/payment/fiscal details remain in
 their own views. Owner and cashier views never imply that local totals are a

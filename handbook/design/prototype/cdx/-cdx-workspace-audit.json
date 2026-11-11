@@ -1,0 +1,774 @@
+{
+  "date": "2026-11-11",
+  "scope": "Browser design review at 1024 × 768; not physical-device verification",
+  "screens": [
+    {
+      "screen": "sell",
+      "actual": "sell",
+      "header": "Shop identity",
+      "overflow": false,
+      "mainTop": 104,
+      "paired": false
+    },
+    {
+      "screen": "pay",
+      "actual": "pay",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "quick",
+      "actual": "quick",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "quantity",
+      "actual": "quantity",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "discount",
+      "actual": "discount",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "discount-review",
+      "actual": "discount-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "mobile",
+      "actual": "mobile",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "pending",
+      "actual": "pending",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "credit",
+      "actual": "credit",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "mixed",
+      "actual": "mixed",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "done",
+      "actual": "done",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "history",
+      "actual": "history",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "receipt",
+      "actual": "receipt",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "print",
+      "actual": "print",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "refund",
+      "actual": "refund",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "refund-review",
+      "actual": "refund-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "return-items",
+      "actual": "return-items",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "return-review",
+      "actual": "return-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "opening",
+      "actual": "opening",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "money",
+      "actual": "money",
+      "header": "Shop identity",
+      "overflow": false,
+      "mainTop": 104,
+      "paired": true
+    },
+    {
+      "screen": "cashup",
+      "actual": "cashup",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "count-review",
+      "actual": "count-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "handover",
+      "actual": "handover",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "locked",
+      "actual": "locked",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "switch-person",
+      "actual": "switch-person",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "expense",
+      "actual": "expense",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "expense-review",
+      "actual": "expense-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "stock",
+      "actual": "stock",
+      "header": "Shop identity",
+      "overflow": false,
+      "mainTop": 104,
+      "paired": false
+    },
+    {
+      "screen": "product",
+      "actual": "product",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "receive",
+      "actual": "receive",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "receive-review",
+      "actual": "receive-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "stock-count",
+      "actual": "stock-count",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "count-stock-review",
+      "actual": "count-stock-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "product-edit",
+      "actual": "product-edit",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "customers",
+      "actual": "customers",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "customer",
+      "actual": "customer",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "suppliers",
+      "actual": "suppliers",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "supplier-statement",
+      "actual": "supplier-statement",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "invoice-items",
+      "actual": "invoice-items",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "invoice-payment",
+      "actual": "invoice-payment",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "invoice-review",
+      "actual": "invoice-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "invoice-detail",
+      "actual": "invoice-detail",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "kept-customers",
+      "actual": "kept-customers",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "kept-account",
+      "actual": "kept-account",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "kept-checkout",
+      "actual": "kept-checkout",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "kept-keep",
+      "actual": "kept-keep",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "kept-refund",
+      "actual": "kept-refund",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "kept-refund-review",
+      "actual": "kept-refund-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "reports",
+      "actual": "reports",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "report-sales",
+      "actual": "report-sales",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "report-cash",
+      "actual": "report-cash",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "report-coverage",
+      "actual": "report-coverage",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "report-trend",
+      "actual": "report-trend",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "report-products",
+      "actual": "report-products",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "report-cashiers",
+      "actual": "report-cashiers",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "report-discounts",
+      "actual": "report-discounts",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": true
+    },
+    {
+      "screen": "people",
+      "actual": "people",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "staff",
+      "actual": "staff",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-review",
+      "actual": "access-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-status",
+      "actual": "access-status",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-remove",
+      "actual": "access-remove",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "my-access",
+      "actual": "my-access",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-limited",
+      "actual": "access-limited",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-expired",
+      "actual": "access-expired",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-removed",
+      "actual": "access-removed",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "access-recovery",
+      "actual": "access-recovery",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "connect",
+      "actual": "connect",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "connection-review",
+      "actual": "connection-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "connection-status",
+      "actual": "connection-status",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "pair",
+      "actual": "pair",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "pair-code",
+      "actual": "pair-code",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "join",
+      "actual": "join",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "join-review",
+      "actual": "join-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "join-status",
+      "actual": "join-status",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "restore",
+      "actual": "restore",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "restore-review",
+      "actual": "restore-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "restore-status",
+      "actual": "restore-status",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "lost-phone",
+      "actual": "lost-phone",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal",
+      "actual": "fiscal",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-setup",
+      "actual": "fiscal-setup",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-queue",
+      "actual": "fiscal-queue",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-receipt",
+      "actual": "fiscal-receipt",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-check",
+      "actual": "fiscal-check",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-owner-review",
+      "actual": "fiscal-owner-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-day",
+      "actual": "fiscal-day",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-close",
+      "actual": "fiscal-close",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "fiscal-device",
+      "actual": "fiscal-device",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "shop",
+      "actual": "shop",
+      "header": "Shop identity",
+      "overflow": false,
+      "mainTop": 104,
+      "paired": true
+    },
+    {
+      "screen": "settings",
+      "actual": "settings",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "records",
+      "actual": "records",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "export",
+      "actual": "export",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "sync",
+      "actual": "sync",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "help",
+      "actual": "help",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "welcome",
+      "actual": "welcome",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "setup",
+      "actual": "setup",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "first-product",
+      "actual": "first-product",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+.appbar[hidden],#connection[hidden]{display:none}
+.task-identity{display:block;font-size:.75rem;line-height:1.5;color:var(--muted);margin-top:6px}
+.task-workspace>section,.report-detail-workspace>*{min-width:0}
+@media(min-width:700px){
+  .app.task-view{grid-template-rows:28px 0 0 minmax(0,1fr) auto 15px}
+  .app.task-view:has(.connection:not([hidden])){grid-template-rows:28px 0 48px minmax(0,1fr) auto 15px}
+  .app.has-context{grid-template-columns:88px minmax(0,1fr) clamp(280px,30vw,380px)}
+  .app.flow.has-context{grid-template-columns:minmax(0,1fr) clamp(280px,32vw,380px)}
+  .app[data-page=stock] #stock-list .menu-row{min-height:76px;padding-top:12px;padding-bottom:12px}
+  .app[data-page=pending] .empty{padding:24px 12px}
+}
+@media(min-width:900px){
+  .app.has-workspace .page-content,.app.has-workspace #dock>.primary{max-width:1120px}
+  .task-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:32px;align-items:start}
+  .workspace-main>.hero:first-child{margin-top:0}
+  .workspace-detail>.menu-row:first-child{padding-top:12px}
+  .workspace-detail>.form-label:first-child{margin-top:0}
+  .invoice-layout .ledger-row,.workspace-detail>.ledger-row{padding:12px 0}
+  .app[data-page=invoice-items] .task-workspace{grid-template-columns:minmax(0,1.4fr) minmax(280px,.8fr)}
+  .app[data-page=receipt] .task-workspace{grid-template-columns:minmax(0,1.3fr) minmax(280px,.8fr)}
+  .app[data-page=pending] .task-workspace{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .app[data-page^=report-] .page-content,.app[data-page=reports] .page-content{max-width:1180px}
+  .report-topline{column-gap:24px}.report-topline .report-filters{max-width:none}
+  .app[data-page=stock] #stock-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));column-gap:20px}
+  .app[data-page=stock] #stock-list>.empty{grid-column:1/-1}
+  .large .task-workspace,.large .report-detail-workspace{display:block}
+  .large .app.has-workspace .page-content{max-width:760px}
+  .large .app[data-page=stock] #stock-list{display:block}
+}
+@media(min-width:1100px){
+  .report-detail-workspace{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.4fr);gap:28px;align-items:start}
+}
