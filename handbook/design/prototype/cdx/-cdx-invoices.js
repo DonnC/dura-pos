@@ -163,7 +163,7 @@ actions['invoice-save']=()=>{
   record('Purchase invoice '+d.ref+' · '+money(total));
   result('Invoice saved.',line('Stock added',d.items.length+' products')+
     line('Cash paid',money(paid))+line('Left on this invoice',money(total-paid))+
-    note('Practice record saved on this phone. No supplier payment was sent.'),
+    note('Practice record saved on this device. No supplier payment was sent.'),
     'invoice-detail','View saved invoice');
 };
 screens['invoice-detail']=()=>{

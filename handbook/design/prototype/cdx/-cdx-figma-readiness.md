@@ -10,13 +10,13 @@ file to create the editable document. Its appearance must be checked there.
 
 ## What a complete design handoff should preserve
 
-- All 90 base routes, grouped by the shop owner's and cashier's tasks.
+- All 96 current base routes, grouped by the shop owner's and cashier's tasks.
 - Conditional states: loading, empty, offline, invalid, disabled, interrupted,
   pending, failed, confirmed and owner-access boundaries where designed;
   control focus, selection and pressed/disabled variants.
 - Dialogs and overlays: baskets, product scan examples, approvals, help and
   recovery details, including focus/return behaviour in the handoff notes.
-- Phone, tablet portrait and landscape layouts; light, dark and large text.
+- Mobile, tablet portrait and landscape layouts; light, dark and large text.
 - The original Shop Sign vectors, product artwork, copy, currency labels,
   type, colours, spacing, controls and status treatments.
 - Components, variants and layout constraints, with navigation and prototype

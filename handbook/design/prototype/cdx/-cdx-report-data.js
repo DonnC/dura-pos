@@ -17,6 +17,8 @@ function reportRange(){
   const f=reportFilter();let start=reportToday,end=reportToday;
   if(f.period==='yesterday')start=end='2026-11-09';
   if(f.period==='week')start='2026-11-09';
+  if(f.period==='last7')start='2026-11-04';
+  if(f.period==='month')start='2026-11-01';
   if(f.period==='custom'){start=f.start;end=f.end;}
   const valid=v=>/^\d{4}-\d{2}-\d{2}$/.test(v)&&!Number.isNaN(Date.parse(v))&&
     new Date(Date.parse(v)).toISOString().slice(0,10)===v;
@@ -29,9 +31,9 @@ function reportRange(){
     new Date(Date.parse(start)+n*86400000).toISOString().slice(0,10))};
 }
 function reportDataset(){
-  const phones=[{id:'phone1',place:'front',name:'Phone 1 · This phone',seen:reportExample?'10 Nov, 09:41':'Current practice session'},
-    ...(reportExample?[{id:'phone2',place:'front',name:'Phone 2 · Counter spare',seen:'10 Nov, 08:12'},
-      {id:'phone3',place:'market',name:'Phone 3 · Market stall',seen:'9 Nov, 18:30'}]:[])];
+  const phones=[{id:'phone1',place:'front',name:'Device 1 · This device',seen:reportExample?'10 Nov, 09:41':'Current practice session'},
+    ...(reportExample?[{id:'phone2',place:'front',name:'Device 2 · Counter spare',seen:'10 Nov, 08:12'},
+      {id:'phone3',place:'market',name:'Device 3 · Market stall',seen:'9 Nov, 18:30'}]:[])];
   const row=(day,phone,gross,returns,count,costs,state='current')=>
     ({day,phone,gross,returns,net:gross-returns,count,costs,state});
   const rows=reportExample?[
@@ -53,7 +55,7 @@ function reportSelection(){
   return {phones,rows,range,expected,complete,net,gross,returns,count:sum('count'),costs,
     profit:complete&&net!==null&&costs!==null?net-costs:null};
 }
-function reportPlace(){return {all:'All example locations',front:'Front counter',market:'Market stall',phone1:'This phone'}[reportFilter().place];}
+function reportPlace(){return {all:'All example locations',front:'Front counter',market:'Market stall',phone1:'This device'}[reportFilter().place];}
 function reportPeriod(){const r=reportRange();return r.error?'Choose a period':
   r.start===r.end?reportDate(r.start):reportDate(r.start)+' – '+reportDate(r.end);}
 const reportMoney=value=>value===null?'Not available':money(value);
@@ -63,15 +65,15 @@ function reportCoverageText(r){
   if(!r.complete){
     const missing=r.expected-r.rows.length,older=new Set(r.rows.filter(row=>row.state==='stale').map(row=>row.phone)).size;
     const reasons=[];if(missing)reasons.push(`${missing} daily update${missing===1?'':'s'} missing`);
-    if(older)reasons.push(`${older} phone${older===1?' has':'s have'} older figures`);
+    if(older)reasons.push(`${older} device${older===1?' has':'s have'} older figures`);
     return 'Incomplete · '+reasons.join('; ')+'.';
   }
-  return r.range.end===reportToday?'Figures so far · Selected phones current through 09:41.':
-    'All selected phones included for this period.';
+  return r.range.end===reportToday?'Figures so far · Selected devices current through 09:41.':
+    'All selected devices included for this period.';
 }
 function reportDrawers(){
   // Drawer figures are latest snapshots, independent of the sales period.
-  return {phone1:{asof:reportExample?'10 Nov, 09:41':'Current practice session',state:'This phone',balances:[
+  return {phone1:{asof:reportExample?'10 Nov, 09:41':'Current practice session',state:'This device',balances:[
     {currency:s.currency,amount:reportExample?7050:s.cash},
     ...(s.currency==='USD'&&(reportExample||s.zwg)?[{currency:'ZWG',amount:reportExample?13500:s.zwg}]:[])]},
     phone2:{asof:'10 Nov, 08:12',state:'Needs a new count',balances:null},

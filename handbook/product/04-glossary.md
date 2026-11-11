@@ -9,10 +9,12 @@ The words used across the notes, the handbook and the code.
 | **Dura** | Shona for a granary. The project's name |
 | **Business** | One trading entity, usually one TIN. It has its own folder in Drive, `Dura POS/<business>/`. One Google account can hold several |
 | **Owner** | The person who controls the business's Google account, keys and settings |
-| **Seller / cashier** | A staff member who sells. Uses the app with their own PIN and doesn't need an email address |
-| **Manager** | A staff role between owner and seller; the owner chooses what a manager may do |
+| **Cashier** | The selling role. Signs in with their own PIN; an email address is not required. Use this role name throughout current UI, never Seller, Staff or User as a substitute |
+| **Manager** | A possible future permission role; not a third role in the current Owner/Cashier design |
 | **Location** | A shop, branch, stall or store. It's a column in the records, not a separate folder |
-| **Phone** (device) | One installation of the app. Each phone gets an ID (`P1`, `P2`). Phones and staff are separate things |
+| **Device** | One app installation on a mobile, tablet or other supported hardware. Device IDs such as `P1` remain technical identifiers. Devices and cashiers are separate: several cashiers may share a device |
+| **Stock** | Products and quantities held for sale. Use Stock for navigation and stock levels; do not alternate it with Inventory |
+| **Stock take** | Physically counting stock and reviewing differences. Use this for the counting task; it is separate from cash-up |
 | **Pricing currency** | The one currency that product prices are set in, chosen by the owner at setup. No default |
 | **Rate policy** | How exchange rates apply: one daily rate, or the latest rate. Every payment records the rate it used |
 | **Kept change** | Change the shop owes a customer ("I'll keep your change"), recorded with its currency until it's used or paid out |
@@ -21,6 +23,20 @@ The words used across the notes, the handbook and the code.
 | **Practice mode** | A fictional shop with fake payment and fiscal services, for training and trying Dura |
 | **Test mode** | A separate copy of a real shop (`(TEST)` folder, separate database, `T-` IDs) using ZIMRA's test environment and payment sandboxes |
 | **Live** | Real trading. Test and practice data can never mix with it |
+
+## Current interface wording
+
+Role labels are **Owner** and **Cashier**. Use **Cashiers** for the collection.
+Use **Device** for an installation, including in pairing, access and reports;
+use **mobile number** for a contact number. Mobile/tablet describe viewport
+types in design tools, not different account or permission nouns. Use **till**
+for responsibility for the drawer/shift, not as another name for the device.
+
+Older notes and technical identifiers may retain `worker`, `seller`, `staff`
+or `phone` for compatibility. They do not define current display copy. This
+design pass establishes the vocabulary; adopting it in Flutter is separate
+implementation work. See the current design language contract in
+`handbook/design/prototype/cdx/-cdx-language-roles.md`.
 
 ## Records
 

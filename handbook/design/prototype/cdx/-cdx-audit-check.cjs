@@ -137,6 +137,6 @@ const inspect=process.argv.includes('--inspect');
    await p.screenshot({path:path.join(__dirname,`-cdx-${device}-cash-recovery.png`)});
   }
   assert.deepEqual(errors,[]);
-  console.log(`PASS: 90 base-screen control checks, ${layouts} focused responsive layouts and two recovery captures.`);
+  console.log(`PASS: ${rows.length} base-screen control checks, ${layouts} focused responsive layouts and two recovery captures.`);
  }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

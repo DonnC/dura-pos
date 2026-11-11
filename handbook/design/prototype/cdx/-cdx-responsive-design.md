@@ -10,13 +10,13 @@ Open [the review board](-cdx-preview.html), then choose **Device**:
 
 | Preview | Browser viewport |
 |---|---|
-| Small phone | 320 × 740 CSS px |
-| Phone | 390 × 844 CSS px |
+| Small device | 320 × 740 CSS px |
+| Device | 390 × 844 CSS px |
 | Tablet portrait | 768 × 1024 CSS px |
 | Tablet landscape | 1024 × 768 CSS px |
 
 The device frame changes the iframe's actual viewport; it does not stretch a
-phone screenshot. The board scales the frame to fit your browser and states
+device screenshot. The board scales the frame to fit your browser and states
 the display scale. Switching devices preserves the basket and typed payment
 input. The standalone prototype also adapts when its browser window is resized.
 These are browser simulations; physical tablet hardware and keyboards remain
@@ -33,9 +33,9 @@ unverified. “Tab” was interpreted as tablet, rather than another bottom tab.
   checkout shows change above the fixed Save action. Amounts keep their currency.
 - Stock uses a list and selected-product preview. Selecting a row updates that
   preview without losing the list or filters. The detail action opens movement
-  history; phone rows open the detail directly.
+  history; device rows open the detail directly.
 - Other forms have bounded reading widths. Accounts can place the statement
-  beside cash entry. Extra space does not grant a seller more permissions.
+  beside cash entry. Extra space does not grant a cashier more permissions.
 - Enlarged text uses one content pane rather than squeezing an order panel
   beside a form. Forms and lists scroll independently of the main action.
 
@@ -52,11 +52,11 @@ unverified. “Tab” was interpreted as tablet, rather than another bottom tab.
 | Sell | Product shelf → Take payment | Persistent tablet basket, quantity editing, hold; same draft after resize |
 | Stock | Search/filter → Receive stock | Low/out filters, empty recovery, selected preview, unit-labelled movement history |
 | Product | Select a product → Receive / edit | Opening quantity and up to six recent movements with signed quantities and resulting balances |
-| Receipts | Search/filter → Open receipt | Search ID, item or seller; cash/account/return filters; mobile filter where relevant; clear-search recovery |
+| Receipts | Search/filter → Open receipt | Search ID, item or cashier; cash/account/return filters; mobile filter where relevant; clear-search recovery |
 | Customer | Balance → Review cash payment | Opening balance, account sales and payments; running balances; overpayment feedback |
 | Supplier | Supplier → Statement / approved payment | Opening balance and payments; unknown due date stays unknown; deliveries remain separate |
 
-Receipt lookup stays scoped to the current phone and role. Pending payments
+Receipt lookup stays scoped to the current device and role. Pending payments
 remain outside completed receipts. Returns keep the original receipt and its
 linked-return indication. Stock retains the existing sample threshold of four;
 this is not a new production policy.
@@ -88,7 +88,7 @@ changed. No supplier purchase value is inferred from a quantity-only delivery.
 ## Checks and next slice
 
 `node handbook/design/prototype/cdx/-cdx-check.cjs` includes the new responsive
-workflow suite and phone/tablet render checks. It regenerates the phone boards
+workflow suite and device/tablet render checks. It regenerates the device boards
 and tablet captures. Results are recorded in [status.md](status.md) after the
 final run. It checks browser geometry, labelled controls and concrete workflows;
 it does not prove device accessibility or vendor task times.

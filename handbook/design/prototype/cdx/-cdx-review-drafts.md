@@ -2,8 +2,8 @@
 
 11 November 2026 · HTML design only · Shop Sign identity unchanged.
 
-Delivery, stock count, money out and cash-up now keep unfinished entry text and
-review details on the current practice phone. A reload no longer forces the
+Delivery, stock take, money out and cash-up now keep unfinished entry text and
+review details on the current practice device. A reload no longer forces the
 owner or cashier to type those values again. No stock, cash or shift change
 occurs until the final save action.
 
@@ -12,7 +12,7 @@ occurs until the final save action.
 | Journey | Kept while unfinished | Fresh check after reload | Completion |
 | --- | --- | --- | --- |
 | Delivery | Product, selling-pack quantity, supplier and delivery reference | Compare with the delivered packs; confirm restored entries | Stock changes once; draft clears |
-| Stock count | Counted products, including zero; difference reason | Compare against current recorded stock; confirm entries | Corrections save once; original movements remain |
+| Stock take | Counted products, including zero; difference reason | Compare against current recorded stock; confirm entries | Corrections save once; original movements remain |
 | Money out | Reason, amount and explanation | Check expected cash, confirm entries and enter owner approval again | Cash/debt changes once; PIN is never retained |
 | Cash-up | Each currency's count, difference explanation and retained floats | Check current drawer figures and confirm entries | Shift closes once; handover remains available after reload |
 
@@ -30,7 +30,7 @@ and opening a new shift clears the previous handover preview.
 
 ## Scope and storage assumptions
 
-- At most one draft per journey, four total, for the current shop, role, seller
+- At most one draft per journey, four total, for the current shop, role, cashier
   and pricing currency. Another context does not display or reuse those values.
 - Entry strings may be incomplete or invalid. They remain editable, with the
   normal validation; an invalid draft cannot become a review/save action.
@@ -69,17 +69,17 @@ The readable scope/baseline above illustrate their purpose; the actual values
 are JSON comparison strings. No journal, workbook or production schema changes.
 Older practice sessions without these optional fields still open. Resetting or
 starting a new practice shop clears them. Shop-record restore examples do not
-import these drafts across phones. Browser reload is not proof of native Android
+import these drafts across devices. Browser reload is not proof of native Android
 process recovery, hardware storage reliability or integration behaviour.
 
 ## Review captures
 
-| Review | Phone | Tablet |
+| Review | Device | Tablet |
 | --- | --- | --- |
-| Delivery | [Phone](-cdx-phone-receive-draft.png) | [Tablet](-cdx-tablet-receive-draft.png) |
-| Stock count | [Phone](-cdx-phone-stock-count-draft.png) | [Tablet](-cdx-tablet-stock-count-draft.png) |
-| Money out | [Phone](-cdx-phone-expense-draft.png) | [Tablet](-cdx-tablet-expense-draft.png) |
-| Cash-up | [Phone](-cdx-phone-cashup-draft.png) | [Tablet](-cdx-tablet-cashup-draft.png) |
+| Delivery | [Device](-cdx-phone-receive-draft.png) | [Tablet](-cdx-tablet-receive-draft.png) |
+| Stock take | [Device](-cdx-phone-stock-count-draft.png) | [Tablet](-cdx-tablet-stock-count-draft.png) |
+| Money out | [Device](-cdx-phone-expense-draft.png) | [Tablet](-cdx-tablet-expense-draft.png) |
+| Cash-up | [Device](-cdx-phone-cashup-draft.png) | [Tablet](-cdx-tablet-cashup-draft.png) |
 
 [-cdx-review-drafts-check.cjs](-cdx-review-drafts-check.cjs) exercises real entry,
 review, reload, reapproval and save paths, including zero/invalid/partial input,

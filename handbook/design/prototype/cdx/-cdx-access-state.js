@@ -52,10 +52,10 @@ function staffDraft(){
   return s.staffAccessDraft;
 }
 function accessDelivery(p){
-  return line('This phone · Phone 1','Saved here',p.enabled&&p.phones.includes('1')?'Seller access applied here':'No selling access here')+
-    (p.pending?line('Waiting for Phone 2','Not confirmed','Last seen today at 08:12. It may still use its previous access.'):
-      p.exampleReceived?line('Phone 2','Example: received','A preview outcome, not a real device acknowledgement.'):
-      line('Phone 2','No change waiting','No real device is connected to this preview.'));
+  return line('This device · Device 1','Saved here',p.enabled&&p.phones.includes('1')?'Cashier access applied here':'No selling access here')+
+    (p.pending?line('Waiting for Device 2','Not confirmed','Last seen today at 08:12. It may still use its previous access.'):
+      p.exampleReceived?line('Device 2','Example: received','A preview outcome, not a real device acknowledgement.'):
+      line('Device 2','No change waiting','No real device is connected to this preview.'));
 }
 if(q.get('access')){
   const a=staffAccess();a.people[0].phones=['1','2'];
@@ -74,7 +74,7 @@ actions['close-shift']=()=>{
 const originalStartStaff=actions['start-person'];
 actions['start-person']=()=>{
   if(supervisedAccess&&val('next-person')!=='owner'){
-    toast('The owner must take this handover. Seller access stays removed.');return;
+    toast('The owner must take this handover. Cashier access stays removed.');return;
   }
   if(val('next-pin')!=='123456')return;
   if(currentAccessState()==='expired'&&val('next-person')==='worker'){

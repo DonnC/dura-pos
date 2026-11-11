@@ -6,6 +6,9 @@ description: Design or review Dura POS mobile journeys, Flutter or Android scree
 
 ## Read first
 
+- `handbook/product/04-glossary.md`: Owner, Cashier, Device, Stock and Stock take
+  are the current display terms. Technical compatibility names are not UI copy.
+
 - `handbook/product/03-experience-principles.md`: the five-second rule,
   states, language, identity, targets and the UI pull-request checklist.
   **This is the standard.**

@@ -28,7 +28,7 @@ screens['fiscal-close']=()=>{
     (pending.length?'<p class="warning">Review the outstanding receipt states first. This example cannot confirm a close while those records need attention.</p>':
       '<p class="sub">All receipt answers in this example are available. The day’s close still needs its own result.</p>')+
     '</section><section><h2 class="section-title">Before proceeding</h2>'+
-    (d.day==='open'&&!pending.length?'<label class="toggle-row"><span><strong>I checked the receipt states</strong>'+ 
+    (d.day==='open'&&!pending.length?'<label class="toggle-row"><span><strong>I checked the receipt states</strong>'+
       '<small>Request close for this same example day.</small></span><input type="checkbox" id="fiscal-close-confirm"></label>':
       '<p class="sub">'+(d.day==='pending'?'Keep the same day identity and check the existing close request.':
         d.day==='failed'?'Review the reported cause and verified device procedure. Do not edit counters or mark the day closed locally.':
@@ -54,13 +54,13 @@ for(const [action,state] of [['fiscal-day-wait','pending'],['fiscal-day-failed',
 }
 screens['fiscal-device']=()=>{
   if(!fiscalGate())return;const condition=fiscalDemo().condition;
-  screen.innerHTML=heading('This fiscal device.','Owner · One device identity on this phone','fiscal')+
+  screen.innerHTML=heading('This fiscal device.','Owner · One device identity on this device','fiscal')+
     '<div class="fiscal-layout"><section>'+line('Device','Example device A')+line('Environment','Test example')+
     line('Access / stored state',condition==='certificate'?'Owner access check needed':
       condition==='integrity'?'Stored state needs investigation':'No real device linked')+
     line('Receipts to preserve',String(fiscalRows().length)+' test examples')+
-    '</section><section><h2 class="section-title">If this phone is replaced</h2>'+
-    '<ol class="steps"><li>Keep the old phone’s records and unresolved references.</li>'+ 
+    '</section><section><h2 class="section-title">If this device is replaced</h2>'+
+    '<ol class="steps"><li>Keep the old device’s records and unresolved references.</li>'+
     '<li>Have the owner review the verified device/support procedure.</li>'+
     '<li>Give the replacement its own approved fiscal identity.</li></ol>'+
     note('Restoring shop records does not copy fiscal keys, identity or counters. No reset, deletion or live activation is offered here.')+

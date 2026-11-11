@@ -7,11 +7,11 @@
 screens.reports=()=>{
   const f=reportFilter();
   screen.innerHTML=btn('money',icon('back')+' Back','back')+'<div class="report-topline">'+
-    heading('How is the shop doing?',reportExample?'Example locations · Saved snapshot':'Current till snapshot · This phone')+
+    heading('How is the shop doing?',reportExample?'Example locations · Saved snapshot':'Current till snapshot · This device')+
     '<div class="report-filters">'+select('report-period','Period',[
-      ['today','Today'],['yesterday','Yesterday'],['week','This week'],['custom','Choose dates']]
+      ['today','Today'],['yesterday','Yesterday'],['week','This week'],['last7','Last 7 days'],['month','This month'],['custom','Choose dates']]
       .map(([v,l])=>option(v,l,f.period===v)).join(''))+
-    select('report-place','Place',option('phone1','This phone',f.place==='phone1')+(reportExample?
+    select('report-place','Place',option('phone1','This device',f.place==='phone1')+(reportExample?
       option('front','Front counter',f.place==='front')+option('market','Market stall',f.place==='market')+
       option('all','All example locations',f.place==='all'):'') )+'</div></div>'+
     (f.period==='custom'?'<div class="report-filters">'+
@@ -32,9 +32,9 @@ function drawReport(){
   }
   body.innerHTML=`<button class="report-coverage ${r.complete?'':'is-partial'}" data-action="report-coverage"
     id="report-coverage-summary">${icon(r.complete?'check':'clock')}<span>${esc(reportCoverageText(r))}
-    <small>See phones and missing information</small></span>${icon('chevron')}</button>`+
+    <small>See devices and missing information</small></span>${icon('chevron')}</button>`+
     (!r.rows.length?'<div class="empty"><h2>No figures loaded.</h2><p class="sub">Missing records are unknown. '+
-      'They do not mean there were no sales.</p>'+btn('report-reset','Show today on this phone')+'</div>':'')+
+      'They do not mean there were no sales.</p>'+btn('report-reset','Show today on this device')+'</div>':'')+
     '<div class="report-layout"><section><section class="hero report-hero"><p class="eyebrow">'+
       (r.complete?'Sales after returns':'Recorded sales after returns')+'</p><div class="amount-due" id="report-net">'+
       esc(reportMoney(r.net))+'</div><p class="sub hero-sub">'+esc(reportPeriod())+' · '+esc(reportPlace())+'</p></section>'+
@@ -44,7 +44,7 @@ function drawReport(){
     '<section><h2 class="section-title">Look closer</h2>'+menu('report-sales','Sales & returns',
       'Original sales, returned goods and the difference','receipt')+
     menu('report-cash','Cash in the drawers','Latest snapshot · Separate currencies and times','money')+
-    menu('report-coverage','What is included?', 'Phones, dates and missing buying costs','phone')+
+    menu('report-coverage','What is included?', 'Devices, dates and missing buying costs','phone')+
     note('These are sales records. Money collected from old debts, supplier payments and kept-change payouts are separate movements.')+
     '</section></div>';
   enable('report-sales',r.rows.length>0);
@@ -68,7 +68,7 @@ screens['report-sales']=()=>{
     line('Goods returned',reportMoney(r.returns??null))+
     '<div class="report-total">'+line('Sales after returns',reportMoney(r.net??null))+'</div>'+
     line('Gross profit',reportMoney(r.profit??null),'Sales after returns − cost of goods. Shop expenses are separate.')+
-    '</section><section><h2 class="section-title">By phone</h2>'+r.phones.map(p=>{
+    '</section><section><h2 class="section-title">By device</h2>'+r.phones.map(p=>{
       const rows=r.rows.filter(row=>row.phone===p.id);
       return line(esc(p.name),rows.length?money(rows.reduce((sum,row)=>sum+row.net,0)):'Not available',
         esc(p.seen)+(rows.some(row=>row.state!=='current')?' · Older / local figures':''));
@@ -99,10 +99,10 @@ screens['report-coverage']=()=>{
         ` · ${rows.length} of ${expected} daily updates`);
     }).join('')+'</section><section><h2 class="section-title">Before relying on the total</h2>'+
     line('Buying costs',r.profit==null?'Missing or incomplete':'Included for this period')+
-    note('An older phone can have newer sales that are not in this view. Keep the recorded figures labelled until the missing records arrive.')+
+    note('An older device can have newer sales that are not in this view. Keep the recorded figures labelled until the missing records arrive.')+
     btn('report-refresh','Check for newer figures','secondary full')+'</section></div>';
   primary('reports','Back to report');
 };
 actions['report-refresh']=()=>showSheet('No new figures received',
-  '<p class="sub">No Shop Hub is connected in this prototype. The saved figures, missing phones and timestamps remain as shown.</p>',
+  '<p class="sub">No Shop Hub is connected in this prototype. The saved figures, missing devices and timestamps remain as shown.</p>',
   btn('close','Keep the saved view','primary'));

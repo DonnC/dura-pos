@@ -4,16 +4,19 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
+const sellCategories=()=>['Favourites','All items',...new Set(products().map(p=>p.cat).filter(Boolean))];
+const inSellCategory=(p,i,c)=>c==='Favourites'?(p.favourite??i<12):c==='All items'||p.cat===c;
 screens.sell=()=>{
-  screen.innerHTML=`<div class="row heading"><h1>Let’s sell.</h1>
+  screen.innerHTML=`<div class="sell-tools"><div class="row heading"><h1>Let’s sell.</h1>
     ${btn('sale-options',icon('down'),'scan','aria-label="Sale options"')}</div>
     ${!s.active?`<p class="warning">Your till is closed. Open it before the next sale.
     ${btn('opening','Open till','text-button')}</p>`:''}
     <div class="search"><div class="searchbox">${icon('search')}
     <input id="search" aria-label="Find a product" placeholder="Find a product"
       value="${esc(search)}"></div>${btn('scan',icon('scan'),'scan','aria-label="Scan barcode"')}</div>
-    <div class="tabs" aria-label="Product categories">${['Favourites','All items','Food','Drinks']
-      .map(c=>btn('category',c,'chip',`data-category="${c}" aria-pressed="${c===category}"`)).join('')}</div>
+    <div class="tabs" aria-label="Product categories">${sellCategories()
+      .map(c=>btn('category',c+' <span class="category-count">'+products().filter((p,i)=>inSellCategory(p,i,c)).length+'</span>',
+        'chip',`data-category="${c}" aria-pressed="${c===category}"`)).join('')}</div></div>
     <div class="catalog" id="catalog"></div>
     ${btn('quick',icon('plus')+' Sell an unlisted item','quick')}
     ${s.held.length?btn('held',`${s.held.length} held ${s.held.length===1?'sale':'sales'} · Resume`,'quick'):''}
@@ -23,24 +26,24 @@ screens.sell=()=>{
 function drawCatalog(){
   const el=document.querySelector('#catalog');
   if(demoState!=='populated'){
-    const states={loading:['Getting the shelf ready.','Loading products saved on this phone.','retry','Show loaded shelf'],
+    const states={loading:['Getting the shelf ready.','Loading products saved on this device.','retry','Show loaded shelf'],
       empty:['Your shelf starts here.','Add one product, or sell an unlisted item.','product-edit','Add first product'],
       error:['Couldn’t load products.','Your basket is safe. Try the local catalogue again.','retry','Try again'],
-      interrupted:['Your sale is still here.','Pick up the basket you left on this phone.','retry','Continue sale']};
+      interrupted:['Your sale is still here.','Pick up the basket you left on this device.','retry','Continue sale']};
     const [t,c,a,l]=states[demoState]||states.error;
     el.innerHTML=`<div class="empty"><h2>${t}</h2><p class="sub">${c}</p>${btn(a,l)}</div>`;
     el.classList.add('single');return;
   }
   el.classList.remove('single');
-  const matches=products().filter((p,i)=>(search||category!=='Favourites'||i<4)&&
-    (!['Food','Drinks'].includes(category)||p.cat===category)&&
+  const matches=products().filter((p,i)=>(search||inSellCategory(p,i,category))&&
     p.name.toLowerCase().includes(search.toLowerCase()));
   el.classList.toggle('many-products',matches.length>4);
   el.innerHTML=matches.map(p=>`<button class="product ${s.basket[p.id]?'selected':''}"
     data-action="add" data-id="${p.id}" aria-label="Add ${esc(p.name)}, ${money(p.cents)}, ${esc(p.unit)}">
-    <div class="art">${art(p.id)}</div>${s.basket[p.id]?`<span class="count">${p.scale?quantityText(p,s.basket[p.id]):s.basket[p.id]}</span>`:''}
+    <div class="art">${p.short?'<span class="product-monogram">'+esc(p.short)+'</span>':art(p.id)}</div>${s.basket[p.id]?`<span class="count">${p.scale?quantityText(p,s.basket[p.id]):s.basket[p.id]}</span>`:''}
     <div class="product-text"><span class="product-name">${esc(p.name)}</span>
-    <span class="unit">${esc(p.unit)}</span><span class="price">${money(p.cents)}</span></div>
+    <span class="unit">${esc(p.unit)}</span>${typeof activeLineDiscount==='function'&&activeLineDiscount(p)?
+      '<span class="discount-badge">Discount in basket</span>':''}<span class="price">${money(p.cents)}</span></div>
     <span class="add">${icon('plus')}</span></button>`).join('')||
     `<div class="empty"><h2>No products found.</h2><p class="sub">Try a shorter name.</p>
     ${btn('clear-search','Show all products')}</div>`;
@@ -95,7 +98,7 @@ actions['resume-held']=b=>{
 };
 screens.quick=()=>{
   screen.innerHTML=heading('An unlisted item.','A one-off sale, without adding to your shelf.','sell')+
-    field('quick-name','What are you selling?','','maxlength="60" placeholder="e.g. Phone charging"')+
+    field('quick-name','What are you selling?','','maxlength="60" placeholder="e.g. Device charging"')+
     field('quick-price',`Price · ${s.currency}`,'','inputmode="decimal" placeholder="0.00"')+
     note('One unit. To sell this regularly, ask the owner to add a product.');
   primary('quick-add','Add to basket',true);
@@ -115,6 +118,9 @@ actions['scan-result']=()=>{navigate('sell');actions.add({dataset:{id:'bread'}})
 screens.pay=()=>{
   if(!count()){navigate('sell');return;}
   screen.innerHTML=heading('Take payment','Walk-in customer · '+count()+' items','sell')+
+    (s.paymentRecovery?.key===cashDraftKey()&&s.paymentRecovery.current===total()?
+      '<p class="warning" id="payment-recovery">Previous payment failed. Prices changed: the request was '+
+      money(s.paymentRecovery.amount)+'. Check the current total before taking payment.</p>':'')+
     `<div class="amount-due"><span>${s.currency}</span>${(total()/100).toFixed(2)}</div>
     <div class="payment-tabs">${btn('cash',icon('cash')+' Cash','active')}
     ${s.features.mobile?btn('mobile',icon('phone')+' Mobile money'):''}</div>
@@ -129,7 +135,7 @@ screens.pay=()=>{
       btn('kept-keep','Keep this change','text-button full')+'</div>':''}
     ${s.features.credit&&staffPermission('credit')?btn('credit','Put on a customer’s account','text-button full'):''}
     ${s.features.multi&&s.currency==='USD'?btn('mixed','Pay with USD + ZWG','text-button full'):''}`;
-  primary('complete','Save practice sale');updateChange();
+  primary('complete','Save sale');updateChange();
 };
 function updateChange(){
   const n=parseCents(received),short=n!==null&&n<total();
@@ -147,38 +153,39 @@ actions.cash=()=>navigate('pay');
 actions.complete=()=>{const n=parseCents(received);if(n===null||n<total())return;
   completeSale('Cash',n,total());};
 function completeSale(method,tender,cashDelta,extra={}){
-  const amount=total();s.saleSeq++;
+  const amount=extra.amount??total();s.saleSeq++;
   lastSale={id:`T-P1-S261110-${String(s.saleSeq).padStart(4,'0')}`,
     items:saleSnapshot(),amount,received:tender,change:method==='Cash'?tender-amount:0,
-    method,who:s.name,status:'Saved on phone',currency:s.currency,...extra};
+    method,who:s.name,status:'Saved on device',currency:s.currency,
+    ...(typeof saleDiscountSummary==='function'?saleDiscountSummary():{}),...extra};
   if(method==='On account'){lastSale.customer='Tariro';s.owed+=amount;
     accountMove('customer','Sale on account',amount,lastSale.id);}
   s.cash+=cashDelta;s.sales+=amount;s.saleCount++;
   for(const p of basketRows())if(p.stock!==null){p.stock-=s.basket[p.id];
     stockMove(p.id,'Sale',-s.basket[p.id],p.stock);}
-  s.history.unshift(lastSale);s.last=lastSale;s.basket={};s.keptCheckout=null;
+  s.history.unshift(lastSale);s.last=lastSale;s.basket={};s.keptCheckout=null;s.paymentRecovery=null;
   received='';save();navigate('done');
 }
 screens.done=()=>{
   if(!lastSale){navigate('history');return;}
   screen.innerHTML=`<section class="receipt"><div class="success-icon">${icon('check')}</div>
-    <p class="eyebrow">Practice sale saved</p><h1>All sorted.</h1>
+    <p class="eyebrow">Sale saved</p><h1>All sorted.</h1>
     <p class="sub">${lastSale.method==='Cash'?'Give the customer their change.':esc(lastSale.method)}</p>
     <div class="change"><p class="micro">${lastSale.method==='Cash'?'CHANGE TO GIVE':'SALE TOTAL'}</p>
     <div class="amount-due">${money(lastSale.method==='Cash'?lastSale.change:lastSale.amount)}</div></div>
     <div class="receipt-details">${line('Sale total',money(lastSale.amount))}
     ${line('Payment',esc(lastSale.method))}${keptReceiptRows(lastSale)}</div></section>
-    <p class="status-line">${icon('check')}Saved on this phone · Practice</p>
+    <p class="status-line">${icon('check')}Saved on this device · Practice</p>
     <p class="status-line wait">${icon('clock')}Not uploaded · No fiscal receipt issued</p>
     ${btn('receipt','View receipt','secondary full')}`;
-  primary('next','Next customer');
+  primary('next',count()?'Return to current sale':'Next customer');
 };
 actions.next=()=>navigate('sell');
 screens.mobile=()=>{
   screen.innerHTML=heading('Mobile money.',money(total())+' · Practice payment','pay')+
     select('provider','Provider',option('ecocash','EcoCash'))+
     field('payment-phone','Customer’s mobile number','','type="tel" maxlength="15" placeholder="07…"')+
-    note('Ask the customer to approve on their phone. A screenshot is not confirmation.')+
+    note('Ask the customer to approve on their device. A screenshot is not confirmation.')+
     (offline?'<p class="warning">You’re offline. Take cash or hold this sale until connected.</p>':'');
   primary('request-payment','Request practice payment',true);
 };
@@ -187,7 +194,10 @@ function sealPayment(){
   if(!count())return false;
   if(s.pending.length>=3){toast('Check an unconfirmed payment before requesting another.');return false;}
   s.paymentSeq=(s.paymentSeq||0)+1;
-  s.pending.push({basket:{...s.basket},amount:total(),ref:`T-PAY-${String(s.paymentSeq).padStart(4,'0')}`});
+  s.pending.push({basket:{...s.basket},amount:total(),ref:`T-PAY-${String(s.paymentSeq).padStart(4,'0')}`,
+    lineDiscounts:structuredClone(s.lineDiscounts||{}),
+    quote:{items:saleSnapshot(),amount:total(),who:s.name,currency:s.currency,
+      ...saleDiscountSummary()}});
   s.basket={};save();return true;
 }
 actions['request-payment']=()=>{if(sealPayment())navigate('pending');};
@@ -195,27 +205,41 @@ screens.pending=()=>{
   if(!s.pending.length&&!sealPayment()){navigate('sell');return;}
   const payment=s.pending[0];
   const confirmed=demoState==='confirmed',failed=demoState==='failed';
-  screen.innerHTML=heading(confirmed?'Payment confirmed.':failed?'Payment failed.':'Waiting for payment.',
+  const missingQuote=confirmed&&!payment.quote;
+  screen.innerHTML=heading(missingQuote?'Review payment details.':confirmed?'Payment confirmed.':failed?'Payment failed.':'Waiting for payment.',
     'Practice provider · '+money(payment.amount))+
-    `<div class="empty">${icon(confirmed?'check':'clock')}<h2>${confirmed?'Ready to finish':
+    `<div class="empty">${icon(confirmed?'check':'clock')}<h2>${missingQuote?'Keep this payment reference':confirmed?'Ready to finish':
       failed?'No money collected':'Ask the customer to approve'}</h2>
     <p class="sub">${confirmed?'Confirmed by the practice provider.':failed?
       'Choose cash or try mobile money again.':'Not paid yet. Don’t take another payment for this sale.'}</p></div>`+
     note(`Reference ${payment.ref} · Rechecking uses this same reference. No live provider is connected.`)+
+    (missingQuote?'<p class="warning">Item details are missing from this older preview request. '+
+      'Keep the reference and ask the owner to review. Do not collect payment again.</p>':'')+
+    (payment.quote?'<details class="payment-quote"><summary>Items in this payment</summary>'+
+      summaryRows(payment.quote.items)+line('Requested amount',money(payment.amount,payment.quote.currency))+
+      '</details>':'')+
     (!confirmed&&!failed?btn('sell','Keep pending · Serve next customer','secondary full'):'');
-  primary(confirmed?'finish-mobile':failed?'retry-pending':'check-payment',
-    confirmed?'Save practice sale':failed?'Choose another payment':'Check payment');
+  primary(missingQuote?'sell':confirmed?'finish-mobile':failed?'retry-pending':'check-payment',
+    missingQuote?'Keep pending · Back to selling':confirmed?'Save practice sale':failed?'Choose another payment':'Check payment');
 };
 actions['check-payment']=()=>toast('Still waiting. No payment confirmed.');
 actions['finish-mobile']=()=>{
-  const pending=s.pending.shift();if(!pending)return;
-  const current={...s.basket};s.basket=pending.basket;
-  completeSale('Mobile money',pending.amount,0,{providerRef:pending.ref});
-  s.basket=current;save();
+  if(!s.pending[0]?.quote)return;
+  const pending=s.pending.shift();
+  const current={basket:s.basket,lineDiscounts:s.lineDiscounts||{},cashDraft:s.cashDraft,
+    keptCheckout:s.keptCheckout,paymentRecovery:s.paymentRecovery,received};
+  s.basket=pending.basket;s.lineDiscounts=pending.lineDiscounts||{};
+  completeSale('Mobile money',pending.amount,0,{...pending.quote,providerRef:pending.ref});
+  Object.assign(s,{basket:current.basket,lineDiscounts:current.lineDiscounts,
+    cashDraft:current.cashDraft,keptCheckout:current.keptCheckout,paymentRecovery:current.paymentRecovery});
+  received=current.received;save();render();
 };
 actions['retry-pending']=()=>{
   if(count()){toast('Hold the current basket before returning to this payment.');return;}
-  const pending=s.pending.shift();s.basket=pending.basket;save();navigate('pay');
+  const pending=s.pending.shift();s.basket=pending.basket;s.lineDiscounts=pending.lineDiscounts||{};
+  save();s.paymentRecovery=total()!==pending.amount?
+    {key:cashDraftKey(),amount:pending.amount,current:total()}:null;save();
+  navigate('pay');
 };
 screens.credit=()=>{
   screen.innerHTML=heading('Put it on account.','Name the person before saving.','pay')+

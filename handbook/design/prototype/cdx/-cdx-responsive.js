@@ -8,7 +8,8 @@ const tabletViewport=window.matchMedia('(min-width:700px)');
 function contextItems(items,editable=false){
   return items.map(p=>`<div class="context-product"><div class="row"><strong>${esc(p.name)}</strong>
     <strong>${money(p.lineTotal??lineAmount(p,p.qty))}</strong></div><p class="micro">${esc(p.unit)} · ${money(p.cents)} each</p>
-    ${editable&&p.scale?btn('quantity-edit',esc(quantityText(p,p.qty))+' · Edit','secondary',`data-id="${p.id}"`):editable?`<div class="stepper">${btn('context-minus','−','',
+      ${p.discountAmount?'<p class="micro">Original '+money(p.originalLineTotal)+' · Discount '+money(p.discountAmount)+'</p>':''}
+      ${editable&&p.scale?btn('quantity-edit',esc(quantityText(p,p.qty))+' · Edit','secondary',`data-id="${p.id}"`):editable?`<div class="stepper">${btn('context-minus','−','',
       `data-id="${p.id}" aria-label="Remove one ${esc(p.name)}"`)}<span>${p.qty}</span>
       ${btn('context-plus','+','',`data-id="${p.id}" aria-label="Add one ${esc(p.name)}"`)}</div>`:
       `<p class="micro">Quantity: ${esc(quantityText(p,p.qty))}</p>`}</div>`).join('');
@@ -35,7 +36,7 @@ function renderContext(blocked=false){
       if(receipt)content=`<p class="eyebrow">Saved practice receipt</p><h2>${money(receipt.amount,receipt.currency)}</h2>
         <p class="sub">${esc(receipt.id)} · ${esc(receipt.who)}</p>`+
         contextItems(receipt.items)+line('Payment',esc(receipt.method))+
-        note('Saved on this phone. Not uploaded. No fiscal receipt issued.');
+        note('Saved on this device. Not uploaded. No fiscal receipt issued.');
     }else if(page==='stock'){
       const p=products().find(p=>p.id===selectedId)||products()[0];
       if(p&&(page!=='stock'||document.querySelector('#stock-list .menu-row')))content=

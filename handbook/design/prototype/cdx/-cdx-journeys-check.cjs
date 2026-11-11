@@ -68,6 +68,6 @@ const assert=require('node:assert/strict');
     assert.match(await p.locator('#screen').innerText(),/ZWG 20.00/);
     assert.doesNotMatch(await p.locator('#screen').innerText(),/USD/);
     console.log('PASS: cash validation, lock/recovery, exact split and retained rate, account sale, '+
-      'collection, approved linked return, zero stock count, pending isolation and ZWG onboarding.');
+      'collection, approved linked return, zero stock take, pending isolation and ZWG onboarding.');
   }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

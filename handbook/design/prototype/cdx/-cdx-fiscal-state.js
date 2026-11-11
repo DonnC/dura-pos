@@ -33,7 +33,7 @@ function fiscalGate(){
 function fiscalDetailRows(r){return line('Saved sale / return',esc(r.sale),'Example local reference')+
   line('Document type',esc(r.type))+line('Amount',money(r.amount))+
   line('Fiscal reference',`<span id="fiscal-reference">${esc(r.ref)}</span>`)+
-  line('Mode / phone','Test example · This phone');}
+  line('Mode / device','Test example · This device');}
 function fiscalStatusCopy(state){return {
   waiting:'This example has not reached the authority. Later records stay in their original order.',
   unknown:'The reply was not confirmed. Check this existing reference before any further submission.',

@@ -66,23 +66,25 @@ a{color:inherit;text-underline-offset:4px}button,select{font:inherit}button,a,se
     <button data-journey="purchase" aria-pressed="false">Receive an invoice</button>
     <button data-journey="kept" aria-pressed="false">Use & return kept change</button>
     <button data-journey="quantities" aria-pressed="false">Weigh & return items</button>
-    <button data-journey="access" aria-pressed="false">Manage staff access</button>
+    <button data-journey="access" aria-pressed="false">Manage cashier access</button>
     <button data-journey="reports" aria-pressed="false">Understand the figures</button>
-    <button data-journey="recovery" aria-pressed="false">Connect & recover phones</button>
+    <button data-journey="recovery" aria-pressed="false">Connect & recover devices</button>
     <button data-journey="fiscal" aria-pressed="false">Fiscal status & recovery</button>
     <button data-journey="start" aria-pressed="false">Start a new shop</button>
   </div>
   <div class="tools" aria-label="Prototype review controls">
-    <button id="focus">Focus on one phone</button>
-    <label>Device <select id="device"><option value="compare">Phone comparison</option>
-      <option value="phone">Phone · 390 × 844</option><option value="narrow">Small phone · 320 × 740</option>
+    <button id="focus">Focus on one device</button>
+    <label>Device <select id="device"><option value="compare">Mobile comparison</option>
+      <option value="phone">Mobile · 390 × 844</option><option value="narrow">Small mobile · 320 × 740</option>
       <option value="portrait">Tablet · 768 × 1024</option>
-      <option value="landscape">Tablet · 1024 × 768</option></select></label>
-    <label>Person <select id="role"><option value="owner">Chipo · Owner</option>
-      <option value="worker">Rudo · Seller</option></select></label>
+      <option value="landscape">Tablet · 1024 × 768</option>
+      <option value="wide">Wide counter · 1440 × 900</option></select></label>
+    <label>Signed-in role <select id="role"><option value="owner">Chipo · Owner</option>
+      <option value="worker">Rudo · Cashier</option></select></label>
     <label>Screen <select id="scene">
       <optgroup label="Serving"><option value="sell">Sell</option><option value="pay">Take payment</option>
       <option value="quick">Unlisted item</option><option value="history">Recent sales</option>
+      <option value="discount">Product discount</option><option value="discount-review">Discount approval</option>
       <option value="receipt">Receipt</option><option value="refund">Return a sale</option>
       <option value="mobile">Mobile money</option><option value="pending">Payment pending</option>
       <option value="mixed">Split cash · USD + ZWG</option><option value="credit">On account</option></optgroup>
@@ -96,30 +98,32 @@ a{color:inherit;text-underline-offset:4px}button,select{font:inherit}button,a,se
       <option value="cashup">Count cash</option><option value="locked">Locked till</option>
       <option value="switch-person">Hand over</option></optgroup>
       <optgroup label="Stock"><option value="stock">Stock</option><option value="product">Product detail</option>
-      <option value="receive">Receive a delivery</option><option value="stock-count">Count stock</option>
+      <option value="receive">Receive a delivery</option><option value="stock-count">Stock take</option>
       <option value="product-edit">Edit product</option></optgroup>
       <optgroup label="Owner"><option value="expense">Money out</option><option value="customers">Customers</option>
       <option value="suppliers">Suppliers</option><option value="reports">Reports overview</option>
       <option value="report-sales">Sales & returns report</option><option value="report-cash">Drawer snapshots</option>
       <option value="report-coverage">Report source coverage</option>
+      <option value="report-trend">Sales trend graph</option><option value="report-products">Product report</option>
+      <option value="report-cashiers">Cashier report</option><option value="report-discounts">Discount report</option>
       <option value="supplier-statement">Supplier statement</option>
       <option value="invoice-items">Purchase invoice · Items</option>
       <option value="invoice-payment">Purchase invoice · Payment</option>
       <option value="invoice-review">Purchase invoice · Review</option>
       <option value="invoice-detail">Saved purchase invoice</option>
       <option value="shop">My shop</option><option value="settings">Optional features</option>
-      <option value="people">People & phones</option><option value="staff">Staff access</option>
-      <option value="pair">Pair a phone</option><option value="records">Records</option>
-      <option value="access-review">Review seller access</option><option value="access-status">Access delivery status</option>
-      <option value="access-remove">Remove seller access</option><option value="my-access">My access</option>
+      <option value="people">Cashiers & devices</option><option value="staff">Cashier access</option>
+      <option value="pair">Pair a device</option><option value="records">Records</option>
+      <option value="access-review">Review cashier access</option><option value="access-status">Access delivery status</option>
+      <option value="access-remove">Remove cashier access</option><option value="my-access">My access</option>
       <option value="access-expired">Offline owner check</option><option value="access-removed">Selling access removed</option>
       <option value="access-recovery">Local owner recovery</option>
       <option value="export">Export preview</option><option value="restore">Restore checks</option></optgroup>
       <optgroup label="Connect / recover"><option value="connection-review">Review shop account</option>
       <option value="connection-status">Connection check result</option><option value="pair-code">Pairing code example</option>
-      <option value="join-review">New phone shop check</option><option value="join-status">New phone next steps</option>
+      <option value="join-review">New device shop check</option><option value="join-status">New device next steps</option>
       <option value="restore-review">Review recovery snapshot</option><option value="restore-status">Recovery next steps</option>
-      <option value="lost-phone">Lost phone follow-up</option></optgroup>
+      <option value="lost-phone">Lost device follow-up</option></optgroup>
       <optgroup label="Optional fiscal examples"><option value="fiscal-setup">Fiscal test setup</option>
       <option value="fiscal-queue">Fiscal receipt queue</option><option value="fiscal-receipt">Fiscal receipt status</option>
       <option value="fiscal-check">Check existing fiscal result</option><option value="fiscal-owner-review">Fiscal owner review</option>
@@ -134,6 +138,8 @@ a{color:inherit;text-underline-offset:4px}button,select{font:inherit}button,a,se
       <option value="loading">Loading</option><option value="error">Load error</option>
       <option value="interrupted">Restored basket</option><option value="confirmed">Payment confirmed</option>
       <option value="failed">Payment failed</option></select></label>
+    <label>Account appearance <select id="account-appearance"><option value="account">Account layout</option>
+      <option value="practice">Practice mode</option></select></label>
     <label>Appearance <select id="appearance"><option value="light">Light</option>
       <option value="dark">Dark</option><option value="large">200% text</option></select></label>
     <label>Recovery example <select id="recovery-case"><option value="ready">Ready example</option>
@@ -157,12 +163,12 @@ a{color:inherit;text-underline-offset:4px}button,select{font:inherit}button,a,se
     <a href="status.md">Design status ↗</a>
     <a href="-cdx-coverage.html">Screens, states & dialogs ↗</a>
   </div>
-  <p class="viewport-label" id="viewport-label">Phone comparisons · Choose a device to inspect a real browser viewport.</p>
+  <p class="viewport-label" id="viewport-label">Device comparisons · Choose a device to inspect a real browser viewport.</p>
   <section class="board" aria-label="Three interactive mobile concepts">
     <article><div class="device-stage"><div class="phone"><iframe id="primary" title="Interactive sell prototype"
-      src="-cdx-counter.html?seed=1&amp;fresh=1"></iframe></div></div>
+      src="-cdx-counter.html?seed=1&amp;fresh=1&amp;shelf=full"></iframe></div></div>
       <div class="caption"><span class="number">01</span><div><h2>Recognise. Tap. Sell.</h2>
-        <p>Your everyday sellers up front.<br>The basket and payment always within reach.</p></div></div></article>
+        <p>Your everyday cashiers up front.<br>The basket and payment always within reach.</p></div></div></article>
     <article><div class="phone"><iframe title="Cash checkout prototype"
       src="-cdx-counter.html?screen=pay&amp;seed=1&amp;cash=500&amp;fresh=1&amp;role=worker"></iframe></div>
       <div class="caption"><span class="number">02</span><div><h2>No mental arithmetic.</h2>
@@ -184,11 +190,11 @@ const focusButton=document.querySelector('#focus');
 const devicePicker=document.querySelector('#device');
 focusButton.onclick=()=>{devicePicker.value=devicePicker.value==='compare'?'phone':'compare';applyDevice();};
 function applyDevice(){
-  const dimensions={phone:[390,844],narrow:[320,740],portrait:[768,1024],landscape:[1024,768]};
+  const dimensions={phone:[390,844],narrow:[320,740],portrait:[768,1024],landscape:[1024,768],wide:[1440,900]};
   const size=dimensions[devicePicker.value];document.body.classList.toggle('device-preview',!!size);
-  focusButton.textContent=size?'Show phone comparisons':'Focus on one phone';
+  focusButton.textContent=size?'Show device comparisons':'Focus on one device';
   if(!size){document.querySelector('#viewport-label').textContent=
-    'Phone comparisons · Choose a device to inspect its browser viewport.';return;}
+    'Device comparisons · Choose a device to inspect its browser viewport.';return;}
   const [width,height]=size,scale=Math.min(1,document.querySelector('.board').clientWidth/(width+10));
   document.body.style.setProperty('--frame-width',(width+10)+'px');
   document.body.style.setProperty('--frame-height',(height+10)+'px');
@@ -201,6 +207,8 @@ function update(){
   const theme=document.querySelector('#appearance').value;
   const params=new URLSearchParams({screen:document.querySelector('#scene').value,seed:'1',fresh:'1',
     role:document.querySelector('#role').value});
+  params.set('appearance',document.querySelector('#account-appearance').value);
+  if(params.get('screen')==='sell')params.set('shelf','full');
   if(params.get('screen').startsWith('invoice-'))params.set('invoice','sample');
   if(params.get('screen').startsWith('kept-')){params.set('kept','sample');params.set('cash','500');}
   if(params.get('screen')==='quantity'||params.get('screen').startsWith('return-')){
@@ -230,20 +238,20 @@ document.querySelectorAll('select').forEach(el=>el.onchange=update);
 devicePicker.onchange=applyDevice;
 window.addEventListener('resize',applyDevice);
 const initialDevice=new URLSearchParams(location.search).get('device');
-if(['phone','narrow','portrait','landscape'].includes(initialDevice))devicePicker.value=initialDevice;
+if(['phone','narrow','portrait','landscape','wide'].includes(initialDevice))devicePicker.value=initialDevice;
 applyDevice();
 const journeys={
   fiscal:[['fiscal-queue','owner','Know what each receipt means.','Saved locally, uncertain result and accepted are separate facts.'],
     ['fiscal-owner-review','owner','Keep the original reference.','Review the cause before any further fiscal action.'],
     ['fiscal-close','owner','A close request has its own answer.','Waiting for confirmation stays visible.']],
   recovery:[['connection-review','owner','Know which account and shop.','Owner control, clear checks and cash selling kept safe.'],
-    ['pair-code','owner','Add a phone carefully.','One-use code, then a shop check on the new phone.'],
-    ['restore-review','owner','See what can come back.','Snapshot date, possible gaps and a new phone identity.']],
-  reports:[['reports','owner','Ask about a period and place.','Recorded sales with source coverage kept visible.'],
-    ['report-cash','owner','Cash has its own story.','Latest drawer snapshots, separate currencies and times.'],
-    ['report-coverage','owner','Know what is missing.','Missing phones and buying costs stay explicit.']],
-  access:[['staff','owner','Give only the access needed.','Allowed phones and a few clear permissions.'],
-    ['access-status','owner','See which phones know.','Saved here and received elsewhere are different facts.'],
+    ['pair-code','owner','Add a device carefully.','One-use code, then a shop check on the new device.'],
+    ['restore-review','owner','See what can come back.','Snapshot date, possible gaps and a new device identity.']],
+  reports:[['report-trend','owner','See the sales trend.','Readable daily figures with gaps and older data marked.'],
+    ['report-products','owner','Know what is selling.','Product quantities, discounts and known profit.'],
+    ['report-cashiers','owner','See sales by cashier.','Recorded people, not assumptions from a shared device.']],
+  access:[['staff','owner','Give only the access needed.','Allowed devices and a few clear permissions.'],
+    ['access-status','owner','See which devices know.','Saved here and received elsewhere are different facts.'],
     ['my-access','worker','Keep an offline shift simple.','Current permissions, owner checks and work kept safe.']],
   quantities:[['quantity','worker','A clear weight. A clear price.','Enter kg or grams, check the line total, then add.'],
     ['return-items','worker','Only what came back.','Choose quantity and shelf condition for each item.'],
@@ -262,7 +270,7 @@ const journeys={
     ['stock-count','owner','Count what is there.','Blank means not counted; zero means none left.']],
   owner:[['money','owner','Check the day.','The drawer is not the same as sales or profit.'],
     ['expense','owner','Know where cash went.','Expense, owner drawing or supplier payment.'],
-    ['people','owner','People and phones.','A seller has access. A phone has a drawer.']],
+    ['people','owner','Cashiers and devices.','A cashier has access. A device has a drawer.']],
   purchase:[['invoice-items','owner','Count the delivery.','Add selling packs and buying costs.'],
     ['invoice-payment','owner','Know what is owed.','Pay later, in full or in part from this till.'],
     ['invoice-review','owner','Check once. Save once.','Stock, cash and supplier balance in one review.']],
@@ -274,7 +282,7 @@ function journey(name){
   document.querySelector('#fiscal-control').hidden=name!=='fiscal';
   const frames=[...document.querySelectorAll('iframe')];
   journeys[name].forEach(([scene,role,title,copy],i)=>{
-    frames[i].src=`-cdx-counter.html?screen=${scene}&role=${role}&seed=1&fresh=1${scene==='pay'||scene==='kept-keep'?'&cash=500':''}${scene.startsWith('invoice-')?'&invoice=sample':''}${scene.startsWith('kept-')?'&kept=sample':''}${scene==='quantity'||scene.startsWith('return-')?'&measure=sample':''}${scene.startsWith('return-')?'&returns=sample':''}${scene==='staff'||scene==='my-access'?'&access=sample':''}${scene==='access-status'?'&access=pending':''}${scene==='reports'||scene.startsWith('report-')?'&reports=sample':''}${['connection-review','pair-code','restore-review'].includes(scene)?'&recovery=ready':''}${scene==='fiscal-queue'?'&fiscal=unknown':scene==='fiscal-owner-review'?'&fiscal=refused':scene==='fiscal-close'?'&fiscal=closing':''}`;
+    frames[i].src=`-cdx-counter.html?screen=${scene}&role=${role}&seed=1&fresh=1${scene==='sell'?'&shelf=full':''}${scene==='pay'||scene==='kept-keep'?'&cash=500':''}${scene.startsWith('invoice-')?'&invoice=sample':''}${scene.startsWith('kept-')?'&kept=sample':''}${scene==='quantity'||scene.startsWith('return-')?'&measure=sample':''}${scene.startsWith('return-')?'&returns=sample':''}${scene==='staff'||scene==='my-access'?'&access=sample':''}${scene==='access-status'?'&access=pending':''}${scene==='reports'||scene.startsWith('report-')?'&reports=sample':''}${name==='reports'?'&period=last7':''}${['connection-review','pair-code','restore-review'].includes(scene)?'&recovery=ready':''}${scene==='fiscal-queue'?'&fiscal=unknown':scene==='fiscal-owner-review'?'&fiscal=refused':scene==='fiscal-close'?'&fiscal=closing':''}`;
     const article=frames[i].closest('article');article.querySelector('h2').textContent=title;
     article.querySelector('.caption p').textContent=copy;
   });

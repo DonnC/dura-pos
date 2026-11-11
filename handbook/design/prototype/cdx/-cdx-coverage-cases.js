@@ -11,6 +11,7 @@ const add=(family,screen,key,values,extra='')=>{
  for(const value of values)states.push({id:`${family}-${value}`,family,screen,query:`${key}=${value}${extra}`});
 };
 add('shelf','sell','state',['populated','empty','loading','error','interrupted']);
+states.push({id:'full-shop-shelf',family:'shelf',screen:'sell',query:'shelf=full'});
 add('payment','pending','state',['populated','confirmed','failed']);
 add('kept','kept-checkout','kept',['sample','stale']);
 add('access','my-access','access',['sample','expired','removed'],'&role=worker');
@@ -51,7 +52,7 @@ for(const [id,screen,setup] of [['stock-empty','stock','empty-products'],
  states.push({id,family:'data-boundary',screen,setup,query:''});
 for(const mode of ['full','later','part'])states.push({id:'invoice-'+mode,family:'invoice-payment',
  screen:'invoice-payment',setup:'invoice-mode',value:mode,query:''});
-for(const period of ['yesterday','week','custom'])states.push({id:'report-'+period,family:'report-filters',
+for(const period of ['yesterday','week','month','custom'])states.push({id:'report-'+period,family:'report-filters',
  screen:'reports',setup:'report-period',value:period,query:''});
 for(const currency of ['USD','ZWG','ZAR'])states.push({id:'pricing-'+currency,family:'currency',
  screen:'pay',setup:'currency',value:currency,query:''});
@@ -69,6 +70,22 @@ for(const [id,screen,setup,value] of [['opening-multi','opening','multi',''],['c
  ['cashup-balanced','count-review','count-review','70.50'],['cashup-over','count-review','count-review','71.00'],
  ['count-matched','count-stock-review','count-matched','']])states.push({id,family:'review-variants',screen,setup,value,query:''});
 states.push({id:'owner-access-records',family:'permission',screen:'records',query:'role=worker'});
+for(const screen of ['report-trend','report-products','report-cashiers','report-discounts']){
+ states.push({id:'detail-'+screen,family:'owner-report-detail',screen,setup:'report-last7',query:''},
+  {id:'cashier-denied-'+screen,family:'permission',screen,query:'role=worker'});
+}
+states.push({id:'discount-owner',family:'discount',screen:'discount',setup:'discount-review',query:''},
+ {id:'discount-cashier',family:'discount',screen:'discount',setup:'discount-review',query:'role=worker'},
+ {id:'discount-invalid',family:'discount',screen:'discount',input:'discount-value',value:'100',query:''},
+ {id:'practice-header',family:'appearance',screen:'sell',query:'appearance=practice'},
+ {id:'account-header',family:'appearance',screen:'sell',query:'appearance=account'});
+for(const screen of ['sell','pay','receipt'])states.push({id:'discount-applied-'+screen,family:'discount',
+ screen,setup:'discount-applied',query:'role=worker'});
+for(const [id,screen,value] of [['pending-quote','pending','quote'],
+ ['pending-next-customer','pending','current'],['payment-price-recovery','pay','retry'],
+ ['pending-saved-current','done','saved'],['discounted-handover','handover','handover'],
+ ['pending-missing-detail','pending','legacy']])
+ states.push({id,family:'sale-continuity',screen,setup:'sale-continuity',value,query:''});
 
 // Each source callsite has at least one actual rendered dialog fixture.
 const dialogs=[
@@ -92,23 +109,24 @@ const dialogs=[
  ['held-populated','selling','sell','held','Held sales','held'],
  ['scan','selling','sell','scan','Scan a product','basket'],
  ['profile-owner','shift','sell','profile','Owner','basket'],
- ['profile-worker','shift','sell','profile','Seller','worker'],
+ ['profile-worker','shift','sell','profile','Cashier','worker'],
  ['shop-account','shop-connection','connect','connection-account','Choose the shop account','connection'],
  ['export','shop','export','export-preview','Export contents','export'],
- ['access-received','staff-access','access-status','access-preview-receipt','Preview a reconnecting phone','pending-access']
+ ['access-received','staff-access','access-status','access-preview-receipt','Preview a reconnecting device','pending-access']
 ].map(([id,file,screen,action,title,fixture])=>({id,file:`-cdx-${file}.js`,screen,action,title,fixture}));
 dialogs.push({...dialogs.find(c=>c.id==='invoice-add'),id:'invoice-item-error',variant:'invalid'},
  {...dialogs.find(c=>c.id==='new-kept-customer'),id:'kept-name-error',variant:'invalid'});
+dialogs.push({...dialogs.find(c=>c.id==='basket'),id:'basket-discounted',fixture:'discounted'});
 
 const familyRoutes={
- selling:['sell','pay','quick','quantity','mobile','pending','credit','mixed','done'],
+ selling:['sell','pay','quick','quantity','discount','discount-review','mobile','pending','credit','mixed','done'],
  receipts:['history','receipt','print','refund','refund-review','return-items','return-review'],
  till:['opening','money','cashup','count-review','handover','locked','switch-person','expense','expense-review'],
  stock:['stock','product','receive','receive-review','stock-count','count-stock-review','product-edit'],
  accounts:['customers','customer','suppliers','supplier-statement'],
  invoices:['invoice-items','invoice-payment','invoice-review','invoice-detail'],
  kept:['kept-customers','kept-account','kept-checkout','kept-keep','kept-refund','kept-refund-review'],
- reports:['reports','report-sales','report-cash','report-coverage'],
+ reports:['reports','report-sales','report-cash','report-coverage','report-trend','report-products','report-cashiers','report-discounts'],
  access:['people','staff','access-review','access-status','access-remove','my-access','access-limited',
   'access-expired','access-removed','access-recovery'],
  connection:['connect','connection-review','connection-status','pair','pair-code','join','join-review','join-status',

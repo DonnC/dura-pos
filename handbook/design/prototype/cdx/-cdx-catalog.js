@@ -18,6 +18,9 @@ function prepareCoverageCase(c){
     if(c.screen==='kept-refund-review')s.keptRefund={customer:'tariro',amount:'1.00'};
     if(c.screen==='return-review'){const d=returnDraft(lastSale);d.qty[0]='1';d.reason='wrong';}
     if(c.screen==='handover')s.active=false;
+    if(c.screen==='discount-review'){
+      selectedId='bread';s.discountDraft=null;const d=discountDraft();d.value='10';d.reason='Promotion';
+    }
     page=c.screen;render();
   }
   if(c.setup==='empty-products'){s.products=[];s.basket={};render();}
@@ -29,6 +32,13 @@ function prepareCoverageCase(c){
   if(c.setup==='kept-no-balance'){keptContact().balance=0;render();}
   if(c.setup==='kept-cash-short'){s.cash=0;s.keptRefund={customer:keptContact().id,amount:'1.00'};render();}
   if(c.setup==='currency'){s.currency=c.value;render();}
+  if(c.setup==='report-last7'){reportFilter().period='last7';render();}
+  if(c.setup==='discount-review'){
+    selectedId='bread';s.discountDraft=null;const d=discountDraft();d.value=c.value||'10';d.reason='Promotion';
+    navigate('discount-review');
+  }
+  if(c.setup==='discount-applied')applyCoverageDiscount(c.screen);
+  if(c.setup==='sale-continuity')prepareContinuityCase(c);
   if(c.setup==='long-data'){
     s.shop='Chipo’s groceries and household supplies at the front counter';
     products()[0].name='Wholegrain family bread with seeds and extra thick slices';
@@ -73,6 +83,32 @@ function coverageInput(id,value){
   const el=document.getElementById(id);if(!el)throw Error('Missing outcome field: '+id);
   el.value=value;el.dispatchEvent(new Event('input',{bubbles:true}));
 }
+function applyCoverageDiscount(scene){
+  selectedId='bread';s.discountDraft=null;const d=discountDraft();d.value='10';d.reason='Promotion';
+  navigate('discount-review');if(s.role==='worker')coverageInput('approval-pin','123456');
+  actions['discount-apply']();
+  if(scene==='receipt'){received='5.00';completeSale('Cash',500,total());}
+  navigate(scene);
+}
+function prepareContinuityCase(c){
+  s.pending=[];s.paymentSeq=0;
+  s.basket={bread:2,milk:1};applyCoverageDiscount('sell');
+  if(c.value==='handover'){
+    navigate('cashup');coverageInput('counted-usd',(s.cash/100).toFixed(2));
+    actions['review-count']();actions['close-shift']();return;
+  }
+  sealPayment();
+  if(c.value==='legacy')delete s.pending[0].quote;
+  if(c.value==='retry'){
+    products()[0].cents=120;actions['retry-pending']();return;
+  }
+  if(['current','saved'].includes(c.value)){
+    s.basket={bread:1};applyCoverageDiscount('sell');received='2.00';rememberCashEntry();
+  }
+  navigate('pending');demoState=c.value==='quote'?'populated':'confirmed';render();
+  if(c.value==='saved')actions['finish-mobile']();
+  else{const quote=document.querySelector('.payment-quote');if(quote)quote.open=true;}
+}
 function runCoverageOutcome(kind){
   const run=action=>actions[action]({dataset:{}});
   if(reviewFlows[kind]){
@@ -104,6 +140,7 @@ function runCoverageOutcome(kind){
   if(kind==='lost-phone')run('lost-phone-preview');
 }
 function openCoverageDialog(c){
+  if(c.fixture==='discounted')applyCoverageDiscount('sell');
   if(c.fixture==='collection'){
     document.querySelector('#customer-amount').value='5.00';inputActions.customer();
   }

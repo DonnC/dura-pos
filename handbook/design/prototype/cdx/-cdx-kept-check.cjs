@@ -112,7 +112,7 @@ const assert=require('node:assert/strict');
      assert(cash.y+cash.height<=dock.y,'Cash input must be visible above the action');
      if(device==='phone'){
       const needed=await p.locator('#kept-mobile-needed').boundingBox();
-      assert(needed.y+needed.height<=cash.y,'Phone must show cash needed before cash input');
+      assert(needed.y+needed.height<=cash.y,'Device must show cash needed before cash input');
      }
     }
     await p.screenshot({path:path.join(__dirname,`-cdx-kept-${device}-${scene}.png`)});

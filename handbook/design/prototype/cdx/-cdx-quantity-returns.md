@@ -5,7 +5,7 @@ workbook or production journal changes.
 
 ## Screens
 
-Open the preview board and choose **Weigh & return items**, then a phone or
+Open the preview board and choose **Weigh & return items**, then a device or
 tablet in Device. The board explicitly loads fictional examples.
 
 | Screen | Purpose and main action | Recovery |
@@ -16,14 +16,14 @@ tablet in Device. The board explicitly loads fictional examples.
 | Check the return | Original prices, selected stock effects and cash/kept split; approve/save | Back preserves the draft; revalidate on save; no posting without owner PIN |
 | Return saved / original receipt | Explicit cash to give and kept change restored; view linked receipt | Original sale is unchanged; remaining quantities limit subsequent returns |
 
-Phones use one scrolling column and a fixed action. The review action shows
+Devices use one scrolling column and a fixed action. The review action shows
 the calculated refund or explains the next input needed. Tablets at 900 CSS px
 place entry/returned items beside the amount summary and approval. Enlarged
 text returns to one column.
 
 ## Fictional sample data
 
-- Loose rice: USD 2.40 per kg; stock on this phone 25 kg.
+- Loose rice: USD 2.40 per kg; stock on this device 25 kg.
 - 0.375 kg / 375 g costs USD 0.90. A USD 1.00 payment gives USD 0.10 change.
 - Returning 0.125 kg refunds USD 0.30. If sellable, it restores 125 g; 250 g
   from the sale remains returnable. Returning those 250 g as damaged refunds
@@ -62,20 +62,20 @@ text returns to one column.
   for the returned goods only. Giving that kept change back remains a separate
   approved payout.
 - **Restoring kept change:** require the original same-currency customer
-  balance on this phone. New receipts keep its contact ID; an old receipt's
+  balance on this device. New receipts keep its contact ID; an old receipt's
   name is accepted only when it matches one contact. Missing, ambiguous or
   unavailable balances block the return with an explanation. Restoring money
   already owed may exceed the new-change cap; it is not rejected or converted
   into cash. It makes the kept-change feature visible again if previously off.
 - **Approval and condition:** all selected returns require the existing
-  practice owner PIN. A seller requests the return for their own receipt;
-  the owner can view this phone's receipts. Restocking is off by default and
+  practice owner PIN. A cashier requests the return for their own receipt;
+  the owner can view this device's receipts. Restocking is off by default and
   selected separately per line. Damaged goods never go back into sellable
   stock automatically.
-- **Scope limits:** same pricing currency and this phone's cash/kept receipts
+- **Scope limits:** same pricing currency and this device's cash/kept receipts
   only. Provider, account and multi-currency refunds, discounts, tax allocation,
-  exchanges, cross-phone return locking and fiscal credit notes remain separate
-  work. Local checks are not proof against two phones refunding the same sale.
+  exchanges, cross-device return locking and fiscal credit notes remain separate
+  work. Local checks are not proof against two devices refunding the same sale.
 - **Stock setup:** the existing whole-pack receiving, buying and counting
   screens exclude measured products. This avoids treating grams as packs while
   their own receiving/count journeys are still undesigned. Measured stock and
@@ -87,7 +87,7 @@ text returns to one column.
 Everything in the prototype is local; there is no invented upload, provider or
 fiscal success. Offline cash selling remains available. Invalid/empty weights,
 wrong precision, invalid whole-pack fractions, fully returned lines, insufficient
-cash, missing receipts, inaccessible seller receipts and unavailable kept
+cash, missing receipts, inaccessible cashier receipts and unavailable kept
 balances have an explanation and a next step.
 
 Optional product `scale` / `measure` fields distinguish integer grams from
@@ -112,14 +112,22 @@ are not a production retention or restore policy.
 `-cdx-quantity-returns-check.cjs` checks conversion, precision, integer money,
 sale/return cash and stock, damaged stock, repeated returns, unchanged receipts,
 kept/cash restoration, draft recovery, shortages and cumulative rounding.
-It renders owner/seller screens at 320, 390, 768 and 1024 CSS px in light/dark
+It renders owner/cashier screens at 320, 390, 768 and 1024 CSS px in light/dark
 and 200% text: 72 combinations.
 
-- [Phone quantity](-cdx-phone-quantity.png) / [tablet quantity](-cdx-tablet-quantity.png).
-- [Phone item selection](-cdx-phone-return-items.png) / [tablet selection](-cdx-tablet-return-items.png).
-- [Phone review](-cdx-phone-return-review.png) / [tablet review](-cdx-tablet-return-review.png).
+- [Device quantity](-cdx-phone-quantity.png) / [tablet quantity](-cdx-tablet-quantity.png).
+- [Device item selection](-cdx-phone-return-items.png) / [tablet selection](-cdx-tablet-return-items.png).
+- [Device review](-cdx-phone-return-review.png) / [tablet review](-cdx-tablet-return-review.png).
 - [Tablet cash and kept-change review](-cdx-tablet-return-kept-review.png).
 
 Final results are in [status.md](status.md). Browser layout and interaction
 checks are not physical scale, device/keyboard, TalkBack or vendor usability
 verification.
+
+## Subsequent design pass
+
+The later language/report/discount pass adds original paid-price discounted returns. See
+[-cdx-language-roles.md](-cdx-language-roles.md),
+[-cdx-discounts.md](-cdx-discounts.md) and
+[-cdx-owner-report-details.md](-cdx-owner-report-details.md) for the current
+contract. Earlier limitations above describe that original slice.

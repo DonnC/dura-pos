@@ -10,7 +10,7 @@ focus and reach every control without changing the familiar daily workflow.
 
 | Priority | Finding | Design correction |
 | --- | --- | --- |
-| High | Cash received disappeared after a browser reload | Retain one unfinished cash entry for the same seller, currency, products, quantities and prices |
+| High | Cash received disappeared after a browser reload | Retain one unfinished cash entry for the same cashier, currency, products, quantities and prices |
 | High | Search and cash inputs suppressed their visible focus outline | Draw focus around the full field; give selects the same focus treatment |
 | Medium | All chips in Stock and Fiscal queue measured about 46 px wide | Set shared chips to a minimum 48 px width |
 | Medium | The cash input itself was about 41 px tall | Give the editable area a 48 px minimum height |
@@ -32,7 +32,7 @@ cash entry restored. Check the amount before saving.** The cashier still checks
 the customer and taps the existing save action. Nothing is charged or recorded
 by restoring the draft.
 
-Changing seller, pricing currency, product price or basket clears the draft.
+Changing cashier, pricing currency, product price or basket clears the draft.
 Holding, clearing or completing the basket also clears it. Consent checkboxes
 and approval PINs are not restored. Pending mobile payments retain their own
 reference and remain unconfirmed after reload; they are not converted into cash.
@@ -59,7 +59,7 @@ so it does not infer implemented screens from documents. It is not an inventory
 of every dialog, alternate state, data value or production app screen.
 
 [-cdx-audit-check.cjs](-cdx-audit-check.cjs) checks control labels and target
-sizes on those base routes, then key journeys at phone, tablet, dark and 200%
+sizes on those base routes, then key journeys at device, tablet, dark and 200%
 text settings. Interaction checks cover cash-draft recovery, context changes,
 unchanged money while drafting, no repeated sale on reload, pending identity,
 dialog Escape/focus return, search focus and reduced-motion feedback.
@@ -68,7 +68,7 @@ Focused assertions first failed for missing visible cash-field focus and then
 for lost cash-entry text after reload. The corrections followed those failures.
 Existing workflow and layout regressions are recorded in [status.md](status.md).
 
-Review the [phone payment](-cdx-phone-cash-recovery.png),
+Review the [device payment](-cdx-phone-cash-recovery.png),
 [tablet payment](-cdx-tablet-cash-recovery.png) and
 [interrupted review](-cdx-phone-review-restart.png) captures. These are browser
 viewport simulations. Screen-reader attributes and keyboard behaviour are
@@ -76,8 +76,8 @@ checks, not evidence of a complete accessibility conformance audit.
 
 ## Assumptions and remaining validation
 
-- The single retained cash draft belongs to this practice phone and seller.
-  It is not shared across phones and does not represent money already taken.
+- The single retained cash draft belongs to this practice device and cashier.
+  It is not shared across devices and does not represent money already taken.
 - The 90-route base inventory uses fictional populated fixtures; conditional
   recovery screens and dialogs also need separate fixtures in any full handoff.
 - Existing live-region and dialog semantics remain in use. Physical Android

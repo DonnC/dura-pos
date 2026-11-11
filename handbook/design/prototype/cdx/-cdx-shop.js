@@ -7,22 +7,22 @@
 screens.shop=()=>{
   const own=s.role==='owner';
   screen.innerHTML=heading(own?'My shop.':'My work.',own?'Keep the shop running your way.':
-    `${esc(s.name)} · Seller · Front counter`)+
+    `${esc(s.name)} · Cashier · Front counter`)+
     `<section class="hero"><p class="eyebrow">${own?'Your business. Your records.':'Your shift'}</p>
     <h2>${own?esc(s.shop):esc(s.name)}</h2><p class="sub hero-sub">${s.active?'Till open':'Till closed'} ·
-    ${s.currency} prices · Practice shop</p></section>`+
+    ${s.currency} prices</p></section>`+
     (own?menu('records','Records & exports','Your own files and backups','receipt')+
-      menu('people','People & phones','Who can use each till','people')+
+      menu('people','Cashiers & devices','Who can use each till','people')+
       menu('settings','Set up when you need it','Credit, payments and currencies','settings'):'')+
-    (s.fiscalDemo?.enabled?menu('fiscal-queue','Fiscal receipt status','Test examples on this phone','receipt'):'')+
-    menu('my-access','My access','What this person may do on this phone','shield')+
-    menu('sync','Saved records','What’s on this phone and waiting to upload','upload')+
-    menu('profile','Lock or hand over',s.active?'Cashier: '+esc(s.name):'Start the next shift','shield')+
+    (s.fiscalDemo?.enabled?menu('fiscal-queue','Fiscal receipt status','Test examples on this device','receipt'):'')+
+    menu('my-access','My access','What this person may do on this device','shield')+
+    menu('sync','Saved records','What’s on this device and waiting to upload','upload')+
+    menu('profile','Lock or hand over',s.active?esc(s.name)+' · '+(own?'Owner':'Cashier'):'Start the next shift','shield')+
     menu('help','Help','A short guide for the person using the till','shield');
 };
 screens.sync=()=>{
   screen.innerHTML=heading('Saved here. Shared later.','Your selling does not wait for the internet.','shop')+
-    line('On this phone',`${s.history.length} practice sales`,'Saved in browser storage')+
+    line('On this device',`${s.history.length} practice sales`,'Saved in browser storage')+
     line('Uploaded','Not connected','No Google account is connected in this prototype')+
     line('Payment provider','No live connection','Cash receipts are not provider confirmations')+
     line('Fiscal receipts','Not configured','Practice receipts are not fiscal receipts')+
@@ -32,9 +32,9 @@ screens.sync=()=>{
 };
 screens.records=()=>{
   screen.innerHTML=heading('Your records.','The shop’s own files, in the shop’s own account.','shop')+
-    `<p class="warning">Google not connected. These are practice records on this phone.</p>`+
+    `<p class="warning">Google not connected. These are practice records on this device.</p>`+
     menu('export','Export records','Preview Excel, CSV or a complete archive','receipt')+
-    menu('restore','Restore a phone','Check the shop and latest backup first','phone')+
+    menu('restore','Restore a device','Check the shop and latest backup first','phone')+
     menu('connect','Connect Google','Set up shared files without interrupting cash sales','upload')+
     '<h2 class="section-title">What’s in your files?</h2>'+
     line('My Shop','Products & settings')+line('2026-11 November','Sales, stock & cash-ups')+
@@ -45,7 +45,7 @@ screens.export=()=>{
     select('export-format','Format',option('xlsx','Excel workbook (.xlsx)')+
       option('csv','Sales table (.csv)')+option('archive','Complete shop archive'))+
     select('export-month','Period',option('november','November 2026'))+
-    `<p class="warning">Incomplete: this phone only. Phone 2 last uploaded at 08:12.</p>
+    `<p class="warning">Incomplete: this device only. Device 2 last uploaded at 08:12.</p>
     <div class="receipt-paper"><p class="eyebrow">DATA PREVIEW · PRACTICE</p>
     ${line('Pricing currency',s.currency)}${line('Sales shown',`${s.history.length} saved this session`)}
     ${s.history.slice(0,3).map(r=>line(esc(r.id),money(r.amount,r.currency))).join('')}</div>`+
@@ -54,7 +54,7 @@ screens.export=()=>{
 };
 actions['export-preview']=()=>showSheet('Export contents',
   line('Format',esc(document.querySelector('#export-format').selectedOptions[0].textContent))+
-  line('Period','November 2026')+line('Completeness','This phone only')+
+  line('Period','November 2026')+line('Completeness','This device only')+
   note('Readable records and field explanations belong in the export. No file is generated from this design.'),
   btn('records','Back to records','primary'));
 screens.settings=()=>{

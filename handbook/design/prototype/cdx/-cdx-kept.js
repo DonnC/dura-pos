@@ -26,7 +26,7 @@ screens['kept-account']=()=>{
     (moves.length?moves.slice().reverse().map(m=>line(esc(m.label),
       (m.delta>0?'+ ':'− ')+keptMoney(Math.abs(m.delta)),
       `${esc(m.who)} · ${esc(m.reference)} · left ${keptMoney(m.balance)}`)).join(''):
-      '<p class="sub">No new activity on this phone yet.</p>')+'</section></div>';
+      '<p class="sub">No new activity on this device yet.</p>')+'</section></div>';
   const use=count()>0&&c.balance>0&&keptAllowed();
   primary(use?'kept-checkout':count()?'pay':'sell',
     use?'Use with current basket':count()?'Pay with cash instead':'Start a sale');
@@ -136,7 +136,7 @@ actions['kept-save-refund']=()=>{
   record('Kept change paid to '+c.name+' · '+keptMoney(amount));
   result('Cash back saved.',line('Give '+esc(c.name),keptMoney(amount))+
     line('Kept here now',keptMoney(c.balance))+line('Cash left in till',money(s.cash))+
-    note('Practice payout saved on this phone. Sales and stock are unchanged.'),'kept-account','View kept change');
+    note('Practice payout saved on this device. Sales and stock are unchanged.'),'kept-account','View kept change');
 };
 screens['kept-keep']=()=>{
   if(!keptGate())return;if(!count()){navigate('sell');return;}
@@ -172,13 +172,13 @@ inputActions['kept-keep']=el=>{
   drawKeepChange();
 };
 actions['kept-add-customer']=()=>showSheet('Whose change is it?',
-  field('kept-new-name','Customer name or phone','','maxlength="40" placeholder="Name they will recognise"')+
+  field('kept-new-name','Customer name or mobile number','','maxlength="40" placeholder="Name they will recognise"')+
   '<p class="error" id="kept-name-error" role="alert"></p>'+
-  note('Use a name you can recognise when they return. Practice contacts stay on this phone.'),
+  note('Use a name you can recognise when they return. Practice contacts stay on this device.'),
   btn('kept-save-customer','Add customer','primary'));
 actions['kept-save-customer']=()=>{
   const name=val('kept-new-name'),k=keptState();
-  const error=name.length<2?'Enter a name or phone number.':k.contacts.length>=12?
+  const error=name.length<2?'Enter a name or mobile number.':k.contacts.length>=12?
     'Practice contact limit reached.':k.contacts.some(c=>c.name.toLowerCase()===name.toLowerCase())?
     'That name is already listed. Close this panel and choose them.':'';
   document.querySelector('#kept-name-error').textContent=error;if(error)return;

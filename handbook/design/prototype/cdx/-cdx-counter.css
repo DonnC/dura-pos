@@ -216,3 +216,10 @@ h1,.identity strong,.unit{overflow-wrap:anywhere}
 .amount-due.long-amount{font-size:1.5rem;letter-spacing:-.5px}
 .large .amount-due.long-amount{font-size:1.25rem}
 .large .amount-due.long-amount span{display:block}
+.discount-basket-line{flex-wrap:wrap}.discount-basket-line>.text-button{margin-left:auto}
+.discount-summary{padding:0 12px;border-left:3px solid var(--brand);margin:12px 0}
+.discount-badge{font-size:.6875rem;color:var(--brand);font-weight:700;line-height:1.4}
+.payment-quote{margin:12px 0}.payment-quote summary{min-height:48px;padding:14px 0;cursor:pointer}
+.category-count{font-size:.75rem;opacity:.8;margin-left:5px}
+.tabs .chip{flex-shrink:0}
+.product-monogram{font-size:1.0625rem;font-weight:700;color:var(--muted);letter-spacing:.04em}

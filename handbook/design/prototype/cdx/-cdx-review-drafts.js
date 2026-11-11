@@ -81,7 +81,7 @@ function reviewNotice(kind,onReview=false){
     `<p class="${stale?'warning':'note'}" id="review-draft-note">${stale?
       'Records changed while you were away. Your entries are kept; check them against the current figures.':
       onReview?'Draft restored. Review the entries and check the box below before saving.':
-      'Unfinished draft restored on this phone. Check the entries before continuing.'}</p>`);
+      'Unfinished draft restored on this device. Check the entries before continuing.'}</p>`);
   screen.insertAdjacentHTML('beforeend',
     (onReview?'<label class="toggle-row"><span><strong>I checked the restored entries</strong>'+
       '<small>Nothing is saved until the final action below.</small></span><input id="review-checked" type="checkbox"></label>':'')+
@@ -165,7 +165,7 @@ screens.handover=()=>{
       (h.countedZwg?line('Hand over in ZWG',money(h.countedZwg-h.keptZwg,'ZWG'))+
         line('ZWG staying',money(h.keptZwg,'ZWG')):'')+
       line('Count difference',varianceText(h.counted-h.expected))+(h.reason?note(esc(h.reason)):'')+
-      note('Saved on this phone. Waiting to upload. Held baskets remain on this till.'),
+      note('Saved on this device. Waiting to upload. Held baskets remain on this till.'),
       'switch-person','Hand over this till');return;
   }
   if(s.active&&draft.counted===undefined){

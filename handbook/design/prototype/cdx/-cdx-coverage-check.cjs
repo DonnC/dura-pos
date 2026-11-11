@@ -11,6 +11,7 @@ const path=require('node:path');
 const assert=require('node:assert/strict');
 const {states,dialogs,familyRoutes}=require('./-cdx-coverage-cases.js');
 const root=__dirname,url=pathToFileURL(path.join(root,'-cdx-counter.html')).href;
+const retiredCopy=/\b(sellers?|staff|phones?|inventory)\b|\bstock count\b/i;
 function params(c){
  const p=new URLSearchParams('fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample'+
   '&access=sample&reports=sample&recovery=ready&fiscal=unknown');
@@ -34,6 +35,7 @@ function params(c){
  try{
   const p=await b.newPage({viewport:{width:390,height:844}});p.setDefaultTimeout(15000);
   p.setDefaultNavigationTimeout(20000);
+  const visit=target=>p.goto(target,{waitUntil:'domcontentloaded'});
   const errors=[];p.on('pageerror',e=>errors.push(e.message));
   await p.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{
    if(typeof showSheet!=='function')return;
@@ -42,8 +44,8 @@ function params(c){
    const originalResult=result;window.openedDesignResults=[];
    result=(...args)=>{openedDesignResults.push(new Error().stack);return originalResult(...args);};
   }));
-  await p.goto(url+'?fresh=1');
-  await p.goto(url+'?fresh=1&seed=1');
+  await visit(url+'?fresh=1');
+  await visit(url+'?fresh=1&seed=1');
   await p.locator('[data-action="sale-options"]').click();await p.locator('[data-action="held"]:visible').click();
   await p.keyboard.press('Escape');
   assert(await p.locator('#app').evaluate(el=>el.contains(document.activeElement)),
@@ -74,25 +76,30 @@ function params(c){
    routes:[],
    stateExamples:[],dialogs:[],dialogCallsites:callsites,resultCallsites,feedbackCallsites};
   for(const route of routes){
-   const c={id:'base-'+route,screen:route};await p.goto(url+'?'+params(c));
+   const c={id:'base-'+route,screen:route};await visit(url+'?'+params(c));
+   await p.locator(`body[data-catalog-ready="${c.id}"]`).waitFor();
    assert.equal(await p.locator('body').getAttribute('data-catalog-ready'),c.id);
    assert.equal(await p.evaluate(()=>page),route,'Catalog must render the requested base screen: '+route);
+   assert(!retiredCopy.test(await p.locator('body').innerText()),route+' uses current terminology');
    await recordResults();
    result.routes.push({route,family:Object.keys(familyRoutes).find(k=>familyRoutes[k].includes(route)),
     url:'-cdx-counter.html?'+params(c),title:await p.locator('h1').first().innerText(),verified:true});
   }
   for(const c of states){
-   await p.goto(url+'?'+params(c));
+   await visit(url+'?'+params(c));
+   await p.locator(`body[data-catalog-ready="${c.id}"]`).waitFor();
    assert.equal(await p.locator('body').getAttribute('data-catalog-ready'),c.id,c.id);
    assert(await p.locator('h1').count(),c.id);
+   assert(!retiredCopy.test(await p.locator('body').innerText()),c.id+' uses current terminology');
    await recordResults();
    if(c.outcome)assert((await p.evaluate(()=>openedDesignResults)).length,c.id+' must show its completion view');
    result.stateExamples.push({...c,url:'-cdx-counter.html?'+params(c),title:await p.locator('h1').first().innerText(),
     actualScreen:await p.evaluate(()=>page),verified:true});
   }
   for(const c of dialogs){
-   await p.goto(url+'?'+params(c));const dialog=p.locator('#sheet');
+   await visit(url+'?'+params(c));const dialog=p.locator('#sheet');
    assert(await dialog.isVisible(),c.id);assert.match(await p.locator('#sheet-title').innerText(),new RegExp(c.title));
+   assert(!retiredCopy.test(await dialog.innerText()),c.id+' uses current terminology');
    assert(await dialog.evaluate(el=>el.contains(document.activeElement)),c.id+' focus enters dialog');
    const stacks=await p.evaluate(()=>openedDesignSheets);
    const match=stacks.at(-1)?.match(/(-cdx-[\w-]+\.js):(\d+):/);
@@ -109,7 +116,7 @@ function params(c){
    await p.setViewportSize({width,height});
    for(const c of dialogs){
     const target=params(c);if(mode==='dark')target.set('theme','dark');if(mode==='large')target.set('text','large');
-    await p.goto(url+'?'+target);
+    await visit(url+'?'+target);
     assert(await p.locator('#sheet').isVisible(),c.id);
     assert(!(await p.locator('#sheet').evaluate(el=>el.scrollWidth>el.clientWidth+1)),`${c.id} dialog overflow ${width} ${mode}`);
     assert(await p.locator('#sheet').evaluate(el=>{
@@ -122,7 +129,7 @@ function params(c){
    for(const mode of ['light','dark','large']){
     await p.setViewportSize({width:320,height:740});const target=params(c);
     if(mode==='dark')target.set('theme','dark');if(mode==='large')target.set('text','large');
-    await p.goto(url+'?'+target);
+    await visit(url+'?'+target);
     assert(!(await p.evaluate(()=>[...document.querySelectorAll('main,#dock,.app')]
       .some(el=>el.scrollWidth>el.clientWidth+1))),`${c.id} ${mode} overflow`);
    }
@@ -140,23 +147,23 @@ summary{cursor:pointer;padding:12px 0}input,select{font:inherit;min-height:48px;
 .preview{min-width:0}.controls{display:flex;gap:16px;flex-wrap:wrap}label{display:block}#coverage-board{position:relative;overflow:hidden;width:100%}
 iframe{position:absolute;left:50%;border:0;background:white}#coverage-current{font-size:20px}#coverage-size{color:#615b55}
 @media(max-width:800px){body{padding:16px}.workspace{display:block}#coverage-links{height:300px}.preview{margin-top:24px}}</style>
-<h1>Dura · Design coverage</h1><p>90 base screens · ${states.length} state examples · ${dialogs.length} dialog examples.
+<h1>Dura · Design coverage</h1><p>${routes.length} base screens · ${states.length} state examples · ${dialogs.length} dialog examples.
 Fictional HTML design only. Figma is deferred until all design coverage is reviewed.</p>
-<p>Select a screen or state below, then inspect it on a phone or tablet. No live account, payment, import or fiscal request runs.</p>
+<p>Select a screen or state below, then inspect it on a device or tablet. No live account, payment, import or fiscal request runs.</p>
 <p><a href="-cdx-preview.html">Open responsive preview</a> · <a href="-cdx-state-dialog-inventory.md">Read coverage policy and remaining checks</a></p>
 <div class="workspace"><aside><label for="coverage-search">Find a screen, state or dialog</label><input id="coverage-search" type="search">
 <div id="coverage-links">
 <h2>Screen families</h2>${Object.entries(familyRoutes).map(([name,list])=>`<details><summary>${escape(name)} · ${list.length} screens</summary><ul>${list.map(route=>`<li><a href="${escape(result.routes.find(c=>c.route===route).url)}">${escape(route)}</a></li>`).join('')}</ul></details>`).join('')}
 <details><summary>State examples · ${states.length}</summary><ul>${rows(result.stateExamples,'title')}</ul></details>
 <details><summary>Dialogs and overlays · ${dialogs.length}</summary><ul>${rows(result.dialogs,'title')}</ul></details>
-</div></aside><section class="preview"><div class="controls"><label>Device<select id="coverage-device"><option value="phone">Phone</option>
+</div></aside><section class="preview"><div class="controls"><label>Device<select id="coverage-device"><option value="phone">Mobile</option>
 <option value="portrait">Tablet portrait</option><option value="landscape">Tablet landscape</option></select></label><label>Appearance<select id="coverage-appearance">
 <option value="light">Light</option><option value="dark">Dark</option><option value="large">200% text</option></select></label></div>
 <h2 id="coverage-current">Sell</h2><p id="coverage-size"></p><p><a id="coverage-open" target="_blank">Open this example on its own</a></p>
 <div id="coverage-board"><iframe id="coverage-frame" title="Selected Dura design example"></iframe></div></section></div>
 <script src="-cdx-coverage-browser.js"></script></html>\n`);
   await p.setViewportSize({width:1440,height:1100});
-  await p.goto(pathToFileURL(path.join(root,'-cdx-coverage.html')).href);
+  await visit(pathToFileURL(path.join(root,'-cdx-coverage.html')).href);
   await p.locator('#coverage-search').fill('fiscal-unknown');
   await p.locator('[data-example="fiscal-unknown"]').click();
   await p.locator('#coverage-device').selectOption('landscape');

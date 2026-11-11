@@ -1,11 +1,11 @@
 # Shop connection, pairing and replacement recovery / CDX
 
 10 November 2026. Interactive design only, inside `cdx`. No Google sign-in,
-camera, QR token, archive import, phone registration or revocation is performed.
+camera, QR token, archive import, device registration or revocation is performed.
 No Flutter, backend, protocol, workbook or production storage contracts change.
 
-Choose **Connect & recover phones** in the preview board. The Device picker
-shows phone, portrait tablet and landscape tablet viewports. The **Recovery
+Choose **Connect & recover devices** in the preview board. The Device picker
+shows device, portrait tablet and landscape tablet viewports. The **Recovery
 example** picker exposes failure states without needing a real account or file.
 These examples are separate from the normal local till and never replace it.
 
@@ -15,31 +15,31 @@ These examples are separate from the normal local till and never replace it.
 |---|---|---|
 | Connect the owner’s account | Explain owner account, shared records and local work; choose account | Offline → keep selling; cancel example chooser without changing work |
 | Check the shop account | Review shop, currency, practice mode and owner control; preview checks | Back to account selection; no password entry |
-| Connection result | Keep account, Hub, shared files, phone pairing and upload facts separate | Denied → choose account; unknown → check existing setup; preparing → keep selling |
-| Add a phone | Owner names the separate phone and sees next steps; show example code | Empty name disables action; no staff or phone is silently added |
-| Pairing code | Non-working illustration labelled as example; preview new phone scan | Expired/used → issue a fresh example; actual lifetime remains a Hub policy |
-| New-phone shop check | Check name, currency and mode with owner; confirm before joining | Wrong shop/mode/currency, offline or unusable code stays blocked |
-| New-phone next steps | Explain owner access, fresh PIN and opening count | Finish preview returns to the unchanged current till |
-| Choose recovery snapshot | Replacement phone, source and dated example snapshot; review | Missing backup → ask owner; older snapshot → newer journal check required |
+| Connection result | Keep account, Hub, shared files, device pairing and upload facts separate | Denied → choose account; unknown → check existing setup; preparing → keep selling |
+| Add a device | Owner names the separate device and sees next steps; show example code | Empty name disables action; no cashier or device is silently added |
+| Pairing code | Non-working illustration labelled as example; preview new device scan | Expired/used → issue a fresh example; actual lifetime remains a Hub policy |
+| New-device shop check | Check name, currency and mode with owner; confirm before joining | Wrong shop/mode/currency, offline or unusable code stays blocked |
+| New-device next steps | Explain owner access, fresh PIN and opening count | Finish preview returns to the unchanged current till |
+| Choose recovery snapshot | Replacement device, source and dated example snapshot; review | Missing backup → ask owner; older snapshot → newer journal check required |
 | Check what comes back | Identity, compatibility, snapshot coverage and missing work; acknowledge gap | Wrong shop/mode/currency, incompatible/unreadable/incomplete records stay blocked |
-| Recovery next steps | Owner verifies new phone, fresh access, count and old-device review | No automatic seller sign-in, drawer opening or copied phone identity |
-| Lost-phone follow-up | Device access is separate from seller access; preview block request | Hub not contacted / phone unconfirmed remain explicit; no erase or false recovery |
+| Recovery next steps | Owner verifies new device, fresh access, count and old-device review | No automatic cashier sign-in, drawer opening or copied device identity |
+| Lost-device follow-up | Device access is separate from cashier access; preview block request | Hub not contacted / device unconfirmed remain explicit; no erase or false recovery |
 
-On phones these stages stack in one column with a fixed main action. At 900
+On devices these stages stack in one column with a fixed main action. At 900
 CSS px, metadata and explanations sit alongside each other. Enlarged text uses
-one column. New-phone examples show Dura’s approved wordmark without showing
-the current till’s seller/account header as if it belonged to the new device.
+one column. New-device examples show Dura’s approved wordmark without showing
+the current till’s cashier/account header as if it belonged to the new device.
 
 ## Decisions and assumptions
 
 - **Preserve the active till:** every connection/pair/restore preview keeps the
   existing shop, pricing currency, signed-in person, drawer, basket, products,
   receipts, held work and unconfirmed payment references. There is no switch
-  to another shop, restored session or new device. A working phone is not erased
-  to make room for a replacement-phone demonstration.
+  to another shop, restored session or new device. A working device is not erased
+  to make room for a replacement-device demonstration.
 - **Owner connects Google:** the owner uses an account they control to prepare
-  their own Shop Hub and files. Other phones pair with that shop. The owner's
-  Google sign-in/password is not shared with sellers. The account chooser here
+  their own Shop Hub and files. Other devices pair with that shop. The owner's
+  Google sign-in/password is not shared with cashiers. The account chooser here
   uses a generic example and collects no real email or credential.
 - **Separate setup facts:** “example paired” does not mean a journal uploaded,
   files finished preparing, a provider confirmed payment or a fiscal receipt
@@ -48,9 +48,9 @@ the current till’s seller/account header as if it belonged to the new device.
 - **Unknown external outcome:** the owner checks an existing setup before
   another creation attempt. The example button demonstrates that check; it does
   not reinstall or contact Google. No retry policy or backend action changes.
-- **Pairing identity:** a separate empty phone checks the expected shop,
-  currency and mode before joining. The owner later assigns seller access;
-  pairing alone does not give a staff PIN, open a drawer or copy the owner's
+- **Pairing identity:** a separate empty device checks the expected shop,
+  currency and mode before joining. The owner later assigns cashier access;
+  pairing alone does not give a cashier PIN, open a drawer or copy the owner's
   Google account. Existing local work is not merged into a different shop.
 - **Code lifetime:** a real pairing code is one-use and short-lived according
   to the issuer. This slice chooses no expiry duration, token format or secret
@@ -66,17 +66,17 @@ the current till’s seller/account header as if it belonged to the new device.
   demonstrates those gates; real identity, schema and acknowledgement checks
   remain implementation work.
 - **Offline limits:** existing authorised tills can keep selling offline.
-  Connecting Google, checking a Drive backup and exchanging a new-phone pairing
+  Connecting Google, checking a Drive backup and exchanging a new-device pairing
   code require connectivity. A local archive may be checked locally, but it
-  does not itself authorise a replacement phone or create its new credentials.
-- **Missing work:** anything never uploaded from a lost phone may be absent.
+  does not itself authorise a replacement device or create its new credentials.
+- **Missing work:** anything never uploaded from a lost device may be absent.
   The owner acknowledges that gap before previewing recovery. A historical
   snapshot is not presented as a complete current shop total. No fiscal device
   identity, counters, keys or old PIN verifiers are restored in this design.
-- **Lost device versus seller:** blocking Phone 2 is a device operation; the
-  seller may still be allowed on other phones. A disconnected device cannot
-  immediately learn a revocation. Blocking does not erase the phone or recover
-  its unsent work. Staff permissions are not changed by this preview.
+- **Lost device versus cashier:** blocking Device 2 is a device operation; the
+  cashier may still be allowed on other devices. A disconnected device cannot
+  immediately learn a revocation. Blocking does not erase the device or recover
+  its unsent work. Cashier permissions are not changed by this preview.
 
 ## Example data and storage effects
 
@@ -94,9 +94,9 @@ including a lost-device block example, leaves all those values, shop identity,
 products and role unchanged. No new financial or stock event is posted.
 
 Optional `recoveryDemo` stores only UI selections and example flags: condition,
-whether an example account was selected, phone name, code used/expired, source,
+whether an example account was selected, device name, code used/expired, source,
 backup choice and preview completion. No token, email, PIN, QR contents, file
-bytes or Google data is stored. Phone/source selections persist after input;
+bytes or Google data is stored. Device/source selections persist after input;
 checkbox acknowledgements reset on re-entry and are revalidated on action.
 Reset/new-shop setup clears the field. Existing practice sessions need no
 migration. There is no production migration, restore or file lifecycle change.
@@ -115,12 +115,12 @@ offline pairing/cash behaviour, alternate compatible fixture, preserved till
 state and owner-only recovery screens. It renders twelve stages at 320, 390,
 768 and 1024 CSS px, in light/dark and 200% text: 144 combinations.
 
-- [Phone account review](-cdx-phone-connection-review.png) / [tablet account review](-cdx-tablet-connection-review.png).
-- [Phone connection status](-cdx-phone-connection-status.png) / [tablet status](-cdx-tablet-connection-status.png).
-- [Phone pairing](-cdx-phone-pair-code.png) / [tablet pairing](-cdx-tablet-pair-code.png).
-- [Phone new-shop check](-cdx-phone-join-review.png) / [tablet shop check](-cdx-tablet-join-review.png).
-- [Phone restore review](-cdx-phone-restore-review.png) / [tablet restore review](-cdx-tablet-restore-review.png).
-- [Phone lost-device review](-cdx-phone-lost-phone.png) / [tablet device review](-cdx-tablet-lost-phone.png).
+- [Device account review](-cdx-phone-connection-review.png) / [tablet account review](-cdx-tablet-connection-review.png).
+- [Device connection status](-cdx-phone-connection-status.png) / [tablet status](-cdx-tablet-connection-status.png).
+- [Device pairing](-cdx-phone-pair-code.png) / [tablet pairing](-cdx-tablet-pair-code.png).
+- [Device new-shop check](-cdx-phone-join-review.png) / [tablet shop check](-cdx-tablet-join-review.png).
+- [Device restore review](-cdx-phone-restore-review.png) / [tablet restore review](-cdx-tablet-restore-review.png).
+- [Device lost-device review](-cdx-phone-lost-phone.png) / [tablet device review](-cdx-tablet-lost-phone.png).
 
 Final checks and the next design slice are in [status.md](status.md). Browser
 rendering/interaction tests are not real OAuth, camera, secure pairing, backup

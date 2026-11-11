@@ -6,11 +6,11 @@ brand masters, actual app colours and Android icon/splash are updated under
 `client/`; app workflows, backend and record formats remain unchanged.
 
 [Open the interactive review board](-cdx-preview.html) or
-[open one phone](-cdx-counter.html). Start with the five journey buttons above
-the phones. The **Person** and **Screen** controls let you inspect individual
-owner and worker screens. **Focus on one phone** makes that review easier.
+[open one device](-cdx-counter.html). Start with the five journey buttons above
+the devices. The **Person** and **Screen** controls let you inspect individual
+owner and worker screens. **Focus on one device** makes that review easier.
 
-The **Device** selector now includes phone, small phone, tablet portrait and
+The **Device** selector now includes device, small device, tablet portrait and
 tablet landscape. See [responsive feature details](-cdx-responsive-design.md)
 and the maintained [task status](status.md) for this design-only continuation.
 
@@ -23,10 +23,10 @@ serving customers share a tool, but need different information and authority.
 
 - The **owner** can sell, check the day, receive stock, change prices, pay
   expenses and suppliers, collect customer balances and manage access.
-- The **seller** gets selling, stock visibility, their own till, their own
-  receipts and owner-approved expenses/returns. No shop exports, staff
+- The **cashier** gets selling, stock visibility, their own till, their own
+  receipts and owner-approved expenses/returns. No shop exports, cashier
   administration or shop-wide financial information appear in that view.
-- **The phone holds a drawer; the person takes responsibility for it.** A lock
+- **The device holds a drawer; the person takes responsibility for it.** A lock
   keeps the same responsibility. A handover closes a counted shift and starts
   another person with an opening count. Changing the screen’s role in the
   review controls is deliberately outside this product journey.
@@ -44,7 +44,7 @@ benchmarked against OTS or tested with vendors yet.
 | An unusual sale | Can I charge for something not listed? | Enter a name and price for one unlisted item | Unlisted item → Basket |
 | A return | Who approved money leaving? | Find original receipt; select reason; obtain owner approval | Recent sales → Receipt → Return → Approval → Saved |
 | A delivery | What actually arrived? | Owner counts selling packs and reviews the new stock | Stock → Receive → Review → Saved |
-| A shelf check | Where did stock go? | Owner enters counts; blank is uncounted, zero is none | Stock count → Differences → Reason → Saved |
+| A shelf check | Where did stock go? | Owner enters counts; blank is uncounted, zero is none | Stock take → Differences → Reason → Saved |
 | Money leaves | Why is cash lower than sales? | Enter expense; owner approves it | Money out → Review / PIN → Saved |
 | A regular pays | Is their balance now right? | Owner records cash against an existing account | Customers → Payment → Review → Saved |
 | Closing | Does the cash balance? | Count before seeing expected amounts; explain a difference | Cash count → Review → Close → Handover |
@@ -58,30 +58,30 @@ silently overwrite the current basket.
 
 ## What each person sees
 
-| Area | Owner | Seller |
+| Area | Owner | Cashier |
 |---|---|---|
 | Bottom navigation | Sell / Stock / Money / My shop | Sell / Stock / My till / Me |
 | Sales | This till’s latest receipts | Own receipts on this till |
 | Stock | Low stock, details, receive, count, add/edit | Stock visibility and product details |
 | Money | Till cash, receipts, expenses, customers, suppliers, summary | Own shift, drawer, receipts, approved expense, cash-up |
-| People | Owner and seller access; allowed phone; pairing preview | Current person, lock and handover |
+| People | Owner and cashier access; allowed device; pairing preview | Current person, lock and handover |
 | Records | Export preview, restore checks, connection status | Saved/upload status relevant to the till |
 | Returns | Owner approval PIN | Ask owner to enter approval PIN |
 
-Owner-only screen entry shows a clear access screen in the seller preview.
+Owner-only screen entry shows a clear access screen in the cashier preview.
 This is browser navigation design, **not production security**. Review controls
 can select any role; the sample PIN is printed for training. Production must
 enforce permissions in controllers and the hub, protect PINs, rate-limit failed
 attempts and enforce offline-access policy. This prototype stores no entered PIN.
 Manager-specific permissions and multiple-location administration are outside
-this owner/seller design pass.
+this owner/cashier design pass.
 
 ## Money stays understandable
 
 **Sales, payments and cash are separate.** The owner’s seeded day starts at
 USD 86.50 sales, 24 sales and USD 70.50 expected cash. The cash seed reconciles:
 USD 10.00 opening float + USD 72.00 received − USD 8.50 change − USD 3.00 expenses.
-The seller’s separate example starts at USD 25.50 sales, eight sales and
+The cashier’s separate example starts at USD 25.50 sales, eight sales and
 USD 20.50 cash. These are example summaries, not reconstructed from the single
 seeded receipt in Recent sales. New actions update the appropriate counters.
 
@@ -95,7 +95,7 @@ seeded receipt in Recent sales. New actions update the appropriate counters.
 | Receive 6 bread loaves | None | None | 18 loaves becomes 24; supplier payment is separate |
 | USD 10.00 float + USD 1.00 sale, count USD 10.50 | None on close | Count shows USD 0.50 short | Explanation required before closing |
 
-Profit is **not available** where costs are missing. Another phone’s last
+Profit is **not available** where costs are missing. Another device’s last
 upload is visible above owner totals; incomplete figures are never labelled
 final shop totals. Owner drawings are distinct from shop expenses.
 
@@ -110,7 +110,7 @@ The basic cash screen starts lean. The owner can enable customer accounts,
 mobile-money checkout and USD/ZWG split cash in My shop. The screen picker also
 lets reviewers jump directly into these flows.
 
-- **Mobile money:** enter a provider and phone number; request a practice
+- **Mobile money:** enter a provider and mobile number; request a practice
   payment; keep the order unresolved until the provider confirms. Pending
   orders are separate from the next basket. “Keep pending · Serve next customer”
   preserves the reference. Rechecking stays pending. The reviewer selects
@@ -125,10 +125,10 @@ lets reviewers jump directly into these flows.
 - **Customer account:** select the named regular; show the existing debt and
   new sale; saving increases money owed without increasing cash.
 
-Kept change, partial returns, fractional-weight quantity entry, discounts and
-provider settlement matching need separate detailed designs. They are not
-hidden unfinished buttons in the everyday route. Fiscalisation remains an
-optional readiness screen because the integration is deferred in the roadmap.
+Kept change, partial returns, fractional quantities and manual product-line
+discounts now have linked detailed workflows. Provider settlement matching is
+still separate design work. Optional fiscal status/recovery uses test examples;
+its real integration remains deferred in the roadmap.
 
 ## First setup and supporting screens
 
@@ -158,7 +158,7 @@ printer operation, restore or external payment actually runs.
 | Interrupted | Browser-local basket, records, stock, pending/held sales and balances restore |
 | Locked | Basket and shift preserved; incorrect practice PIN has explicit retry feedback |
 | Pending | Unconfirmed payment stays separate, never labelled paid or fiscal accepted |
-| Saved | Separate saved-on-phone, not-uploaded and no-fiscal-receipt messages |
+| Saved | Separate saved-on-device, not-uploaded and no-fiscal-receipt messages |
 
 Light, dark, 320/390 px and enlarged text layouts use the same components.
 Actions and labels have text, not colour alone. Main actions stay within the
@@ -167,7 +167,7 @@ No motion is required. Enlarged text reflows to one product column and stacked
 rows. Safe-area and keyboard behaviour still need verification in the actual
 Android app, as do TalkBack and reviewed Shona/Ndebele translations.
 
-The approved Shop Sign wordmark and d replace the silo/phone mark. Colours are
+The approved Shop Sign wordmark and d replace the silo/device mark. Colours are
 charcoal `#252525`, chalk `#F4F0E8` and sign red `#C3452D`, with white work
 surfaces. The wordmark shares its canonical SVG with the app's branding assets.
 Existing Roboto body typography remains. Red is for actions and selection;
@@ -179,15 +179,15 @@ and business behaviour are unchanged. See [the brand guide](../../branding/04-sh
 
 `dura-cdx-day-v2` contains only fictional sandbox state. Bounds are 40 products,
 30 recent receipts, 50 activity entries, three held sales, three pending payments
-and eight added sellers. Product quantity steps are capped at 99. No entered PIN,
+and eight added cashiers. Product quantity steps are capped at 99. No entered PIN,
 credential or real business record is persisted. The role picker restarts a
-role-specific example; it is not authentication or a multi-phone sync simulation.
-The review board seeds independent phone sessions and deliberately resets them
+role-specific example; it is not authentication or a multi-device sync simulation.
+The review board seeds independent device sessions and deliberately resets them
 on changing journeys. **Reset practice day** removes this fictional key.
 
 The older `dura-cdx-practice-basket-v1` key is not imported or deleted. Multi-step
 review drafts stay in memory; typed unsaved forms are not a crash-safe business
-record. The standalone phone restores saved state of the selected role. There
+record. The standalone device restores saved state of the selected role. There
 is no Dura schema/file migration and no effect on the shop’s backup/restore.
 The previous prototype files moved here by the owner now share the same
 wordmark and palette; their older workflows remain unchanged.
@@ -196,7 +196,7 @@ wordmark and palette; their older workflows remain unchanged.
 
 Run `node handbook/design/prototype/cdx/-cdx-check.cjs` from the repository root
 with Playwright available to Node and Edge installed. It runs the two journey
-suites, checks owner/seller geometry, shelf and payment states, detects missing
+suites, checks owner/cashier geometry, shelf and payment states, detects missing
 local resources and regenerates deliberate design captures. Supporting code is
 split by journey so no handwritten source file exceeds 500 lines.
 
@@ -207,7 +207,7 @@ are recorded below after the final run. Browser checks do not establish the
 five-second rule or the timed selling target. Those require vendor observation.
 
 Final run on 10 November 2026: both workflow suites passed, followed by **342
-layout combinations** across owner/seller views, 320/390 px widths, light/dark
+layout combinations** across owner/cashier views, 320/390 px widths, light/dark
 and enlarged text. Controls were checked for labels; dialog focus and Escape
 recovery were checked separately from cash/stock workflows. Shelf states,
 offline cash, confirmed/failed practice-payment outcomes and local assets
@@ -244,13 +244,13 @@ Kept change checkout, cash-back screens and assumptions are documented in
 Weighed quantities and partial returns are documented in
 [-cdx-quantity-returns.md](-cdx-quantity-returns.md).
 
-Staff permissions, removal and offline recovery are documented in
-[-cdx-staff-access.md](-cdx-staff-access.md).
+Cashier permissions, removal and offline recovery are documented in
+[-cdx-cashier-access.md](-cdx-staff-access.md).
 
 Period/location reports and their sample coverage rules are documented in
 [-cdx-period-location-reports.md](-cdx-period-location-reports.md).
 
-Connection, new-phone pairing and replacement recovery are documented in
+Connection, new-device pairing and replacement recovery are documented in
 [-cdx-connection-recovery.md](-cdx-connection-recovery.md).
 
 Optional fiscal receipt status, day close and device recovery are documented in
@@ -264,3 +264,8 @@ The complete current screen/state/dialog index is in
 [-cdx-coverage.html](-cdx-coverage.html), with its
 [coverage policy](-cdx-state-dialog-inventory.md). Older review recovery is
 documented in [-cdx-review-drafts.md](-cdx-review-drafts.md).
+
+Current wording, compact header and role boundaries follow
+[-cdx-language-roles.md](-cdx-language-roles.md). Product-line discounts are in
+[-cdx-discounts.md](-cdx-discounts.md); detailed owner graphs/tables are in
+[-cdx-owner-report-details.md](-cdx-owner-report-details.md).

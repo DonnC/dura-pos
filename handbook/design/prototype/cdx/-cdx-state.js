@@ -24,14 +24,16 @@ let s={version:2,role:worker?'worker':'owner',name:worker?'Rudo':'Chipo',
   supplier:2000,features:{credit:false,mobile:false,multi:false},last:null};
 try{
   const saved=JSON.parse(localStorage.getItem(storageKey));
-  if(q.get('fresh')!=='1'&&saved?.version===2&&saved.role===s.role&&
+  if(q.get('fresh')!=='1'&&saved?.version===2&&['owner','worker'].includes(saved.role)&&
+    (!q.has('role')||saved.role===s.role)&&
     Array.isArray(saved.products)&&saved.products.length<=40&&Array.isArray(saved.history)&&
     saved.history.length<=30&&Number.isSafeInteger(saved.cash))s={...s,...saved};
 }catch{}
 if(q.get('seed')==='1')s.basket={bread:2,milk:1};
 if(q.get('features')==='1')s.features={credit:true,mobile:true,multi:true};
+if(['account','practice'].includes(q.get('appearance')))s.previewAppearance=q.get('appearance');
 const screens={},actions={},inputActions={};
-const ownerScreens=new Set(['receive','stock-count','product-edit','customers',
+const ownerScreens=new Set(['receive','receive-review','stock-count','count-stock-review','product-edit','customers',
   'invoice-items','invoice-payment','invoice-review','invoice-detail',
   'customer','suppliers','supplier-statement','records','export','people','staff','pair','settings','setup','reports',
   'connect','restore','fiscal','access-review','access-status','access-remove',
@@ -40,6 +42,7 @@ const ownerScreens=new Set(['receive','stock-count','product-edit','customers',
   'fiscal-owner-review','fiscal-day','fiscal-close','fiscal-device']);
 let page=q.get('screen')||'sell',demoState=q.get('state')||'populated';
 let offline=q.get('offline')==='1',category='Favourites',search='',selectedId='bread';
+if(q.get('shelf')==='full')category='All items';
 let received=q.get('cash')==='500'?'5.00':'',undoBasket,toastTimer,draft={},lastSale=s.last;
 const screen=document.querySelector('#screen'),dock=document.querySelector('#dock');
 const nav=document.querySelector('#nav'),sheet=document.querySelector('#sheet');
@@ -73,6 +76,7 @@ const parseCents=value=>{
 };
 const validAmount=id=>{const n=parseCents(val(id));return n!==null&&n>0;};
 function save(){
+  if(typeof clearStaleDiscounts==='function')clearStaleDiscounts();
   if(typeof clearStaleCashDraft==='function')clearStaleCashDraft();
   // A customer/payment draft must not follow a changed or held basket.
   if(s.keptCheckout&&s.keptCheckout.basket!==keptBasketKey())s.keptCheckout=null;
@@ -105,14 +109,16 @@ function showSheet(title,body,footer=''){
 }
 function result(title,body,next,label){
   screen.innerHTML=`<div class="page-content"><div class="result-top"><div class="success-icon">${icon('check')}</div>
-    <p class="eyebrow">Practice record saved on this phone</p><h1>${title}</h1></div>${body}</div>`;
+    <p class="eyebrow">Practice record saved on this device</p><h1>${title}</h1></div>${body}</div>`;
   primary(next,label);
 }
 function enable(action,yes){const el=document.querySelector(`[data-action="${action}"]`);
   if(el)el.disabled=!yes;}
 function summaryRows(items){return items.map(p=>line(esc(p.name),money(p.lineTotal??lineAmount(p,p.qty)),
-  `${esc(quantityText(p,p.qty))} · ${money(p.cents)} per ${esc(p.unit)}`)).join('');}
-function saleSnapshot(){return basketRows().map(p=>({...p,qty:s.basket[p.id],lineTotal:lineAmount(p,s.basket[p.id])}));}
+  `${esc(quantityText(p,p.qty))} · ${money(p.cents)} per ${esc(p.unit)}`)+
+  (p.discountAmount?line('Discount included','− '+money(p.discountAmount),'Original line '+money(p.originalLineTotal)):'')).join('');}
+function saleSnapshot(){return basketRows().map(p=>({...p,qty:s.basket[p.id],
+  lineTotal:lineAmount(p,s.basket[p.id]),...(typeof lineDiscountSnapshot==='function'?lineDiscountSnapshot(p):{})}));}
 function resetBasket(){undoBasket={...s.basket};s.basket={};save();}
 function stockMove(id,label,delta,after){
   s.movements=s.movements||[];s.movements.push({id,label,delta,after,who:s.name});

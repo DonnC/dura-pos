@@ -11,11 +11,17 @@ const {pathToFileURL}=require('node:url');
 const path=require('node:path');
 const assert=require('node:assert/strict');
 const addedChecks=process.argv.includes('--existing-only')?[]:
-  ['-cdx-review-drafts-check.cjs','-cdx-coverage-check.cjs'];
-for(const file of [...addedChecks,'-cdx-audit-check.cjs','-cdx-workflows-check.cjs','-cdx-journeys-check.cjs',
+  ['-cdx-sell-density-check.cjs','-cdx-language-ui-check.cjs','-cdx-discounts-check.cjs',
+   '-cdx-owner-reports-check.cjs','-cdx-walkthrough-check.cjs',
+   '-cdx-review-drafts-check.cjs','-cdx-coverage-check.cjs'];
+const checks=[...addedChecks,'-cdx-audit-check.cjs','-cdx-workflows-check.cjs','-cdx-journeys-check.cjs',
   '-cdx-responsive-check.cjs','-cdx-invoice-check.cjs','-cdx-kept-check.cjs',
   '-cdx-quantity-returns-check.cjs','-cdx-access-check.cjs','-cdx-reports-check.cjs',
-  '-cdx-connection-check.cjs','-cdx-fiscal-check.cjs'])
+  '-cdx-connection-check.cjs','-cdx-fiscal-check.cjs'];
+const from=process.argv.find(arg=>arg.startsWith('--from='))?.slice(7);
+const start=from?checks.indexOf(`-cdx-${from}-check.cjs`):0;
+if(start<0)throw Error('Unknown check to resume: '+from);
+for(const file of checks.slice(start))
   execFileSync(process.execPath,[path.join(__dirname,file)],{stdio:'inherit'});
 (async()=>{
   const b=await chromium.launch({channel:'msedge',headless:true});
@@ -108,7 +114,7 @@ for(const file of [...addedChecks,'-cdx-audit-check.cjs','-cdx-workflows-check.c
     console.log(`PASS: ${layouts} layout combinations; capturing design boards.`);
     execFileSync(process.execPath,[path.join(__dirname,'-cdx-capture-boards.cjs')],{stdio:'inherit'});
     assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
-    console.log(`PASS: ${layouts} owner/worker phone/tablet layouts, light/dark/200% text; `+
-      'shelf states, offline cash, pending outcomes, local fonts/assets, phone/tablet captures.');
+    console.log(`PASS: ${layouts} owner/worker device/tablet layouts, light/dark/200% text; `+
+      'shelf states, offline cash, pending outcomes, local fonts/assets, device/tablet captures.');
   }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

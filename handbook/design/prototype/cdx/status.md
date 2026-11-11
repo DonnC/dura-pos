@@ -6,27 +6,27 @@ Current scope: work only in this folder. Do not change app/backend code.
 ## Covered
 
 - [x] Approved B / Shop Sign identity, charcoal, chalk and sign red.
-- [x] Phone owner/seller journeys: selling, payment, receipts and full returns.
+- [x] Device owner/cashier journeys: selling, payment, receipts and full returns.
 - [x] Opening float, lock, cash-up differences and handover.
 - [x] Stock receipts/counts, expenses and basic customer/supplier balances.
-- [x] Practice-only onboarding, staff access and connection/export previews.
-- [x] Phone light/dark/enlarged-text renders and workflow checks.
+- [x] Practice-only onboarding, cashier access and connection/export previews.
+- [x] Device light/dark/enlarged-text renders and workflow checks.
 
 ## Completed — this pass
 
-- [x] Device preview controls: phone, tablet portrait and tablet landscape.
+- [x] Device preview controls: device, tablet portrait and tablet landscape.
 - [x] Responsive tablet workspaces, including a persistent editable Sell basket.
 - [x] More useful Stock: search, low/out-of-stock filters and movement detail.
 - [x] More useful receipts: search, payment/return filters and empty recovery.
 - [x] Customer/supplier statements with explicit balance movements.
-- [x] Phone/tablet interaction, resize and visual verification; refreshed captures.
+- [x] Mobile/tablet interaction, resize and visual verification; refreshed captures.
 
 ## Completed — supplier purchase invoices
 
 - [x] Items received and purchase costs.
 - [x] Payment, due date and optional evidence.
 - [x] Review, saved detail and statement links.
-- [x] Phone/tablet captures and interaction/layout verification.
+- [x] Mobile/tablet captures and interaction/layout verification.
 
 ## Completed — kept change
 
@@ -34,7 +34,7 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Use kept change at checkout, with cash for the rest.
 - [x] Keep new change with customer agreement.
 - [x] Approved cash refund and confirmation.
-- [x] Phone/tablet interaction, layouts, captures and assumptions.
+- [x] Mobile/tablet interaction, layouts, captures and assumptions.
 - [x] Final existing-screen regression run.
 
 ## Completed — quantities and partial returns
@@ -43,15 +43,15 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Select returned quantities and stock condition per item.
 - [x] Original-payment refund split, approval and linked history.
 - [x] Draft recovery and limits after previous returns.
-- [x] Phone/tablet renders, interactions and assumptions.
+- [x] Mobile/tablet renders, interactions and assumptions.
 - [x] Final existing-screen regression run.
 
-## Completed — staff access
+## Completed — cashier access
 
-- [x] Seller permissions and allowed-phone review.
-- [x] Remove access with honest per-phone delivery states.
-- [x] Seller offline access, owner check and supervised recovery.
-- [x] Phone/tablet captures, interactions and assumptions.
+- [x] Cashier permissions and allowed-device review.
+- [x] Remove access with honest per-device delivery states.
+- [x] Cashier offline access, owner check and supervised recovery.
+- [x] Mobile/tablet captures, interactions and assumptions.
 - [x] Final existing-screen regression run.
 
 ## Completed — period and location reports
@@ -60,16 +60,16 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Sales/returns breakdown and known profit.
 - [x] Drawer snapshots with separate currencies and timestamps.
 - [x] Source coverage, missing data and custom-period recovery.
-- [x] Phone/tablet captures, checks and assumptions.
+- [x] Mobile/tablet captures, checks and assumptions.
 - [x] Final existing-screen regression checks and board-capture recovery.
 
 ## Completed — connection, pairing and restore
 
 - [x] Owner connection checklist and recovery states.
-- [x] Pairing / new-phone shop confirmation and code recovery.
-- [x] Replacement-phone restore review and lost-phone follow-up.
+- [x] Pairing / new-device shop confirmation and code recovery.
+- [x] Replacement-device restore review and lost-device follow-up.
 - [x] Preserved local work and mismatched/incomplete backup guards.
-- [x] Phone/tablet captures, interaction checks and assumptions.
+- [x] Mobile/tablet captures, interaction checks and assumptions.
 - [x] Final existing-screen regression and capture review.
 
 ## Completed — optional fiscal status and recovery
@@ -78,14 +78,14 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Receipt queue, unknown result and owner issue review.
 - [x] Fiscal-day close, waiting and failed-close recovery.
 - [x] Device/access recovery without copied fiscal identity.
-- [x] Phone/tablet captures, preserved-work checks and assumptions.
+- [x] Mobile/tablet captures, preserved-work checks and assumptions.
 - [x] Final existing-screen regression and board captures.
 
 ## Completed — first consistency, accessibility and interruption audit
 
 - [x] Inventory the 90 base screens and review shared control sizes.
 - [x] Cash/search focus, small filters and reduced-motion feedback.
-- [x] Preserve unfinished cash entry for the same seller, currency and basket.
+- [x] Preserve unfinished cash entry for the same cashier, currency and basket.
 - [x] Verify keyboard/dialog recovery, stale-draft guards and responsive layouts.
 - [x] Inspect refreshed renders and finish the audit summary.
 - [x] Assess complete Figma conversion scope and limitations.
@@ -97,78 +97,161 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Retain delivery, stock-count, money-out and cash-up entry/review drafts.
 - [x] Fresh checks, approval re-entry, changed-record guards and saved handover.
 - [x] Complete the linked state/dialog review catalog and coverage policies.
-- [x] Verify restored phone/tablet layouts, dark/large text and all dialog layouts.
+- [x] Verify restored device/tablet layouts, dark/large text and all dialog layouts.
 - [x] Inspect captures and record assumptions and remaining design gates.
 - [x] Final existing-screen regression sweep and board captures.
+
+## Completed — language, account header, owner reports and discounts
+
+- [x] Standardise Owner / Cashier / Device and Stock / Stock take in design copy.
+- [x] Compact account header and one small Preview/Practice corner marker.
+- [x] Keep owner reports/settings hidden and guarded for cashiers.
+- [x] Detailed owner trend/product/cashier/discount reports with graphs and tables.
+- [x] Product-line discount entry/review, payment and receipt presentation.
+- [x] Verify discount approval, held sales, original paid-price returns and layouts.
+- [x] Update catalog coverage and inspect mobile/tablet renders.
+- [x] Validate the two dedicated project design skills and generated pointers.
+- [x] Final existing-workflow, layout and vocabulary checks.
+
+## Completed — final Owner/Cashier browser walkthrough
+
+- [x] Review catalog coverage and identify cross-feature continuity risks.
+- [x] Verify signed-in role after reopening and discounted shift handover.
+- [x] Verify pending payment quotes and the next customer's unfinished sale.
+- [x] Close identified gaps and inspect mobile/tablet recovery views.
+- [x] Refresh catalog, focused regression checks and review notes.
+
+## Completed — Sell space and updated previews
+
+- [x] Remove the four-item Favourites cutoff and oversized tablet cards.
+- [x] Adaptive shelf columns, compact toolbar and bounded basket width.
+- [x] Representative 24-product review shop and category counts.
+- [x] Mobile, portrait, landscape and wide preview captures.
+- [x] Verify resizing, filtering and the interactive preview controls.
+- [x] Final category-label, catalog and source checks.
 
 ## Next design work
 
 - [x] Kept-change journey and its use/refund at checkout.
 - [x] Fractional quantities and partial returns with explicit units/approval.
-- [x] Deeper staff permission/revocation and offline access states.
+- [x] Deeper cashier permission/revocation and offline access states.
 - [x] Period/location report exploration without pretending missing data is complete.
 - [x] Connection, pairing and replacement-recovery design previews.
 - [x] Optional fiscal receipt/day and rejected-receipt recovery design.
 - [x] First cross-screen consistency, accessibility and interruption-state audit.
 - [x] Complete state/dialog coverage inventory and richer older-review draft recovery.
-- [ ] Final owner/seller walkthrough of the catalog and closure of any design gaps.
+- [x] Final browser walkthrough as Owner/Cashier and closure of identified design gaps.
+- [ ] Owner review of the finished catalog, workflow choices and assumptions.
 - [ ] Physical device/keyboard, TalkBack and vendor usability observations.
 - [ ] Figma handoff at the end, after design coverage and final review are complete.
 
 ## Decisions / assumptions for this pass
 
-- “Tab layout” means tablet layout; phone bottom tabs remain familiar.
+- “Tab layout” means tablet layout; device bottom tabs remain familiar.
 - Tablet uses the same workflows and permissions; more space exposes the basket,
-  rather than adding extra business features or owner access for a seller.
+  rather than adding extra business features or owner access for a cashier.
 - At 700 CSS px and above, navigation becomes a rail. Enlarged text uses one
   content pane instead of squeezing an order-summary panel beside the form.
-- Favourite products retain a balanced two-column shelf; larger catalogues can
-  use additional columns. Stock's existing practice low threshold of four is
+- Mobile products retain two columns; tablet/wide Sell uses adaptive columns
+  and a 280–380 px basket. Stock's existing practice low threshold of four is
   retained, not introduced as a production policy.
 - Portrait/landscape previews are browser viewport simulations. They are not
   proof of behaviour on physical hardware.
 - Statements use fictional opening balances and only subsequent practice actions.
   No live connection, production schema or external integration is added.
-- Receipt lookup is scoped to the current phone and role. It does not imply a
+- Receipt lookup is scoped to the current device and role. It does not imply a
   complete shop-wide history, and unknown supplier due dates stay unknown.
+
+## Previous pass — language, header, reports and discounts
+
+Current design copy uses Owner / Cashier / Device consistently, and Stock for
+goods and Stock take for a physical count. The project glossary is the shared
+contract; technical IDs remain stable. Existing app implementation copy has not
+been migrated in this design pass.
+
+The compact header shows shop, signed-in name and role. Healthy saving no longer
+needs a permanent second bar. A small corner marker identifies Preview or the
+once-selected Practice appearance. Owner and Cashier retain familiar navigation
+positions, with different destinations and guarded owner-only routes.
+
+Owner reports now include daily trends, product performance, cashier attribution
+and discounts, with graphs and exact-value tables. Periods include this month
+and last seven days. Missing records remain visible; unknown buying costs do not
+become zero cost or invented profit. Shared devices do not stand in for people.
+
+Product-line discounts show original price, reduction and payable amount through
+basket, payment and receipt. Cashier requests require fresh owner approval.
+Held baskets retain approved unchanged discounts; changed quantities/prices need
+a fresh review. Partial returns use the original discounted amount paid,
+including fractional quantities and cumulative rounding.
+
+The catalog now covers 96 routes, 142 additional states and 27 dialog examples
+across all 19 dialog call sites. All 12 completion-view sites have examples;
+23 brief-feedback sources are separately inventoried. Current coverage and
+108 dialog layouts passed. Focused checks passed for header/role boundaries,
+discount approval, draft reload, held sales, changed quantities, validation,
+net-price returns, 24 discount layouts and 48 detailed-report layouts.
+Existing workflow, journey, responsive, invoice, kept-change, quantity/return,
+cashier-access, report, connection and fiscal checks passed. The final 696-layout
+sweep, five design boards and browser asset/error checks passed. Mobile/tablet
+header, role, graph, scrolled report table, payment and receipt captures were
+inspected. UTF-8, source headers, 500-line limits and whitespace checks passed.
+
+Added dedicated dura-responsive-design and dura-design-language skills, linked
+to the project glossary and current prototype contract. Both skill validators
+passed; the generated skill-pointer check reports 12 skills and zero problems.
+Design edits stay in cdx, with authorised shared vocabulary/skill updates under
+the handbook and .agents/.claude. App/backend code was not edited in this pass.
+
+Open [-cdx-preview.html](-cdx-preview.html) for mobile/tablet journeys or
+[-cdx-coverage.html](-cdx-coverage.html) for the searchable catalog.
+Contracts, assumptions and captures are in [-cdx-language-roles.md](-cdx-language-roles.md),
+[-cdx-discounts.md](-cdx-discounts.md) and
+[-cdx-owner-report-details.md](-cdx-owner-report-details.md).
+
+Assumptions: Cashier is the one current selling-role label. Every cashier manual
+discount needs owner approval; one discount per product line, with no stacking
+or free-item workflow in this slice. Fixed discounts apply to the entire line.
+Preview means fictional account appearance; Practice is not a live database
+switch. No PIN is persisted. Fixtures are fictional snapshots, not a complete
+shop ledger. Physical devices, keyboard/insets, TalkBack, vendor observation and
+real-service validation remain unverified.
+
+Next: final owner/cashier catalog walkthrough and closure of any design gaps it
+finds. Figma remains deferred until design coverage and final review are complete;
+no Figma file, import package, upload or conversion was created in this pass.
 
 ## Latest summary
 
-The linked state/dialog catalog now accounts for all 90 current base routes,
-125 additional state examples and 26 dialog examples spanning all 19 dialog
-call sites. Every one of the 12 completion-view call sites has a rendered
-example. All 23 brief-feedback source locations are inventoried separately;
-that is not a claim that every toast condition was rendered.
+Sell now uses the available shelf space: adaptive tablet/wide columns, compact
+product cards and a 280–380 px basket. The four-product Favourites cutoff is
+removed. Category labels include counts and scroll without squeezing their text.
+Tablet search/categories remain available while scrolling; portrait keeps a
+separate search row so the search field is usable. Mobile retains two columns.
 
-Delivery, stock-count, money-out and cash-up entry/review drafts now survive
-reload. Product/count zero values, invalid text, reasons, per-currency counts
-and retained floats remain editable. Restored reviews need a fresh check;
-money out still requires approval again. Changed records return to entry
-with values retained, and completed drafts cannot replay their effects.
-A closed shift keeps its own handover summary. Empty tracked-product lists
-now offer Add a product. Long pricing amounts use a compact treatment.
+The review preview opens a fictional 24-product shop on All items, with 12
+Favourites and Food / Drinks / Household categories. A new Wide counter option
+uses 1440 × 900. At normal text the checked layouts show 9 full cards on a
+1024 × 768 tablet, 20 at 1440 × 900, and all 24 at the supplied screenshot's
+1913 × 915 size. Cards do not stretch to fill a short category.
 
-Passed: current route/state/dialog/result inventory checks; 104 dialog layouts;
-48 restored-review layouts; approval, zero/partial/invalid input, changed-record,
-currency, saved-handover and no-replay checks. Eight recovery captures and the
-interactive catalog were inspected. Source headers, UTF-8, source-size and
-whitespace checks passed. Existing workflow, journey, responsive, invoice,
-kept-change, quantity/return, staff-access, report, connection and fiscal checks
-passed, plus their final 696-layout sweep and all five board captures.
-All edits for this pass are inside cdx. App/backend code was not edited.
+Passed: 18 layout combinations across six sizes in light/dark/large text;
+category counts and label fit; search/filtering; unchanged basket on resizing;
+the existing responsive interaction suite; source headers, UTF-8, 500-line
+limits and whitespace checks. The refreshed catalog passed 96 routes, 149
+state examples and 27 dialog examples, including 108 dialog layouts. Eight
+captures cover mobile, portrait/landscape tablets, two wide sizes, an empty
+basket, payment and an owner report. Actual renders were inspected.
 
-Open [-cdx-coverage.html](-cdx-coverage.html) to search examples and switch
-phone/tablet or appearance. Coverage policy and remaining gates are in
-[-cdx-state-dialog-inventory.md](-cdx-state-dialog-inventory.md). Recovery rules,
-storage sample and captures are in [-cdx-review-drafts.md](-cdx-review-drafts.md).
+Decisions / assumptions: the 24 products are fictional review data, not a
+prescribed shop catalogue. Additional items without pictures use letter
+placeholders. The larger sample is opt-in through shelf=full and enabled by
+the main Sell preview; original small fixtures remain available. Visible card
+counts vary with text size and names. All edits stayed in cdx; app/backend code
+and project skills were not changed.
 
-Assumptions: one bounded unfinished draft per journey on this phone, scoped to
-shop/role/seller/currency; a restored physical count requires a fresh check;
-no persisted PIN or consent; browser storage is not native Android process
-recovery. Fixtures are isolated fictional snapshots, not a complete shop ledger.
-Physical devices, keyboard/insets, TalkBack, vendor observation and real-service
-validation remain unverified.
-
-Next: final owner/seller catalog walkthrough and closure of any design gaps it
-finds. Figma remains deferred until design coverage and final review are complete;
-no Figma file, import package, upload or conversion was created in this pass.
+Open [-cdx-preview.html](-cdx-preview.html) to verify the updated journeys, or see
+[-cdx-sell-space.md](-cdx-sell-space.md) for captures and exact layout notes.
+Next: owner review of these layouts and the complete catalog. Physical Android,
+keyboard/insets, TalkBack, vendor observations and real-service recovery remain
+unverified. Figma remains deferred; no conversion or upload was created.

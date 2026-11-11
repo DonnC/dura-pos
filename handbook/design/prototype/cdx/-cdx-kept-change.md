@@ -21,7 +21,7 @@ the selected pricing currency). Ordinary old sessions begin with zero kept
 change. The feature stays off until enabled by the owner.
 
 On tablets of at least 900 CSS px, the form and the payment/approval summary
-sit side by side. Phones and enlarged text use one column with the main action
+sit side by side. Devices and enlarged text use one column with the main action
 fixed below the scrollable content. Amounts keep their currency labels.
 
 ## Reconciliation examples
@@ -47,12 +47,12 @@ explicitly say to count its physical cash once; the debt is not extra sales.
 
 ## Decisions and assumptions
 
-- **Till-local, same currency:** use/refund is limited to this phone's kept
+- **Till-local, same currency:** use/refund is limited to this device's kept
   balance in the current pricing currency. The `kept=stale` design state blocks
-  use/refund and offers cash selling. This does not solve multi-phone races or
+  use/refund and offers cash selling. This does not solve multi-device races or
   prove that a live shared balance is current. Cross-till and cross-currency
   use require a separate design slice.
-- **Seller access:** a seller may use change at checkout and request a payout.
+- **Cashier access:** a cashier may use change at checkout and request a payout.
   Every cash payout requires the owner's existing practice PIN. This previews
   a conservative permission choice; it does not implement authorisation.
 - **Optional feature and limits:** the example limit is 2.00 in the displayed
@@ -64,7 +64,7 @@ explicitly say to count its physical cash once; the debt is not extra sales.
   of the cash-sale change; splitting between change given and kept is future
   work. There is no arbitrary top-up or transfer facility.
 - **Customer identification:** existing practice names or a quick-added name /
-  phone are supported. Duplicate names are rejected in this small example.
+  device are supported. Duplicate names are rejected in this small example.
   Real identification, ambiguity, shared numbers and privacy need validation.
 - **Sales returns are separate:** a kept-change cash payout is not a returned
   sale. Selected-item returns now preserve the original cash/kept split and restore
@@ -101,15 +101,15 @@ There are no journal, workbook, Flutter or backend schema changes.
 
 `-cdx-kept-check.cjs` exercises cash/debt/stock outcomes, partial/full use,
 overpayment, cap and agreement, draft recovery, refund approval, insufficient
-cash, stale recovery and feature visibility. It also renders owner and seller
+cash, stale recovery and feature visibility. It also renders owner and cashier
 layouts at 320, 390, 768 and 1024 CSS px in light/dark and 200% text.
 
-Phone and tablet captures are named `-cdx-kept-{phone|tablet}-{screen}.png`,
+Device and tablet captures are named `-cdx-kept-{phone|tablet}-{screen}.png`,
 for account, checkout, keep, refund and refund-review. Examples:
 
-- [Phone checkout](-cdx-kept-phone-checkout.png) / [tablet checkout](-cdx-kept-tablet-checkout.png).
-- [Phone cash-back review](-cdx-kept-phone-refund-review.png) / [tablet cash-back review](-cdx-kept-tablet-refund-review.png).
-- [Phone keeping change](-cdx-kept-phone-keep.png) / [tablet keeping change](-cdx-kept-tablet-keep.png).
+- [Device checkout](-cdx-kept-phone-checkout.png) / [tablet checkout](-cdx-kept-tablet-checkout.png).
+- [Device cash-back review](-cdx-kept-phone-refund-review.png) / [tablet cash-back review](-cdx-kept-tablet-refund-review.png).
+- [Device keeping change](-cdx-kept-phone-keep.png) / [tablet keeping change](-cdx-kept-tablet-keep.png).
 
 Final results are in
 [status.md](status.md). Browser viewports are not physical-device, keyboard,

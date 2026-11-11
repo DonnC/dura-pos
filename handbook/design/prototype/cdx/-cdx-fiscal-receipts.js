@@ -8,10 +8,10 @@ let fiscalFilter='all';
 screens.fiscal=()=>{
   if(!fiscalDemo().enabled){screen.innerHTML=heading('Fiscal receipts.','Optional · Not configured','settings')+
     '<div class="fiscal-layout"><section>'+line('Connection','Not configured')+
-    line('Phone identity','One fiscal device per phone')+'</section><section><h2 class="section-title">Explore in test mode</h2>'+
+    line('Device identity','One fiscal device per device')+'</section><section><h2 class="section-title">Explore in test mode</h2>'+
     '<p class="sub">Review status, receipt issues and fiscal-day recovery with examples before a real setup.</p>'+
     fiscalExampleNote()+'</section></div>';primary('fiscal-setup','Explore test setup');return;}
-  screen.innerHTML=heading('Fiscal receipt status.','Test-device example · This phone','settings')+
+  screen.innerHTML=heading('Fiscal receipt status.','Test-device example · This device','settings')+
     (fiscalDemo().condition==='ending'?'<p class="warning">Example: the fiscal day is nearing its configured limit. Ask the owner to review it.</p>':'')+
     '<div class="fiscal-layout"><section>'+line('Saved sale','Separate local record')+
     line('Fiscal items needing attention',String(fiscalOutstanding().length))+
@@ -31,7 +31,7 @@ screens['fiscal-setup']=()=>{
 actions['fiscal-enable-preview']=()=>{fiscalDemo().enabled=true;save();navigate('fiscal');};
 screens['fiscal-queue']=()=>{
   if(!fiscalGate())return;
-  screen.innerHTML=heading('Fiscal receipt queue.',s.role==='owner'?'Test example · This phone':'Your test examples on this phone','shop')+
+  screen.innerHTML=heading('Fiscal receipt queue.',s.role==='owner'?'Test example · This device':'Your test examples on this device','shop')+
     '<div class="tabs">'+[['all','All'],['waiting','Waiting'],['attention','Needs attention']].map(([v,l])=>
       btn('fiscal-filter',l,'chip',`data-filter="${v}" aria-pressed="${fiscalFilter===v}"`)).join('')+'</div>'+
     '<div id="fiscal-queue-list"></div>'+note('A saved sale, a payment and a fiscal answer are separate records. Checking status does not charge the customer again.');
@@ -49,7 +49,7 @@ actions['fiscal-show-all']=()=>{fiscalFilter='all';render();};
 actions['fiscal-open']=b=>{fiscalDemo().selected=b.dataset.ref;save();navigate('fiscal-receipt');};
 screens['fiscal-receipt']=()=>{
   if(!fiscalGate())return;const r=selectedFiscal();
-  if(!r){screen.innerHTML=heading('Open your own receipt.','Ask the owner to review other sellers’ records.','fiscal-queue');return;}
+  if(!r){screen.innerHTML=heading('Open your own receipt.','Ask the owner to review other cashiers’ records.','fiscal-queue');return;}
   screen.innerHTML=heading(fiscalLabels[r.state]+'.','Test result · Original record kept','fiscal-queue')+
     '<div class="fiscal-layout"><section>'+line('Amount',money(r.amount))+
     line('Fiscal reference',`<span id="fiscal-reference">${esc(r.ref)}</span>`)+

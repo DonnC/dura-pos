@@ -6,7 +6,10 @@
 
 // Base-unit integers: 1000 grams per kg. Money rounds once per sale line.
 function roundRatio(n,d){return Number((BigInt(n)*2n+BigInt(d))/(BigInt(d)*2n));}
-const lineAmount=(p,qty)=>roundRatio(BigInt(p.cents)*BigInt(qty),p.scale||1);
+const lineAmount=(p,qty)=>{
+  const raw=roundRatio(BigInt(p.cents)*BigInt(qty),p.scale||1);
+  return typeof discountedLineAmount==='function'?discountedLineAmount(p,qty,raw):raw;
+};
 function decimalQuantity(units,scale=1){
   if(scale===1)return String(units);
   const abs=Math.abs(units);
@@ -57,7 +60,7 @@ function drawQuantity(){
   document.querySelector('#quantity-error').textContent=d.value?error:'';
   document.querySelector('#quantity-total').innerHTML=line('Weight',!error?quantityText(p,units):'Enter a weight')+
     line('Line total',!error?money(lineAmount(p,units)):money(0))+
-    line('On this phone',stockText(p));enable('quantity-save',!error);
+    line('On this device',stockText(p));enable('quantity-save',!error);
 }
 inputActions.quantity=el=>{
   const d=s.quantityDraft;

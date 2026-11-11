@@ -9,7 +9,7 @@
       "unlabelled": [],
       "overflow": false,
       "primary": [
-        "Owner checks this phone"
+        "Owner checks this device"
       ]
     },
     {
@@ -54,7 +54,7 @@
     },
     {
       "route": "access-review",
-      "title": "Check seller access.",
+      "title": "Check cashier access.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -69,7 +69,7 @@
       "unlabelled": [],
       "overflow": false,
       "primary": [
-        "Back to people & phones"
+        "Back to people & devices"
       ]
     },
     {
@@ -109,7 +109,7 @@
       "unlabelled": [],
       "overflow": false,
       "primary": [
-        "Preview adding another phone"
+        "Preview adding another device"
       ]
     },
     {
@@ -124,12 +124,12 @@
     },
     {
       "route": "count-stock-review",
-      "title": "Review the count.",
+      "title": "Review stock take.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
       "primary": [
-        "Save stock count"
+        "Save stock take"
       ]
     },
     {
@@ -159,6 +159,26 @@
       "unlabelled": [],
       "overflow": false,
       "primary": []
+    },
+    {
+      "route": "discount",
+      "title": "Discount this product.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review discount"
+      ]
+    },
+    {
+      "route": "discount-review",
+      "title": "Discount this product.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review discount"
+      ]
     },
     {
       "route": "done",
@@ -390,7 +410,7 @@
     },
     {
       "route": "join-status",
-      "title": "Example phone joined.",
+      "title": "Example device joined.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -468,7 +488,7 @@
     },
     {
       "route": "lost-phone",
-      "title": "Review the lost phone.",
+      "title": "Review the lost device.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -528,7 +548,7 @@
     },
     {
       "route": "pair",
-      "title": "Add a shop phone.",
+      "title": "Add a shop device.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -538,12 +558,12 @@
     },
     {
       "route": "pair-code",
-      "title": "Scan from the new phone.",
+      "title": "Scan from the new device.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
       "primary": [
-        "Preview the new phone scanning"
+        "Preview the new device scanning"
       ]
     },
     {
@@ -553,7 +573,7 @@
       "unlabelled": [],
       "overflow": false,
       "primary": [
-        "Save practice sale"
+        "Save sale"
       ]
     },
     {
@@ -568,7 +588,7 @@
     },
     {
       "route": "people",
-      "title": "People & phones.",
+      "title": "Cashiers & devices.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -691,6 +711,16 @@
       ]
     },
     {
+      "route": "report-cashiers",
+      "title": "Cashiers.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check included records"
+      ]
+    },
+    {
       "route": "report-coverage",
       "title": "What is included?",
       "small": [],
@@ -701,8 +731,38 @@
       ]
     },
     {
+      "route": "report-discounts",
+      "title": "Discounts.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check included records"
+      ]
+    },
+    {
+      "route": "report-products",
+      "title": "Products.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check included records"
+      ]
+    },
+    {
       "route": "report-sales",
       "title": "Sales & returns.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check included records"
+      ]
+    },
+    {
+      "route": "report-trend",
+      "title": "Sales trend.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -722,7 +782,7 @@
     },
     {
       "route": "restore",
-      "title": "Recover onto a new phone.",
+      "title": "Recover onto a new device.",
       "small": [],
       "unlabelled": [],
       "overflow": false,
@@ -830,7 +890,7 @@
     },
     {
       "route": "stock-count",
-      "title": "Count the shelf.",
+      "title": "Stock take.",
       "small": [],
       "unlabelled": [],
       "overflow": false,

@@ -11,9 +11,11 @@ screens.welcome=()=>{
     <p class="sub">Sell with or without internet. Keep your records in your own account.</p>
     <div class="welcome-points">${line('Free to trade','No subscription')}
     ${line('Your records','Yours to keep')}${line('Start small','Add more when needed')}</div>
-    ${btn('join','Join an existing shop','text-button full')}`;
+    ${btn('join','Join an existing shop','text-button full')}
+    ${btn('start-practice','Try practice mode','text-button full')}`;
   primary('setup','Set up my shop');
 };
+actions['start-practice']=()=>{s.previewAppearance='practice';save();navigate('sell');};
 screens.setup=()=>{
   screen.innerHTML=heading('Make it your shop.','Step 1 of 2 · The essentials','welcome')+
     field('setup-name','Shop name',draft.setupName||'','maxlength="60" placeholder="e.g. Chipo’s corner shop"')+
@@ -34,7 +36,7 @@ screens['first-product']=()=>{
     field('first-unit','Selling unit','','maxlength="30" placeholder="e.g. 1 kg or 1 bag"')+
     field('first-price',`Selling price · ${draft.setupCurrency}`,'','inputmode="decimal" placeholder="0.00"')+
     note('You can add products and turn on stock tracking later. This creates a separate fictional practice shop.');
-  primary('first-save','Start my practice shop',true);
+  primary('first-save',s.previewAppearance==='practice'?'Start practice shop':'Start my shop',true);
 };
 inputActions['first-product']=()=>enable('first-save',val('first-name')&&val('first-unit')&&validAmount('first-price'));
 actions['first-save']=()=>{
@@ -47,6 +49,7 @@ actions['first-save']=()=>{
   s.invoiceDraft=null;s.invoices=[];
   delete s.kept;delete s.keptCheckout;delete s.keptRefund;delete s.keptSelected;
   delete s.fiscalDemo;
+  delete s.lineDiscounts;delete s.discountDraft;
   delete s.reviewDrafts;delete s.lastHandover;
   delete s.reportFilter;delete s.recoveryDemo;
   delete s.staffAccess;delete s.staffAccessDraft;delete s.staffActor;

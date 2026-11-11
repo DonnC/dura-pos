@@ -36,7 +36,7 @@ function returnPlan(r){
   const amount=lines.reduce((sum,l)=>sum+l.amount,0);
   const kept=r.keptUsed?roundRatio(BigInt(r.keptUsed)*BigInt(prior.amount+amount),r.amount)-prior.kept:0;
   const cash=amount-kept,c=originalKeptCustomer(r);
-  if(!canReturn(r))error='This payment type, currency or seller’s receipt cannot be returned here.';
+  if(!canReturn(r))error='This payment type, currency or cashier’s receipt cannot be returned here.';
   else if(!s.active)error='Open this till before saving a return.';
   else if(r.keptUsed&&(!c||!s.kept?.verified||s.kept.currency!==r.currency)){
     error='The original kept-change balance is unavailable here. Keep the receipt and ask the owner.';
@@ -61,7 +61,7 @@ if(q.get('returns')==='sample'){
   if(rice){
     lastSale={id:'T-P1-S261110-0030',items:[{...initialProducts[0],qty:2,lineTotal:200},
       {...rice,qty:750,lineTotal:180}],amount:380,received:500,change:120,method:'Cash',
-      who:s.name,currency:s.currency,status:'Saved on phone'};
+      who:s.name,currency:s.currency,status:'Saved on device'};
     s.history=[lastSale,...s.history.filter(r=>r.id!==lastSale.id)].slice(0,30);s.last=lastSale;
     if(page==='return-review'){
       s.returnDraft={sale:lastSale.id,qty:['1','0.250'],restock:[false,true],reason:'wrong'};

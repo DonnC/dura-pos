@@ -98,5 +98,5 @@ actions['return-save']=()=>{
   }
   s.returnDraft=null;record(reference+' linked to '+r.id);
   result('Return saved.',returnPaymentRows(p)+line('Linked receipt',esc(r.id))+
-    note('Practice correction saved on this phone. The original receipt stays unchanged.'),'receipt','View original receipt');
+    note('Practice correction saved on this device. The original receipt stays unchanged.'),'receipt','View original receipt');
 };

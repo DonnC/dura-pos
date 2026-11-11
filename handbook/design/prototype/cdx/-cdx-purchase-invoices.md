@@ -17,7 +17,7 @@ sample entries, and a device selector for actual browser viewport resizing.
 | Saved invoice | Read the original costs and payment; open supplier statement | Empty invoice history offers a new invoice |
 
 The tablet places the payment summary alongside the form and review amounts
-alongside received items. Phones use a single scrollable column and fixed main
+alongside received items. Devices use a single scrollable column and fixed main
 action. At 200% text, forms return to a single column. The invoice flow hides
 main navigation; Back leads to the previous step or supplier account.
 
@@ -70,7 +70,7 @@ prevention, editing, evidence examples, draft recovery and owner access.
 The form is local: there is no fabricated loading spinner or upload success.
 Offline status uses the existing banner and does not disable the invoice.
 Empty invoices, invalid inputs, insufficient cash, duplicate references and
-seller access denial each have an explanation and a recovery route.
+cashier access denial each have an explanation and a recovery route.
 
 Optional `invoiceDraft` and `invoices` fields extend only the existing fictional
 browser state. Old practice sessions start with no invoices; no migration is
@@ -84,13 +84,13 @@ journal, workbook, backend schema or app code changes.
 
 Run `-cdx-invoice-check.cjs` with Playwright/Edge available. It captures:
 
-- [-cdx-invoice-phone-items.png](-cdx-invoice-phone-items.png)
-- [-cdx-invoice-phone-payment.png](-cdx-invoice-phone-payment.png)
-- [-cdx-invoice-phone-review.png](-cdx-invoice-phone-review.png)
+- [-cdx-invoice-device-items.png](-cdx-invoice-phone-items.png)
+- [-cdx-invoice-device-payment.png](-cdx-invoice-phone-payment.png)
+- [-cdx-invoice-device-review.png](-cdx-invoice-phone-review.png)
 - [-cdx-invoice-tablet-items.png](-cdx-invoice-tablet-items.png)
 - [-cdx-invoice-tablet-payment.png](-cdx-invoice-tablet-payment.png)
 - [-cdx-invoice-tablet-review.png](-cdx-invoice-tablet-review.png)
 
-Phone/tablet browser captures are not physical-device, keyboard, TalkBack or
+Mobile/tablet browser captures are not physical-device, keyboard, TalkBack or
 vendor usability testing. Full check results and the next task are in
 [status.md](status.md).

@@ -71,7 +71,8 @@ actions['close-shift']=()=>{
   draft.reason=val('variance-note');
   if(count()){
     if(s.held.length===3){toast('Resolve a held sale before closing. Your basket is safe.');return;}
-    s.held.push({basket:{...s.basket},name:`${s.name}’s unfinished sale`,amount:total()});s.basket={};
+    s.held.push({basket:{...s.basket},name:`${s.name}’s unfinished sale`,amount:total(),
+      lineDiscounts:structuredClone(s.lineDiscounts||{})});s.basket={};
   }
   s.active=false;record(`Shift closed: ${varianceText(draft.counted-s.cash)}`);navigate('handover');
 };
@@ -84,10 +85,11 @@ screens.handover=()=>{
       line('ZWG staying',money(draft.keptZwg,'ZWG')):'')+
     line('Count difference',varianceText(draft.counted-s.cash))+
     (draft.reason?note(esc(draft.reason)):'')+
-    note('Saved on this phone. Waiting to upload. Held baskets remain on this till.'),
+    note('Saved on this device. Waiting to upload. Held baskets remain on this till.'),
     'switch-person','Hand over this till');
 };
-actions.profile=()=>showSheet(`${esc(s.name)} · ${s.role==='owner'?'Owner':'Seller'}`,
+actions.profile=()=>showSheet(`${esc(s.name)} · ${s.role==='owner'?'Owner':'Cashier'}`,
+  '<p class="micro">Front counter · Device 1</p>'+
   menu('lock','Lock Dura','Keep your basket and shift open','shield')+
   menu('switch-person','Switch person',s.active?'Cash up before another person takes the drawer':
     'Start the next person’s shift','people')+
@@ -98,7 +100,7 @@ screens.locked=()=>{
     `<div class="empty">${icon('shield')}</div>`+
     field('unlock-pin','Your PIN','','type="password" inputmode="numeric" maxlength="6"')+
     `<p class="error" id="pin-error" role="alert"></p>`+
-    note('Practice PIN: 123456. This preview is not a phone lock.');
+    note('Practice PIN: 123456. This preview is not a device lock.');
   primary('unlock','Unlock Dura',true);
 };
 inputActions.locked=()=>enable('unlock',val('unlock-pin').length===6);
@@ -115,7 +117,7 @@ screens['switch-person']=()=>{
     primary('cashup','Count and close this shift');return;
   }
   screen.innerHTML+=select('next-person','Next person',
-    (supervisedAccess?'':option('worker','Rudo · Seller'))+option('owner','Chipo · Owner',supervisedAccess))+
+    (supervisedAccess?'':option('worker','Rudo · Cashier'))+option('owner','Chipo · Owner',supervisedAccess))+
     field('next-pin','Their PIN','','type="password" inputmode="numeric" maxlength="6"')+
     note('Practice PIN: 123456. The next person counts the retained float before opening.');
   primary('start-person','Continue to opening count',true);

@@ -28,7 +28,8 @@ function keptMove(c,delta,label,reference=''){
   c.balance+=delta;c.moves.push({delta,label,reference,who:s.name});
   while(c.moves.length>40)c.opening+=c.moves.shift().delta;
 }
-const keptBasketKey=()=>JSON.stringify(Object.entries(s.basket).sort());
+const keptBasketKey=()=>JSON.stringify([Object.entries(s.basket).sort(),
+  typeof basketDiscountTotal==='function'?basketDiscountTotal():0]);
 function keptCheckout(){
   if(!s.keptCheckout||s.keptCheckout.basket!==keptBasketKey()){
     s.keptCheckout={basket:keptBasketKey(),customer:keptContact().id,
@@ -40,7 +41,7 @@ function keptPicker(id=keptContact().id){
     option(c.id,`${c.name} · ${keptMoney(c.balance)} kept here`,c.id===id)).join(''));
 }
 function keptContextNote(){
-  return note(keptAllowed()?'Front counter · This phone only. Check the customer’s name before using or paying out their change.':
+  return note(keptAllowed()?'Front counter · This device only. Check the customer’s name before using or paying out their change.':
     'This balance needs checking, or is in another currency. Take cash for the sale; do not use or pay out this balance here.');
 }
 function keptReceiptRows(r){

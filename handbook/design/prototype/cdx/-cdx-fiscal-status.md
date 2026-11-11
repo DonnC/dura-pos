@@ -8,7 +8,7 @@ history. Fiscal details stay behind an optional entry in My shop, with a
 separate owner area for day close and device recovery.
 
 Open [-cdx-preview.html](-cdx-preview.html), choose **Fiscal status & recovery**,
-then Phone, Tablet portrait or Tablet landscape. Individual screen selection
+then Device, Tablet portrait or Tablet landscape. Individual screen selection
 exposes the **Fiscal example** selector for waiting, uncertain, refused,
 received-with-finding, accepted, day-close and device-access cases.
 
@@ -17,7 +17,7 @@ received-with-finding, accepted, day-close and device-access cases.
 | Screen | Purpose and entry | Main action / exit | Recovery |
 | --- | --- | --- | --- |
 | Test setup | Owner settings; explain optional setup | Preview test-device status | No live activation or credential entry |
-| Receipt queue | My shop; own records for worker, this phone for owner | Open a receipt; return to till | Filters and explicit empty view; no invented complete shop history |
+| Receipt queue | My shop; own records for worker, this device for owner | Open a receipt; return to till | Filters and explicit empty view; no invented complete shop history |
 | Receipt status | Original reference and separate local/upload/fiscal facts | Check existing reference or ask owner | Unconfirmed remains unconfirmed; refused and findings are distinct |
 | Existing result | Same document identity | Show a labelled example answer | No new sale, charge or fiscal submission |
 | Owner issue review | Receipt needing attention | Check same reference | Preserve signed content; safe support details stay local |
@@ -25,7 +25,7 @@ received-with-finding, accepted, day-close and device-access cases.
 | Close review | Same day, outstanding states visible | Request-close preview only after review | Pending/failed retain identity; no force-close or counter editing |
 | Device recovery | Owner access or storage concern | Review shop-record recovery | Preserve old references; do not clone fiscal identity |
 
-Phone screens use one reading column and a reachable primary action. At tablet
+Device screens use one reading column and a reachable primary action. At tablet
 landscape width, receipt facts and next steps use two columns; navigation stays
 in the familiar rail. Large text returns to one column. The queue remains a
 simple list rather than a dashboard of small status cards. Words carry every
@@ -48,11 +48,11 @@ The response chooser is an explicit design-review device, not a production
 button that lets a cashier declare acceptance. No real network/loading time is
 simulated. The saved preview state can survive a reload; it offers no guarantee
 of production recovery. Worker links to owner screens show the existing owner
-access guard, and another seller's reference cannot be opened by the worker.
+access guard, and another cashier's reference cannot be opened by the worker.
 
 ## Assumptions and limits
 
-- Examples use three fixed fictional documents, two sellers and one fiscal day.
+- Examples use three fixed fictional documents, two cashiers and one fiscal day.
   `F-EX-*` identifiers are labels, not assigned authority identifiers. Sample
   sales retain 10 November dates; this design pass is dated 11 November.
 - A linked credit-note fixture makes the document type explicit; this pass does
@@ -83,14 +83,14 @@ integration was exercised and no compliance conclusion follows.
 
 ## Review captures
 
-| View | Phone | Tablet landscape |
+| View | Device | Tablet landscape |
 | --- | --- | --- |
-| Queue | [Phone](-cdx-phone-fiscal-queue.png) | [Tablet](-cdx-tablet-fiscal-queue.png) |
-| Unconfirmed receipt | [Phone](-cdx-phone-fiscal-receipt.png) | [Tablet](-cdx-tablet-fiscal-receipt.png) |
-| Owner issue review | [Phone](-cdx-phone-fiscal-owner-review.png) | [Tablet](-cdx-tablet-fiscal-owner-review.png) |
-| Fiscal day | [Phone](-cdx-phone-fiscal-day.png) | [Tablet](-cdx-tablet-fiscal-day.png) |
-| Close waiting | [Phone](-cdx-phone-fiscal-close.png) | [Tablet](-cdx-tablet-fiscal-close.png) |
-| Device recovery | [Phone](-cdx-phone-fiscal-device.png) | [Tablet](-cdx-tablet-fiscal-device.png) |
+| Queue | [Device](-cdx-phone-fiscal-queue.png) | [Tablet](-cdx-tablet-fiscal-queue.png) |
+| Unconfirmed receipt | [Device](-cdx-phone-fiscal-receipt.png) | [Tablet](-cdx-tablet-fiscal-receipt.png) |
+| Owner issue review | [Device](-cdx-phone-fiscal-owner-review.png) | [Tablet](-cdx-tablet-fiscal-owner-review.png) |
+| Fiscal day | [Device](-cdx-phone-fiscal-day.png) | [Tablet](-cdx-tablet-fiscal-day.png) |
+| Close waiting | [Device](-cdx-phone-fiscal-close.png) | [Tablet](-cdx-tablet-fiscal-close.png) |
+| Device recovery | [Device](-cdx-phone-fiscal-device.png) | [Tablet](-cdx-tablet-fiscal-device.png) |
 
 Automated checks live in [-cdx-fiscal-check.cjs](-cdx-fiscal-check.cjs).
 Physical devices, keyboard/insets, TalkBack, vendor observation and live fiscal

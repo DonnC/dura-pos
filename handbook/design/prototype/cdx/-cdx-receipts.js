@@ -7,14 +7,14 @@
 function receiptList(){
   const sample={id:'T-P1-S261110-0008',items:[{...initialProducts[0],qty:2},
     {...initialProducts[1],qty:1}],amount:350,received:500,change:150,method:'Cash',
-    who:s.name,currency:s.currency,status:'Saved on phone'};
+    who:s.name,currency:s.currency,status:'Saved on device'};
   return [...s.history,...(s.seedDay?[sample]:[])].filter((r,i,a)=>a.findIndex(x=>x.id===r.id)===i);
 }
 let receiptSearch='',receiptFilter='all';
 screens.history=()=>{
-  screen.innerHTML=heading('Recent sales.',s.role==='worker'?'Your sales on this till':'Front counter · This phone','money')+
+  screen.innerHTML=heading('Recent sales.',s.role==='worker'?'Your sales on this till':'Front counter · This device','money')+
     `<div class="search feature-search"><div class="searchbox">${icon('search')}
-    <input id="receipt-search" aria-label="Find a receipt" placeholder="Receipt, product or seller"
+    <input id="receipt-search" aria-label="Find a receipt" placeholder="Receipt, product or cashier"
       value="${esc(receiptSearch)}"></div></div><div class="tabs">${[
       ['all','All receipts'],['cash','Cash'],['account','On account'],['returns','With returns']]
       .concat(s.features.mobile||receiptList().some(r=>r.method==='Mobile money')?[['mobile','Mobile money']]:[])
@@ -47,13 +47,15 @@ screens.receipt=()=>{
   screen.innerHTML=heading('Sale receipt.','Practice receipt · Not fiscal','history')+
     `<div class="receipt-paper"><h2>${esc(s.shop)}</h2><p class="micro">${esc(r.id)}<br>
     ${esc(r.who)} · Front counter</p><div class="receipt-details">${summaryRows(r.items)}</div>
+    ${r.discountTotal?line('Subtotal',money(r.subtotal,r.currency))+
+      line('Discounts','− '+money(r.discountTotal,r.currency)):''}
     ${line('Total',money(r.amount,r.currency))}${line('Payment',esc(r.method))}
     ${r.method==='Cash'?line('Cash received',money(r.received,r.currency))+
       line('Change given',money(r.change,r.currency)):''}
     ${keptReceiptRows(r)}
     ${r.payments?r.payments.map(p=>line('Cash received',money(p.amount,p.currency))).join('')+
       line('Rate kept with sale',`USD 1.00 = ${money(r.rateMinor,'ZWG')}`):''}</div>
-    <p class="status-line">${icon('check')}Saved on this phone</p>
+    <p class="status-line">${icon('check')}Saved on this device</p>
     <p class="status-line wait">${icon('clock')}Not uploaded · No fiscal receipt issued</p>
     <div class="split">${btn('share-receipt','Share receipt')}${btn('print','Print receipt')}</div>
     ${returnHistory(r)}

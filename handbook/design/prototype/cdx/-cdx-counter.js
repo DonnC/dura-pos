@@ -13,22 +13,27 @@ function render(){
     'setup','first-product','pending','refund','refund-review','receive-review',
     'count-stock-review','expense-review','invoice-items','invoice-payment','invoice-review','export',
     'kept-checkout','kept-keep','kept-refund','kept-refund-review',
-    'quantity','return-items','return-review','access-review','access-remove',
+    'quantity','discount','discount-review','return-items','return-review','access-review','access-remove',
     'access-expired','access-removed','access-recovery','staff','connection-review',
     'connection-status','pair-code','join-review','join-status','restore-review','restore-status','lost-phone','fiscal-setup','fiscal-check','fiscal-owner-review','fiscal-close'].includes(page);
   document.querySelector('.identity strong').textContent=s.shop;
-  document.querySelector('.identity small').textContent=`Front counter · ${s.name} · ${
-    s.role==='owner'?'Owner':'Seller'}`;
+  document.querySelector('.identity small').textContent=`${s.name} · ${
+    s.role==='owner'?'Owner':'Cashier'}`;
   const avatar=document.querySelector('.avatar');avatar.textContent=s.name[0];
-  avatar.dataset.action='profile';avatar.setAttribute('aria-label',`Current seller: ${s.name}`);
+  avatar.dataset.action='profile';avatar.setAttribute('aria-label',
+    `Signed in as ${s.name}, ${s.role==='owner'?'Owner':'Cashier'}. Open profile`);
   const connection=document.querySelector('#connection');
-  document.querySelector('.appbar').hidden=onboarding;connection.hidden=onboarding;
+  document.querySelector('.appbar').hidden=onboarding;connection.hidden=onboarding||!offline;
+  const appearance=s.previewAppearance||'account';
+  s.previewAppearance=appearance;
+  document.querySelector('#mode-marker').textContent=appearance==='practice'?'Practice':'Preview';
   connection.classList.toggle('offline',offline);
   connection.innerHTML=`<span class="dot"></span>${offline?
-    'Offline · Saved here, upload later':'Practice shop · Saved on this phone'}${icon('chevron')}`;
+    'Offline · Sales saved on this device':'Saved on this device'}${icon('chevron')}`;
   const groups={stock:['stock','product','product-edit','receive','receive-review','stock-count','count-stock-review'],
     money:['money','history','receipt','print','refund','refund-review','expense','expense-review',
       'customers','customer','suppliers','supplier-statement','reports','report-sales','report-cash','report-coverage',
+      'report-trend','report-products','report-cashiers','report-discounts',
       'invoice-items','invoice-payment','invoice-review','invoice-detail',
       'kept-customers','kept-account','kept-refund','kept-refund-review','return-items','return-review'],
     shop:['shop','people','staff','pair','settings','records','export','restore','connect','sync','help','fiscal','my-access','access-review','access-status','access-remove',

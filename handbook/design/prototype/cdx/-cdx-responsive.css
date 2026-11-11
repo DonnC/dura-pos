@@ -40,9 +40,16 @@
   .app[data-page=sell].has-context #dock{grid-column:3;border-left:1px solid var(--line)}
   .app[data-page=sell].has-context .primary svg{display:none}
   .primary .total{white-space:nowrap}
-  .catalog{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .catalog.many-products{grid-template-columns:repeat(auto-fit,minmax(144px,1fr))}
-  .art{height:86px}.art svg{width:112px;height:86px}
+  .app[data-page=sell].has-context{grid-template-columns:88px minmax(0,1fr) clamp(280px,30vw,380px)}
+  .app[data-page=sell] .catalog{grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;
+    align-content:start}
+  .app[data-page=sell] .catalog.single{grid-template-columns:1fr}
+  .app[data-page=sell] .product{min-height:140px;max-width:210px}
+  .app[data-page=sell] .art{height:48px}.app[data-page=sell] .art svg{width:64px;height:48px}
+  .sell-tools{position:sticky;top:-24px;padding-top:8px;background:var(--paper);z-index:1;
+    display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px;align-items:center}
+  .sell-tools h1{font-size:1.625rem}.sell-tools .heading{margin-bottom:8px}
+  .sell-tools>.tabs,.sell-tools>.warning{grid-column:1/-1}
   .product-text{padding:12px 14px}.product.selected .product-text{padding:11px 13px}
   .product-name{font-size:.9375rem}.price{font-size:1rem}
   .unit{font-size:.75rem}.product .add{bottom:12px}
@@ -64,5 +71,9 @@
   .large .app.flow{grid-template-columns:minmax(0,1fr)}
   .large .appbar{padding:8px 20px}.large .identity{gap:8px}
   .large .catalog{grid-template-columns:1fr}.large .page-content{max-width:760px}
+  .large .app[data-page=sell] .catalog{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+  .large .app[data-page=sell] .product{max-width:none}
+  .large .sell-tools{display:block;position:static}
   .large nav{gap:8px;padding:12px 4px}.large nav button{min-height:86px}
 }
+@media(min-width:700px) and (max-width:899px){.sell-tools{display:block}}

@@ -8,7 +8,7 @@ screens.money=()=>{
   const own=s.role==='owner';
   screen.innerHTML=heading(own?'Your money.':'My till.',
     `Tuesday, 10 November · ${own?'Front counter':esc(s.name)}`)+
-    (own?'<p class="warning">This phone only · Shop total incomplete.<br>Phone 2 last uploaded at 08:12.</p>':'')+
+    (own?'<p class="warning">This device only · Shop total incomplete.<br>Device 2 last uploaded at 08:12.</p>':'')+
     `<section class="hero"><p class="eyebrow">${own?'Sales after returns':'My sales this shift'}</p>
     <div class="amount-due"><span>${s.currency}</span>${(s.sales/100).toFixed(2)}</div>
     <small>${s.saleCount} sales · ${own?'This till only':'Your signed-in shift'}</small></section>`+
@@ -51,7 +51,7 @@ actions['review-expense']=()=>{
   navigate('expense-review');
 };
 function approvalField(){return field('approval-pin','Chipo’s approval PIN','','type="password" '+
-  'inputmode="numeric" maxlength="6"')+note('Practice approval PIN: 123456. No real staff credentials are used.');}
+  'inputmode="numeric" maxlength="6"')+note('Practice approval PIN: 123456. No real cashier credentials are used.');}
 screens['expense-review']=()=>{
   const e=draft.expense;if(!e){navigate('expense');return;}
   screen.innerHTML=heading('Check money out.','Owner approval · Front counter','expense')+
