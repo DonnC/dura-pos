@@ -14,6 +14,8 @@ screens.shop=()=>{
     (own?menu('records','Records & exports','Your own files and backups','receipt')+
       menu('people','People & phones','Who can use each till','people')+
       menu('settings','Set up when you need it','Credit, payments and currencies','settings'):'')+
+    (s.fiscalDemo?.enabled?menu('fiscal-queue','Fiscal receipt status','Test examples on this phone','receipt'):'')+
+    menu('my-access','My access','What this person may do on this phone','shield')+
     menu('sync','Saved records','What’s on this phone and waiting to upload','upload')+
     menu('profile','Lock or hand over',s.active?'Cashier: '+esc(s.name):'Start the next shift','shield')+
     menu('help','Help','A short guide for the person using the till','shield');
@@ -55,66 +57,17 @@ actions['export-preview']=()=>showSheet('Export contents',
   line('Period','November 2026')+line('Completeness','This phone only')+
   note('Readable records and field explanations belong in the export. No file is generated from this design.'),
   btn('records','Back to records','primary'));
-screens.connect=()=>{
-  screen.innerHTML=heading('Your Google account.','Your records stay in an account you control.','records')+
-    `<ol class="steps"><li><strong>Choose the shop’s account</strong><p>The owner signs in.</p></li>
-    <li><strong>Review access</strong><p>Dura’s Shop Hub uses the files it creates for this shop.</p></li>
-    <li><strong>Check your records</strong><p>The app confirms that uploads and readable Sheets are ready.</p></li></ol>`+
-    note('No sign-in runs in this design. You can keep selling before connecting.');
-  primary('sell','Set up later · Keep selling');
-};
-screens.restore=()=>{
-  screen.innerHTML=heading('Restore a phone.','Check the shop before bringing records back.','records')+
-    field('restore-shop','Shop name','','placeholder="Name in your backup" maxlength="60"')+
-    select('restore-source','Restore from',option('drive','Your Google Drive')+option('archive','Complete shop archive'))+
-    `<p class="warning">Records not yet uploaded from a lost phone may be missing. Never erase a working phone to try a restore.</p>`+
-    note('Production checks identity, mode, schema and upload history. A replacement phone gets its own device identity.');
-  primary('restore-check','Review restore checks',true);
-};
-inputActions.restore=()=>enable('restore-check',val('restore-shop').length>1);
-actions['restore-check']=()=>showSheet('Before restoring',line('Shop',esc(val('restore-shop')))+
-  line('Backup access','Not connected')+note('No backup has been opened or imported in this prototype. In the app, review backup date and missing records before confirming.'));
-screens.people=()=>{
-  screen.innerHTML=heading('People & phones.','A person sells. A phone holds a drawer.','shop')+
-    '<h2 class="section-title">People</h2>'+line('Chipo','Owner','All shop settings and records')+
-    menu('staff',esc(s.rudo?.name||'Rudo'),'Seller · Front counter only','people')+
-    (s.staff||[]).map(p=>line(esc(p.name),esc(p.role),'Front counter')).join('')+
-    btn('add-staff','Add a person','text-button full')+
-    '<h2 class="section-title">Phones</h2>'+line('Phone 1','This till','Front counter · '+esc(s.name))+
-    line('Phone 2','Last seen 08:12','Later activity is unknown')+
-    menu('pair','Pair another phone','Owner pairs; the seller does not need an email','phone');
-};
-actions['add-staff']=()=>{draft.newStaff=true;navigate('staff');};
-screens.staff=()=>{
-  screen.innerHTML=heading(draft.newStaff?'Add a person.':'Seller access.','Keep access close to the work.','people')+
-    field('staff-name','Name',draft.newStaff?'':s.rudo?.name||'Rudo','maxlength="40"')+
-    line('Role','Seller')+
-    line('Allowed phone','Front counter')+
-    `<ul class="plain-list"><li>Sell and find own receipts</li><li>View own shift and count the drawer</li>
-    <li>See stock at this location</li><li>Ask for owner approval for a refund</li></ul>`+
-    note('They set a PIN on their phone. Never share the owner’s PIN. This form previews access; it does not invite anyone.');
-  primary('save-staff','Save practice access',!!draft.newStaff);
-};
-inputActions.staff=()=>enable('save-staff',val('staff-name').length>=2);
-actions['save-staff']=()=>{
-  if(draft.newStaff){s.staff=s.staff||[];if(s.staff.length>=8){toast('Practice staff limit reached.');return;}
-    s.staff.push({name:val('staff-name'),role:'Seller'});}
-  else s.rudo={name:val('staff-name'),role:'Seller'};
-  record('Practice access reviewed for '+val('staff-name'));draft.newStaff=false;navigate('people');
-};
-screens.pair=()=>{
-  screen.innerHTML=heading('Pair a shop phone.','Keep both phones with you.','people')+
-    `<div class="scan-frame">${icon('phone')}${icon('scan')}</div>`+
-    '<h2 class="center">Scan from the new phone</h2><p class="sub center">In Dura, choose “Join an existing shop”.</p>'+
-    line('Location','Front counter')+line('Code status','Preview only')+
-    note('Production uses a short-lived pairing QR, not the owner’s Google password. This illustration is not a pairing code.');
-  primary('people','Back to people & phones');
-};
 screens.settings=()=>{
   const toggle=(id,title,sub,on)=>`<label class="toggle-row"><span><strong>${title}</strong>
     <small>${sub}</small></span><input type="checkbox" id="${id}" ${on?'checked':''}></label>`;
   screen.innerHTML=heading('Set up when needed.','Cash selling always stays available.','shop')+
     toggle('feature-credit','Customer accounts','Keep balances for trusted regulars',s.features.credit)+
+    toggle('feature-kept','Kept change','Record small change owed to customers at this till',s.features.kept)+
+    `<div id="kept-limit-setting" ${s.features.kept?'':'hidden'}>`+
+    field('kept-limit',`Practice limit per customer · ${s.currency}`,
+      ((s.kept?.cap??200)/100).toFixed(2),'inputmode="decimal"')+
+    '<p class="micro">No expiry. Clear outstanding balances before switching this off.</p></div>'+
+    '<p class="error" id="kept-setting-error" role="alert"></p>'+
     toggle('feature-mobile','Mobile money','Show practice provider checkout',s.features.mobile)+
     (s.currency==='USD'?toggle('feature-multi','USD + ZWG cash','Show a rate and exact split',s.features.multi):'')+
     (s.currency==='USD'?`<div id="rate-setting" ${s.features.multi?'':'hidden'}>`+
@@ -128,21 +81,23 @@ screens.settings=()=>{
 inputActions.settings=()=>{
   const multi=document.querySelector('#feature-multi')?.checked;
   if(document.querySelector('#rate-setting'))document.querySelector('#rate-setting').hidden=!multi;
-  enable('save-settings',!multi||validAmount('shop-rate'));
+  const kept=document.querySelector('#feature-kept').checked,cap=parseCents(val('kept-limit'));
+  document.querySelector('#kept-limit-setting').hidden=!kept;
+  const maxBalance=Math.max(0,...(s.kept?.contacts||[]).map(c=>c.balance));
+  const error=!kept&&maxBalance>0?'Clear kept change balances before switching this off.':
+    kept&&(cap===null||cap<=0||cap<maxBalance)?'Enter a limit above zero, at least as much as the largest balance.':'';
+  document.querySelector('#kept-setting-error').textContent=error;
+  enable('save-settings',(!multi||validAmount('shop-rate'))&&!error);
 };
 actions['save-settings']=()=>{
+  inputActions.settings();if(document.querySelector('[data-action="save-settings"]').disabled)return;
   s.features={credit:document.querySelector('#feature-credit').checked,
+    kept:document.querySelector('#feature-kept').checked,
     mobile:document.querySelector('#feature-mobile').checked,
     multi:s.currency==='USD'&&document.querySelector('#feature-multi').checked};
   if(s.currency==='USD')s.rateMinor=parseCents(val('shop-rate'));
+  if(s.features.kept)keptState().cap=parseCents(val('kept-limit'));
   record('Optional features updated');navigate('shop');toast('Preferences saved');
-};
-screens.fiscal=()=>{
-  screen.innerHTML=heading('Fiscal receipts.','Optional · Separate from saving a sale.','settings')+
-    line('Status','Not configured')+line('Device','One fiscal device per phone')+
-    note('The business uses its own ZIMRA credentials and completes ZIMRA’s onboarding. No certification or acceptance is implied here.')+
-    '<p class="sub">Production setup needs separate test and live environments, fiscal-day status, rejected-receipt recovery and device replacement screens. This optional integration is deferred.</p>';
-  primary('settings','Back to preferences');
 };
 screens.help=()=>{
   screen.innerHTML=heading('A little help.','The everyday basics.','shop')+

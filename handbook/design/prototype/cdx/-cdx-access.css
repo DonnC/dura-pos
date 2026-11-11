@@ -1,0 +1,12 @@
+.access-layout section{min-width:0}.access-layout .ledger-row{gap:12px}
+.access-layout .micro{line-height:1.6;margin:12px 0}.access-layout>.section-title{margin-top:12px}
+.access-layout .toggle-row{padding:14px 0}
+.access-layout .section-title:first-child{margin-top:12px}
+.access-supervision{padding:12px 16px;background:var(--soft);border-left:3px solid var(--brand);
+  font-size:.8125rem;line-height:1.5;margin-bottom:16px}
+@media(min-width:900px){
+  .app[data-page^=access-] .page-content,.app[data-page=my-access] .page-content,
+  .app[data-page=staff] .page-content,.app[data-page=people] .page-content{max-width:960px}
+  .access-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+  .large .access-layout{display:block}
+}

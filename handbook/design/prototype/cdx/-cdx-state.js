@@ -32,8 +32,12 @@ if(q.get('seed')==='1')s.basket={bread:2,milk:1};
 if(q.get('features')==='1')s.features={credit:true,mobile:true,multi:true};
 const screens={},actions={},inputActions={};
 const ownerScreens=new Set(['receive','stock-count','product-edit','customers',
-  'customer','suppliers','records','export','people','staff','pair','settings','setup','reports',
-  'connect','restore','fiscal']);
+  'invoice-items','invoice-payment','invoice-review','invoice-detail',
+  'customer','suppliers','supplier-statement','records','export','people','staff','pair','settings','setup','reports',
+  'connect','restore','fiscal','access-review','access-status','access-remove',
+  'report-sales','report-cash','report-coverage','connection-review','connection-status',
+  'pair-code','restore-review','restore-status','lost-phone','fiscal-setup',
+  'fiscal-owner-review','fiscal-day','fiscal-close','fiscal-device']);
 let page=q.get('screen')||'sell',demoState=q.get('state')||'populated';
 let offline=q.get('offline')==='1',category='Favourites',search='',selectedId='bread';
 let received=q.get('cash')==='500'?'5.00':'',undoBasket,toastTimer,draft={},lastSale=s.last;
@@ -44,8 +48,8 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,c=>
   ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=(cents,currency=s.currency)=>`${currency} ${(cents/100).toFixed(2)}`;
 const basketRows=()=>products().filter(p=>s.basket[p.id]>0);
-const total=()=>basketRows().reduce((sum,p)=>sum+p.cents*s.basket[p.id],0);
-const count=()=>basketRows().reduce((sum,p)=>sum+s.basket[p.id],0);
+const total=()=>basketRows().reduce((sum,p)=>sum+lineAmount(p,s.basket[p.id]),0);
+const count=()=>basketRows().reduce((sum,p)=>sum+(p.scale?1:s.basket[p.id]),0);
 const btn=(action,label,cls='secondary',extra='')=>
   `<button class="${cls}" data-action="${action}" ${extra}>${label}</button>`;
 const line=(title,value,sub='')=>`<div class="ledger-row"><div>${title}
@@ -69,8 +73,14 @@ const parseCents=value=>{
 };
 const validAmount=id=>{const n=parseCents(val(id));return n!==null&&n>0;};
 function save(){
+  if(typeof clearStaleCashDraft==='function')clearStaleCashDraft();
+  // A customer/payment draft must not follow a changed or held basket.
+  if(s.keptCheckout&&s.keptCheckout.basket!==keptBasketKey())s.keptCheckout=null;
   s.history=s.history.slice(0,30);s.events=s.events.slice(0,50);s.held=s.held.slice(0,3);
   s.refunds=(s.refunds||[]).filter(id=>id==='T-P1-S261110-0008'||s.history.some(r=>r.id===id));
+  const retained=new Set(['T-P1-S261110-0008',...s.history.map(r=>r.id)]);
+  if(s.returnTotals)for(const id of Object.keys(s.returnTotals))if(!retained.has(id))delete s.returnTotals[id];
+  if(s.partialReturns)s.partialReturns=s.partialReturns.filter(r=>retained.has(r.sale)).slice(0,30);
   try{localStorage.setItem(storageKey,JSON.stringify(s));}catch{
     toast('Browser storage unavailable. Keep this practice session open.');
   }
@@ -94,13 +104,17 @@ function showSheet(title,body,footer=''){
   sheet.showModal();
 }
 function result(title,body,next,label){
-  screen.innerHTML=`<div class="result-top"><div class="success-icon">${icon('check')}</div>
-    <p class="eyebrow">Practice record saved on this phone</p><h1>${title}</h1></div>${body}`;
+  screen.innerHTML=`<div class="page-content"><div class="result-top"><div class="success-icon">${icon('check')}</div>
+    <p class="eyebrow">Practice record saved on this phone</p><h1>${title}</h1></div>${body}</div>`;
   primary(next,label);
 }
 function enable(action,yes){const el=document.querySelector(`[data-action="${action}"]`);
   if(el)el.disabled=!yes;}
-function summaryRows(items){return items.map(p=>line(esc(p.name),money(p.cents*p.qty),
-  `${p.qty} × ${esc(p.unit)} · ${money(p.cents)} each`)).join('');}
-function saleSnapshot(){return basketRows().map(p=>({...p,qty:s.basket[p.id]}));}
+function summaryRows(items){return items.map(p=>line(esc(p.name),money(p.lineTotal??lineAmount(p,p.qty)),
+  `${esc(quantityText(p,p.qty))} · ${money(p.cents)} per ${esc(p.unit)}`)).join('');}
+function saleSnapshot(){return basketRows().map(p=>({...p,qty:s.basket[p.id],lineTotal:lineAmount(p,s.basket[p.id])}));}
 function resetBasket(){undoBasket={...s.basket};s.basket={};save();}
+function stockMove(id,label,delta,after){
+  s.movements=s.movements||[];s.movements.push({id,label,delta,after,who:s.name});
+  s.movements=s.movements.slice(-60);
+}

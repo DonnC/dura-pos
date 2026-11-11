@@ -35,9 +35,10 @@ function drawCatalog(){
   const matches=products().filter((p,i)=>(search||category!=='Favourites'||i<4)&&
     (!['Food','Drinks'].includes(category)||p.cat===category)&&
     p.name.toLowerCase().includes(search.toLowerCase()));
+  el.classList.toggle('many-products',matches.length>4);
   el.innerHTML=matches.map(p=>`<button class="product ${s.basket[p.id]?'selected':''}"
     data-action="add" data-id="${p.id}" aria-label="Add ${esc(p.name)}, ${money(p.cents)}, ${esc(p.unit)}">
-    <div class="art">${art(p.id)}</div>${s.basket[p.id]?`<span class="count">${s.basket[p.id]}</span>`:''}
+    <div class="art">${art(p.id)}</div>${s.basket[p.id]?`<span class="count">${p.scale?quantityText(p,s.basket[p.id]):s.basket[p.id]}</span>`:''}
     <div class="product-text"><span class="product-name">${esc(p.name)}</span>
     <span class="unit">${esc(p.unit)}</span><span class="price">${money(p.cents)}</span></div>
     <span class="add">${icon('plus')}</span></button>`).join('')||
@@ -51,7 +52,9 @@ function drawBasket(){
     btn(s.active?'pay':'opening',`<span>${s.active?'Take payment':'Open till'} ${icon('arrow')}</span>
     <span class="total">${money(total())}</span>`,'primary',s.active&&!count()?'disabled':'');
 }
-actions.add=b=>{const id=b.dataset.id;s.basket[id]=Math.min(99,(s.basket[id]||0)+1);
+actions.add=b=>{const id=b.dataset.id;
+  if(products().find(p=>p.id===id)?.scale){selectedId=id;navigate('quantity');return;}
+  s.basket[id]=Math.min(99,(s.basket[id]||0)+1);
   save();drawCatalog();drawBasket();toast('Added to basket');};
 actions.category=b=>{category=b.dataset.category;screens.sell();};
 actions['clear-search']=()=>{search='';category='All items';screens.sell();};
@@ -64,9 +67,10 @@ actions['sale-options']=()=>showSheet('This sale',
     menu('clear-basket','Clear this basket','Undo is available','close'):''));
 actions.basket=()=>showSheet('Your basket',basketRows().map(p=>
   `<div class="ledger-row"><div class="grow"><strong>${esc(p.name)}</strong>
-  <small>${money(p.cents)} · ${esc(p.unit)}</small></div><div class="stepper">
+  <small>${money(p.cents)} · ${esc(p.unit)}</small></div>${p.scale?
+  btn('quantity-edit',esc(quantityText(p,s.basket[p.id]))+' · Edit','secondary',`data-id="${p.id}"`):`<div class="stepper">
   ${btn('minus','−','',`data-id="${p.id}" aria-label="Remove one ${esc(p.name)}"`)}
-  <span>${s.basket[p.id]}</span>${btn('plus','+','',`data-id="${p.id}" aria-label="Add one ${esc(p.name)}"`)}</div></div>`
+  <span>${p.scale?quantityText(p,s.basket[p.id]):s.basket[p.id]}</span>${btn('plus','+','',`data-id="${p.id}" aria-label="Add one ${esc(p.name)}"`)}</div>`}</div>`
   ).join('')+line('Total',money(total()))+
   (count()?btn('hold','Hold sale','text-button'):'<p class="sub">Add a product to start.</p>'),
   (undoBasket?btn('undo','Undo last quantity change','text-button full'):'')+
@@ -121,16 +125,20 @@ screens.pay=()=>{
       .map(n=>btn('tender',n===total()?'Exact':money(n),'',`data-cents="${n}"`)).join('')}</div>
     <div id="payment-error" class="error" role="alert"></div>
     <div class="change row" id="change-copy"><span>Change to give</span><strong id="change">${money(0)}</strong></div>
-    ${s.features.credit?btn('credit','Put on a customer’s account','text-button full'):''}
+    ${s.features.kept&&staffPermission('kept')?'<div class="kept-options">'+btn('kept-checkout','Use a customer’s kept change','secondary full')+
+      btn('kept-keep','Keep this change','text-button full')+'</div>':''}
+    ${s.features.credit&&staffPermission('credit')?btn('credit','Put on a customer’s account','text-button full'):''}
     ${s.features.multi&&s.currency==='USD'?btn('mixed','Pay with USD + ZWG','text-button full'):''}`;
   primary('complete','Save practice sale');updateChange();
 };
 function updateChange(){
   const n=parseCents(received),short=n!==null&&n<total();
+  document.querySelector('#received').setAttribute('aria-invalid',String(!!received&&(n===null||short)));
   document.querySelector('#change').textContent=money(Math.max(0,(n||0)-total()));
   document.querySelector('#payment-error').textContent=short?`${money(total()-n)} still needed`:
     received&&n===null?'Use an amount with up to two decimal places.':'';
   enable('complete',n!==null&&!short);
+  if(s.features.kept)enable('kept-keep',n!==null&&n>total());
 }
 inputActions.pay=el=>{if(el.id==='received'){received=el.value;updateChange();}};
 actions.tender=b=>{received=(Number(b.dataset.cents)/100).toFixed(2);
@@ -143,10 +151,13 @@ function completeSale(method,tender,cashDelta,extra={}){
   lastSale={id:`T-P1-S261110-${String(s.saleSeq).padStart(4,'0')}`,
     items:saleSnapshot(),amount,received:tender,change:method==='Cash'?tender-amount:0,
     method,who:s.name,status:'Saved on phone',currency:s.currency,...extra};
-  if(method==='On account'){lastSale.customer='Tariro';s.owed+=amount;}
+  if(method==='On account'){lastSale.customer='Tariro';s.owed+=amount;
+    accountMove('customer','Sale on account',amount,lastSale.id);}
   s.cash+=cashDelta;s.sales+=amount;s.saleCount++;
-  for(const p of basketRows())if(p.stock!==null)p.stock-=s.basket[p.id];
-  s.history.unshift(lastSale);s.last=lastSale;s.basket={};received='';save();navigate('done');
+  for(const p of basketRows())if(p.stock!==null){p.stock-=s.basket[p.id];
+    stockMove(p.id,'Sale',-s.basket[p.id],p.stock);}
+  s.history.unshift(lastSale);s.last=lastSale;s.basket={};s.keptCheckout=null;
+  received='';save();navigate('done');
 }
 screens.done=()=>{
   if(!lastSale){navigate('history');return;}
@@ -156,7 +167,7 @@ screens.done=()=>{
     <div class="change"><p class="micro">${lastSale.method==='Cash'?'CHANGE TO GIVE':'SALE TOTAL'}</p>
     <div class="amount-due">${money(lastSale.method==='Cash'?lastSale.change:lastSale.amount)}</div></div>
     <div class="receipt-details">${line('Sale total',money(lastSale.amount))}
-    ${line('Payment',esc(lastSale.method))}</div></section>
+    ${line('Payment',esc(lastSale.method))}${keptReceiptRows(lastSale)}</div></section>
     <p class="status-line">${icon('check')}Saved on this phone · Practice</p>
     <p class="status-line wait">${icon('clock')}Not uploaded · No fiscal receipt issued</p>
     ${btn('receipt','View receipt','secondary full')}`;

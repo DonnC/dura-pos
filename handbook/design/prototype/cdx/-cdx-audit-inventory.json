@@ -1,0 +1,890 @@
+{
+  "date": "2026-11-11",
+  "scope": "HTML design sandbox; base-route inventory, not all state variants",
+  "screens": [
+    {
+      "route": "access-expired",
+      "title": "Owner check needed.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Owner checks this phone"
+      ]
+    },
+    {
+      "route": "access-limited",
+      "title": "Ask the owner.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Pay with cash instead"
+      ]
+    },
+    {
+      "route": "access-recovery",
+      "title": "Owner check.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Approve one offline shift"
+      ]
+    },
+    {
+      "route": "access-remove",
+      "title": "Remove selling access?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Remove practice selling access"
+      ]
+    },
+    {
+      "route": "access-removed",
+      "title": "Selling access removed.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Owner takes over"
+      ]
+    },
+    {
+      "route": "access-review",
+      "title": "Check seller access.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save practice access"
+      ]
+    },
+    {
+      "route": "access-status",
+      "title": "Access update.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to people & phones"
+      ]
+    },
+    {
+      "route": "cashup",
+      "title": "Count your cash.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review cash-up"
+      ]
+    },
+    {
+      "route": "connect",
+      "title": "Keep your records together.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Choose the shop’s account"
+      ]
+    },
+    {
+      "route": "connection-review",
+      "title": "Check the shop account.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview connection checks"
+      ]
+    },
+    {
+      "route": "connection-status",
+      "title": "Example connection ready.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview adding another phone"
+      ]
+    },
+    {
+      "route": "count-review",
+      "title": "Check your cash-up.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Close my shift"
+      ]
+    },
+    {
+      "route": "count-stock-review",
+      "title": "Review the count.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save stock count"
+      ]
+    },
+    {
+      "route": "credit",
+      "title": "Put it on account.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save on account"
+      ]
+    },
+    {
+      "route": "customer",
+      "title": "Tariro.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review payment"
+      ]
+    },
+    {
+      "route": "customers",
+      "title": "Customers.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "done",
+      "title": "All sorted.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Next customer"
+      ]
+    },
+    {
+      "route": "expense",
+      "title": "Record money out.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review money out"
+      ]
+    },
+    {
+      "route": "expense-review",
+      "title": "Check money out.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save money out"
+      ]
+    },
+    {
+      "route": "export",
+      "title": "Export records.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review export contents"
+      ]
+    },
+    {
+      "route": "first-product",
+      "title": "What do you sell?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Start my practice shop"
+      ]
+    },
+    {
+      "route": "fiscal",
+      "title": "Fiscal receipt status.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "View receipt status"
+      ]
+    },
+    {
+      "route": "fiscal-check",
+      "title": "Check the existing result.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Show example answer"
+      ]
+    },
+    {
+      "route": "fiscal-close",
+      "title": "Check the fiscal-day close.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review outstanding receipts"
+      ]
+    },
+    {
+      "route": "fiscal-day",
+      "title": "This fiscal day.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review fiscal-day close"
+      ]
+    },
+    {
+      "route": "fiscal-device",
+      "title": "This fiscal device.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to fiscal status"
+      ]
+    },
+    {
+      "route": "fiscal-owner-review",
+      "title": "Review the receipt issue.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview checking the same reference"
+      ]
+    },
+    {
+      "route": "fiscal-queue",
+      "title": "Fiscal receipt queue.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to till"
+      ]
+    },
+    {
+      "route": "fiscal-receipt",
+      "title": "Result not confirmed.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check this existing reference"
+      ]
+    },
+    {
+      "route": "fiscal-setup",
+      "title": "Start with a test device.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview test-device status"
+      ]
+    },
+    {
+      "route": "handover",
+      "title": "Shift closed.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Hand over this till"
+      ]
+    },
+    {
+      "route": "help",
+      "title": "A little help.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to selling"
+      ]
+    },
+    {
+      "route": "history",
+      "title": "Recent sales.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "invoice-detail",
+      "title": "No invoices yet.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Add purchase invoice"
+      ]
+    },
+    {
+      "route": "invoice-items",
+      "title": "Items received.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Continue to payment"
+      ]
+    },
+    {
+      "route": "invoice-payment",
+      "title": "How is it paid?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review invoice"
+      ]
+    },
+    {
+      "route": "invoice-review",
+      "title": "Check the delivery.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save practice invoice"
+      ]
+    },
+    {
+      "route": "join",
+      "title": "Join your shop.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview an example scan"
+      ]
+    },
+    {
+      "route": "join-review",
+      "title": "Is this the right shop?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview joining this shop"
+      ]
+    },
+    {
+      "route": "join-status",
+      "title": "Example phone joined.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Finish preview · Back to selling"
+      ]
+    },
+    {
+      "route": "kept-account",
+      "title": "Tariro’s change.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Use with current basket"
+      ]
+    },
+    {
+      "route": "kept-checkout",
+      "title": "Use kept change.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save practice sale"
+      ]
+    },
+    {
+      "route": "kept-customers",
+      "title": "Kept change.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "kept-keep",
+      "title": "Keep this change.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save sale & keep change"
+      ]
+    },
+    {
+      "route": "kept-refund",
+      "title": "Give cash back.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review cash back"
+      ]
+    },
+    {
+      "route": "kept-refund-review",
+      "title": "Check cash back.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Approve & save cash back"
+      ]
+    },
+    {
+      "route": "locked",
+      "title": "Your till is locked.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Unlock Dura"
+      ]
+    },
+    {
+      "route": "lost-phone",
+      "title": "Review the lost phone.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview a device block request"
+      ]
+    },
+    {
+      "route": "mixed",
+      "title": "USD + ZWG cash.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save split payment"
+      ]
+    },
+    {
+      "route": "mobile",
+      "title": "Mobile money.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Request practice payment"
+      ]
+    },
+    {
+      "route": "money",
+      "title": "Your money.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Cash up this till"
+      ]
+    },
+    {
+      "route": "my-access",
+      "title": "My access.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to selling"
+      ]
+    },
+    {
+      "route": "opening",
+      "title": "Open your till.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Open till"
+      ]
+    },
+    {
+      "route": "pair",
+      "title": "Add a shop phone.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Show example pairing code"
+      ]
+    },
+    {
+      "route": "pair-code",
+      "title": "Scan from the new phone.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Preview the new phone scanning"
+      ]
+    },
+    {
+      "route": "pay",
+      "title": "Take payment",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save practice sale"
+      ]
+    },
+    {
+      "route": "pending",
+      "title": "Waiting for payment.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check payment"
+      ]
+    },
+    {
+      "route": "people",
+      "title": "People & phones.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "print",
+      "title": "Print receipt.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Find a printer"
+      ]
+    },
+    {
+      "route": "product",
+      "title": "Bread",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Receive this product"
+      ]
+    },
+    {
+      "route": "product-edit",
+      "title": "Edit product.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save product"
+      ]
+    },
+    {
+      "route": "quantity",
+      "title": "How much rice?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Add to basket"
+      ]
+    },
+    {
+      "route": "quick",
+      "title": "An unlisted item.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Add to basket"
+      ]
+    },
+    {
+      "route": "receipt",
+      "title": "Sale receipt.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "receive",
+      "title": "Receive stock.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review stock received"
+      ]
+    },
+    {
+      "route": "receive-review",
+      "title": "Check the delivery.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save stock received"
+      ]
+    },
+    {
+      "route": "records",
+      "title": "Your records.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "refund",
+      "title": "Return this sale.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review return"
+      ]
+    },
+    {
+      "route": "refund-review",
+      "title": "Approve the return.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Approve & save return"
+      ]
+    },
+    {
+      "route": "report-cash",
+      "title": "What cash is expected?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to report"
+      ]
+    },
+    {
+      "route": "report-coverage",
+      "title": "What is included?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Back to report"
+      ]
+    },
+    {
+      "route": "report-sales",
+      "title": "Sales & returns.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Check included records"
+      ]
+    },
+    {
+      "route": "reports",
+      "title": "How is the shop doing?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "View sales breakdown"
+      ]
+    },
+    {
+      "route": "restore",
+      "title": "Recover onto a new phone.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review example recovery"
+      ]
+    },
+    {
+      "route": "restore-review",
+      "title": "Check what comes back.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Confirm the note below"
+      ]
+    },
+    {
+      "route": "restore-status",
+      "title": "Example recovery ready.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Finish preview · View records"
+      ]
+    },
+    {
+      "route": "return-items",
+      "title": "What came back?",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Enter a return quantity"
+      ]
+    },
+    {
+      "route": "return-review",
+      "title": "Check the return.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Approve & save return"
+      ]
+    },
+    {
+      "route": "sell",
+      "title": "Let’s sell.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Take payment \n    USD 3.50"
+      ]
+    },
+    {
+      "route": "settings",
+      "title": "Set up when needed.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Save preferences"
+      ]
+    },
+    {
+      "route": "setup",
+      "title": "Make it your shop.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Add my first product"
+      ]
+    },
+    {
+      "route": "shop",
+      "title": "My shop.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "staff",
+      "title": "Rudo’s access.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review access"
+      ]
+    },
+    {
+      "route": "stock",
+      "title": "Your stock.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Receive stock"
+      ]
+    },
+    {
+      "route": "stock-count",
+      "title": "Count the shelf.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Review count"
+      ]
+    },
+    {
+      "route": "supplier-statement",
+      "title": "Mambo Wholesale.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Record a supplier payment"
+      ]
+    },
+    {
+      "route": "suppliers",
+      "title": "Suppliers.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": []
+    },
+    {
+      "route": "switch-person",
+      "title": "Pass the till on.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Count and close this shift"
+      ]
+    },
+    {
+      "route": "sync",
+      "title": "Saved here. Shared later.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Keep selling"
+      ]
+    },
+    {
+      "route": "welcome",
+      "title": "Your shop.Your own way.",
+      "small": [],
+      "unlabelled": [],
+      "overflow": false,
+      "primary": [
+        "Set up my shop"
+      ]
+    }
+  ]
+}

@@ -7,6 +7,8 @@
 import 'package:flutter/material.dart';
 
 /// Brand colours are defined here; widgets consume semantic theme colours.
+///
+/// The values follow the Counter design (`handbook/design/prototype/cdx`).
 abstract final class DuraPalette {
   static const transparent = Color(0x00000000);
   static const ink = Color(0xff252525);
@@ -22,6 +24,10 @@ abstract final class DuraPalette {
   static const error = Color(0xff9d2440);
   static const errorContainer = Color(0xffffe1e8);
   static const onErrorContainer = Color(0xff410018);
+  static const warn = Color(0xfff8eed9);
+  static const warnInk = Color(0xff745014);
+  static const summaryMuted = Color(0xffe6ddd3);
+  static const scrim = Color(0x66252525);
 
   static const darkSurface = Color(0xff1e1d1b);
   static const darkSoft = Color(0xff302d29);
@@ -32,4 +38,6 @@ abstract final class DuraPalette {
   static const darkAccentContainer = Color(0xff5a251b);
   static const darkError = Color(0xffffb3c5);
   static const darkErrorContainer = Color(0xff5d102b);
+  static const darkWarn = Color(0xff392f20);
+  static const darkWarnInk = Color(0xffefd197);
 }

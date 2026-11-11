@@ -12,7 +12,9 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  leak_tracker_flutter_testing: ^3.0.10
 
 flutter:
+  uses-material-design: true
   assets:
     - assets/fonts/

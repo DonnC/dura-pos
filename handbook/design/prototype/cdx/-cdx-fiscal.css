@@ -1,0 +1,10 @@
+.fiscal-layout section{min-width:0}.fiscal-layout .ledger-row{gap:12px;padding:13px 0}
+.fiscal-layout .section-title:first-child{margin-top:12px}
+.fiscal-layout .sub{line-height:1.65}.fiscal-layout .micro{margin:10px 0;line-height:1.6}
+#fiscal-queue-list{margin-top:12px}
+@media(min-width:900px){
+  .app[data-page=fiscal] .page-content,.app[data-page^=fiscal-] .page-content{max-width:960px}
+  .fiscal-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+  .fiscal-layout .form-label:first-child{margin-top:0}
+  .large .fiscal-layout{display:block}
+}

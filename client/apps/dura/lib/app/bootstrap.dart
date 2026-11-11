@@ -16,14 +16,20 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../features/diagnostics/diagnostic_providers.dart';
+import '../features/diagnostics/usage_recording.dart';
+import 'analytics_provider.dart';
 import 'app_copy.dart';
 import 'app_storage.dart';
+import 'app_version.dart';
 import 'dura_app.dart';
+import 'preference_store_provider.dart';
 
 Future<void> bootstrap({
   DiagnosticPolicy diagnosticPolicy = const DiagnosticPolicy.fromEnvironment(),
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Whatever opens before a failure is closed again, newest first.
+  final opened = <Future<void> Function()>[];
   try {
     diagnosticPolicy.validate();
     await DuraTheme.prepareFonts();
@@ -32,27 +38,53 @@ Future<void> bootstrap({
       Directory('${support.path}/${DiagnosticPolicy.logDirectory}'),
       policy: diagnosticPolicy,
     );
+    opened.add(logs.close);
+    // Bootstrap owns this connection for the app's lifetime; features that
+    // need their own tables open them through their own providers.
     final database = LocalDatabase.open(
       File('${support.path}/${AppStorage.databaseFile}'),
     );
-    try {
-      await SqlitePreferences(database).read(AppStorage.themeKey);
-    } finally {
-      // This bootstrap probe owns its connection; features will own theirs.
-      await database.close();
-    }
-    await logs.record('app.started');
+    opened.add(database.close);
+    final preferences = SqlitePreferences(database);
+    final recording =
+        await preferences.read(AppStorage.usageRecordingKey) != AppStorage.off;
+    final usage = RotatingAnalytics(
+      Directory('${support.path}/${RotatingAnalytics.directoryName}'),
+      enabled: recording,
+    );
+    opened.add(usage.close);
+    final version = {
+      'appVersion': AppVersion.version,
+      'buildNumber': AppVersion.build,
+    };
+    await logs.record(
+      'app.started',
+      fields: {
+        ...version,
+        'schemaVersion': database.schemaVersion,
+        'os': Platform.operatingSystem,
+      },
+    );
+    unawaited(usage.track(AnalyticsEvents.appOpened, fields: version));
+    void quietly(Future<void> Function() close) =>
+        unawaited(close().catchError((Object _, StackTrace _) {}));
     runApp(
       ProviderScope(
         overrides: [
           diagnosticStoreProvider.overrideWith((ref) {
-            ref.onDispose(
-              () => unawaited(
-                logs.close().catchError((Object _, StackTrace _) {}),
-              ),
-            );
+            ref.onDispose(() => quietly(logs.close));
             return logs;
           }),
+          preferenceStoreProvider.overrideWith((ref) {
+            ref.onDispose(() => quietly(database.close));
+            return preferences;
+          }),
+          analyticsProvider.overrideWith((ref) {
+            ref.onDispose(() => quietly(usage.close));
+            return usage;
+          }),
+          usageRecordingStartProvider.overrideWithValue(recording),
+          usageSwitchProvider.overrideWithValue((on) => usage.enabled = on),
           diagnosticPolicyProvider.overrideWithValue(diagnosticPolicy),
           shareArchiveProvider.overrideWithValue((archive) async {
             await SharePlus.instance.share(
@@ -64,14 +96,21 @@ Future<void> bootstrap({
       ),
     );
   } on Object {
+    // A failed start releases what it opened before showing the message.
+    for (final close in opened.reversed) {
+      await close().catchError((Object _, StackTrace _) {});
+    }
     runApp(
-      const MaterialApp(
+      MaterialApp(
+        theme: DuraTheme.light,
         home: Scaffold(
           body: SafeArea(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(DuraSpacing.large),
-                child: Text(AppCopy.startupFailed),
+            child: Builder(
+              builder: (context) => Center(
+                child: Padding(
+                  padding: EdgeInsets.all(context.dura.space.xl),
+                  child: const Text(AppCopy.startupFailed),
+                ),
               ),
             ),
           ),

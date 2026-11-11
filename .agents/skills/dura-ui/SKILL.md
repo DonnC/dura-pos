@@ -14,6 +14,20 @@ description: Create or modify Dura POS Flutter screens and reusable components w
 
 ## Rules
 
+- **The Counter design is the reference** (`handbook/design/prototype/cdx`,
+  decision 0012). Build a screen from its tracker row in
+  `handbook/design/ui-tracker.md`, and tick the row in the same change.
+  `melos run check` fails when the tracker and the code disagree.
+- **Screens use `dura_ui` components, never Material's widgets directly.**
+  A component is a thin wrapper around a standard Flutter widget, so focus,
+  keyboard and screen-reader behaviour stay native. Every value comes from
+  `context.dura` (colours, spacing, corners, sizes, text); no literal sizes,
+  colours or text styles in a widget.
+- **Responsive by window size, never platform:** `DuraWindow`, `DuraPage` and
+  `LayoutBuilder`; read `MediaQuery.sizeOf`, not `MediaQuery.of`. Check 320
+  wide, 200% text and a tablet-width window.
+- **A new screen** gets a `TrackedScreen` entry with its tracker ID, which
+  also names it in usage records and problem reports.
 - **Reuse before creating.** Don't scatter new text fields, dropdowns or
   dialogs. Extend focused components by composition, not by building one
   giant configurable field.

@@ -14,16 +14,6 @@ screens.welcome=()=>{
     ${btn('join','Join an existing shop','text-button full')}`;
   primary('setup','Set up my shop');
 };
-screens.join=()=>{
-  screen.innerHTML=heading('Join your shop.','Ask the owner to open People & phones → Pair a phone.','welcome')+
-    `<div class="scan-frame">${icon('scan')}</div><h2 class="center">Scan the owner’s code</h2>`+
-    '<p class="sub center">The code connects this phone to the right shop. You do not need your own email account.</p>'+
-    note('Pairing and camera access are previewed here. No phone is actually paired.');
-  primary('join-practice','Try the seller’s practice till');
-};
-actions['join-practice']=()=>{
-  s.role='worker';s.name='Rudo';s.active=false;save();navigate('opening');
-};
 screens.setup=()=>{
   screen.innerHTML=heading('Make it your shop.','Step 1 of 2 · The essentials','welcome')+
     field('setup-name','Shop name',draft.setupName||'','maxlength="60" placeholder="e.g. Chipo’s corner shop"')+
@@ -53,6 +43,14 @@ actions['first-save']=()=>{
     stock:null,stockUnit:'packs',cat:'Food'}];
   s.active=false;s.cash=0;s.zwg=0;s.sales=0;s.saleCount=0;s.saleSeq=0;s.owed=0;s.supplier=0;s.pending=[];
   s.history=[];s.basket={};s.held=[];s.events=[];s.seedDay=false;
+  s.movements=[];s.accounts={customer:{opening:0,moves:[]},supplier:{opening:0,moves:[]}};
+  s.invoiceDraft=null;s.invoices=[];
+  delete s.kept;delete s.keptCheckout;delete s.keptRefund;delete s.keptSelected;
+  delete s.fiscalDemo;
+  delete s.reviewDrafts;delete s.lastHandover;
+  delete s.reportFilter;delete s.recoveryDemo;
+  delete s.staffAccess;delete s.staffAccessDraft;delete s.staffActor;
+  delete s.quantityDraft;delete s.returnDraft;delete s.returnTotals;delete s.partialReturns;delete s.returnSeq;
   s.features={credit:false,mobile:false,multi:false};s.last=null;s.refunds=[];
   save();navigate('opening');
 };

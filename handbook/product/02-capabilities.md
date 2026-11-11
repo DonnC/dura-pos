@@ -20,9 +20,10 @@ and the code.
 | Capability | Status | Phase | Design |
 |---|---|---|---|
 | Flutter workspace, CI, release tooling, licence headers | Built | 1 | [`../engineering/05-delivery.md`](../engineering/05-delivery.md) |
-| Shared theme and controls (`dura_ui`), golden tests | Built | 1 | [`../engineering/01-architecture.md`](../engineering/01-architecture.md) |
+| Shared theme tokens and components (`dura_ui`) for the Counter design: wrappers around Flutter's widgets, responsive from phone to computer, golden and leak tests | Built: 17 components; the rest are listed in the [tracker](../design/ui-tracker.md) | 1, 2 | [decision 0012](../decisions/0012-counter-design-and-ui-foundation.md) |
+| App shell: shop header, Sell, Stock, Money and My shop (My till and Me for a seller), bottom bar or side rail | Built; the tabs are shells until their phases | 1 | [`../design/ui-tracker.md`](../design/ui-tracker.md) |
 | Local preferences (Drift) | Built | 1 | [`../decisions/0001-foundation.md`](../decisions/0001-foundation.md) |
-| On-device diagnostics: rotating, redacted logs; ZIP shared by the owner | Built | 1 | [`../engineering/07-coding-and-diagnostics.md`](../engineering/07-coding-and-diagnostics.md) |
+| On-device diagnostics: rotating, redacted logs with each error's code frames, screen and recent screens; ZIP shared by the owner | Built | 1 | [`../engineering/07-coding-and-diagnostics.md`](../engineering/07-coding-and-diagnostics.md) |
 | Report a problem, with logs attached automatically | Partly built: the operation exists; no screen or transport yet | 1, 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
 
 ## Selling (the core)
@@ -84,7 +85,8 @@ and the code.
 | A public one-page shop page from the hub: contacts and a price list, which the owner can turn off | Partly built: in the hub, and served by Google; buttons not yet checked on a phone | 6 | [decision 0009](../decisions/0009-shop-page.md) |
 | Manual payment references (bank transfer, wallets without an API) | Designed | 2, 6 | [`notes/10`](../../notes/10-build-plan.md) §5 |
 | Provider settlement matching (gross, fees, payouts) | Planned | 6 | [`../engineering/03-records-and-sheets.md`](../engineering/03-records-and-sheets.md) |
-| Optional Firebase crash and problem reports (never shop data); a build without it | Designed | 7 | [`notes/08`](../../notes/08-change-invoices-suppliers-ux-support.md) |
+| Usage records (screens, actions, timings; never shop data): rotated on the phone, owner can switch off | Built on the phone | 1 | [decision 0012](../decisions/0012-counter-design-and-ui-foundation.md) |
+| Usage records uploaded to the owner's own Drive through the hub, when the owner turns it on | Planned | 6 | [decision 0012](../decisions/0012-counter-design-and-ui-foundation.md) |
 
 ## Later
 

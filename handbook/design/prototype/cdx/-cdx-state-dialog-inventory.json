@@ -1,0 +1,2624 @@
+{
+  "date": "2026-11-11",
+  "scope": "Current cdx prototype only; designed examples, not all possible data values",
+  "routes": [
+    {
+      "route": "access-expired",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=expired&reports=sample&recovery=ready&fiscal=unknown&screen=access-expired&catalog=base-access-expired&role=worker",
+      "title": "Owner check needed.",
+      "verified": true
+    },
+    {
+      "route": "access-limited",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=limited&reports=sample&recovery=ready&fiscal=unknown&screen=access-limited&catalog=base-access-limited&role=worker",
+      "title": "Ask the owner.",
+      "verified": true
+    },
+    {
+      "route": "access-recovery",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=expired&reports=sample&recovery=ready&fiscal=unknown&screen=access-recovery&catalog=base-access-recovery&role=worker",
+      "title": "Owner check.",
+      "verified": true
+    },
+    {
+      "route": "access-remove",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=access-remove&catalog=base-access-remove",
+      "title": "Remove selling access?",
+      "verified": true
+    },
+    {
+      "route": "access-removed",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=removed&reports=sample&recovery=ready&fiscal=unknown&screen=access-removed&catalog=base-access-removed&role=worker",
+      "title": "Selling access removed.",
+      "verified": true
+    },
+    {
+      "route": "access-review",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=access-review&catalog=base-access-review",
+      "title": "Check seller access.",
+      "verified": true
+    },
+    {
+      "route": "access-status",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=access-status&catalog=base-access-status",
+      "title": "Access update.",
+      "verified": true
+    },
+    {
+      "route": "cashup",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=cashup&catalog=base-cashup",
+      "title": "Count your cash.",
+      "verified": true
+    },
+    {
+      "route": "connect",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=connect&catalog=base-connect",
+      "title": "Keep your records together.",
+      "verified": true
+    },
+    {
+      "route": "connection-review",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=connection-review&catalog=base-connection-review",
+      "title": "Check the shop account.",
+      "verified": true
+    },
+    {
+      "route": "connection-status",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=connection-status&catalog=base-connection-status",
+      "title": "Example connection ready.",
+      "verified": true
+    },
+    {
+      "route": "count-review",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-review&catalog=base-count-review",
+      "title": "Check your cash-up.",
+      "verified": true
+    },
+    {
+      "route": "count-stock-review",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-stock-review&catalog=base-count-stock-review",
+      "title": "Review the count.",
+      "verified": true
+    },
+    {
+      "route": "credit",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=credit&catalog=base-credit",
+      "title": "Put it on account.",
+      "verified": true
+    },
+    {
+      "route": "customer",
+      "family": "accounts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=customer&catalog=base-customer",
+      "title": "Tariro.",
+      "verified": true
+    },
+    {
+      "route": "customers",
+      "family": "accounts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=customers&catalog=base-customers",
+      "title": "Customers.",
+      "verified": true
+    },
+    {
+      "route": "done",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=done&catalog=base-done",
+      "title": "All sorted.",
+      "verified": true
+    },
+    {
+      "route": "expense",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense&catalog=base-expense",
+      "title": "Record money out.",
+      "verified": true
+    },
+    {
+      "route": "expense-review",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense-review&catalog=base-expense-review",
+      "title": "Check money out.",
+      "verified": true
+    },
+    {
+      "route": "export",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=export&catalog=base-export",
+      "title": "Export records.",
+      "verified": true
+    },
+    {
+      "route": "first-product",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=first-product&catalog=base-first-product",
+      "title": "What do you sell?",
+      "verified": true
+    },
+    {
+      "route": "fiscal",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal&catalog=base-fiscal",
+      "title": "Fiscal receipt status.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-check",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-check&catalog=base-fiscal-check",
+      "title": "Check the existing result.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-close",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-close&catalog=base-fiscal-close",
+      "title": "Check the fiscal-day close.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-day",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-day&catalog=base-fiscal-day",
+      "title": "This fiscal day.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-device",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-device&catalog=base-fiscal-device",
+      "title": "This fiscal device.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-owner-review",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-owner-review&catalog=base-fiscal-owner-review",
+      "title": "Review the receipt issue.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-queue",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-queue&catalog=base-fiscal-queue",
+      "title": "Fiscal receipt queue.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-receipt",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-receipt&catalog=base-fiscal-receipt",
+      "title": "Result not confirmed.",
+      "verified": true
+    },
+    {
+      "route": "fiscal-setup",
+      "family": "fiscal",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-setup&catalog=base-fiscal-setup",
+      "title": "Start with a test device.",
+      "verified": true
+    },
+    {
+      "route": "handover",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=handover&catalog=base-handover",
+      "title": "Shift closed.",
+      "verified": true
+    },
+    {
+      "route": "help",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=help&catalog=base-help",
+      "title": "A little help.",
+      "verified": true
+    },
+    {
+      "route": "history",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=history&catalog=base-history",
+      "title": "Recent sales.",
+      "verified": true
+    },
+    {
+      "route": "invoice-detail",
+      "family": "invoices",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-detail&catalog=base-invoice-detail",
+      "title": "MW-1042",
+      "verified": true
+    },
+    {
+      "route": "invoice-items",
+      "family": "invoices",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-items&catalog=base-invoice-items",
+      "title": "Items received.",
+      "verified": true
+    },
+    {
+      "route": "invoice-payment",
+      "family": "invoices",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-payment&catalog=base-invoice-payment",
+      "title": "How is it paid?",
+      "verified": true
+    },
+    {
+      "route": "invoice-review",
+      "family": "invoices",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-review&catalog=base-invoice-review",
+      "title": "Check the delivery.",
+      "verified": true
+    },
+    {
+      "route": "join",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=join&catalog=base-join",
+      "title": "Join your shop.",
+      "verified": true
+    },
+    {
+      "route": "join-review",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=join-review&catalog=base-join-review",
+      "title": "Is this the right shop?",
+      "verified": true
+    },
+    {
+      "route": "join-status",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=join-status&catalog=base-join-status",
+      "title": "Example phone joined.",
+      "verified": true
+    },
+    {
+      "route": "kept-account",
+      "family": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-account&catalog=base-kept-account",
+      "title": "Tariro’s change.",
+      "verified": true
+    },
+    {
+      "route": "kept-checkout",
+      "family": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-checkout&catalog=base-kept-checkout",
+      "title": "Use kept change.",
+      "verified": true
+    },
+    {
+      "route": "kept-customers",
+      "family": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-customers&catalog=base-kept-customers",
+      "title": "Kept change.",
+      "verified": true
+    },
+    {
+      "route": "kept-keep",
+      "family": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-keep&catalog=base-kept-keep&cash=500",
+      "title": "Keep this change.",
+      "verified": true
+    },
+    {
+      "route": "kept-refund",
+      "family": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-refund&catalog=base-kept-refund",
+      "title": "Give cash back.",
+      "verified": true
+    },
+    {
+      "route": "kept-refund-review",
+      "family": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-refund-review&catalog=base-kept-refund-review",
+      "title": "Check cash back.",
+      "verified": true
+    },
+    {
+      "route": "locked",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=locked&catalog=base-locked",
+      "title": "Your till is locked.",
+      "verified": true
+    },
+    {
+      "route": "lost-phone",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=lost-phone&catalog=base-lost-phone",
+      "title": "Review the lost phone.",
+      "verified": true
+    },
+    {
+      "route": "mixed",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=mixed&catalog=base-mixed",
+      "title": "USD + ZWG cash.",
+      "verified": true
+    },
+    {
+      "route": "mobile",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=mobile&catalog=base-mobile",
+      "title": "Mobile money.",
+      "verified": true
+    },
+    {
+      "route": "money",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=money&catalog=base-money",
+      "title": "Your money.",
+      "verified": true
+    },
+    {
+      "route": "my-access",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=ss&reports=sample&recovery=ready&fiscal=unknown&screen=my-access&catalog=base-my-access&role=worker",
+      "title": "My access.",
+      "verified": true
+    },
+    {
+      "route": "opening",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=opening&catalog=base-opening",
+      "title": "Open your till.",
+      "verified": true
+    },
+    {
+      "route": "pair",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pair&catalog=base-pair",
+      "title": "Add a shop phone.",
+      "verified": true
+    },
+    {
+      "route": "pair-code",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pair-code&catalog=base-pair-code",
+      "title": "Scan from the new phone.",
+      "verified": true
+    },
+    {
+      "route": "pay",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=base-pay",
+      "title": "Take payment",
+      "verified": true
+    },
+    {
+      "route": "pending",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pending&catalog=base-pending",
+      "title": "Waiting for payment.",
+      "verified": true
+    },
+    {
+      "route": "people",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=people&catalog=base-people",
+      "title": "People & phones.",
+      "verified": true
+    },
+    {
+      "route": "print",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=print&catalog=base-print",
+      "title": "Print receipt.",
+      "verified": true
+    },
+    {
+      "route": "product",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=product&catalog=base-product",
+      "title": "Bread",
+      "verified": true
+    },
+    {
+      "route": "product-edit",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=product-edit&catalog=base-product-edit",
+      "title": "Edit product.",
+      "verified": true
+    },
+    {
+      "route": "quantity",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=quantity&catalog=base-quantity",
+      "title": "How much rice?",
+      "verified": true
+    },
+    {
+      "route": "quick",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=quick&catalog=base-quick",
+      "title": "An unlisted item.",
+      "verified": true
+    },
+    {
+      "route": "receipt",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receipt&catalog=base-receipt",
+      "title": "Sale receipt.",
+      "verified": true
+    },
+    {
+      "route": "receive",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive&catalog=base-receive",
+      "title": "Receive stock.",
+      "verified": true
+    },
+    {
+      "route": "receive-review",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive-review&catalog=base-receive-review",
+      "title": "Check the delivery.",
+      "verified": true
+    },
+    {
+      "route": "records",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=records&catalog=base-records",
+      "title": "Your records.",
+      "verified": true
+    },
+    {
+      "route": "refund",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=refund&catalog=base-refund",
+      "title": "Return this sale.",
+      "verified": true
+    },
+    {
+      "route": "refund-review",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=refund-review&catalog=base-refund-review",
+      "title": "Approve the return.",
+      "verified": true
+    },
+    {
+      "route": "report-cash",
+      "family": "reports",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=report-cash&catalog=base-report-cash",
+      "title": "What cash is expected?",
+      "verified": true
+    },
+    {
+      "route": "report-coverage",
+      "family": "reports",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=report-coverage&catalog=base-report-coverage",
+      "title": "What is included?",
+      "verified": true
+    },
+    {
+      "route": "report-sales",
+      "family": "reports",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=report-sales&catalog=base-report-sales",
+      "title": "Sales & returns.",
+      "verified": true
+    },
+    {
+      "route": "reports",
+      "family": "reports",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=reports&catalog=base-reports",
+      "title": "How is the shop doing?",
+      "verified": true
+    },
+    {
+      "route": "restore",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=restore&catalog=base-restore",
+      "title": "Recover onto a new phone.",
+      "verified": true
+    },
+    {
+      "route": "restore-review",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=restore-review&catalog=base-restore-review",
+      "title": "Check what comes back.",
+      "verified": true
+    },
+    {
+      "route": "restore-status",
+      "family": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=restore-status&catalog=base-restore-status",
+      "title": "Example recovery ready.",
+      "verified": true
+    },
+    {
+      "route": "return-items",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=return-items&catalog=base-return-items",
+      "title": "What came back?",
+      "verified": true
+    },
+    {
+      "route": "return-review",
+      "family": "receipts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=return-review&catalog=base-return-review",
+      "title": "Check the return.",
+      "verified": true
+    },
+    {
+      "route": "sell",
+      "family": "selling",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=base-sell",
+      "title": "Let’s sell.",
+      "verified": true
+    },
+    {
+      "route": "settings",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=settings&catalog=base-settings",
+      "title": "Set up when needed.",
+      "verified": true
+    },
+    {
+      "route": "setup",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=setup&catalog=base-setup",
+      "title": "Make it your shop.",
+      "verified": true
+    },
+    {
+      "route": "shop",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=shop&catalog=base-shop",
+      "title": "My shop.",
+      "verified": true
+    },
+    {
+      "route": "staff",
+      "family": "access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=staff&catalog=base-staff",
+      "title": "Rudo’s access.",
+      "verified": true
+    },
+    {
+      "route": "stock",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock&catalog=base-stock",
+      "title": "Your stock.",
+      "verified": true
+    },
+    {
+      "route": "stock-count",
+      "family": "stock",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock-count&catalog=base-stock-count",
+      "title": "Count the shelf.",
+      "verified": true
+    },
+    {
+      "route": "supplier-statement",
+      "family": "accounts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=supplier-statement&catalog=base-supplier-statement",
+      "title": "Mambo Wholesale.",
+      "verified": true
+    },
+    {
+      "route": "suppliers",
+      "family": "accounts",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=suppliers&catalog=base-suppliers",
+      "title": "Suppliers.",
+      "verified": true
+    },
+    {
+      "route": "switch-person",
+      "family": "till",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=switch-person&catalog=base-switch-person",
+      "title": "Pass the till on.",
+      "verified": true
+    },
+    {
+      "route": "sync",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sync&catalog=base-sync",
+      "title": "Saved here. Shared later.",
+      "verified": true
+    },
+    {
+      "route": "welcome",
+      "family": "shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=welcome&catalog=base-welcome",
+      "title": "Your shop.\nYour own way.",
+      "verified": true
+    }
+  ],
+  "stateExamples": [
+    {
+      "id": "shelf-populated",
+      "family": "shelf",
+      "screen": "sell",
+      "query": "state=populated",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=shelf-populated&state=populated",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "shelf-empty",
+      "family": "shelf",
+      "screen": "sell",
+      "query": "state=empty",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=shelf-empty&state=empty",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "shelf-loading",
+      "family": "shelf",
+      "screen": "sell",
+      "query": "state=loading",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=shelf-loading&state=loading",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "shelf-error",
+      "family": "shelf",
+      "screen": "sell",
+      "query": "state=error",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=shelf-error&state=error",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "shelf-interrupted",
+      "family": "shelf",
+      "screen": "sell",
+      "query": "state=interrupted",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=shelf-interrupted&state=interrupted",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "payment-populated",
+      "family": "payment",
+      "screen": "pending",
+      "query": "state=populated",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pending&catalog=payment-populated&state=populated",
+      "title": "Waiting for payment.",
+      "actualScreen": "pending",
+      "verified": true
+    },
+    {
+      "id": "payment-confirmed",
+      "family": "payment",
+      "screen": "pending",
+      "query": "state=confirmed",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pending&catalog=payment-confirmed&state=confirmed",
+      "title": "Payment confirmed.",
+      "actualScreen": "pending",
+      "verified": true
+    },
+    {
+      "id": "payment-failed",
+      "family": "payment",
+      "screen": "pending",
+      "query": "state=failed",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pending&catalog=payment-failed&state=failed",
+      "title": "Payment failed.",
+      "actualScreen": "pending",
+      "verified": true
+    },
+    {
+      "id": "kept-sample",
+      "family": "kept",
+      "screen": "kept-checkout",
+      "query": "kept=sample",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-checkout&catalog=kept-sample",
+      "title": "Use kept change.",
+      "actualScreen": "kept-checkout",
+      "verified": true
+    },
+    {
+      "id": "kept-stale",
+      "family": "kept",
+      "screen": "kept-checkout",
+      "query": "kept=stale",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=stale&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-checkout&catalog=kept-stale",
+      "title": "Use kept change.",
+      "actualScreen": "kept-checkout",
+      "verified": true
+    },
+    {
+      "id": "access-sample",
+      "family": "access",
+      "screen": "my-access",
+      "query": "access=sample&role=worker",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=my-access&catalog=access-sample&role=worker",
+      "title": "My access.",
+      "actualScreen": "my-access",
+      "verified": true
+    },
+    {
+      "id": "access-expired",
+      "family": "access",
+      "screen": "my-access",
+      "query": "access=expired&role=worker",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=expired&reports=sample&recovery=ready&fiscal=unknown&screen=my-access&catalog=access-expired&role=worker",
+      "title": "My access.",
+      "actualScreen": "my-access",
+      "verified": true
+    },
+    {
+      "id": "access-removed",
+      "family": "access",
+      "screen": "my-access",
+      "query": "access=removed&role=worker",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=removed&reports=sample&recovery=ready&fiscal=unknown&screen=my-access&catalog=access-removed&role=worker",
+      "title": "My access.",
+      "actualScreen": "my-access",
+      "verified": true
+    },
+    {
+      "id": "delivery-pending",
+      "family": "delivery",
+      "screen": "access-status",
+      "query": "access=pending",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=pending&reports=sample&recovery=ready&fiscal=unknown&screen=access-status&catalog=delivery-pending",
+      "title": "Access update.",
+      "actualScreen": "access-status",
+      "verified": true
+    },
+    {
+      "id": "connection-ready",
+      "family": "connection",
+      "screen": "connection-status",
+      "query": "recovery=ready",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=connection-status&catalog=connection-ready",
+      "title": "Example connection ready.",
+      "actualScreen": "connection-status",
+      "verified": true
+    },
+    {
+      "id": "connection-offline",
+      "family": "connection",
+      "screen": "connection-status",
+      "query": "recovery=offline",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=offline&fiscal=unknown&screen=connection-status&catalog=connection-offline",
+      "title": "Connect when you are online.",
+      "actualScreen": "connection-status",
+      "verified": true
+    },
+    {
+      "id": "connection-denied",
+      "family": "connection",
+      "screen": "connection-status",
+      "query": "recovery=denied",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=denied&fiscal=unknown&screen=connection-status&catalog=connection-denied",
+      "title": "Account access not approved.",
+      "actualScreen": "connection-status",
+      "verified": true
+    },
+    {
+      "id": "connection-unknown",
+      "family": "connection",
+      "screen": "connection-status",
+      "query": "recovery=unknown",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=unknown&fiscal=unknown&screen=connection-status&catalog=connection-unknown",
+      "title": "Check the existing setup.",
+      "actualScreen": "connection-status",
+      "verified": true
+    },
+    {
+      "id": "connection-partial",
+      "family": "connection",
+      "screen": "connection-status",
+      "query": "recovery=partial",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=partial&fiscal=unknown&screen=connection-status&catalog=connection-partial",
+      "title": "Some setup is still preparing.",
+      "actualScreen": "connection-status",
+      "verified": true
+    },
+    {
+      "id": "pair-ready",
+      "family": "pair",
+      "screen": "pair-code",
+      "query": "recovery=ready",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pair-code&catalog=pair-ready",
+      "title": "Scan from the new phone.",
+      "actualScreen": "pair-code",
+      "verified": true
+    },
+    {
+      "id": "pair-expired",
+      "family": "pair",
+      "screen": "pair-code",
+      "query": "recovery=expired",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=expired&fiscal=unknown&screen=pair-code&catalog=pair-expired",
+      "title": "Get a fresh pairing code.",
+      "actualScreen": "pair-code",
+      "verified": true
+    },
+    {
+      "id": "pair-used",
+      "family": "pair",
+      "screen": "pair-code",
+      "query": "recovery=used",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=used&fiscal=unknown&screen=pair-code&catalog=pair-used",
+      "title": "Get a fresh pairing code.",
+      "actualScreen": "pair-code",
+      "verified": true
+    },
+    {
+      "id": "join-ready",
+      "family": "join",
+      "screen": "join-review",
+      "query": "recovery=ready",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=join-review&catalog=join-ready",
+      "title": "Is this the right shop?",
+      "actualScreen": "join-review",
+      "verified": true
+    },
+    {
+      "id": "join-offline",
+      "family": "join",
+      "screen": "join-review",
+      "query": "recovery=offline",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=offline&fiscal=unknown&screen=join-review&catalog=join-offline",
+      "title": "Is this the right shop?",
+      "actualScreen": "join-review",
+      "verified": true
+    },
+    {
+      "id": "join-wrong-shop",
+      "family": "join",
+      "screen": "join-review",
+      "query": "recovery=wrong-shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=wrong-shop&fiscal=unknown&screen=join-review&catalog=join-wrong-shop",
+      "title": "Is this the right shop?",
+      "actualScreen": "join-review",
+      "verified": true
+    },
+    {
+      "id": "join-wrong-mode",
+      "family": "join",
+      "screen": "join-review",
+      "query": "recovery=wrong-mode",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=wrong-mode&fiscal=unknown&screen=join-review&catalog=join-wrong-mode",
+      "title": "Is this the right shop?",
+      "actualScreen": "join-review",
+      "verified": true
+    },
+    {
+      "id": "join-wrong-currency",
+      "family": "join",
+      "screen": "join-review",
+      "query": "recovery=wrong-currency",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=wrong-currency&fiscal=unknown&screen=join-review&catalog=join-wrong-currency",
+      "title": "Is this the right shop?",
+      "actualScreen": "join-review",
+      "verified": true
+    },
+    {
+      "id": "restore-ready",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=ready",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=restore-review&catalog=restore-ready",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-offline",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=offline",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=offline&fiscal=unknown&screen=restore-review&catalog=restore-offline",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-unknown",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=unknown",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=unknown&fiscal=unknown&screen=restore-review&catalog=restore-unknown",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-partial",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=partial",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=partial&fiscal=unknown&screen=restore-review&catalog=restore-partial",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-denied",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=denied",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=denied&fiscal=unknown&screen=restore-review&catalog=restore-denied",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-wrong-shop",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=wrong-shop",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=wrong-shop&fiscal=unknown&screen=restore-review&catalog=restore-wrong-shop",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-wrong-mode",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=wrong-mode",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=wrong-mode&fiscal=unknown&screen=restore-review&catalog=restore-wrong-mode",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-wrong-currency",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=wrong-currency",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=wrong-currency&fiscal=unknown&screen=restore-review&catalog=restore-wrong-currency",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-newer",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=newer",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=newer&fiscal=unknown&screen=restore-review&catalog=restore-newer",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-damaged",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=damaged",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=damaged&fiscal=unknown&screen=restore-review&catalog=restore-damaged",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-gap",
+      "family": "restore",
+      "screen": "restore-review",
+      "query": "recovery=gap",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=gap&fiscal=unknown&screen=restore-review&catalog=restore-gap",
+      "title": "Check what comes back.",
+      "actualScreen": "restore-review",
+      "verified": true
+    },
+    {
+      "id": "restore-missing",
+      "family": "restore",
+      "screen": "restore",
+      "query": "recovery=missing",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=missing&fiscal=unknown&screen=restore&catalog=restore-missing",
+      "title": "Recover onto a new phone.",
+      "actualScreen": "restore",
+      "verified": true
+    },
+    {
+      "id": "report-read-loading",
+      "family": "report-read",
+      "screen": "reports",
+      "query": "state=loading",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=reports&catalog=report-read-loading&state=loading",
+      "title": "How is the shop doing?",
+      "actualScreen": "reports",
+      "verified": true
+    },
+    {
+      "id": "report-read-error",
+      "family": "report-read",
+      "screen": "reports",
+      "query": "state=error",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=reports&catalog=report-read-error&state=error",
+      "title": "How is the shop doing?",
+      "actualScreen": "reports",
+      "verified": true
+    },
+    {
+      "id": "fiscal-off",
+      "family": "fiscal",
+      "screen": "fiscal-receipt",
+      "query": "fiscal=off",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=off&screen=fiscal-receipt&catalog=fiscal-off",
+      "title": "Fiscal receipts are off.",
+      "actualScreen": "fiscal-receipt",
+      "verified": true
+    },
+    {
+      "id": "fiscal-waiting",
+      "family": "fiscal",
+      "screen": "fiscal-receipt",
+      "query": "fiscal=waiting",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=waiting&screen=fiscal-receipt&catalog=fiscal-waiting",
+      "title": "Waiting to send.",
+      "actualScreen": "fiscal-receipt",
+      "verified": true
+    },
+    {
+      "id": "fiscal-unknown",
+      "family": "fiscal",
+      "screen": "fiscal-receipt",
+      "query": "fiscal=unknown",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=fiscal-receipt&catalog=fiscal-unknown",
+      "title": "Result not confirmed.",
+      "actualScreen": "fiscal-receipt",
+      "verified": true
+    },
+    {
+      "id": "fiscal-refused",
+      "family": "fiscal",
+      "screen": "fiscal-receipt",
+      "query": "fiscal=refused",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=refused&screen=fiscal-receipt&catalog=fiscal-refused",
+      "title": "Needs owner review.",
+      "actualScreen": "fiscal-receipt",
+      "verified": true
+    },
+    {
+      "id": "fiscal-flagged",
+      "family": "fiscal",
+      "screen": "fiscal-receipt",
+      "query": "fiscal=flagged",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=flagged&screen=fiscal-receipt&catalog=fiscal-flagged",
+      "title": "Example received · Day-close issue.",
+      "actualScreen": "fiscal-receipt",
+      "verified": true
+    },
+    {
+      "id": "fiscal-accepted",
+      "family": "fiscal",
+      "screen": "fiscal-receipt",
+      "query": "fiscal=accepted",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=accepted&screen=fiscal-receipt&catalog=fiscal-accepted",
+      "title": "Example accepted.",
+      "actualScreen": "fiscal-receipt",
+      "verified": true
+    },
+    {
+      "id": "day-clear",
+      "family": "day",
+      "screen": "fiscal-close",
+      "query": "fiscal=clear",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=clear&screen=fiscal-close&catalog=day-clear",
+      "title": "Check the fiscal-day close.",
+      "actualScreen": "fiscal-close",
+      "verified": true
+    },
+    {
+      "id": "day-closing",
+      "family": "day",
+      "screen": "fiscal-close",
+      "query": "fiscal=closing",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=closing&screen=fiscal-close&catalog=day-closing",
+      "title": "Check the fiscal-day close.",
+      "actualScreen": "fiscal-close",
+      "verified": true
+    },
+    {
+      "id": "day-close-failed",
+      "family": "day",
+      "screen": "fiscal-close",
+      "query": "fiscal=close-failed",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=close-failed&screen=fiscal-close&catalog=day-close-failed",
+      "title": "Check the fiscal-day close.",
+      "actualScreen": "fiscal-close",
+      "verified": true
+    },
+    {
+      "id": "day-closed",
+      "family": "day",
+      "screen": "fiscal-close",
+      "query": "fiscal=closed",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=closed&screen=fiscal-close&catalog=day-closed",
+      "title": "Check the fiscal-day close.",
+      "actualScreen": "fiscal-close",
+      "verified": true
+    },
+    {
+      "id": "day-ending",
+      "family": "day",
+      "screen": "fiscal-close",
+      "query": "fiscal=ending",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=ending&screen=fiscal-close&catalog=day-ending",
+      "title": "Check the fiscal-day close.",
+      "actualScreen": "fiscal-close",
+      "verified": true
+    },
+    {
+      "id": "device-certificate",
+      "family": "device",
+      "screen": "fiscal-device",
+      "query": "fiscal=certificate",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=certificate&screen=fiscal-device&catalog=device-certificate",
+      "title": "This fiscal device.",
+      "actualScreen": "fiscal-device",
+      "verified": true
+    },
+    {
+      "id": "device-integrity",
+      "family": "device",
+      "screen": "fiscal-device",
+      "query": "fiscal=integrity",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=integrity&screen=fiscal-device&catalog=device-integrity",
+      "title": "This fiscal device.",
+      "actualScreen": "fiscal-device",
+      "verified": true
+    },
+    {
+      "id": "offline-sell",
+      "family": "offline",
+      "screen": "sell",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=offline-sell&offline=1",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "offline-pay",
+      "family": "offline",
+      "screen": "pay",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=offline-pay&offline=1",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "offline-mobile",
+      "family": "offline",
+      "screen": "mobile",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=mobile&catalog=offline-mobile&offline=1",
+      "title": "Mobile money.",
+      "actualScreen": "mobile",
+      "verified": true
+    },
+    {
+      "id": "offline-invoice-payment",
+      "family": "offline",
+      "screen": "invoice-payment",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-payment&catalog=offline-invoice-payment&offline=1",
+      "title": "How is it paid?",
+      "actualScreen": "invoice-payment",
+      "verified": true
+    },
+    {
+      "id": "offline-return-items",
+      "family": "offline",
+      "screen": "return-items",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=return-items&catalog=offline-return-items&offline=1",
+      "title": "What came back?",
+      "actualScreen": "return-items",
+      "verified": true
+    },
+    {
+      "id": "offline-report-coverage",
+      "family": "offline",
+      "screen": "report-coverage",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=report-coverage&catalog=offline-report-coverage&offline=1",
+      "title": "What is included?",
+      "actualScreen": "report-coverage",
+      "verified": true
+    },
+    {
+      "id": "offline-sync",
+      "family": "offline",
+      "screen": "sync",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sync&catalog=offline-sync&offline=1",
+      "title": "Saved here. Shared later.",
+      "actualScreen": "sync",
+      "verified": true
+    },
+    {
+      "id": "permission-credit",
+      "family": "permission",
+      "screen": "credit",
+      "query": "role=worker&access=sample",
+      "setup": "limited",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=credit&catalog=permission-credit&role=worker",
+      "title": "Ask the owner.",
+      "actualScreen": "access-limited",
+      "verified": true
+    },
+    {
+      "id": "permission-kept-checkout",
+      "family": "permission",
+      "screen": "kept-checkout",
+      "query": "role=worker&access=sample",
+      "setup": "limited",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-checkout&catalog=permission-kept-checkout&role=worker",
+      "title": "Ask the owner.",
+      "actualScreen": "access-limited",
+      "verified": true
+    },
+    {
+      "id": "invalid-pay-5.001",
+      "family": "validation",
+      "screen": "pay",
+      "query": "",
+      "input": "received",
+      "value": "5.001",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=invalid-pay-5.001",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "invalid-pay-1.00",
+      "family": "validation",
+      "screen": "pay",
+      "query": "",
+      "input": "received",
+      "value": "1.00",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=invalid-pay-1.00",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "invalid-expense-9999999.00",
+      "family": "validation",
+      "screen": "expense",
+      "query": "",
+      "input": "expense-amount",
+      "value": "9999999.00",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense&catalog=invalid-expense-9999999.00",
+      "title": "Record money out.",
+      "actualScreen": "expense",
+      "verified": true
+    },
+    {
+      "id": "invalid-cashup-bad",
+      "family": "validation",
+      "screen": "cashup",
+      "query": "",
+      "input": "counted-usd",
+      "value": "bad",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=cashup&catalog=invalid-cashup-bad",
+      "title": "Count your cash.",
+      "actualScreen": "cashup",
+      "verified": true
+    },
+    {
+      "id": "stock-no-match",
+      "family": "empty",
+      "screen": "stock",
+      "input": "stock-search",
+      "value": "No such item",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock&catalog=stock-no-match",
+      "title": "Your stock.",
+      "actualScreen": "stock",
+      "verified": true
+    },
+    {
+      "id": "history-no-match",
+      "family": "empty",
+      "screen": "history",
+      "input": "receipt-search",
+      "value": "No such receipt",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=history&catalog=history-no-match",
+      "title": "Recent sales.",
+      "actualScreen": "history",
+      "verified": true
+    },
+    {
+      "id": "mobile-offline",
+      "family": "disabled",
+      "screen": "mobile",
+      "query": "offline=1",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=mobile&catalog=mobile-offline&offline=1",
+      "title": "Mobile money.",
+      "actualScreen": "mobile",
+      "verified": true
+    },
+    {
+      "id": "kept-off",
+      "family": "disabled",
+      "screen": "kept-checkout",
+      "query": "",
+      "setup": "kept-off",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-checkout&catalog=kept-off",
+      "title": "Kept change is off.",
+      "actualScreen": "kept-checkout",
+      "verified": true
+    },
+    {
+      "id": "fiscal-filter-empty",
+      "family": "empty",
+      "screen": "fiscal-queue",
+      "query": "fiscal=clear",
+      "action": "fiscal-filter",
+      "data": {
+        "filter": "waiting"
+      },
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=clear&screen=fiscal-queue&catalog=fiscal-filter-empty",
+      "title": "Fiscal receipt queue.",
+      "actualScreen": "fiscal-queue",
+      "verified": true
+    },
+    {
+      "id": "restored-receive",
+      "family": "review-recovery",
+      "screen": "receive",
+      "reviewKind": "receive",
+      "variant": "restored",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive&catalog=restored-receive",
+      "title": "Check the delivery.",
+      "actualScreen": "receive-review",
+      "verified": true
+    },
+    {
+      "id": "stale-receive",
+      "family": "review-recovery",
+      "screen": "receive",
+      "reviewKind": "receive",
+      "variant": "stale",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive&catalog=stale-receive",
+      "title": "Receive stock.",
+      "actualScreen": "receive",
+      "verified": true
+    },
+    {
+      "id": "restored-stock",
+      "family": "review-recovery",
+      "screen": "stock-count",
+      "reviewKind": "stock",
+      "variant": "restored",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock-count&catalog=restored-stock",
+      "title": "Review the count.",
+      "actualScreen": "count-stock-review",
+      "verified": true
+    },
+    {
+      "id": "stale-stock",
+      "family": "review-recovery",
+      "screen": "stock-count",
+      "reviewKind": "stock",
+      "variant": "stale",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock-count&catalog=stale-stock",
+      "title": "Count the shelf.",
+      "actualScreen": "stock-count",
+      "verified": true
+    },
+    {
+      "id": "restored-expense",
+      "family": "review-recovery",
+      "screen": "expense",
+      "reviewKind": "expense",
+      "variant": "restored",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense&catalog=restored-expense",
+      "title": "Check money out.",
+      "actualScreen": "expense-review",
+      "verified": true
+    },
+    {
+      "id": "stale-expense",
+      "family": "review-recovery",
+      "screen": "expense",
+      "reviewKind": "expense",
+      "variant": "stale",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense&catalog=stale-expense",
+      "title": "Record money out.",
+      "actualScreen": "expense",
+      "verified": true
+    },
+    {
+      "id": "restored-cashup",
+      "family": "review-recovery",
+      "screen": "cashup",
+      "reviewKind": "cashup",
+      "variant": "restored",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=cashup&catalog=restored-cashup",
+      "title": "Check your cash-up.",
+      "actualScreen": "count-review",
+      "verified": true
+    },
+    {
+      "id": "stale-cashup",
+      "family": "review-recovery",
+      "screen": "cashup",
+      "reviewKind": "cashup",
+      "variant": "stale",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=cashup&catalog=stale-cashup",
+      "title": "Count your cash.",
+      "actualScreen": "cashup",
+      "verified": true
+    },
+    {
+      "id": "missing-receive-review",
+      "family": "review-recovery",
+      "screen": "receive-review",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive-review&catalog=missing-receive-review",
+      "title": "Receive stock.",
+      "actualScreen": "receive",
+      "verified": true
+    },
+    {
+      "id": "missing-count-stock-review",
+      "family": "review-recovery",
+      "screen": "count-stock-review",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-stock-review&catalog=missing-count-stock-review",
+      "title": "Count the shelf.",
+      "actualScreen": "stock-count",
+      "verified": true
+    },
+    {
+      "id": "missing-expense-review",
+      "family": "review-recovery",
+      "screen": "expense-review",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense-review&catalog=missing-expense-review",
+      "title": "Record money out.",
+      "actualScreen": "expense",
+      "verified": true
+    },
+    {
+      "id": "missing-count-review",
+      "family": "review-recovery",
+      "screen": "count-review",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-review&catalog=missing-count-review",
+      "title": "Count your cash.",
+      "actualScreen": "cashup",
+      "verified": true
+    },
+    {
+      "id": "stock-empty",
+      "family": "data-boundary",
+      "screen": "stock",
+      "setup": "empty-products",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock&catalog=stock-empty",
+      "title": "Your stock.",
+      "actualScreen": "stock",
+      "verified": true
+    },
+    {
+      "id": "receive-empty",
+      "family": "data-boundary",
+      "screen": "receive",
+      "setup": "empty-products",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive&catalog=receive-empty",
+      "title": "No products to receive.",
+      "actualScreen": "receive",
+      "verified": true
+    },
+    {
+      "id": "count-empty",
+      "family": "data-boundary",
+      "screen": "stock-count",
+      "setup": "empty-products",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock-count&catalog=count-empty",
+      "title": "No products to count.",
+      "actualScreen": "stock-count",
+      "verified": true
+    },
+    {
+      "id": "invoice-empty",
+      "family": "data-boundary",
+      "screen": "invoice-items",
+      "setup": "invoice-empty",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-items&catalog=invoice-empty",
+      "title": "Items received.",
+      "actualScreen": "invoice-items",
+      "verified": true
+    },
+    {
+      "id": "invoice-saved",
+      "family": "data-boundary",
+      "screen": "invoice-detail",
+      "setup": "invoice-saved",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-detail&catalog=invoice-saved",
+      "title": "MW-1042",
+      "actualScreen": "invoice-detail",
+      "verified": true
+    },
+    {
+      "id": "receipt-empty",
+      "family": "data-boundary",
+      "screen": "history",
+      "setup": "receipt-empty",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=history&catalog=receipt-empty",
+      "title": "Recent sales.",
+      "actualScreen": "history",
+      "verified": true
+    },
+    {
+      "id": "kept-other-currency",
+      "family": "data-boundary",
+      "screen": "kept-checkout",
+      "setup": "kept-other-currency",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-checkout&catalog=kept-other-currency",
+      "title": "Use kept change.",
+      "actualScreen": "kept-checkout",
+      "verified": true
+    },
+    {
+      "id": "kept-no-balance",
+      "family": "data-boundary",
+      "screen": "kept-refund",
+      "setup": "kept-no-balance",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-refund&catalog=kept-no-balance",
+      "title": "Give cash back.",
+      "actualScreen": "kept-refund",
+      "verified": true
+    },
+    {
+      "id": "kept-cash-short",
+      "family": "data-boundary",
+      "screen": "kept-refund",
+      "setup": "kept-cash-short",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-refund&catalog=kept-cash-short",
+      "title": "Give cash back.",
+      "actualScreen": "kept-refund",
+      "verified": true
+    },
+    {
+      "id": "invoice-full",
+      "family": "invoice-payment",
+      "screen": "invoice-payment",
+      "setup": "invoice-mode",
+      "value": "full",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-payment&catalog=invoice-full",
+      "title": "How is it paid?",
+      "actualScreen": "invoice-payment",
+      "verified": true
+    },
+    {
+      "id": "invoice-later",
+      "family": "invoice-payment",
+      "screen": "invoice-payment",
+      "setup": "invoice-mode",
+      "value": "later",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-payment&catalog=invoice-later",
+      "title": "How is it paid?",
+      "actualScreen": "invoice-payment",
+      "verified": true
+    },
+    {
+      "id": "invoice-part",
+      "family": "invoice-payment",
+      "screen": "invoice-payment",
+      "setup": "invoice-mode",
+      "value": "part",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-payment&catalog=invoice-part",
+      "title": "How is it paid?",
+      "actualScreen": "invoice-payment",
+      "verified": true
+    },
+    {
+      "id": "report-yesterday",
+      "family": "report-filters",
+      "screen": "reports",
+      "setup": "report-period",
+      "value": "yesterday",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=reports&catalog=report-yesterday",
+      "title": "How is the shop doing?",
+      "actualScreen": "reports",
+      "verified": true
+    },
+    {
+      "id": "report-week",
+      "family": "report-filters",
+      "screen": "reports",
+      "setup": "report-period",
+      "value": "week",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=reports&catalog=report-week",
+      "title": "How is the shop doing?",
+      "actualScreen": "reports",
+      "verified": true
+    },
+    {
+      "id": "report-custom",
+      "family": "report-filters",
+      "screen": "reports",
+      "setup": "report-period",
+      "value": "custom",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=reports&catalog=report-custom",
+      "title": "How is the shop doing?",
+      "actualScreen": "reports",
+      "verified": true
+    },
+    {
+      "id": "pricing-USD",
+      "family": "currency",
+      "screen": "pay",
+      "setup": "currency",
+      "value": "USD",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=pricing-USD",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "pricing-ZWG",
+      "family": "currency",
+      "screen": "pay",
+      "setup": "currency",
+      "value": "ZWG",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=pricing-ZWG",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "pricing-ZAR",
+      "family": "currency",
+      "screen": "pay",
+      "setup": "currency",
+      "value": "ZAR",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=pricing-ZAR",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "setup-unselected",
+      "family": "disabled",
+      "screen": "setup",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=setup&catalog=setup-unselected",
+      "title": "Make it your shop.",
+      "actualScreen": "setup",
+      "verified": true
+    },
+    {
+      "id": "long-data-sell",
+      "family": "long-data",
+      "screen": "sell",
+      "setup": "long-data",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=long-data-sell",
+      "title": "Let’s sell.",
+      "actualScreen": "sell",
+      "verified": true
+    },
+    {
+      "id": "long-data-pay",
+      "family": "long-data",
+      "screen": "pay",
+      "setup": "long-data",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=pay&catalog=long-data-pay",
+      "title": "Take payment",
+      "actualScreen": "pay",
+      "verified": true
+    },
+    {
+      "id": "saved-delivery",
+      "family": "completion",
+      "screen": "receive",
+      "outcome": "receive",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receive&catalog=saved-delivery",
+      "title": "Stock received.",
+      "actualScreen": "receive-review",
+      "verified": true
+    },
+    {
+      "id": "saved-count",
+      "family": "completion",
+      "screen": "stock-count",
+      "outcome": "stock",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=stock-count&catalog=saved-count",
+      "title": "Count saved.",
+      "actualScreen": "count-stock-review",
+      "verified": true
+    },
+    {
+      "id": "saved-money-out",
+      "family": "completion",
+      "screen": "expense",
+      "outcome": "expense",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=expense&catalog=saved-money-out",
+      "title": "Money out saved.",
+      "actualScreen": "expense-review",
+      "verified": true
+    },
+    {
+      "id": "saved-close",
+      "family": "completion",
+      "screen": "cashup",
+      "outcome": "cashup",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=cashup&catalog=saved-close",
+      "title": "Shift closed.",
+      "actualScreen": "handover",
+      "verified": true
+    },
+    {
+      "id": "saved-collection",
+      "family": "completion",
+      "screen": "customer",
+      "outcome": "collection",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=customer&catalog=saved-collection",
+      "title": "Payment saved.",
+      "actualScreen": "customer",
+      "verified": true
+    },
+    {
+      "id": "saved-invoice",
+      "family": "completion",
+      "screen": "invoice-review",
+      "outcome": "invoice",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-review&catalog=saved-invoice",
+      "title": "Invoice saved.",
+      "actualScreen": "invoice-review",
+      "verified": true
+    },
+    {
+      "id": "saved-kept-refund",
+      "family": "completion",
+      "screen": "kept-refund",
+      "outcome": "kept-refund",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-refund&catalog=saved-kept-refund",
+      "title": "Cash back saved.",
+      "actualScreen": "kept-refund-review",
+      "verified": true
+    },
+    {
+      "id": "saved-partial-return",
+      "family": "completion",
+      "screen": "return-items",
+      "outcome": "partial-return",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=return-items&catalog=saved-partial-return",
+      "title": "Return saved.",
+      "actualScreen": "return-review",
+      "verified": true
+    },
+    {
+      "id": "saved-full-return",
+      "family": "completion",
+      "screen": "refund",
+      "outcome": "full-return",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=refund&catalog=saved-full-return",
+      "title": "Return saved.",
+      "actualScreen": "refund-review",
+      "verified": true
+    },
+    {
+      "id": "removed-access",
+      "family": "completion",
+      "screen": "access-remove",
+      "outcome": "access",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=access-remove&catalog=removed-access",
+      "title": "Removed on this phone.",
+      "actualScreen": "access-remove",
+      "verified": true
+    },
+    {
+      "id": "blocked-phone-preview",
+      "family": "completion",
+      "screen": "lost-phone",
+      "outcome": "lost-phone",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=lost-phone&catalog=blocked-phone-preview",
+      "title": "Example block request.",
+      "actualScreen": "lost-phone",
+      "verified": true
+    },
+    {
+      "id": "sale-done-Cash",
+      "family": "completion",
+      "screen": "done",
+      "setup": "sale-done",
+      "value": "Cash",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=done&catalog=sale-done-Cash",
+      "title": "All sorted.",
+      "actualScreen": "done",
+      "verified": true
+    },
+    {
+      "id": "sale-done-Mobile-money",
+      "family": "completion",
+      "screen": "done",
+      "setup": "sale-done",
+      "value": "Mobile money",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=done&catalog=sale-done-Mobile-money",
+      "title": "All sorted.",
+      "actualScreen": "done",
+      "verified": true
+    },
+    {
+      "id": "sale-done-On-account",
+      "family": "completion",
+      "screen": "done",
+      "setup": "sale-done",
+      "value": "On account",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=done&catalog=sale-done-On-account",
+      "title": "All sorted.",
+      "actualScreen": "done",
+      "verified": true
+    },
+    {
+      "id": "opening-multi",
+      "family": "review-variants",
+      "screen": "opening",
+      "setup": "multi",
+      "value": "",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=opening&catalog=opening-multi",
+      "title": "Open your till.",
+      "actualScreen": "opening",
+      "verified": true
+    },
+    {
+      "id": "cashup-multi",
+      "family": "review-variants",
+      "screen": "cashup",
+      "setup": "multi",
+      "value": "",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=cashup&catalog=cashup-multi",
+      "title": "Count your cash.",
+      "actualScreen": "cashup",
+      "verified": true
+    },
+    {
+      "id": "cashup-balanced",
+      "family": "review-variants",
+      "screen": "count-review",
+      "setup": "count-review",
+      "value": "70.50",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-review&catalog=cashup-balanced",
+      "title": "Check your cash-up.",
+      "actualScreen": "count-review",
+      "verified": true
+    },
+    {
+      "id": "cashup-over",
+      "family": "review-variants",
+      "screen": "count-review",
+      "setup": "count-review",
+      "value": "71.00",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-review&catalog=cashup-over",
+      "title": "Check your cash-up.",
+      "actualScreen": "count-review",
+      "verified": true
+    },
+    {
+      "id": "count-matched",
+      "family": "review-variants",
+      "screen": "count-stock-review",
+      "setup": "count-matched",
+      "value": "",
+      "query": "",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=count-stock-review&catalog=count-matched",
+      "title": "Review the count.",
+      "actualScreen": "count-stock-review",
+      "verified": true
+    },
+    {
+      "id": "owner-access-records",
+      "family": "permission",
+      "screen": "records",
+      "query": "role=worker",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=records&catalog=owner-access-records&role=worker",
+      "title": "Owner access.",
+      "actualScreen": "records",
+      "verified": true
+    }
+  ],
+  "dialogs": [
+    {
+      "id": "collection",
+      "file": "-cdx-accounts.js",
+      "screen": "customer",
+      "action": "review-collection",
+      "title": "Payment from Tariro",
+      "fixture": "collection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=customer&catalog=collection",
+      "source": {
+        "file": "-cdx-accounts.js",
+        "line": 51
+      },
+      "verified": true
+    },
+    {
+      "id": "day-answer",
+      "file": "-cdx-fiscal-day.js",
+      "screen": "fiscal-close",
+      "action": "fiscal-day-answer",
+      "title": "Example close answer",
+      "fixture": "closing",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=closing&screen=fiscal-close&catalog=day-answer",
+      "source": {
+        "file": "-cdx-fiscal-day.js",
+        "line": 48
+      },
+      "verified": true
+    },
+    {
+      "id": "ask-owner",
+      "file": "-cdx-fiscal-receipts.js",
+      "screen": "fiscal-receipt",
+      "action": "fiscal-ask-owner",
+      "title": "Ask the owner to review",
+      "fixture": "refused",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=refused&screen=fiscal-receipt&catalog=ask-owner&role=worker",
+      "source": {
+        "file": "-cdx-fiscal-receipts.js",
+        "line": 64
+      },
+      "verified": true
+    },
+    {
+      "id": "fiscal-support",
+      "file": "-cdx-fiscal-receipts.js",
+      "screen": "fiscal-owner-review",
+      "action": "fiscal-support",
+      "title": "Support details",
+      "fixture": "refused",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=refused&screen=fiscal-owner-review&catalog=fiscal-support",
+      "source": {
+        "file": "-cdx-fiscal-receipts.js",
+        "line": 92
+      },
+      "verified": true
+    },
+    {
+      "id": "invoice-add",
+      "file": "-cdx-invoices.js",
+      "screen": "invoice-items",
+      "action": "invoice-add",
+      "title": "Add an item",
+      "fixture": "invoice",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-items&catalog=invoice-add",
+      "source": {
+        "file": "-cdx-invoices.js",
+        "line": 58
+      },
+      "verified": true
+    },
+    {
+      "id": "invoice-edit",
+      "file": "-cdx-invoices.js",
+      "screen": "invoice-items",
+      "action": "invoice-edit",
+      "title": "Edit item",
+      "fixture": "invoice",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-items&catalog=invoice-edit",
+      "source": {
+        "file": "-cdx-invoices.js",
+        "line": 58
+      },
+      "verified": true
+    },
+    {
+      "id": "invoice-evidence",
+      "file": "-cdx-invoices.js",
+      "screen": "invoice-payment",
+      "action": "invoice-evidence",
+      "title": "Keep the invoice",
+      "fixture": "invoice",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-payment&catalog=invoice-evidence",
+      "source": {
+        "file": "-cdx-invoices.js",
+        "line": 122
+      },
+      "verified": true
+    },
+    {
+      "id": "new-kept-customer",
+      "file": "-cdx-kept.js",
+      "screen": "kept-account",
+      "action": "kept-add-customer",
+      "title": "Whose change",
+      "fixture": "kept",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-account&catalog=new-kept-customer",
+      "source": {
+        "file": "-cdx-kept.js",
+        "line": 174
+      },
+      "verified": true
+    },
+    {
+      "id": "share",
+      "file": "-cdx-receipts.js",
+      "screen": "receipt",
+      "action": "share-receipt",
+      "title": "Share receipt",
+      "fixture": "receipt",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=receipt&catalog=share",
+      "source": {
+        "file": "-cdx-receipts.js",
+        "line": 64
+      },
+      "verified": true
+    },
+    {
+      "id": "printer",
+      "file": "-cdx-receipts.js",
+      "screen": "print",
+      "action": "find-printer",
+      "title": "Available printers",
+      "fixture": "receipt",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=print&catalog=printer",
+      "source": {
+        "file": "-cdx-receipts.js",
+        "line": 75
+      },
+      "verified": true
+    },
+    {
+      "id": "report-refresh",
+      "file": "-cdx-reports.js",
+      "screen": "report-coverage",
+      "action": "report-refresh",
+      "title": "No new figures",
+      "fixture": "reports",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=report-coverage&catalog=report-refresh",
+      "source": {
+        "file": "-cdx-reports.js",
+        "line": 106
+      },
+      "verified": true
+    },
+    {
+      "id": "access-check",
+      "file": "-cdx-seller-access.js",
+      "screen": "my-access",
+      "action": "access-check",
+      "title": "No access update",
+      "fixture": "worker",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=my-access&catalog=access-check&role=worker",
+      "source": {
+        "file": "-cdx-seller-access.js",
+        "line": 23
+      },
+      "verified": true
+    },
+    {
+      "id": "sale-options",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "sale-options",
+      "title": "This sale",
+      "fixture": "basket",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=sale-options",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 63
+      },
+      "verified": true
+    },
+    {
+      "id": "basket",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "basket",
+      "title": "Your basket",
+      "fixture": "basket",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=basket",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 68
+      },
+      "verified": true
+    },
+    {
+      "id": "basket-empty",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "basket",
+      "title": "Your basket",
+      "fixture": "empty",
+      "url": "-cdx-counter.html?fresh=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=basket-empty",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 68
+      },
+      "verified": true
+    },
+    {
+      "id": "basket-measured",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "basket",
+      "title": "Your basket",
+      "fixture": "measured",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=basket-measured",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 68
+      },
+      "verified": true
+    },
+    {
+      "id": "held-empty",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "held",
+      "title": "Held sales",
+      "fixture": "empty",
+      "url": "-cdx-counter.html?fresh=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=held-empty",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 89
+      },
+      "verified": true
+    },
+    {
+      "id": "held-populated",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "held",
+      "title": "Held sales",
+      "fixture": "held",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=held-populated",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 89
+      },
+      "verified": true
+    },
+    {
+      "id": "scan",
+      "file": "-cdx-selling.js",
+      "screen": "sell",
+      "action": "scan",
+      "title": "Scan a product",
+      "fixture": "basket",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=scan",
+      "source": {
+        "file": "-cdx-selling.js",
+        "line": 110
+      },
+      "verified": true
+    },
+    {
+      "id": "profile-owner",
+      "file": "-cdx-shift.js",
+      "screen": "sell",
+      "action": "profile",
+      "title": "Owner",
+      "fixture": "basket",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=profile-owner",
+      "source": {
+        "file": "-cdx-shift.js",
+        "line": 90
+      },
+      "verified": true
+    },
+    {
+      "id": "profile-worker",
+      "file": "-cdx-shift.js",
+      "screen": "sell",
+      "action": "profile",
+      "title": "Seller",
+      "fixture": "worker",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=sell&catalog=profile-worker&role=worker",
+      "source": {
+        "file": "-cdx-shift.js",
+        "line": 90
+      },
+      "verified": true
+    },
+    {
+      "id": "shop-account",
+      "file": "-cdx-shop-connection.js",
+      "screen": "connect",
+      "action": "connection-account",
+      "title": "Choose the shop account",
+      "fixture": "connection",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=connect&catalog=shop-account",
+      "source": {
+        "file": "-cdx-shop-connection.js",
+        "line": 19
+      },
+      "verified": true
+    },
+    {
+      "id": "export",
+      "file": "-cdx-shop.js",
+      "screen": "export",
+      "action": "export-preview",
+      "title": "Export contents",
+      "fixture": "export",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=export&catalog=export",
+      "source": {
+        "file": "-cdx-shop.js",
+        "line": 55
+      },
+      "verified": true
+    },
+    {
+      "id": "access-received",
+      "file": "-cdx-staff-access.js",
+      "screen": "access-status",
+      "action": "access-preview-receipt",
+      "title": "Preview a reconnecting phone",
+      "fixture": "pending-access",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=pending&reports=sample&recovery=ready&fiscal=unknown&screen=access-status&catalog=access-received",
+      "source": {
+        "file": "-cdx-staff-access.js",
+        "line": 89
+      },
+      "verified": true
+    },
+    {
+      "id": "invoice-item-error",
+      "file": "-cdx-invoices.js",
+      "screen": "invoice-items",
+      "action": "invoice-add",
+      "title": "Add an item",
+      "fixture": "invoice",
+      "variant": "invalid",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=invoice-items&catalog=invoice-item-error",
+      "source": {
+        "file": "-cdx-invoices.js",
+        "line": 58
+      },
+      "verified": true
+    },
+    {
+      "id": "kept-name-error",
+      "file": "-cdx-kept.js",
+      "screen": "kept-account",
+      "action": "kept-add-customer",
+      "title": "Whose change",
+      "fixture": "kept",
+      "variant": "invalid",
+      "url": "-cdx-counter.html?fresh=1&seed=1&invoice=sample&kept=sample&measure=sample&returns=sample&access=sample&reports=sample&recovery=ready&fiscal=unknown&screen=kept-account&catalog=kept-name-error",
+      "source": {
+        "file": "-cdx-kept.js",
+        "line": 174
+      },
+      "verified": true
+    }
+  ],
+  "dialogCallsites": [
+    {
+      "file": "-cdx-selling.js",
+      "line": 63,
+      "source": "actions['sale-options']=()=>showSheet('This sale',"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 68,
+      "source": "actions.basket=()=>showSheet('Your basket',basketRows().map(p=>"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 89,
+      "source": "actions.held=()=>showSheet('Held sales',s.held.length?s.held.map((h,i)=>menu('resume-held',"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 110,
+      "source": "actions.scan=()=>showSheet('Scan a product',`<div class=\"scan-frame\">${icon('scan')}</div>"
+    },
+    {
+      "file": "-cdx-accounts.js",
+      "line": 51,
+      "source": "showSheet('Payment from Tariro',line('Cash received',money(draft.collection))+"
+    },
+    {
+      "file": "-cdx-invoices.js",
+      "line": 58,
+      "source": "showSheet(existing?'Edit item':'Add an item',select('item-product','Product',available.map(p=>"
+    },
+    {
+      "file": "-cdx-invoices.js",
+      "line": 122,
+      "source": "actions['invoice-evidence']=()=>showSheet('Keep the invoice with it.',"
+    },
+    {
+      "file": "-cdx-shift.js",
+      "line": 90,
+      "source": "actions.profile=()=>showSheet(`${esc(s.name)} · ${s.role==='owner'?'Owner':'Seller'}`,"
+    },
+    {
+      "file": "-cdx-receipts.js",
+      "line": 64,
+      "source": "actions['share-receipt']=()=>showSheet('Share receipt',"
+    },
+    {
+      "file": "-cdx-receipts.js",
+      "line": 75,
+      "source": "actions['find-printer']=()=>showSheet('Available printers',"
+    },
+    {
+      "file": "-cdx-shop.js",
+      "line": 55,
+      "source": "actions['export-preview']=()=>showSheet('Export contents',"
+    },
+    {
+      "file": "-cdx-kept.js",
+      "line": 174,
+      "source": "actions['kept-add-customer']=()=>showSheet('Whose change is it?',"
+    },
+    {
+      "file": "-cdx-staff-access.js",
+      "line": 89,
+      "source": "actions['access-preview-receipt']=()=>showSheet('Preview a reconnecting phone',"
+    },
+    {
+      "file": "-cdx-seller-access.js",
+      "line": 23,
+      "source": "actions['access-check']=()=>showSheet('No access update received',"
+    },
+    {
+      "file": "-cdx-reports.js",
+      "line": 106,
+      "source": "actions['report-refresh']=()=>showSheet('No new figures received',"
+    },
+    {
+      "file": "-cdx-shop-connection.js",
+      "line": 19,
+      "source": "actions['connection-account']=()=>showSheet('Choose the shop account',"
+    },
+    {
+      "file": "-cdx-fiscal-receipts.js",
+      "line": 64,
+      "source": "actions['fiscal-ask-owner']=()=>showSheet('Ask the owner to review',"
+    },
+    {
+      "file": "-cdx-fiscal-receipts.js",
+      "line": 92,
+      "source": "const r=selectedFiscal()||fiscalRows()[0];showSheet('Support details · Example',"
+    },
+    {
+      "file": "-cdx-fiscal-day.js",
+      "line": 48,
+      "source": "actions['fiscal-day-answer']=()=>showSheet('Example close answer',"
+    }
+  ],
+  "resultCallsites": [
+    {
+      "file": "-cdx-stock.js",
+      "line": 112,
+      "source": "result('Stock received.',line(esc(p.name),`${p.stock} ${esc(p.stockUnit)} now`),'stock','Back to stock');"
+    },
+    {
+      "file": "-cdx-stock.js",
+      "line": 151,
+      "source": "result('Count saved.',note('The correction is a new stock movement. Earlier sales stay unchanged.'),"
+    },
+    {
+      "file": "-cdx-money.js",
+      "line": 68,
+      "source": "result('Money out saved.',line('Amount',money(e.amount))+line('Expected cash now',money(s.cash)),"
+    },
+    {
+      "file": "-cdx-accounts.js",
+      "line": 60,
+      "source": "result('Payment saved.',line('Tariro still owes',money(s.owed))+line('Expected cash now',money(s.cash)),"
+    },
+    {
+      "file": "-cdx-invoices.js",
+      "line": 164,
+      "source": "result('Invoice saved.',line('Stock added',d.items.length+' products')+"
+    },
+    {
+      "file": "-cdx-shift.js",
+      "line": 80,
+      "source": "result('Shift closed.',heading('',`${esc(s.name)} · Front counter`)+"
+    },
+    {
+      "file": "-cdx-receipts.js",
+      "line": 116,
+      "source": "result('Return saved.',line('Give the customer',money(lastSale.amount))+"
+    },
+    {
+      "file": "-cdx-kept.js",
+      "line": 137,
+      "source": "result('Cash back saved.',line('Give '+esc(c.name),keptMoney(amount))+"
+    },
+    {
+      "file": "-cdx-partial-returns.js",
+      "line": 100,
+      "source": "result('Return saved.',returnPaymentRows(p)+line('Linked receipt',esc(r.id))+"
+    },
+    {
+      "file": "-cdx-staff-access.js",
+      "line": 111,
+      "source": "result('Removed on this phone.',accessDelivery(p)+"
+    },
+    {
+      "file": "-cdx-phone-restore.js",
+      "line": 77,
+      "source": "result('Example block request.',line('Shop Hub','Not contacted by this preview')+"
+    },
+    {
+      "file": "-cdx-review-drafts.js",
+      "line": 163,
+      "source": "result('Shift closed.',`<p class=\"sub\">${esc(s.name)} · Front counter</p>`+"
+    }
+  ],
+  "feedbackCallsites": [
+    {
+      "file": "-cdx-state.js",
+      "line": 85,
+      "source": "toast('Browser storage unavailable. Keep this practice session open.');"
+    },
+    {
+      "file": "-cdx-quantities.js",
+      "line": 78,
+      "source": "toast('Rice quantity saved',true);"
+    },
+    {
+      "file": "-cdx-quantities.js",
+      "line": 82,
+      "source": "s.quantityDraft=null;save();navigate('sell');toast('Rice removed',true);};"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 58,
+      "source": "save();drawCatalog();drawBasket();toast('Added to basket');};"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 81,
+      "source": "save();actions.basket();drawCatalog();drawBasket();if(!s.basket[id])toast('Item removed',true);"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 83,
+      "source": "actions['clear-basket']=()=>{resetBasket();navigate('sell');toast('Basket cleared',true);};"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 85,
+      "source": "if(!count())return;if(s.held.length===3){toast('Resume a held sale first. Three can wait here.');return;}"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 87,
+      "source": "s.basket={};save();navigate('sell');toast('Sale held. Ready for the next customer.');"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 93,
+      "source": "if(count()){toast('Hold or clear the current basket first.');return;}"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 105,
+      "source": "if(products().length>=40){toast('Practice catalogue limit reached.');return;}"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 188,
+      "source": "if(s.pending.length>=3){toast('Check an unconfirmed payment before requesting another.');return false;}"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 209,
+      "source": "actions['check-payment']=()=>toast('Still waiting. No payment confirmed.');"
+    },
+    {
+      "file": "-cdx-selling.js",
+      "line": 217,
+      "source": "if(count()){toast('Hold the current basket before returning to this payment.');return;}"
+    },
+    {
+      "file": "-cdx-stock.js",
+      "line": 171,
+      "source": "if(!p){if(products().length>=40){toast('Practice catalogue limit reached.');return;}"
+    },
+    {
+      "file": "-cdx-invoices.js",
+      "line": 57,
+      "source": "if(!available.length){toast('All tracked products are already added.');return;}"
+    },
+    {
+      "file": "-cdx-invoices.js",
+      "line": 154,
+      "source": "toast('That invoice number is already saved. Check the supplier’s invoice.');return;"
+    },
+    {
+      "file": "-cdx-shift.js",
+      "line": 73,
+      "source": "if(s.held.length===3){toast('Resolve a held sale before closing. Your basket is safe.');return;}"
+    },
+    {
+      "file": "-cdx-shop.js",
+      "line": 100,
+      "source": "record('Optional features updated');navigate('shop');toast('Preferences saved');"
+    },
+    {
+      "file": "-cdx-access-state.js",
+      "line": 77,
+      "source": "toast('The owner must take this handover. Seller access stays removed.');return;"
+    },
+    {
+      "file": "-cdx-staff-access.js",
+      "line": 73,
+      "source": "if(!d.id&&a.people.length>=9){toast('Practice staff limit reached.');return;}"
+    },
+    {
+      "file": "-cdx-fiscal-receipts.js",
+      "line": 77,
+      "source": "if(r.ref!=='F-EX-0015'){toast('Only the first example has response variants. No record changed.');return;}"
+    },
+    {
+      "file": "-cdx-responsive.js",
+      "line": 57,
+      "source": "if(!s.basket[id])toast('Item removed',true);"
+    },
+    {
+      "file": "-cdx-counter.js",
+      "line": 70,
+      "source": "if(!accessCanAction(a)){toast('Ask the owner. Your work is kept.');render();return;}"
+    }
+  ],
+  "dialogLayoutChecks": 104
+}

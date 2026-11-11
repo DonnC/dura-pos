@@ -79,15 +79,15 @@ Paynow <--- the hub, with the shop's keys
 |---|---|
 | `backend/hub` | All protocol actions are written and tested against fakes: pairing, journal, setup, views, master data, status, timers, Paynow, photos, exports, plus the public shop page. Its main path has run on a real Google account (results in `handbook/engineering/10-real-account-test.md`); **timers and Paynow's sandbox haven't** |
 | `backend/templates` | Sample shop, clean templates per pricing currency, contract, checks. Not yet published, so the hub's template URLs are empty |
-| `client/packages/dura_core` | Money types and the cash-sale calculation |
-| `client/packages/dura_data` | Local preferences in Drift |
-| `client/packages/dura_ui` | Theme, shared controls, golden tests |
-| `client/apps/dura` | The app shell and on-device diagnostics. No selling screens yet |
+| `client/packages/dura_core` | Money types, the cash-sale calculation, posting rules, sale events, the outbox port and uploader, the analytics port, safe stack frames |
+| `client/packages/dura_data` | Local preferences and the durable outbox in Drift; the rotating problem log and usage log |
+| `client/packages/dura_ui` | The Counter design's theme tokens and 17 wrapper components, with golden, leak and contrast tests |
+| `client/apps/dura` | The four-tab shell (owner and seller words, bar or rail), Problem reports with the usage switch. The tabs are shells; progress is in `handbook/design/ui-tracker.md` |
 | `client/packages/dura_hub` | The hub adapter behind the backend port in `dura_core`, tested against a live hub. No screen uses it yet |
-| Not started | Selling screens, the phone's outbox, hub install and update, fiscalisation |
+| Not started | Selling screens, hub install and update, usage upload to Drive, fiscalisation |
 
-GitHub Actions has not been confirmed running. Don't report anything above as
-proven beyond what the tests show.
+GitHub Actions runs on pull requests (`verify`, `hub`, `templates`). Don't
+report anything above as proven beyond what the tests show.
 
 ## The order of work
 

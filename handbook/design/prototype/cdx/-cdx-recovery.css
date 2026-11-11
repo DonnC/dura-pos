@@ -1,0 +1,17 @@
+.recovery-layout section{min-width:0}.recovery-layout .ledger-row{gap:12px;padding:13px 0}
+.recovery-layout .section-title:first-child{margin-top:12px}
+.recovery-layout .sub,.recovery-layout .micro{line-height:1.65}
+.pairing-example{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;min-height:190px;padding:22px;background:var(--soft);border:1px dashed var(--line);
+  border-radius:16px;text-align:center;margin:16px 0;font-size:.8125rem}
+.pairing-example .icon{width:72px;height:72px}.pairing-example span{color:var(--muted);font-size:.75rem}
+.recovery-brand{margin:0 0 18px}.recovery-brand img{width:80px;height:32px;object-fit:contain}
+@media(min-width:900px){
+  .app[data-page=connect] .page-content,.app[data-page=pair] .page-content,
+  .app[data-page=restore] .page-content,.app[data-page^=connection-] .page-content,
+  .app[data-page=pair-code] .page-content,.app[data-page^=join-] .page-content,
+  .app[data-page^=restore-] .page-content,.app[data-page=lost-phone] .page-content{max-width:960px}
+  .recovery-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+  .recovery-layout .form-label:first-child{margin-top:0}
+  .large .recovery-layout{display:block}
+}

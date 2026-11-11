@@ -8,13 +8,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dura_core/dura_core.dart';
+import 'package:dura_pos/app/analytics_provider.dart';
 import 'package:dura_pos/app/app_copy.dart';
+import 'package:dura_pos/app/app_storage.dart';
+import 'package:dura_pos/app/preference_store_provider.dart';
 import 'package:dura_pos/features/diagnostics/diagnostic_providers.dart';
 import 'package:dura_pos/features/diagnostics/diagnostic_screen.dart';
+import 'package:dura_pos/features/diagnostics/usage_recording.dart';
 import 'package:dura_ui/dura_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/memory_preferences.dart';
+import 'support/recording_analytics.dart';
 
 final class FakeDiagnostics implements DiagnosticStore {
   bool failExport = false;
@@ -47,17 +54,27 @@ Widget screen(
   ShareArchive share, {
   double scale = 1,
   DiagnosticPolicy policy = const DiagnosticPolicy(),
+  MemoryPreferences? preferences,
+  RecordingAnalytics? analytics,
+  void Function(bool on)? usageSwitch,
+  bool recordingAtStart = true,
 }) => ProviderScope(
   overrides: [
     diagnosticStoreProvider.overrideWithValue(store),
     diagnosticPolicyProvider.overrideWithValue(policy),
     shareArchiveProvider.overrideWithValue(share),
+    preferenceStoreProvider.overrideWithValue(
+      preferences ?? MemoryPreferences(),
+    ),
+    analyticsProvider.overrideWithValue(analytics ?? RecordingAnalytics()),
+    if (usageSwitch != null) usageSwitchProvider.overrideWithValue(usageSwitch),
+    usageRecordingStartProvider.overrideWithValue(recordingAtStart),
   ],
   child: MaterialApp(
     theme: DuraTheme.light,
     home: MediaQuery(
       data: MediaQueryData(textScaler: TextScaler.linear(scale)),
-      child: const DiagnosticScreen(),
+      child: const Scaffold(body: DiagnosticScreen()),
     ),
   ),
 );
@@ -65,90 +82,147 @@ Widget screen(
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   setUpAll(DuraTheme.prepareFonts);
-  testWidgets('shows injected retention limits instead of fixed UI copy', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      screen(
-        FakeDiagnostics(),
-        (_) async {},
-        policy: const DiagnosticPolicy(maxFiles: 3, maxFileBytes: 1024),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.textContaining('3 files of 1024 bytes'), findsOneWidget);
-  });
 
-  testWidgets(
-    'export completion after leaving the screen does not update disposed state',
-    (tester) async {
-      final completion = Completer<String>();
-      final store = FakeDiagnostics()..pendingArchive = completion;
+  group('SHOP-13 problem reports', () {
+    testWidgets('shows injected retention limits instead of fixed UI copy', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        screen(
+          FakeDiagnostics(),
+          (_) async {},
+          policy: const DiagnosticPolicy(maxFiles: 3, maxFileBytes: 1024),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.textContaining('3 files of 1024 bytes'), findsOneWidget);
+    });
+
+    testWidgets(
+      'export completion after leaving the screen does not update disposed '
+      'state',
+      (tester) async {
+        final completion = Completer<String>();
+        final store = FakeDiagnostics()..pendingArchive = completion;
+        await tester.pumpWidget(screen(store, (_) async {}));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(AppCopy.prepareArchive));
+        await tester.pump();
+        await tester.pumpWidget(const SizedBox.shrink());
+        completion.complete('/example/support.zip');
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets('previews files and shares only after explicit confirmation', (
+      tester,
+    ) async {
+      final store = FakeDiagnostics();
+      final analytics = RecordingAnalytics();
+      var shares = 0;
+      await tester.pumpWidget(
+        screen(store, (_) async => shares++, analytics: analytics),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('dura-00000001.jsonl'), findsOneWidget);
+      await tester.tap(find.text(AppCopy.prepareArchive));
+      await tester.pumpAndSettle();
+      expect(store.exports, 1);
+      expect(shares, 0);
+      await tester.tap(find.text(AppCopy.shareArchive));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.cancel));
+      await tester.pumpAndSettle();
+      expect(shares, 0);
+      await tester.tap(find.text(AppCopy.shareArchive));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(AppCopy.share));
+      await tester.pumpAndSettle();
+      expect(shares, 1);
+      expect(analytics.events.single.$1, AnalyticsEvents.supportShared);
+    });
+
+    testWidgets('failed exports expose recovery without leaking raw errors', (
+      tester,
+    ) async {
+      final store = FakeDiagnostics()..failExport = true;
       await tester.pumpWidget(screen(store, (_) async {}));
       await tester.pumpAndSettle();
       await tester.tap(find.text(AppCopy.prepareArchive));
-      await tester.pump();
-      await tester.pumpWidget(const SizedBox.shrink());
-      completion.complete('/example/support.zip');
+      await tester.pumpAndSettle();
+      expect(find.text(AppCopy.archiveFailed), findsOneWidget);
+      expect(find.textContaining('unsafe internal detail'), findsNothing);
+      store.failExport = false;
+      await tester.tap(find.text(AppCopy.prepareArchive));
+      await tester.pumpAndSettle();
+      expect(find.text(AppCopy.shareArchive), findsOneWidget);
+    });
+
+    testWidgets('320px and large text retain readable diagnostic controls', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(320, 720);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        screen(FakeDiagnostics(), (_) async {}, scale: 2),
+      );
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-    },
-  );
-  testWidgets('previews files and shares only after explicit confirmation', (
-    tester,
-  ) async {
-    final store = FakeDiagnostics();
-    var shares = 0;
-    await tester.pumpWidget(screen(store, (_) async => shares++));
-    await tester.pumpAndSettle();
-    expect(find.text('dura-00000001.jsonl'), findsOneWidget);
-    await tester.tap(find.text(AppCopy.prepareArchive));
-    await tester.pumpAndSettle();
-    expect(store.exports, 1);
-    expect(shares, 0);
-    await tester.tap(find.text(AppCopy.shareArchive));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(AppCopy.cancel));
-    await tester.pumpAndSettle();
-    expect(shares, 0);
-    await tester.tap(find.text(AppCopy.shareArchive));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(AppCopy.share));
-    await tester.pumpAndSettle();
-    expect(shares, 1);
+      // The main action stays in the dock, in view without scrolling.
+      expect(find.text(AppCopy.prepareArchive).hitTestable(), findsOneWidget);
+    });
   });
 
-  testWidgets('failed exports expose recovery without leaking raw errors', (
-    tester,
-  ) async {
-    final store = FakeDiagnostics()..failExport = true;
-    await tester.pumpWidget(screen(store, (_) async {}));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(AppCopy.prepareArchive));
-    await tester.pumpAndSettle();
-    expect(find.text(AppCopy.archiveFailed), findsOneWidget);
-    expect(find.textContaining('unsafe internal detail'), findsNothing);
-    store.failExport = false;
-    await tester.tap(find.text(AppCopy.prepareArchive));
-    await tester.pumpAndSettle();
-    expect(find.text(AppCopy.shareArchive), findsOneWidget);
-  });
+  group('APP-03 usage recording switch', () {
+    testWidgets('turning it off stops the recorder and is remembered', (
+      tester,
+    ) async {
+      final preferences = MemoryPreferences();
+      final switched = <bool>[];
+      await tester.pumpWidget(
+        screen(
+          FakeDiagnostics(),
+          (_) async {},
+          preferences: preferences,
+          usageSwitch: switched.add,
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text(AppCopy.usageRecording),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text(AppCopy.usageRecording));
+      await tester.pumpAndSettle();
+      expect(switched, [false]);
+      expect(preferences.values[AppStorage.usageRecordingKey], AppStorage.off);
+    });
 
-  testWidgets('320px and large text retain readable diagnostic controls', (
-    tester,
-  ) async {
-    tester.view.physicalSize = const Size(320, 720);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(screen(FakeDiagnostics(), (_) async {}, scale: 2));
-    await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text(AppCopy.prepareArchive),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(tester.takeException(), isNull);
-    expect(find.text(AppCopy.prepareArchive), findsOneWidget);
+    testWidgets('turning it back on records that it was turned on', (
+      tester,
+    ) async {
+      final analytics = RecordingAnalytics();
+      await tester.pumpWidget(
+        screen(
+          FakeDiagnostics(),
+          (_) async {},
+          analytics: analytics,
+          recordingAtStart: false,
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text(AppCopy.usageRecording),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text(AppCopy.usageRecording));
+      await tester.pumpAndSettle();
+      expect(analytics.events.single.$1, AnalyticsEvents.recordingOn);
+    });
   });
 }

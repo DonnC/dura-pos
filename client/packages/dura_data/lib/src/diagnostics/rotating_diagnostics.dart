@@ -11,6 +11,7 @@ import 'package:dura_core/dura_core.dart';
 import 'package:path/path.dart' as path;
 import 'package:rotation_log/rotation_log.dart';
 
+import 'record_shape.dart';
 import 'safe_record.dart';
 import 'support_archive.dart';
 
@@ -22,13 +23,15 @@ final class RotatingDiagnostics implements DiagnosticStore {
   RotatingDiagnostics(
     this.directory, {
     this.policy = const DiagnosticPolicy(),
+    this.fileNamePrefix = DiagnosticPolicy.logPrefix,
+    this.shape = safeRecord,
   }) {
     policy.validate();
     _logger = RotationLogger(
       RotationLogTerm.size(policy.maxFileBytes),
       options: RotationLogOptions(
         directoryName: DiagnosticPolicy.logDirectory,
-        fileNamePrefix: DiagnosticPolicy.logPrefix,
+        fileNamePrefix: fileNamePrefix,
         // The package counts archives separately from the active file.
         maxArchivedFiles: policy.maxFiles - 1,
       ),
@@ -38,6 +41,12 @@ final class RotatingDiagnostics implements DiagnosticStore {
 
   final Directory directory;
   final DiagnosticPolicy policy;
+
+  /// Starts every file's name, so two writers never share a file.
+  final String fileNamePrefix;
+
+  /// Turns a call into the record that's written, dropping anything unsafe.
+  final RecordShape shape;
   Future<void> _tail = Future.value();
   int _exportSequence = 0;
   late final RotationLogger _logger;
@@ -61,9 +70,7 @@ final class RotatingDiagnostics implements DiagnosticStore {
     for (final file in await files()) {
       if (await file.length() > policy.maxFileBytes) await file.delete();
     }
-    final line = jsonEncode(
-      safeRecord(event, traceId, fields, policy.maxFileBytes),
-    );
+    final line = jsonEncode(shape(event, traceId, fields, policy.maxFileBytes));
     _logger.append(line);
     await _logger.flush();
   });

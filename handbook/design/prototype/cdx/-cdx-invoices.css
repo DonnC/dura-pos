@@ -1,0 +1,17 @@
+.invoice-choices{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}
+.invoice-choices .chip{flex:1;white-space:normal;min-height:48px}
+#invoice-lines{margin-bottom:16px}#invoice-lines .text-button{margin-bottom:8px}
+.invoice-layout section{min-width:0}.invoice-layout .ledger-row{gap:12px}
+.app[data-page=invoice-payment] .invoice-overview .section-title{margin-top:18px}
+.app[data-page=invoice-payment] .invoice-overview .ledger-row{padding:12px 0}
+.app[data-page=invoice-payment] .invoice-overview .ledger-row:last-child{
+  background:var(--soft);padding:14px;border-radius:10px;font-size:1rem}
+.app[data-page=invoice-payment] .note{margin:12px 0}
+@media(min-width:900px){
+  .app[data-page^=invoice] .page-content{max-width:960px}
+  .invoice-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+  .app[data-page=invoice-payment] .invoice-layout{column-gap:40px;row-gap:16px}
+  .app[data-page=invoice-payment] .invoice-overview{grid-column:2;grid-row:1/3}
+  .invoice-extra{grid-column:1}
+  .large .invoice-layout{display:block}
+}

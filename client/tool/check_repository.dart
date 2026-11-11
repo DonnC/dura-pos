@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'source_header.dart';
+import 'ui_tracker.dart';
 import 'version_drift.dart';
 import 'workspace.dart';
 
@@ -38,12 +39,18 @@ List<String> repositoryVersionDrift() {
     File('../backend/hub/package.json').readAsStringSync(),
   ) as Map<String, Object?>;
   final hubSource = File('../backend/hub/src/protocol.js').readAsStringSync();
+  final appSource = File('apps/dura/lib/app/app_version.dart')
+      .readAsStringSync();
   final versions = <String, String?>{
     'backend/hub/package.json': hub['version'] as String?,
     'backend/hub/src/protocol.js': RegExp("HUB_VERSION_ = '([^']+)'")
         .firstMatch(hubSource)
         ?.group(1),
+    'apps/dura/lib/app/app_version.dart': RegExp("version = '([^']+)'")
+        .firstMatch(appSource)
+        ?.group(1),
   };
+  final appBuild = RegExp(r'build = (\d+);').firstMatch(appSource)?.group(1);
   final dependencies = <String, String>{};
   var appVersion = '';
   for (final directory in workspacePackages) {
@@ -61,12 +68,48 @@ List<String> repositoryVersionDrift() {
       }
     }
   }
-  return versionDrift(
-    version: version,
-    build: release['buildNumber']! as int,
-    appVersion: appVersion,
-    versions: versions,
-    dependencies: dependencies,
+  final build = release['buildNumber']! as int;
+  return [
+    ...versionDrift(
+      version: version,
+      build: build,
+      appVersion: appVersion,
+      versions: versions,
+      dependencies: dependencies,
+    ),
+    if (appBuild != '$build')
+      'apps/dura/lib/app/app_version.dart build is $appBuild, '
+          'but release.json says $build',
+  ];
+}
+
+/// Checks `handbook/design/ui-tracker.md` against the app's screens and tests.
+List<String> repositoryTrackerProblems() {
+  Iterable<File> dartFiles(String root) => Directory(root).existsSync()
+      ? Directory(root)
+            .listSync(recursive: true)
+            .whereType<File>()
+            .where((file) => file.path.endsWith('.dart'))
+      : const [];
+  final testRoots = [
+    'apps/dura/test',
+    'test',
+    for (final package in workspacePackages.where(
+      (p) => p.startsWith('packages/'),
+    ))
+      '$package/test',
+  ];
+  return trackerProblems(
+    tracker: File('../handbook/design/ui-tracker.md')
+        .readAsStringSync()
+        .replaceAll('\r\n', '\n'),
+    registered: registeredIds(
+      dartFiles('apps/dura/lib').map((file) => file.readAsStringSync()),
+    ),
+    tests: {
+      for (final root in testRoots)
+        for (final file in dartFiles(root)) file.path: file.readAsStringSync(),
+    },
   );
 }
 
@@ -124,13 +167,14 @@ void main() {
       }
       if (name.contains('/lib/') &&
           !name.endsWith('/theme/dura_palette.dart') &&
-          RegExp(r'Color\(0x|Colors\.').hasMatch(text)) {
+          RegExp(r'Color\(0x|\bColors\.').hasMatch(text)) {
         errors.add('$name contains colours outside the theme');
       }
     }
   }
   errors.addAll(straySourceHeaders());
   errors.addAll(repositoryVersionDrift());
+  errors.addAll(repositoryTrackerProblems());
   for (final directory in workspacePackages) {
     if (packageManifest(directory)['resolution'] != 'workspace') {
       errors.add('$directory is not in workspace resolution');

@@ -9,24 +9,43 @@ import 'dart:async';
 import 'package:dura_core/dura_core.dart';
 import 'package:flutter/foundation.dart';
 
+/// What a problem report calls each kind of error.
+abstract final class ErrorSources {
+  /// Thrown while Flutter was building, laying out or painting.
+  static const flutter = 'flutter_error';
+
+  /// Thrown in async code that nothing caught.
+  static const uncaught = 'uncaught_error';
+}
+
 /// Register app-owned handlers and return an idempotent restoration callback.
-VoidCallback installErrorTracing(Diagnostics logs) {
+///
+/// Each error is written with its type, the code frames that led to it, the
+/// screen it happened on and the screens before. Never its message, which can
+/// hold a name, an amount or a path.
+VoidCallback installErrorTracing(Diagnostics logs, {Breadcrumbs? trail}) {
   final previousFlutter = FlutterError.onError;
   final previousPlatform = PlatformDispatcher.instance.onError;
-  void trace(Object error) {
+  void trace(Object error, StackTrace? stack, String source) {
     // Never recurse if a full disk also prevents writing the error event.
     unawaited(
       logs
           .record(
             'runtime.error',
-            fields: {'errorType': error.runtimeType.toString()},
+            fields: {
+              'errorType': error.runtimeType.toString(),
+              'code': source,
+              'frames': ?(stack == null ? null : safeFrames(stack)),
+              'screen': ?trail?.current,
+              'trail': ?trail?.trail,
+            },
           )
           .catchError((Object _, StackTrace _) {}),
     );
   }
 
   void flutterHandler(FlutterErrorDetails details) {
-    trace(details.exception);
+    trace(details.exception, details.stack, ErrorSources.flutter);
     if (previousFlutter != null) {
       previousFlutter(details);
     } else if (kDebugMode) {
@@ -35,7 +54,7 @@ VoidCallback installErrorTracing(Diagnostics logs) {
   }
 
   bool platformHandler(Object error, StackTrace stack) {
-    trace(error);
+    trace(error, stack, ErrorSources.uncaught);
     return previousPlatform?.call(error, stack) ?? false;
   }
 

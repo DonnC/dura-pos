@@ -2,6 +2,37 @@
 
 ## Unreleased — 0.1.0-dev.2
 
+### Added: the Counter design's foundation in the app
+
+- **The Counter design leads the app** ([decision 0012](handbook/decisions/0012-counter-design-and-ui-foundation.md)),
+  and [`handbook/design/ui-tracker.md`](handbook/design/ui-tracker.md) lists its
+  28 components and 55 screens and sheets, with how far each has come.
+  `melos run check` fails when the tracker and the code disagree.
+- **`dura_ui` theme tokens:** colours, spacing, corners, sizes and a compact type
+  scale from the design, read with `context.dura`.
+- **17 components that wrap Flutter's widgets:**
+  - buttons, text and amount fields, amount text, chips, list rows;
+  - summary card, notices, action dock;
+  - bottom bar and side rail, shop header, page heading, setting switch.
+
+  Amounts can't be shown without their currency.
+- **Layout follows the window, not the device.** Phones get a bottom bar. Tablets
+  and computer windows get a side rail and one readable column. At large text,
+  rows stack rather than break words.
+- **The app opens on a four-tab shell:** Sell, Stock, Money and My shop, or My till
+  and Me for a seller. Each tab says plainly when its work opens. Diagnostics move
+  under My shop as Problem reports.
+- **Every widget test in `dura_ui` and the app fails on a memory leak.**
+
+### Added: richer problem reports, and usage records on the phone
+
+- **Each error now records** its code frames, the screen it happened on and the
+  last 20 screens before it. Never its message or a device path.
+- **Usage records** of screens, tabs and main actions are kept in their own
+  rotated files on the phone, never with sales, amounts or names. The owner can
+  switch them off in Problem reports. Uploading them to the owner's Drive comes
+  with the hub phase.
+
 ### Changed: the Shop Sign identity
 
 - Apply the owner-approved B wordmark and d, charcoal, chalk and sign red to

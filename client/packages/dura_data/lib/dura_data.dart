@@ -4,6 +4,7 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
+export 'src/analytics/rotating_analytics.dart';
 export 'src/diagnostics/rotating_diagnostics.dart';
 export 'src/storage/local_database.dart';
 export 'src/storage/sqlite_outbox.dart';

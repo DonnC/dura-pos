@@ -10,6 +10,10 @@ brand masters, actual app colours and Android icon/splash are updated under
 the phones. The **Person** and **Screen** controls let you inspect individual
 owner and worker screens. **Focus on one phone** makes that review easier.
 
+The **Device** selector now includes phone, small phone, tablet portrait and
+tablet landscape. See [responsive feature details](-cdx-responsive-design.md)
+and the maintained [task status](status.md) for this design-only continuation.
+
 ![Everyday selling and owner money](-cdx-overview.png)
 
 ## The design decision
@@ -230,3 +234,33 @@ the captures, including the older embedded prototype. The matching Flutter
 theme/icon verification and Android build limitation are recorded in the
 [brand guide](../../branding/04-shop-sign.md). Prototype workflow logic and
 the browser storage key were preserved.
+
+Supplier purchase invoice screens and their assumptions are documented in
+[-cdx-purchase-invoices.md](-cdx-purchase-invoices.md).
+
+Kept change checkout, cash-back screens and assumptions are documented in
+[-cdx-kept-change.md](-cdx-kept-change.md).
+
+Weighed quantities and partial returns are documented in
+[-cdx-quantity-returns.md](-cdx-quantity-returns.md).
+
+Staff permissions, removal and offline recovery are documented in
+[-cdx-staff-access.md](-cdx-staff-access.md).
+
+Period/location reports and their sample coverage rules are documented in
+[-cdx-period-location-reports.md](-cdx-period-location-reports.md).
+
+Connection, new-phone pairing and replacement recovery are documented in
+[-cdx-connection-recovery.md](-cdx-connection-recovery.md).
+
+Optional fiscal receipt status, day close and device recovery are documented in
+[-cdx-fiscal-status.md](-cdx-fiscal-status.md).
+
+The consistency and interruption audit is documented in
+[-cdx-consistency-audit.md](-cdx-consistency-audit.md), with a separate
+[Figma conversion assessment](-cdx-figma-readiness.md).
+
+The complete current screen/state/dialog index is in
+[-cdx-coverage.html](-cdx-coverage.html), with its
+[coverage policy](-cdx-state-dialog-inventory.md). Older review recovery is
+documented in [-cdx-review-drafts.md](-cdx-review-drafts.md).

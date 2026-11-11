@@ -7,4 +7,9 @@
 abstract final class AppStorage {
   static const databaseFile = 'dura-foundation.sqlite';
   static const themeKey = 'appearance.theme';
+
+  /// Whether usage records are kept. Missing means on.
+  static const usageRecordingKey = 'analytics.recording';
+  static const on = 'on';
+  static const off = 'off';
 }

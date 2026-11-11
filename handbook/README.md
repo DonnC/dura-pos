@@ -46,6 +46,10 @@ Numbered, never rewritten: a later decision supersedes an earlier one.
 | [0006](decisions/0006-backend-folder-and-uniform-conventions.md) | `backend/` holds the hub and templates; the hub is JavaScript; templates must be Excel-compatible; uniform conventions |
 | [0007](decisions/0007-generator-package-and-cli.md) | The workbook generator is the `dura_templates` package with a CLI; refactors proven by fingerprints |
 | [0008](decisions/0008-clean-templates.md) | Clean templates, one set per pricing currency, byte-reproducible with a hash manifest; setup requires the pricing currency |
+| [0009](decisions/0009-shop-page.md) | A public one-page shop page from the hub, which the owner can turn off |
+| [0010](decisions/0010-double-entry-records.md) | Double-entry records: one row, two sides, with no new tabs |
+| [0011](decisions/0011-shop-sign-identity.md) | The Shop Sign identity: custom wordmark and d, charcoal, chalk and sign red |
+| [0012](decisions/0012-counter-design-and-ui-foundation.md) | The Counter design leads the app; components wrap Flutter's widgets and read theme tokens; an enforced tracker; local problem and usage logs |
 
 Use the [template](decisions/0000-template.md) for a new decision.
 
@@ -60,6 +64,8 @@ supersedes foundation branding: custom wordmark and d, charcoal/chalk/sign red.
   interactive [HTML prototype](design/prototype/).
 - [Current mobile design](design/prototype/cdx/-cdx-preview.html): interactive
   daily journeys for the owner and seller.
+- [Mobile app tracker](design/ui-tracker.md): every component and screen of that
+  design, and how far each has come. CI keeps it honest.
 - [Branding](design/branding/04-shop-sign.md): the Shop Sign wordmark and d.
 
 ## Outside the handbook

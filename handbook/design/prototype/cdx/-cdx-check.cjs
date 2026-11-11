@@ -10,7 +10,12 @@ const {execFileSync}=require('node:child_process');
 const {pathToFileURL}=require('node:url');
 const path=require('node:path');
 const assert=require('node:assert/strict');
-for(const file of ['-cdx-workflows-check.cjs','-cdx-journeys-check.cjs'])
+const addedChecks=process.argv.includes('--existing-only')?[]:
+  ['-cdx-review-drafts-check.cjs','-cdx-coverage-check.cjs'];
+for(const file of [...addedChecks,'-cdx-audit-check.cjs','-cdx-workflows-check.cjs','-cdx-journeys-check.cjs',
+  '-cdx-responsive-check.cjs','-cdx-invoice-check.cjs','-cdx-kept-check.cjs',
+  '-cdx-quantity-returns-check.cjs','-cdx-access-check.cjs','-cdx-reports-check.cjs',
+  '-cdx-connection-check.cjs','-cdx-fiscal-check.cjs'])
   execFileSync(process.execPath,[path.join(__dirname,file)],{stdio:'inherit'});
 (async()=>{
   const b=await chromium.launch({channel:'msedge',headless:true});
@@ -21,7 +26,7 @@ for(const file of ['-cdx-workflows-check.cjs','-cdx-journeys-check.cjs'])
     const url=pathToFileURL(path.join(__dirname,'-cdx-counter.html')).href;
     const scenes=['sell','pay','opening','cashup','money','shop','stock','product',
       'receive','stock-count','product-edit','expense','customers','customer','suppliers',
-      'reports','people','staff','settings','records','export','restore','connect','pair',
+      'supplier-statement','reports','people','staff','settings','records','export','restore','connect','pair',
       'history','receipt','refund','quick','mobile','pending','credit','mixed','welcome',
       'setup','join','locked','switch-person','sync','help','fiscal','print',
       'receive-review','count-review','handover','count-stock-review','expense-review',
@@ -29,8 +34,8 @@ for(const file of ['-cdx-workflows-check.cjs','-cdx-journeys-check.cjs'])
     const reviews=['receive-review','count-review','handover','count-stock-review','expense-review',
       'refund-review','first-product','done'];
     let layouts=0;
-    for(const width of [320,390]){
-      await p.setViewportSize({width,height:844});
+    for(const [width,height] of [[320,844],[390,844],[768,1024],[1024,768]]){
+      await p.setViewportSize({width,height});
       for(const mode of ['', '&theme=dark','&text=large']){
         for(const scene of scenes){
           await p.goto(`${url}?fresh=1&seed=1&screen=${reviews.includes(scene)?'sell':scene}${mode}`);
@@ -56,7 +61,7 @@ for(const file of ['-cdx-workflows-check.cjs','-cdx-journeys-check.cjs'])
           });
           assert(!unlabelled,`Unlabelled control: ${scene}`);
           const dock=await p.locator('#dock').boundingBox();
-          assert(!dock||dock.y+dock.height<=845,`Unreachable action: ${width} ${scene} ${mode}`);
+          assert(!dock||dock.y+dock.height<=height+1,`Unreachable action: ${width} ${scene} ${mode}`);
           layouts++;
         }
         for(const scene of ['sell','money','shop','stock','cashup','opening','expense','records']){
@@ -83,19 +88,27 @@ for(const file of ['-cdx-workflows-check.cjs','-cdx-journeys-check.cjs'])
       await p.goto(`${url}?fresh=1&${params}`);await p.evaluate(()=>document.fonts.ready);
       await p.screenshot({path:path.join(__dirname,`-cdx-${name}.png`)});
     }
-    await p.setViewportSize({width:1440,height:1560});
-    await p.goto(pathToFileURL(path.join(__dirname,'-cdx-preview.html')).href);
-    console.log(`PASS: ${layouts} layout combinations; capturing design boards.`);
-    for(const [journey,name] of [['sell','overview'],['shift','shift-board'],
-      ['stock','stock-board'],['owner','owner-board'],['start','setup-board']]){
-      const ready=p.frames().filter(f=>f!==p.mainFrame()).map(f=>f.waitForNavigation({waitUntil:'load'}));
-      await p.locator(`[data-journey="${journey}"]`).click();
-      await Promise.all(ready);
-      await Promise.all(p.frames().map(f=>f.evaluate(()=>document.fonts.ready)));
-      await p.screenshot({path:path.join(__dirname,`-cdx-${name}.png`),fullPage:true});
+    for(const [name,width,height,params] of [
+      ['tablet-sell-landscape',1024,768,'seed=1'],
+      ['tablet-sell-portrait',768,1024,'seed=1'],
+      ['tablet-payment',1024,768,'seed=1&screen=pay&cash=500'],
+      ['tablet-stock',1024,768,'screen=stock'],
+      ['tablet-receipts',1024,768,'screen=history'],
+      ['tablet-customer',1024,768,'screen=customer']]){
+      await p.setViewportSize({width,height});await p.goto(`${url}?fresh=1&${params}`);
+      if(name==='tablet-customer'){
+        await p.locator('#customer-amount').fill('5.00');
+        await p.locator('[data-action="review-collection"]').click();
+        await p.locator('[data-action="save-collection"]').click();
+        await p.locator('[data-action="customer"]:visible').first().click();
+      }
+      await p.evaluate(()=>document.fonts.ready);
+      await p.screenshot({path:path.join(__dirname,`-cdx-${name}.png`)});
     }
+    console.log(`PASS: ${layouts} layout combinations; capturing design boards.`);
+    execFileSync(process.execPath,[path.join(__dirname,'-cdx-capture-boards.cjs')],{stdio:'inherit'});
     assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);
-    console.log(`PASS: ${layouts} owner/worker layouts at 320/390px, light/dark/200% text; `+
-      'shelf states, offline cash, pending outcomes, local fonts/assets, 12 design captures.');
+    console.log(`PASS: ${layouts} owner/worker phone/tablet layouts, light/dark/200% text; `+
+      'shelf states, offline cash, pending outcomes, local fonts/assets, phone/tablet captures.');
   }finally{await b.close();}
 })().catch(e=>{console.error(e);process.exit(1);});

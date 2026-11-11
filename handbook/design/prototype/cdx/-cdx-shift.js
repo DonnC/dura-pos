@@ -44,7 +44,7 @@ screens['count-review']=()=>{
   if(draft.counted===undefined){navigate('cashup');return;}
   const diff=draft.counted-s.cash,zwgDiff=draft.countedZwg-s.zwg;
   screen.innerHTML=heading('Check your cash-up.','One last check before handover.','cashup')+
-    line('Expected cash',money(s.cash))+line('Cash counted',money(draft.counted))+
+    line('Expected cash',money(s.cash))+line('Cash counted',money(draft.counted))+keptOwedRow()+
     `<p class="${diff?'warning':'change'}">${varianceText(diff)}</p>`+
     (s.zwg>0?line('Expected ZWG',money(s.zwg,'ZWG'))+
       line('Counted ZWG',money(draft.countedZwg,'ZWG'))+
@@ -114,8 +114,8 @@ screens['switch-person']=()=>{
     screen.innerHTML+=note('Locking the app keeps the same cashier responsible. A new cashier needs a cash-up first.');
     primary('cashup','Count and close this shift');return;
   }
-  screen.innerHTML+=select('next-person','Next person',option('worker','Rudo · Seller')+
-    option('owner','Chipo · Owner'))+
+  screen.innerHTML+=select('next-person','Next person',
+    (supervisedAccess?'':option('worker','Rudo · Seller'))+option('owner','Chipo · Owner',supervisedAccess))+
     field('next-pin','Their PIN','','type="password" inputmode="numeric" maxlength="6"')+
     note('Practice PIN: 123456. The next person counts the retained float before opening.');
   primary('start-person','Continue to opening count',true);

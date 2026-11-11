@@ -4,7 +4,12 @@
 // found in the LICENSE file at the repository root.
 // SPDX-License-Identifier: MIT
 
+/// Every path in the app. Sell is home.
 abstract final class AppRoutes {
-  static const home = '/';
-  static const diagnostics = '/diagnostics';
+  static const sell = '/sell';
+  static const stock = '/stock';
+  static const money = '/money';
+  static const shop = '/shop';
+  static const diagnosticsSegment = 'diagnostics';
+  static const diagnostics = '$shop/$diagnosticsSegment';
 }

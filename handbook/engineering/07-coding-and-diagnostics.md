@@ -44,6 +44,8 @@ application-support/
     dura-1793606400000000.log
   diagnostics-exports/
     support-TIMESTAMP-SEQUENCE.zip
+  usage/
+    usage.log
   dura-foundation.sqlite
 ```
 
@@ -58,6 +60,18 @@ trace values have a restricted identifier format. Unknown fields and free-form
 messages are discarded. Never put tokens, PINs, customer names, amounts, payment
 payloads or private keys into identifier fields just because a regex accepts them.
 Global handlers log safe exception types, not exception text or account paths.
+Each error also carries its source (`flutter_error` or `uncaught_error`), up to
+12 frames from `safeFrames` as `function (package/file.dart:line)`, the screen's
+tracker ID and the last 20 screens from `Breadcrumbs`. `safeRecord` checks every
+frame and step again, so a message or a `file:` path can't be written. Release
+builds made with `--split-debug-info` have no symbols, so their frames are empty.
+
+Usage records are a second `RotatingDiagnostics` writer in `usage/`, with the
+`usage` prefix, five files of 1 MiB, and `analyticsRecord` as its allowlist. Only
+names in `AnalyticsEvents` and `AnalyticsFields` are kept; anything else becomes
+`analytics.unknown` or is dropped. Recording is on unless the owner switches it
+off in Problem reports (`analytics.recording` = `off`). Writes never throw to the
+caller. See [decision 0012](../decisions/0012-counter-design-and-ui-foundation.md).
 
 Rotation happens before an append would exceed the cap. Only managed diagnostic
 filenames are eligible for pruning. rotation_log 0.1.2 provides size rotation and
