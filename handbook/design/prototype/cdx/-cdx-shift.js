@@ -92,8 +92,7 @@ actions.profile=()=>showSheet(`${esc(s.name)} · ${s.role==='owner'?'Owner':'Cas
   '<p class="micro">Front counter · Device 1</p>'+
   menu('lock','Lock Dura','Keep your basket and shift open','shield')+
   menu('switch-person','Switch person',s.active?'Cash up before another person takes the drawer':
-    'Start the next person’s shift','people')+
-  menu('money',s.role==='owner'?'My money':'My till','Sales and cash for this shift','money'));
+    'Start the next person’s shift','people'));
 actions.lock=()=>{save();navigate('locked');};
 screens.locked=()=>{
   screen.innerHTML=heading('Your till is locked.',`${esc(s.name)} · Basket and shift kept safe`)+

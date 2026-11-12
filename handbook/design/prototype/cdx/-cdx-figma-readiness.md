@@ -10,7 +10,7 @@ file to create the editable document. Its appearance must be checked there.
 
 ## What a complete design handoff should preserve
 
-- All 96 current base routes, grouped by the shop owner's and cashier's tasks.
+- All 100 current base routes, grouped by the shop owner's and cashier's tasks.
 - Conditional states: loading, empty, offline, invalid, disabled, interrupted,
   pending, failed, confirmed and owner-access boundaries where designed;
   control focus, selection and pressed/disabled variants.

@@ -7,10 +7,10 @@ screen/state/dialog and inspect it on mobile, tablet portrait or tablet landscap
 Light, dark and 200% text are available. Device changes resize the same example;
 appearance changes reopen its canonical fixture. Every example is fictional.
 
-The inventory contains **96 base screens**, **149 additional state examples**
-and **27 dialog examples**. The dialog examples exercise all **19 dialog call
+The inventory contains **98 base screens**, **157 additional state examples**
+and **28 dialog examples**. The dialog examples exercise all **20 dialog call
 sites** in the scripts actually loaded by the prototype. These are example
-counts, not 272 distinct product screens or an enumeration of arbitrary inputs.
+counts, not 283 distinct product screens or an enumeration of arbitrary inputs.
 
 [-cdx-state-dialog-inventory.json](-cdx-state-dialog-inventory.json) is the
 machine-readable record: screen family, example URL, actual heading, actual
@@ -24,7 +24,7 @@ The catalog also includes long shop/product names and a large pricing amount.
 | --- | ---: | --- |
 | Selling | 11 | Shelf, quick item, measured quantities, payment methods, pending answers and saved outcome; current/held baskets remain separate |
 | Receipts and returns | 7 | Lookup, original receipt, print, whole/partial returns; linked history and original prices remain visible |
-| Till and money out | 9 | Float, drawer, cash count, variance, handover, lock and person change; restored review needs a fresh check and approval where required |
+| Till and cash movements | 11 | Float, money in/out, drawer, cash count, variance, handover, lock and person change; restored review needs a fresh check and approval where required |
 | Stock | 7 | Search, filters, product movements, delivery, physical count and product edit; empty tracked stock offers Add a product |
 | Accounts | 4 | Customer/supplier lists and statements; customer collection is an explicit local review dialog |
 | Purchase invoices | 4 | Items/costs, payment, review and saved invoice; absent invoice and empty item list have separate examples |
@@ -166,3 +166,9 @@ and denied-cashier report routes. Technical IDs remain unchanged. See
 [-cdx-language-roles.md](-cdx-language-roles.md),
 [-cdx-discounts.md](-cdx-discounts.md) and
 [-cdx-owner-report-details.md](-cdx-owner-report-details.md).
+
+The operations pass adds the 500-item stock-take example, progress/recount and
+difference review, converted Sell prices, a failed-save receipt preview and
+money-in approval/completion. The currency selector has its own dialog example.
+Sale completion now is the receipt preview itself, rather than an intermediate
+success screen. See [-cdx-stocktake-and-checkout.md](-cdx-stocktake-and-checkout.md).

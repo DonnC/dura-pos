@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-11",
+  "date": "2026-11-12",
   "scope": "Browser design review at 1024 × 768; not physical-device verification",
   "screens": [
     {
@@ -104,7 +104,7 @@
       "header": "Task identity",
       "overflow": false,
       "mainTop": 28,
-      "paired": true
+      "paired": false
     },
     {
       "screen": "print",
@@ -219,6 +219,22 @@
       "paired": true
     },
     {
+      "screen": "money-in",
+      "actual": "money-in",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "money-in-review",
+      "actual": "money-in-review",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
       "screen": "stock",
       "actual": "stock",
       "header": "Shop identity",
@@ -264,11 +280,27 @@
       "header": "Task identity",
       "overflow": false,
       "mainTop": 28,
-      "paired": false
+      "paired": true
     },
     {
       "screen": "product-edit",
       "actual": "product-edit",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "take-history",
+      "actual": "take-history",
+      "header": "Task identity",
+      "overflow": false,
+      "mainTop": 28,
+      "paired": false
+    },
+    {
+      "screen": "take-history-detail",
+      "actual": "take-history-detail",
       "header": "Task identity",
       "overflow": false,
       "mainTop": 28,

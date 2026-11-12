@@ -29,9 +29,11 @@ function drawReceipts(){
       receiptFilter==='account'&&r.method==='On account'||receiptFilter==='mobile'&&r.method==='Mobile money'||
       receiptFilter==='returns'&&hasReturns(r))&&
     [r.id,r.who,r.customer||'',...r.items.map(p=>p.name)].join(' ').toLowerCase().includes(receiptSearch.toLowerCase()));
-  document.querySelector('#receipt-list').innerHTML=matches.map(r=>menu('open-receipt',money(r.amount,r.currency),
+  document.querySelector('#receipt-list').innerHTML=matches.map(r=>'<div class="receipt-list-row">'+menu('open-receipt',money(r.amount,r.currency),
     `${esc(r.who)} · ${esc(r.method)}${hasReturns(r)?' · Return linked':''} · ${esc(r.id)}`,
-    'receipt',`data-id="${r.id}"`)).join('')||`<div class="empty compact"><h2>No matching receipts.</h2>
+    'receipt',`data-id="${r.id}"`)+
+    (canReturn(r)&&!(s.refunds||[]).includes(r.id)?btn('return-from-history','Return','text-button',`data-id="${r.id}"`):'')+
+    '</div>').join('')||`<div class="empty compact"><h2>No matching receipts.</h2>
     <p class="sub">Try a shorter search or include all payment types. Unconfirmed payments are not completed sales.</p>
     ${btn('clear-receipt-search','Show all receipts')}</div>`;
 }
@@ -39,13 +41,25 @@ inputActions.history=el=>{if(el.id==='receipt-search'){receiptSearch=el.value;dr
 actions['receipt-filter']=b=>{receiptFilter=b.dataset.filter;screens.history();};
 actions['clear-receipt-search']=()=>{receiptSearch='';receiptFilter='all';screens.history();};
 actions['open-receipt']=b=>{lastSale=receiptList().find(r=>r.id===b.dataset.id);navigate('receipt');};
-screens.receipt=()=>{
+actions['return-from-history']=b=>{
+  const r=receiptList().find(r=>r.id===b.dataset.id);
+  if(!r||!canReturn(r)||(s.refunds||[]).includes(r.id))return;
+  lastSale=r;navigate('return-items');
+};
+screens.receipt=()=>renderReceipt(false);
+function renderReceipt(checkout=false){
+  clearTimeout(toastTimer);document.querySelector('#toast').classList.remove('visible');
   if(!lastSale)lastSale=receiptList()[0];
   if(s.role==='worker'&&lastSale?.who!==s.name)lastSale=receiptList().find(r=>r.who===s.name);
   if(!lastSale){screen.innerHTML=heading('No receipt yet.','Your first saved sale will appear here.','sell');return;}
   const r=lastSale;
-  screen.innerHTML=heading('Sale receipt.','Practice receipt · Not fiscal','history')+
-    `<div class="receipt-paper"><h2>${esc(s.shop)}</h2><p class="micro">${esc(r.id)}<br>
+  const failed=checkout&&saleSaveError;
+  screen.innerHTML=(checkout?'':btn('history',icon('back')+' Back','back'))+
+    '<h1 class="receipt-sr-only">'+(failed?'Sale not saved':'Receipt')+'</h1>'+
+    (failed?'<p class="receipt-save-error" role="alert">Couldn’t save. Retry this sale; don’t take payment again.</p>':'')+
+    `<div class="receipt-paper"><div class="receipt-header"><h2>${esc(s.shop)}</h2>`+
+    (failed?'':'<span class="receipt-check" role="img" aria-label="Sale completed">'+icon('check')+'</span>')+
+    `</div><p class="micro">${esc(r.id)}<br>
     ${esc(r.who)} · Front counter</p><div class="receipt-details">${summaryRows(r.items)}</div>
     ${r.discountTotal?line('Subtotal',money(r.subtotal,r.currency))+
       line('Discounts','− '+money(r.discountTotal,r.currency)):''}
@@ -53,16 +67,15 @@ screens.receipt=()=>{
     ${r.method==='Cash'?line('Cash received',money(r.received,r.currency))+
       line('Change given',money(r.change,r.currency)):''}
     ${keptReceiptRows(r)}
-    ${r.payments?r.payments.map(p=>line('Cash received',money(p.amount,p.currency))).join('')+
+    ${r.payments?r.payments.filter(p=>p.amount>0).map(p=>line('Cash received',money(p.amount,p.currency))).join('')+
+      (r.changePayments||[]).map(p=>line('Change given',money(p.amount,p.currency))).join('')+
+      (r.changePayments&&Math.round((r.roundingZwgSubcent||0)/100)?line('Rounding',money(Math.round(r.roundingZwgSubcent/100),'ZWG')):'')+
       line('Rate kept with sale',`USD 1.00 = ${money(r.rateMinor,'ZWG')}`):''}</div>
-    <p class="status-line">${icon('check')}Saved on this device</p>
-    <p class="status-line wait">${icon('clock')}Not uploaded · No fiscal receipt issued</p>
-    <div class="split">${btn('share-receipt','Share receipt')}${btn('print','Print receipt')}</div>
-    ${returnHistory(r)}
-    ${(s.refunds||[]).includes(r.id)?'<p class="warning">A return is linked to this sale.</p>':
-      canReturn(r)?btn('return-items','Return selected items','secondary full')+
-        (r.method==='Cash'&&!hasReturns(r)?btn('refund','Return whole sale','text-button full'):''):''}`;
-};
+    <div class="split">${btn('share-receipt','Share receipt','secondary',saleSaveError&&checkout?'disabled':'')}${btn('print','Print receipt','secondary',saleSaveError&&checkout?'disabled':'')}</div>
+    ${checkout?'':returnHistory(r)}`;
+  if(checkout)primary(saleSaveError?'retry-sale-save':'next',saleSaveError?'Retry saving this sale':
+    count()?'Return to current sale':'Next customer');
+}
 actions['share-receipt']=()=>showSheet('Share receipt',
   `<div class="receipt-paper"><h3>${esc(s.shop)}</h3>${line('Sale',money(lastSale.amount))}
   <p class="micro">${esc(lastSale.id)} · Practice copy</p></div>
@@ -85,6 +98,8 @@ screens.refund=()=>{
     summaryRows(lastSale.items)+line('Cash to refund',money(lastSale.amount,lastSale.currency))+
     select('return-reason','Reason',option('','Choose a reason')+option('wrong','Wrong item')+
       option('damaged','Damaged product')+option('other','Other'))+
+    '<div id="return-other-wrap">'+field('return-other','Explain the other reason',draft.refund?.other||'',
+      'maxlength="120"')+'</div>'+
     select('return-stock','Put the items back on the shelf?',option('no','No, keep out of stock')+
       option('yes','Yes, all returned items are sellable'))+
     note('This flow returns the whole sale. Owner approval is required before cash leaves the drawer.');
@@ -92,15 +107,21 @@ screens.refund=()=>{
     document.querySelector('#return-stock').value=draft.refund.restock?'yes':'no';}
   primary('review-refund','Review return',true);inputActions.refund();
 };
-inputActions.refund=()=>enable('review-refund',!!val('return-reason')&&
-  lastSale.currency===s.currency&&lastSale.amount<=s.cash);
+inputActions.refund=()=>{
+  document.querySelector('#return-other-wrap').hidden=val('return-reason')!=='other';
+  enable('review-refund',!!val('return-reason')&&(val('return-reason')!=='other'||val('return-other').length>=3)&&
+    lastSale.currency===s.currency&&lastSale.amount<=s.cash);
+};
 actions['review-refund']=()=>{
-  draft.refund={reason:val('return-reason'),restock:val('return-stock')==='yes'};navigate('refund-review');
+  if(val('return-reason')==='other'&&val('return-other').length<3)return;
+  draft.refund={reason:val('return-reason'),other:val('return-other'),restock:val('return-stock')==='yes'};navigate('refund-review');
 };
 screens['refund-review']=()=>{
   if(!draft.refund||!lastSale){navigate('refund');return;}
   screen.innerHTML=heading('Approve the return.',`Requested by ${esc(s.name)} · Cash refund`,'refund')+
     line('Original sale',esc(lastSale.id))+line('Cash leaving the drawer',money(lastSale.amount))+
+    line('Reason',esc(draft.refund.reason==='other'?draft.refund.other:
+      draft.refund.reason==='damaged'?'Damaged product':'Wrong item'))+
     line('Stock',draft.refund.restock?'Return to shelf':'Keep out of stock')+approvalField();
   primary('save-refund','Approve & save return',true);
 };
@@ -114,7 +135,7 @@ actions['save-refund']=()=>{
     const p=products().find(p=>p.id===item.id);if(p&&p.stock!==null){p.stock+=item.qty;
       stockMove(p.id,'Returned to shelf',item.qty,p.stock);}
   }
-  record(`Return linked to ${lastSale.id}; approved by Chipo`);draft.refund=null;
+  record(`Return linked to ${lastSale.id}; approved by Chipo; ${draft.refund.reason==='other'?draft.refund.other:draft.refund.reason}`);draft.refund=null;
   result('Return saved.',line('Give the customer',money(lastSale.amount))+
     line('Linked sale',esc(lastSale.id))+note('The original receipt remains unchanged.'),
     'history','Back to recent sales');

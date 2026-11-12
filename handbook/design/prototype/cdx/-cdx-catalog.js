@@ -6,6 +6,7 @@
 
 // Catalog-only fixtures. Every mutation is local fictional preview data.
 function prepareCoverageCase(c){
+  if(c.base&&c.screen==='take-history-detail')prepareCoverageCase({setup:'take-history',screen:c.screen});
   if(c.base){
     draft.receive={id:'bread',qty:6,ref:'DEL-012',supplier:'Mambo Wholesale'};
     draft.stockCount=[{id:'bread',before:18,count:16}];
@@ -13,15 +14,29 @@ function prepareCoverageCase(c){
     draft.counted=7000;draft.countedZwg=0;draft.kept=1000;draft.keptZwg=0;
     draft.refund={reason:'wrong',restock:true};draft.setupCurrency='USD';draft.setupName='Practice shop';
     lastSale=receiptList()[0];
+    if(c.screen==='done')s.basket={};
     if(c.screen==='invoice-detail')s.invoices=[{...invoiceDraft(),
       total:invoiceTotal(invoiceDraft()),paid:invoicePaid(invoiceDraft()),who:'Chipo'}];
     if(c.screen==='kept-refund-review')s.keptRefund={customer:'tariro',amount:'1.00'};
     if(c.screen==='return-review'){const d=returnDraft(lastSale);d.qty[0]='1';d.reason='wrong';}
     if(c.screen==='handover')s.active=false;
+    if(c.screen==='money-in-review')Object.assign(cashInDraft(),{kind:'owner',amount:'10.00',baseline:s.cash});
     if(c.screen==='discount-review'){
       selectedId='bread';s.discountDraft=null;const d=discountDraft();d.value='10';d.reason='Promotion';
     }
     page=c.screen;render();
+  }
+  if(c.setup==='change'||c.setup==='change-receipt'){
+    s.zwg=c.value==='short'?0:5400;
+    Object.assign(mixedDraft(),{usd:'5.00',zwg:'0.00',changeCurrency:
+      ['USD','ZWG','split'].includes(c.value)?c.value:c.setup==='change-receipt'?'ZWG':c.value==='short'?'ZWG':'',usdPart:'1.00'});
+    if(c.value==='rate')s.rateMinor=2800;
+    page='mixed';render();if(c.setup==='change-receipt')actions['save-mixed']();
+  }
+  if(c.setup==='take-history'){
+    const t=stockTake();takeProducts().slice(0,37).forEach((p,i)=>t.entries[p.id]={
+      value:String(p.stock-(i%5===0?1:0)),before:p.stock,revision:s.stockRevisions?.[p.id]||0});
+    t.reasonType='damage';rememberTakeHistory(takeRows());s.stockTake=null;page=c.screen;render();
   }
   if(c.setup==='empty-products'){s.products=[];s.basket={};render();}
   if(c.setup==='invoice-empty'){s.invoiceDraft={ref:'',items:[],mode:'later',paid:'',due:'',evidence:false};render();}
@@ -38,6 +53,24 @@ function prepareCoverageCase(c){
     navigate('discount-review');
   }
   if(c.setup==='discount-applied')applyCoverageDiscount(c.screen);
+  if(c.setup==='count-progress'){
+    const t=stockTake();takeProducts().slice(0,37).forEach((p,i)=>t.entries[p.id]={
+      value:decimalQuantity(Math.max(0,p.stock-(i%5===0?1:0)),p.scale||1),before:p.stock,revision:s.stockRevisions?.[p.id]||0});
+    if(c.value==='stale')products()[0].stock++;
+    if(c.value==='reason')Object.assign(t.entries.bread,{reasonType:'other',reason:'Damaged loaf removed'});
+    if(c.screen==='count-stock-review'){draft.stockCount=takeRows();t.reasonType='other';t.reason='Found damaged packs';}
+    page=c.screen;render();
+  }
+  if(c.setup==='display-zwg'){s.displayCurrency='ZWG';render();}
+  if(c.setup==='sale-save-failed'){lastSale=receiptList()[0];s.basket={};saleSaveError=true;render();}
+  if(c.setup==='money-in-saved'){
+    Object.assign(cashInDraft(),{kind:'owner',amount:'10.00',baseline:s.cash});
+    navigate('money-in-review');actions['cash-in-save']();
+  }
+  if(c.setup==='money-in-cashier'){
+    Object.assign(cashInDraft(),{kind:'other',amount:'5.00',note:'Change supplied by owner',baseline:s.cash});
+    navigate('money-in-review');
+  }
   if(c.setup==='sale-continuity')prepareContinuityCase(c);
   if(c.setup==='long-data'){
     s.shop='Chipo’s groceries and household supplies at the front counter';
@@ -50,6 +83,7 @@ function prepareCoverageCase(c){
   }
   if(c.setup==='count-matched'){draft.stockCount=[{id:'bread',before:18,count:18}];page=c.screen;render();}
   if(c.setup==='sale-done'){
+    s.basket={};
     lastSale={...receiptList().at(-1),method:c.value,received:500,change:c.value==='Cash'?150:0};
     navigate('done');
   }

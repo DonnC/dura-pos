@@ -50,6 +50,8 @@ actions['first-save']=()=>{
   delete s.kept;delete s.keptCheckout;delete s.keptRefund;delete s.keptSelected;
   delete s.fiscalDemo;
   delete s.lineDiscounts;delete s.discountDraft;
+  delete s.takeHistory;delete s.takeHistorySeq;delete s.mixedDraft;
+  delete s.stockTake;delete s.stockRevisions;delete s.cashInDraft;delete s.displayCurrency;
   delete s.reviewDrafts;delete s.lastHandover;
   delete s.reportFilter;delete s.recoveryDemo;
   delete s.staffAccess;delete s.staffAccessDraft;delete s.staffActor;

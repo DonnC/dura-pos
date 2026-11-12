@@ -10,13 +10,13 @@ function render(){
   app.classList.remove('has-workspace');
   const blocked=s.role==='worker'&&ownerScreens.has(page);
   const onboarding=['welcome','setup','first-product','join','join-review','join-status'].includes(page);
-  const full=['pay','done','opening','cashup','count-review','handover','locked','welcome','join',
+  const full=['pay','opening','cashup','count-review','handover','locked','welcome','join','money-in','money-in-review',
     'setup','first-product','pending','refund','refund-review','receive-review',
     'count-stock-review','expense-review','invoice-items','invoice-payment','invoice-review','export',
     'kept-checkout','kept-keep','kept-refund','kept-refund-review',
     'quantity','discount','discount-review','return-items','return-review','access-review','access-remove',
     'access-expired','access-removed','access-recovery','staff','connection-review',
-    'connection-status','pair-code','join-review','join-status','restore-review','restore-status','lost-phone','fiscal-setup','fiscal-check','fiscal-owner-review','fiscal-close'].includes(page);
+    'connection-status','pair-code','join-review','join-status','restore-review','restore-status','lost-phone','fiscal-setup','fiscal-check','fiscal-owner-review','fiscal-close'].includes(page)||page==='done'&&saleSaveError;
   document.querySelector('.identity strong').textContent=s.shop;
   document.querySelector('.identity small').textContent=`${s.name} · ${
     s.role==='owner'?'Owner':'Cashier'}`;
@@ -33,8 +33,8 @@ function render(){
   connection.classList.toggle('offline',offline);
   connection.innerHTML=`<span class="dot"></span>${offline?
     'Offline · Sales saved on this device':'Saved on this device'}${icon('chevron')}`;
-  const groups={stock:['stock','product','product-edit','receive','receive-review','stock-count','count-stock-review'],
-    money:['money','history','receipt','print','refund','refund-review','expense','expense-review',
+  const groups={stock:['stock','product','product-edit','receive','receive-review','stock-count','count-stock-review','take-history','take-history-detail'],
+    money:['money','history','receipt','print','refund','refund-review','expense','expense-review','money-in','money-in-review',
       'customers','customer','suppliers','supplier-statement','reports','report-sales','report-cash','report-coverage',
       'report-trend','report-products','report-cashiers','report-discounts',
       'invoice-items','invoice-payment','invoice-review','invoice-detail',

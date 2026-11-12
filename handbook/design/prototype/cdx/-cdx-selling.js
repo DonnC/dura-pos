@@ -8,6 +8,7 @@ const sellCategories=()=>['Favourites','All items',...new Set(products().map(p=>
 const inSellCategory=(p,i,c)=>c==='Favourites'?(p.favourite??i<12):c==='All items'||p.cat===c;
 screens.sell=()=>{
   screen.innerHTML=`<div class="sell-tools"><div class="row heading"><h1>Let’s sell.</h1>
+    ${currencyControl()}
     ${btn('sale-options',icon('down'),'scan','aria-label="Sale options"')}</div>
     ${!s.active?`<p class="warning">Your till is closed. Open it before the next sale.
     ${btn('opening','Open till','text-button')}</p>`:''}
@@ -16,7 +17,7 @@ screens.sell=()=>{
       value="${esc(search)}"></div>${btn('scan',icon('scan'),'scan','aria-label="Scan barcode"')}</div>
     <div class="tabs" aria-label="Product categories">${sellCategories()
       .map(c=>btn('category',c+' <span class="category-count">'+products().filter((p,i)=>inSellCategory(p,i,c)).length+'</span>',
-        'chip',`data-category="${c}" aria-pressed="${c===category}"`)).join('')}</div></div>
+        'chip',`data-category="${c}" aria-pressed="${c===category}"`)).join('')}</div>${currencyRateNote()}</div>
     <div class="catalog" id="catalog"></div>
     ${btn('quick',icon('plus')+' Sell an unlisted item','quick')}
     ${s.held.length?btn('held',`${s.held.length} held ${s.held.length===1?'sale':'sales'} · Resume`,'quick'):''}
@@ -39,11 +40,11 @@ function drawCatalog(){
     p.name.toLowerCase().includes(search.toLowerCase()));
   el.classList.toggle('many-products',matches.length>4);
   el.innerHTML=matches.map(p=>`<button class="product ${s.basket[p.id]?'selected':''}"
-    data-action="add" data-id="${p.id}" aria-label="Add ${esc(p.name)}, ${money(p.cents)}, ${esc(p.unit)}">
+    data-action="add" data-id="${p.id}" aria-label="Add ${esc(p.name)}, ${sellDisplayMoney(p.cents)}, ${esc(p.unit)}">
     <div class="art">${p.short?'<span class="product-monogram">'+esc(p.short)+'</span>':art(p.id)}</div>${s.basket[p.id]?`<span class="count">${p.scale?quantityText(p,s.basket[p.id]):s.basket[p.id]}</span>`:''}
     <div class="product-text"><span class="product-name">${esc(p.name)}</span>
     <span class="unit">${esc(p.unit)}</span>${typeof activeLineDiscount==='function'&&activeLineDiscount(p)?
-      '<span class="discount-badge">Discount in basket</span>':''}<span class="price">${money(p.cents)}</span></div>
+      '<span class="discount-badge">Discount in basket</span>':''}<span class="price">${sellDisplayMoney(p.cents)}</span></div>
     <span class="add">${icon('plus')}</span></button>`).join('')||
     `<div class="empty"><h2>No products found.</h2><p class="sub">Try a shorter name.</p>
     ${btn('clear-search','Show all products')}</div>`;
@@ -51,9 +52,9 @@ function drawCatalog(){
 function drawBasket(){
   dock.innerHTML=`<div class="basket-top">${btn('basket',`${icon('sell')} ${count()}
     ${count()===1?'item':'items'} in basket ${icon('down')}`,'basket-link')}
-    <span class="micro">${s.currency} prices</span></div>`+
+    <span class="micro">${s.currency} prices${sellCurrency()!==s.currency?' · '+sellCurrency()+' display':''}</span></div>`+
     btn(s.active?'pay':'opening',`<span>${s.active?'Take payment':'Open till'} ${icon('arrow')}</span>
-    <span class="total">${money(total())}</span>`,'primary',s.active&&!count()?'disabled':'');
+    <span class="total">${sellDisplayMoney(total())}</span>`,'primary',s.active&&!count()?'disabled':'');
 }
 actions.add=b=>{const id=b.dataset.id;
   if(products().find(p=>p.id===id)?.scale){selectedId=id;navigate('quantity');return;}
@@ -105,7 +106,7 @@ screens.quick=()=>{
 };
 inputActions.quick=()=>enable('quick-add',val('quick-name')&&validAmount('quick-price'));
 actions['quick-add']=()=>{
-  if(products().length>=40){toast('Practice catalogue limit reached.');return;}
+  if(products().length>=previewProductLimit){toast('Practice catalogue limit reached.');return;}
   const id=`item${products().length}`;products().push({id,name:val('quick-name'),unit:'1 item',
     stockUnit:'items',stock:null,cents:parseCents(val('quick-price')),cat:'Food',oneOff:true});
   s.basket[id]=1;save();navigate('sell');
@@ -164,22 +165,11 @@ function completeSale(method,tender,cashDelta,extra={}){
   for(const p of basketRows())if(p.stock!==null){p.stock-=s.basket[p.id];
     stockMove(p.id,'Sale',-s.basket[p.id],p.stock);}
   s.history.unshift(lastSale);s.last=lastSale;s.basket={};s.keptCheckout=null;s.paymentRecovery=null;
-  received='';save();navigate('done');
+  received='';saleSaveError=!save();navigate('done');
 }
-screens.done=()=>{
-  if(!lastSale){navigate('history');return;}
-  screen.innerHTML=`<section class="receipt"><div class="success-icon">${icon('check')}</div>
-    <p class="eyebrow">Sale saved</p><h1>All sorted.</h1>
-    <p class="sub">${lastSale.method==='Cash'?'Give the customer their change.':esc(lastSale.method)}</p>
-    <div class="change"><p class="micro">${lastSale.method==='Cash'?'CHANGE TO GIVE':'SALE TOTAL'}</p>
-    <div class="amount-due">${money(lastSale.method==='Cash'?lastSale.change:lastSale.amount)}</div></div>
-    <div class="receipt-details">${line('Sale total',money(lastSale.amount))}
-    ${line('Payment',esc(lastSale.method))}${keptReceiptRows(lastSale)}</div></section>
-    <p class="status-line">${icon('check')}Saved on this device · Practice</p>
-    <p class="status-line wait">${icon('clock')}Not uploaded · No fiscal receipt issued</p>
-    ${btn('receipt','View receipt','secondary full')}`;
-  primary('next',count()?'Return to current sale':'Next customer');
-};
+let saleSaveError=false;
+screens.done=()=>renderReceipt(true);
+actions['retry-sale-save']=()=>{if(save()){saleSaveError=false;render();}};
 actions.next=()=>navigate('sell');
 screens.mobile=()=>{
   screen.innerHTML=heading('Mobile money.',money(total())+' · Practice payment','pay')+
@@ -250,28 +240,3 @@ screens.credit=()=>{
 };
 inputActions.credit=()=>enable('save-credit',!!val('credit-customer'));
 actions['save-credit']=()=>completeSale('On account',0,0);
-screens.mixed=()=>{
-  screen.innerHTML=heading('USD + ZWG cash.','Rate shown before you accept the money.','pay')+
-    `<div class="warning">Practice rate · USD 1.00 = ${money(s.rateMinor,'ZWG')}<br>Example only; not a live rate.</div>`+
-    field('mixed-usd','Cash in USD','','inputmode="decimal" placeholder="0.00"')+
-    field('mixed-zwg','Cash in ZWG','','inputmode="decimal" placeholder="0.00"')+
-    line('Sale total',money(total()))+`<p class="change" id="mixed-due">Enter both amounts. Use 0 if none.</p>`+
-    note('This lean preview supports an exact split. Overpayments need an explicit change currency in production.');
-  primary('save-mixed','Save split payment',true);
-};
-inputActions.mixed=()=>{
-  const usd=parseCents(val('mixed-usd')),zwg=parseCents(val('mixed-zwg'));
-  const paid=usd!==null&&zwg!==null?BigInt(usd)*BigInt(s.rateMinor)+BigInt(zwg)*100n:null;
-  const left=paid===null?null:BigInt(total())*BigInt(s.rateMinor)-paid;
-  const due=left!==null&&left>0n?(left+99n)/100n:0n;
-  document.querySelector('#mixed-due').textContent=left===null?'Enter both amounts.':
-    left===0n?'Exact payment. No change to give.':left>0n?
-    `ZWG ${due/100n}.${String(due%100n).padStart(2,'0')} still needed`:
-    'Overpayment: adjust the split to the exact amount.';
-  enable('save-mixed',left===0n);
-};
-actions['save-mixed']=()=>{
-  const usd=parseCents(val('mixed-usd')),zwg=parseCents(val('mixed-zwg'));s.zwg+=zwg;
-  completeSale('Split cash',total(),usd,{rateMinor:s.rateMinor,
-    payments:[{currency:'USD',amount:usd},{currency:'ZWG',amount:zwg}]});
-};

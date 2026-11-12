@@ -1,7 +1,16 @@
 # Dura / CDX design status
 
-Updated: 11 November 2026. This is a design prototype, not the Flutter app.
+Updated: 12 November 2026. This is a design prototype, not the Flutter app.
 Current scope: work only in this folder. Do not change app/backend code.
+
+## Completed — overpayment and stock-take refinement
+
+- [x] Explicit change currency, split change and drawer limits.
+- [x] Retained rate and interrupted payment recovery.
+- [x] Inline counted-item feedback, reasons and count history.
+- [x] Focused interactions, dark/large-text layouts and phone/tablet previews.
+- [x] Preserve the direct quiet receipt and failed-save retry.
+- [x] Refresh the 100-route, 167-state and 28-dialog catalog.
 
 ## Covered
 
@@ -140,6 +149,29 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] Verify existing journeys, refresh previews/catalog and inspect captures.
 - [x] Record decisions, checks and next work.
 
+## Completed — stock take, one-step receipts and cash movements
+
+- [x] Research current Square, Lightspeed and Shopify stock-count workflows.
+- [x] Search/category/status filters, bounded count pages and saved progress.
+- [x] Recount changed stock; leave uncounted goods untouched; explain Other reasons.
+- [x] Direct receipt after saving, with honest local-save success/failure.
+- [x] Persistent Stock take / Receive stock actions and Add product FAB.
+- [x] Simplify money-out purpose; add money-in entry/review.
+- [x] Compact mobile account header and remove duplicate profile money shortcut.
+- [x] Restore Sell currency control with converted product prices and explicit rate.
+- [x] Verify 500-item counts, recovery, reasons, money, currency and receipt paths.
+- [x] Update catalog/previews, inspect layouts and document decisions and next work.
+
+## Completed — quiet receipt preview
+
+- [x] Remove success heading, duplicate change card and device/fiscal status copy.
+- [x] Receipt data plus one small green success check; no return actions here.
+- [x] Keep Share, Print and Next customer; preserve an honest minimal failure state.
+- [x] Keep returns available from Recent sales instead of the receipt.
+- [x] Verify 48 phone/tablet, role and appearance layouts and refreshed captures.
+- [x] Verify relevant receipt/return regressions and refresh the catalog.
+- [x] Finish preview notes and latest summary.
+
 ## Next design work
 
 - [x] Kept-change journey and its use/refund at checkout.
@@ -151,6 +183,7 @@ Current scope: work only in this folder. Do not change app/backend code.
 - [x] First cross-screen consistency, accessibility and interruption-state audit.
 - [x] Complete state/dialog coverage inventory and richer older-review draft recovery.
 - [x] Final browser walkthrough as Owner/Cashier and closure of identified design gaps.
+- [ ] Cross-currency refund allocation and insufficient refund-cash states.
 - [ ] Owner review of the finished catalog, workflow choices and assumptions.
 - [ ] Physical device/keyboard, TalkBack and vendor usability observations.
 - [ ] Figma handoff at the end, after design coverage and final review are complete.
@@ -233,43 +266,53 @@ no Figma file, import package, upload or conversion was created in this pass.
 
 ## Latest summary
 
-Reviewed the other screens for tablet space and removed the repeated shop
-header from task/detail screens. The full header remains on Sell, Stock,
-Money/My till and My shop/Me. Tasks retain Back, their title and a small signed-in
-name/role within the scrolling content. The normal tablet task canvas starts
-76 px higher. Relevant offline status and the Preview/Practice marker remain.
+12 November: designed overpayment and change currency on the current payment
+screen. Choose USD, ZWG or split change; only the USD part needs typing for split
+change. Available drawer balances, insufficient cash and a changed-rate recovery
+remain beside the payment. Exact payment stays quick. Saving opens the same quiet
+receipt directly, including received cash, actual change and the retained rate.
 
-Money and shop summaries now sit beside useful actions. Invoice entry/review,
-approval/float review and existing account/kept-change/return forms use paired
-layouts where appropriate. Receipt screens show one receipt beside actions,
-instead of duplicating it in a side panel. Stock gains useful row columns and a
-bounded detail panel. Report titles/filters share a row; wide report graphs sit
-beside exact figures. Large text and mobile preserve their readable order.
+Synthesized the supplied stock-take examples into Dura's scalable workflow:
+inline counted quantities and differences, optional item reasons with typed Other,
+a shared reason for remaining differences, and searchable/paged completed-count
+history. Counting stays direct, searchable, resumable and bounded to 20 inputs;
+there is no added stock-take dashboard or compulsory per-item modal/save.
+Completed snapshots retain their original quantities and reasons when stock later
+changes. Existing Owner/Cashier boundaries stay in place.
 
-Passed: geometry/header audit of all 96 routes; 156 responsive combinations at
-320/768/1024/1440 px in light/dark/large text; role labels, reachable actions,
-basket/tender resize preservation and blind cash counting. The catalog passed
-96 routes, 149 state examples, 27 dialogs and 108 dialog layouts. Existing
-workflow, journey, responsive, restored-review, discount, kept-change,
-quantity/return, report, access, interruption, continuity and vocabulary checks
-passed. Source headers, UTF-8, 500-line limits and whitespace checks passed.
-Twenty-three review captures and four additional Cashier captures were created;
-representative actual mobile/tablet/wide renders were inspected.
+Passed: explicit currency choice, USD/ZWG/split drawer effects, insufficient cash,
+retained draft and rate-change recovery; 500-item operations/reload/recount checks;
+per-item reasons and immutable history after reload; 72 new phone/tablet layouts
+at 320/390/768/1024 px in light/dark/enlarged text; 48 quiet-receipt layouts and
+receipt failure/retry; existing journey regression; phone/tablet preview controls.
+Ten new captures were rendered and the phone/tablet layouts inspected.
+Catalog passed: 100 routes, 167 states, 28 dialogs, 20 dialog callsites,
+13 completion callsites and 112 dialog layouts. The workspace review also passed
+100 screen audits and 156 layouts, including header, role and resize checks.
 
-Decisions / assumptions: full identity belongs on the main destinations, not
-above every task. Profile/lock controls remain there, reachable after Back.
-Focused counting/setup forms retain readable widths rather than invented
-panels. Expected cash remains hidden before the blind count. Extra tablet space
-never grants Owner permissions. Stock previews use the existing fictional
-24-product example. All edits stayed in cdx; app/backend code and skills were
-not changed. No production data, migration or restore contract changes.
+Decisions / assumptions: USD/ZWG and the rate are fictional configured examples.
+Change choice is explicit for cross-currency overpayment; incoming cash counts
+as available, but cash denominations are not modeled. Rounding occurs once to the
+selected currency's cents and the residual is retained. A changed shop rate keeps
+the typed tender but requires checking change again. History is Owner-only and
+shows the last ten counts on this device; it is not a full journal or upload
+confirmation. Starting a new shop clears these local prototype histories.
 
-Open [-cdx-preview.html](-cdx-preview.html) and choose **Review tablet task
-layouts**, or use the device/screen controls. All updated mobile/tablet examples
-and the detailed review are linked in
-[-cdx-tablet-space-review.md](-cdx-tablet-space-review.md). The route audit is
-[-cdx-workspace-audit.json](-cdx-workspace-audit.json).
+All work stayed in cdx. No app/backend code, skills or Figma files changed.
+Open [-cdx-preview.html](-cdx-preview.html) and choose **Overpayment & change**,
+then use Device to compare phone and tablet. Details and stock-take synthesis:
+[-cdx-overpayment-and-count-history.md](-cdx-overpayment-and-count-history.md).
 
-Next: owner review of the revised header rule and tablet layouts. Physical
-Android, keyboard/insets, TalkBack, vendor observations and real-service recovery
-remain unverified. Figma remains deferred; no conversion or upload was created.
+Next: design refund allocation for these currency combinations, then continue the
+final catalog walkthrough. Physical devices, scanner/keyboard, TalkBack and vendor
+observations remain open. Figma stays at the end after coverage and owner review.
+
+## Completed — keep image previews out of Git
+
+- [x] Added folder-local image ignore rules, including nested previews.
+- [x] Removed 170 existing image paths from Git tracking; all 202 local images remain unchanged.
+- [x] Verified no images remain in the index and every local image is ignored.
+
+This stages image removals for the next commit; earlier commits retain their images.
+No history rewrite or commit was made. Editable prototype sources stay tracked.
+Next design work remains cross-currency refund allocation.

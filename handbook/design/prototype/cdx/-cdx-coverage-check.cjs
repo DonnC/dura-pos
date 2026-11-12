@@ -72,7 +72,7 @@ function params(c){
     const m=stack.match(/(-cdx-[\w-]+\.js):(\d+):/);if(m)observedResults.add(`${m[1]}:${m[2]}`);
    }
   };
-  const result={date:'2026-11-11',scope:'Current cdx prototype only; designed examples, not all possible data values',
+  const result={date:'2026-11-12',scope:'Current cdx prototype only; designed examples, not all possible data values',
    routes:[],
    stateExamples:[],dialogs:[],dialogCallsites:callsites,resultCallsites,feedbackCallsites};
   for(const route of routes){

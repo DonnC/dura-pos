@@ -7,11 +7,25 @@
 // Explicit designed examples, not an enumeration of every possible data value.
 (()=>{
 const states=[];
+for(const value of ['choose','USD','ZWG','split','short','rate'])states.push({id:'change-'+value,
+ family:'change',screen:'mixed',setup:'change',value,query:''});
+states.push({id:'change-receipt',family:'change',screen:'done',setup:'change-receipt',query:''},
+ {id:'take-item-reason',family:'stock-take',screen:'stock-count',setup:'count-progress',value:'reason',query:'take=large'},
+ {id:'take-history-saved',family:'stock-take',screen:'take-history',setup:'take-history',query:'take=large'},
+ {id:'take-history-detail',family:'stock-take',screen:'take-history-detail',setup:'take-history',query:'take=large'});
 const add=(family,screen,key,values,extra='')=>{
  for(const value of values)states.push({id:`${family}-${value}`,family,screen,query:`${key}=${value}${extra}`});
 };
 add('shelf','sell','state',['populated','empty','loading','error','interrupted']);
 states.push({id:'full-shop-shelf',family:'shelf',screen:'sell',query:'shelf=full'});
+states.push({id:'take-500-items',family:'stock-take',screen:'stock-count',query:'take=large'},
+ {id:'take-progress',family:'stock-take',screen:'stock-count',query:'take=large',setup:'count-progress'},
+ {id:'take-recount',family:'stock-take',screen:'stock-count',query:'take=large',setup:'count-progress',value:'stale'},
+ {id:'take-review-differences',family:'stock-take',screen:'count-stock-review',query:'take=large',setup:'count-progress'},
+ {id:'sell-converted-prices',family:'currency',screen:'sell',query:'shelf=full',setup:'display-zwg'},
+ {id:'checkout-save-failure',family:'completion',screen:'done',query:'',setup:'sale-save-failed'},
+ {id:'money-in-saved',family:'completion',screen:'money-in-review',query:'',setup:'money-in-saved'},
+ {id:'money-in-approval',family:'permission',screen:'money-in-review',query:'role=worker',setup:'money-in-cashier'});
 add('payment','pending','state',['populated','confirmed','failed']);
 add('kept','kept-checkout','kept',['sample','stale']);
 add('access','my-access','access',['sample','expired','removed'],'&role=worker');
@@ -117,12 +131,14 @@ const dialogs=[
 dialogs.push({...dialogs.find(c=>c.id==='invoice-add'),id:'invoice-item-error',variant:'invalid'},
  {...dialogs.find(c=>c.id==='new-kept-customer'),id:'kept-name-error',variant:'invalid'});
 dialogs.push({...dialogs.find(c=>c.id==='basket'),id:'basket-discounted',fixture:'discounted'});
+dialogs.push({id:'display-currency',file:'-cdx-display-currency.js',screen:'sell',action:'display-currency',
+ title:'Display and payment currency',fixture:'basket'});
 
 const familyRoutes={
  selling:['sell','pay','quick','quantity','discount','discount-review','mobile','pending','credit','mixed','done'],
  receipts:['history','receipt','print','refund','refund-review','return-items','return-review'],
- till:['opening','money','cashup','count-review','handover','locked','switch-person','expense','expense-review'],
- stock:['stock','product','receive','receive-review','stock-count','count-stock-review','product-edit'],
+ till:['opening','money','cashup','count-review','handover','locked','switch-person','expense','expense-review','money-in','money-in-review'],
+ stock:['stock','product','receive','receive-review','stock-count','count-stock-review','product-edit','take-history','take-history-detail'],
  accounts:['customers','customer','suppliers','supplier-statement'],
  invoices:['invoice-items','invoice-payment','invoice-review','invoice-detail'],
  kept:['kept-customers','kept-account','kept-checkout','kept-keep','kept-refund','kept-refund-review'],

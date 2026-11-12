@@ -40,6 +40,11 @@ it is not another fixed header. Onboarding retains its own minimal treatment.
 Returning to a main destination restores the shop header. See
 `-cdx-tablet-space-review.md` for the responsive space review and exceptions.
 
+Receipt previews are the deliberate exception: the document's shop and recorded
+cashier provide identity. They do not repeat a page heading or role label.
+Completion uses one small semantic check mark, as specified in
+`-cdx-quiet-receipt.md`; sync/fiscal status and return controls stay off this view.
+
 Healthy local saving does not require a persistent second status bar. Offline
 status can show when relevant; saved/upload/payment/fiscal details remain in
 their own views. Owner and cashier views never imply that local totals are a

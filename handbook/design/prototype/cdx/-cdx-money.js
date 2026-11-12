@@ -15,39 +15,48 @@ screens.money=()=>{
     `<div class="row"><h2>In the cash drawer</h2><span class="micro">${s.currency}</span></div>`+
     line('Expected cash',money(s.cash),'Float + cash in − cash out')+keptOwedRow()+
     (s.zwg>0?line('Expected ZWG',money(s.zwg,'ZWG')):'')+
+    '<div class="money-movement-actions">'+btn('money-in','Money in','secondary')+
+      btn('expense','Money out','secondary')+'</div>'+
     menu('history','Recent sales','Find a receipt · Returns','receipt')+
     (s.features.kept?menu('kept-customers','Kept change','Money this till owes customers','people'):'')+
-    (own?menu('expense','Record money out','Shop expense, drawing or supplier payment','money')+
-      (s.features.credit?menu('customers','Customers',money(s.owed)+' owed to the shop','people'):'')+
+    (own?(s.features.credit?menu('customers','Customers',money(s.owed)+' owed to the shop','people'):'')+
       menu('suppliers','Suppliers',money(s.supplier)+' to pay','stock')+
-      menu('reports','Reports','Period, place and missing information','receipt'):
-      menu('expense','Record a shop expense','Owner approval before cash leaves','money'))+
+      menu('reports','Reports','Period, place and missing information','receipt'):'')+
     (!s.active?'<p class="change">Your shift is closed. Open the till for a new shift.</p>':'');
   primary(s.active?'cashup':'opening',s.active?'Cash up this till':'Open till');
 };
+const moneyUses={transport:'Transport',rent:'Rent',utilities:'Electricity / water',wages:'Wages',
+  supplier:'Supplier payment',drawing:'Owner withdrawal',expense:'Other'};
+const moneyUseAllowed=kind=>['transport','rent','utilities','wages','expense',...(s.role==='owner'?['supplier','drawing']:[])].includes(kind);
+const moneyUseNote=()=>['expense','supplier'].includes(val('expense-kind'))?val('expense-note'):moneyUses[val('expense-kind')];
 screens.expense=()=>{
   screen.innerHTML=heading('Record money out.','What left this drawer?','money')+
-    select('expense-kind','Reason',option('expense','Shop expense')+(s.role==='owner'?
-      option('drawing','Owner’s drawing')+option('supplier','Payment to Mambo Wholesale'):''))+
+    select('expense-kind','What was it used for?',Object.entries(moneyUses).filter(([v])=>moneyUseAllowed(v))
+      .map(([v,l])=>option(v,l,v===(draft.expense?.purpose||draft.expense?.kind||'expense'))).join(''))+
     field('expense-amount',`Cash taken out · ${s.currency}`,draft.expense?
       (draft.expense.amount/100).toFixed(2):'','inputmode="decimal" placeholder="0.00"')+
-    field('expense-note','What was it for?',draft.expense?.note||'',
-      'maxlength="120" placeholder="e.g. Bus fare to buy stock"')+
+    '<div id="expense-description">'+field('expense-note','Describe the other use',draft.expense?.note||'',
+      'maxlength="120" placeholder="e.g. Bus fare to buy stock"')+'</div>'+
     '<p class="error" id="expense-error" role="alert"></p>'+
     note('This changes expected cash. Receiving stock alone does not take money out of the drawer.');
-  if(draft.expense)document.querySelector('#expense-kind').value=draft.expense.kind;
+  if(draft.expense)document.querySelector('#expense-kind').value=draft.expense.purpose||draft.expense.kind;
   primary('review-expense','Review money out',true);inputActions.expense();
 };
 inputActions.expense=()=>{
+  const kind=val('expense-kind');document.querySelector('#expense-description').hidden=!['expense','supplier'].includes(kind);
+  document.querySelector('[for="expense-note"]').firstChild.textContent=kind==='supplier'?'Reference (optional)':'Describe the other use';
   const amount=parseCents(val('expense-amount'));
   const error=amount>s.cash?`Only ${money(s.cash)} is expected in this drawer.`:
     val('expense-kind')==='supplier'&&amount>s.supplier?'That is more than this supplier’s balance.':
     val('expense-amount')&&amount===null?'Use an amount with up to two decimal places.':'';
   document.querySelector('#expense-error').textContent=error;
-  enable('review-expense',validAmount('expense-amount')&&!error&&val('expense-note').length>=3);
+  enable('review-expense',validAmount('expense-amount')&&!error&&moneyUseAllowed(kind)&&
+    (kind!=='expense'||val('expense-note').length>=3));
 };
 actions['review-expense']=()=>{
-  draft.expense={amount:parseCents(val('expense-amount')),kind:val('expense-kind'),note:val('expense-note')};
+  const purpose=val('expense-kind');
+  draft.expense={amount:parseCents(val('expense-amount')),kind:['drawing','supplier'].includes(purpose)?purpose:'expense',
+    purpose,note:moneyUseNote()||moneyUses[purpose]};
   navigate('expense-review');
 };
 function approvalField(){return field('approval-pin','Chipo’s approval PIN','','type="password" '+

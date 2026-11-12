@@ -16,10 +16,12 @@ screens.stock=()=>{
       value="${esc(stockSearch)}"></div></div><div class="tabs">${[
       ['stock-all','All','all'],['stock-low','Running low','low'],['stock-out','Out of stock','out']]
       .map(([a,l,k])=>btn(a,l,'chip',`aria-pressed="${stockFilter===k}"`)).join('')}</div>`+
-    `<div id="stock-list"></div>`+(s.role==='owner'?`<div class="split">
-    ${btn('stock-count','Stock take')}${btn('new-product','Add product')}</div>`:'');
+    `<div id="stock-list"></div>`+(s.role==='owner'?btn('new-product',icon('plus'),'product-fab',
+      'aria-label="Add product" title="Add product"'):'');
   drawStockList();
-  if(s.role==='owner')primary('receive','Receive stock');
+  if(s.role==='owner')dock.innerHTML='<div class="stock-actions">'+
+    btn('stock-count',s.stockTake&&Object.values(s.stockTake.entries||{}).some(e=>e.value!=='')?'Resume stock take':'Stock take','secondary')+
+    btn('receive','Receive stock','primary')+'</div>';
   else dock.innerHTML=note('Need more stock? Let the owner know what’s running low.');
 };
 function drawStockList(){
@@ -72,6 +74,7 @@ screens.receive=()=>{
     primary('new-product','Add a product');return;
   }
   screen.innerHTML=heading('Receive stock.','Count what actually arrived.','stock')+
+    btn('new-invoice','Receiving several products? Use a supplier invoice','text-button full')+
     select('receive-product','Product',products().filter(p=>p.stock!==null&&!p.scale).map(p=>
       option(p.id,`${p.name} · ${p.unit}`,p.id===selectedId)).join(''))+
     field('receive-qty','How many selling packs arrived?',draft.receive?.qty??'',
@@ -112,45 +115,6 @@ actions['save-receive']=()=>{
   result('Stock received.',line(esc(p.name),`${p.stock} ${esc(p.stockUnit)} now`),'stock','Back to stock');
   draft.receive=null;
 };
-screens['stock-count']=()=>{
-  if(!products().some(p=>p.stock!==null&&!p.scale)){
-    screen.innerHTML=heading('No products to count.','Add a product with stock tracking first.','stock');
-    primary('new-product','Add a product');return;
-  }
-  screen.innerHTML=heading('Stock take.','Front counter · Enter what you can see.','stock')+
-    products().filter(p=>p.stock!==null&&!p.scale).map(p=>field(`count-${p.id}`,
-      `${esc(p.name)} · Count ${esc(p.stockUnit)} (${esc(p.unit)} each)`,
-      draft.stockCount?.find(r=>r.id===p.id)?.count??'',
-      'type="number" min="0" max="999" placeholder="Not counted"')).join('')+
-    note('Leave anything you haven’t counted blank. Zero means none left. Measured-stock counts are not included in this preview.');
-  primary('review-stock-count','Review count',true);inputActions['stock-count']();
-};
-inputActions['stock-count']=()=>{
-  const values=products().filter(p=>p.stock!==null&&!p.scale).map(p=>val(`count-${p.id}`));
-  enable('review-stock-count',values.some(v=>v!=='')&&values.every(v=>v===''||/^\d{1,3}$/.test(v)));
-};
-actions['review-stock-count']=()=>{
-  draft.stockCount=products().filter(p=>p.stock!==null&&!p.scale&&val(`count-${p.id}`)!=='')
-    .map(p=>({id:p.id,count:Number(val(`count-${p.id}`)),before:p.stock}));navigate('count-stock-review');
-};
-screens['count-stock-review']=()=>{
-  if(!draft.stockCount){navigate('stock-count');return;}
-  const changed=draft.stockCount.some(r=>r.count!==r.before);
-  screen.innerHTML=heading('Review stock take.','Differences need a reason.','stock-count')+
-    draft.stockCount.map(r=>{const p=products().find(p=>p.id===r.id);return line(esc(p.name),
-      `${r.count} ${esc(p.stockUnit)}`,`Recorded ${r.before}; difference ${r.count-r.before}`);}).join('')+
-    (changed?field('count-reason','Reason for the difference','','maxlength="120" '+
-      'placeholder="e.g. Damaged packs removed"'):'<p class="change">All counted products match.</p>');
-  primary('save-stock-count','Save stock take',changed);
-};
-inputActions['count-stock-review']=()=>enable('save-stock-count',val('count-reason').length>=5);
-actions['save-stock-count']=()=>{
-  for(const r of draft.stockCount){products().find(p=>p.id===r.id).stock=r.count;
-    stockMove(r.id,'Stock take adjustment',r.count-r.before,r.count);}
-  record('Stock take saved: '+(val('count-reason')||'Counts matched'));
-  result('Count saved.',note('The correction is a new stock movement. Earlier sales stay unchanged.'),
-    'stock','Back to stock');draft.stockCount=null;
-};
 actions['new-product']=()=>{selectedId='';navigate('product-edit');};
 screens['product-edit']=()=>{
   const p=products().find(p=>p.id===selectedId);
@@ -168,7 +132,7 @@ inputActions['product-edit']=()=>enable('save-product',val('product-name')&&val(
   validAmount('product-price'));
 actions['save-product']=()=>{
   let p=products().find(p=>p.id===selectedId);
-  if(!p){if(products().length>=40){toast('Practice catalogue limit reached.');return;}
+  if(!p){if(products().length>=previewProductLimit){toast('Practice catalogue limit reached.');return;}
     p={id:`item${products().length}`,cat:'Food',stock:0,stockUnit:'packs'};products().push(p);}
   p.name=val('product-name');p.unit=val('product-unit');p.cents=parseCents(val('product-price'));
   p.stock=val('product-track')==='no'?null:(p.stock??0);record('Product saved: '+p.name);navigate('stock');

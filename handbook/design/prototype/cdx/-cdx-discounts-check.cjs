@@ -13,7 +13,18 @@ const assert=require('node:assert/strict');
  try{
   const p=await b.newPage({viewport:{width:390,height:844}});p.setDefaultTimeout(8000);
   const url=pathToFileURL(path.join(__dirname,'-cdx-counter.html')).href;
-  const act=a=>p.locator(`[data-action="${a}"]:visible`).first().click();
+  const act=async a=>{
+    if(a==='return-items'&&!await p.locator('[data-action="return-items"]:visible').count()){
+      const id=await p.evaluate(()=>lastSale.id);
+      if(await p.evaluate(()=>page==='receipt'))await p.locator('.back[data-action="history"]').click();
+      else{await p.locator('nav [data-action="money"]').click();await p.locator('[data-action="history"]:visible').click();}
+      await p.locator(`[data-action="return-from-history"][data-id="${id}"]`).click();return;
+    }
+    await p.locator(`[data-action="${a}"]:visible`).first().click();
+  };
+  const receipt=async()=>{if(await p.evaluate(()=>page==='done')){
+    assert(await p.locator('.receipt-paper').isVisible(),'Receipt preview opens directly after sale');
+  }else await act('receipt');};
   await p.goto(url+'?fresh=1&seed=1&screen=discount');
   assert.match(await p.locator('h1').innerText(),/Discount/);
   await p.locator('#discount-value').fill('10');await p.locator('#discount-reason').fill('Damaged outer pack');
@@ -22,7 +33,7 @@ const assert=require('node:assert/strict');
   assert.equal(await p.evaluate(()=>products()[0].cents),100,'Discount never edits the product price');
   await p.evaluate(()=>navigate('pay'));await p.locator('#received').fill('5.00');await act('complete');
   assert.equal(await p.evaluate(()=>s.last.amount),330);assert.equal(await p.evaluate(()=>s.last.discountTotal),20);
-  await act('receipt');assert.match(await p.locator('#screen').innerText(),/Discount/);
+  await receipt();assert.match(await p.locator('#screen').innerText(),/Discount/);
   await act('return-items');await p.locator('#return-qty-0').fill('1');
   await p.locator('#partial-reason').selectOption('wrong');await act('return-review');
   await p.locator('#approval-pin').fill('123456');const cash=await p.evaluate(()=>s.cash);
@@ -50,7 +61,7 @@ const assert=require('node:assert/strict');
   await p.locator('#discount-value').fill('10');await p.locator('#discount-reason').fill('Promotion');
   // Fixture rice is USD 2.40/kg: 750 g is 180 cents, less 18 cents discount.
   await act('discount-review');await act('discount-apply');assert.equal(await p.evaluate(()=>total()),162);
-  await act('pay');await p.locator('#received').fill('2.00');await act('complete');await act('receipt');
+  await act('pay');await p.locator('#received').fill('2.00');await act('complete');await receipt();
   await act('return-items');await p.locator('#return-qty-0').fill('0.250');
   await p.locator('#partial-reason').selectOption('wrong');await act('return-review');
   await p.locator('#approval-pin').fill('123456');const weighedCash=await p.evaluate(()=>s.cash);
@@ -82,7 +93,7 @@ const assert=require('node:assert/strict');
    await p.locator('#approval-pin').fill('123456');await act('discount-apply');
    await act('pay');await p.locator('#received').fill('5.00');
    await p.screenshot({path:path.join(__dirname,`-cdx-${device}-discount-payment.png`)});
-   await act('complete');await act('receipt');
+   await act('complete');await receipt();
    await p.screenshot({path:path.join(__dirname,`-cdx-${device}-discount-receipt.png`)});
   }
   console.log(`PASS: discount approval, held state, net-price returns and ${layouts} review layouts; six captures.`);

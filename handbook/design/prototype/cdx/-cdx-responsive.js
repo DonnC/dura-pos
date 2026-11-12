@@ -26,7 +26,7 @@ function renderContext(blocked=false){
         (count()?contextItems(saleSnapshot(),true)+line('Total',money(total()))+
           btn('hold','Hold this sale','secondary full'):
           '<div class="empty"><h3>Ready for a customer.</h3><p class="sub">Tap a product on the shelf.</p></div>');
-    }else if(['pay','mobile','mixed','credit'].includes(page)){
+    }else if(['pay','mobile','credit'].includes(page)){
       content=`<p class="eyebrow">You’re taking payment for</p><h2>Order summary</h2>`+
         contextItems(saleSnapshot())+line('Total',money(total()))+
         note('Check the items before saving. Back returns to the same basket.');

@@ -1,0 +1,12 @@
+# Local design previews and images; keep editable prototype sources in Git.
+*.avif
+*.bmp
+*.gif
+*.ico
+*.jpeg
+*.jpg
+*.png
+*.svg
+*.tif
+*.tiff
+*.webp

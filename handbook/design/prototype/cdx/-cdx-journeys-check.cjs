@@ -14,6 +14,9 @@ const assert=require('node:assert/strict');
     const p=await b.newPage({viewport:{width:390,height:844}});
     const url=pathToFileURL(path.join(__dirname,'-cdx-counter.html')).href;
     const act=a=>p.locator(`[data-action="${a}"]:visible`).first().click();
+  const receipt=async()=>{if(await p.evaluate(()=>page==='done')){
+    assert(await p.locator('.receipt-paper').isVisible(),'Receipt preview opens directly after sale');
+  }else await act('receipt');};
     await p.goto(url+'?fresh=1&seed=1');
     await act('pay');await p.locator('#received').fill('5.001');
     assert(await p.locator('[data-action="complete"]').isDisabled());
@@ -32,7 +35,7 @@ const assert=require('node:assert/strict');
     assert.equal(await p.locator('.total').innerText(),'USD 3.50');
     await p.goto(url+'?fresh=1&seed=1&screen=mixed');
     await p.locator('#mixed-usd').fill('1.00');await p.locator('#mixed-zwg').fill('67.50');
-    await act('save-mixed');await act('receipt');
+    await act('save-mixed');await receipt();
     assert.match(await p.locator('#screen').innerText(),/ZWG 67.50/);
     assert.match(await p.locator('#screen').innerText(),/ZWG 27.00/);
     await act('money');assert.match(await p.locator('#screen').innerText(),/USD 71.50/);

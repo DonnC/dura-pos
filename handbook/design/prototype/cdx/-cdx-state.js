@@ -7,6 +7,7 @@
 // Fictional browser sandbox, never a production record or access-control layer.
 const q=new URLSearchParams(location.search);
 const storageKey='dura-cdx-day-v2';
+const previewProductLimit=1000;
 const worker=q.get('role')==='worker';
 const initialProducts=[
   {id:'bread',name:'Bread',unit:'1 loaf',stockUnit:'loaves',cents:100,cat:'Food',stock:18},
@@ -26,7 +27,7 @@ try{
   const saved=JSON.parse(localStorage.getItem(storageKey));
   if(q.get('fresh')!=='1'&&saved?.version===2&&['owner','worker'].includes(saved.role)&&
     (!q.has('role')||saved.role===s.role)&&
-    Array.isArray(saved.products)&&saved.products.length<=40&&Array.isArray(saved.history)&&
+    Array.isArray(saved.products)&&saved.products.length<=previewProductLimit&&Array.isArray(saved.history)&&
     saved.history.length<=30&&Number.isSafeInteger(saved.cash))s={...s,...saved};
 }catch{}
 if(q.get('seed')==='1')s.basket={bread:2,milk:1};
@@ -88,8 +89,9 @@ function save(){
   const retained=new Set(['T-P1-S261110-0008',...s.history.map(r=>r.id)]);
   if(s.returnTotals)for(const id of Object.keys(s.returnTotals))if(!retained.has(id))delete s.returnTotals[id];
   if(s.partialReturns)s.partialReturns=s.partialReturns.filter(r=>retained.has(r.sale)).slice(0,30);
-  try{localStorage.setItem(storageKey,JSON.stringify(s));}catch{
+  try{localStorage.setItem(storageKey,JSON.stringify(s));return true;}catch{
     toast('Browser storage unavailable. Keep this practice session open.');
+    return false;
   }
 }
 function record(text){s.events.unshift({text,who:s.name});save();}
@@ -125,6 +127,7 @@ function saleSnapshot(){return basketRows().map(p=>({...p,qty:s.basket[p.id],
   lineTotal:lineAmount(p,s.basket[p.id]),...(typeof lineDiscountSnapshot==='function'?lineDiscountSnapshot(p):{})}));}
 function resetBasket(){undoBasket={...s.basket};s.basket={};save();}
 function stockMove(id,label,delta,after){
+  s.stockRevisions||={};s.stockRevisions[id]=(s.stockRevisions[id]||0)+1;
   s.movements=s.movements||[];s.movements.push({id,label,delta,after,who:s.name});
   s.movements=s.movements.slice(-60);
 }

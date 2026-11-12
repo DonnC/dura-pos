@@ -29,7 +29,7 @@ let reviewRenderDepth=0;
 function clearReviewMemory(kind){for(const key of reviewFlows[kind].keys)delete draft[key];}
 function reviewFieldIds(kind){return [...(kind==='stock'?
   products().filter(p=>p.stock!==null&&!p.scale).map(p=>'count-'+p.id):reviewFlows[kind].fields),
-  ...(kind==='stock'?['count-reason']:kind==='cashup'?['variance-note','keep-float','keep-float-zwg']:[])];}
+  ...(kind==='stock'?['count-reason','count-reason-type']:kind==='cashup'?['variance-note','keep-float','keep-float-zwg']:[])];}
 function rememberReview(kind,stage){
   const previous=storedReview(kind);
   const r=previous||{scope:reviewScope(),baseline:reviewBaseline(kind),fields:{}};
@@ -52,15 +52,16 @@ function materializeReview(kind){
     draft.receive={id:p.id,qty:Number(f('receive-qty')),ref:f('delivery-ref'),
       supplierId:f('receive-supplier'),supplier:f('receive-supplier')==='mambo'?'Mambo Wholesale':'Other / not named'};
   }else if(kind==='stock'){
-    const rows=products().filter(p=>p.stock!==null&&!p.scale&&f('count-'+p.id)!=='');
-    if(!rows.length||rows.some(p=>!/^\d{1,3}$/.test(f('count-'+p.id))))return false;
-    draft.stockCount=rows.map(p=>({id:p.id,before:p.stock,count:Number(f('count-'+p.id))}));
+    const rows=takeRows();
+    if(!rows.length||rows.some(r=>r.count===null))return false;
+    draft.stockCount=rows;
   }else if(kind==='expense'){
     const amount=parseCents(f('expense-amount')),type=f('expense-kind');
-    if(amount===null||amount<=0||amount>s.cash||f('expense-note').length<3||
-      !['expense',...(s.role==='owner'?['drawing','supplier']:[])].includes(type)||
+    if(amount===null||amount<=0||amount>s.cash||type==='expense'&&f('expense-note').length<3||
+      !moneyUseAllowed(type)||
       type==='supplier'&&amount>s.supplier)return false;
-    draft.expense={amount,kind:type,note:f('expense-note')};
+    draft.expense={amount,kind:['supplier','drawing'].includes(type)?type:'expense',purpose:type,
+      note:['expense','supplier'].includes(type)?f('expense-note')||moneyUses[type]:moneyUses[type]};
   }else{
     const usd=parseCents(f('counted-usd')),zwg=s.zwg>0?parseCents(f('counted-zwg')):0;
     if(!s.active||usd===null||zwg===null)return false;
@@ -97,6 +98,7 @@ function gateRestoredReview(kind){
 }
 actions['review-start-again']=b=>{
   const kind=b.dataset.kind;if(!reviewFlows[kind])return;
+  if(kind==='stock')s.stockTake=null;
   delete s.reviewDrafts?.[kind];clearReviewMemory(kind);
   recoveredReviews.delete(kind);reviewAcknowledged.delete(kind);save();navigate(reviewFlows[kind].entry);
 };

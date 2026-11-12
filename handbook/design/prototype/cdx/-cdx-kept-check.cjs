@@ -15,6 +15,9 @@ const assert=require('node:assert/strict');
   p.setDefaultTimeout(10000);
   const url=pathToFileURL(path.join(__dirname,'-cdx-counter.html')).href;
   const act=a=>p.locator(`[data-action="${a}"]:visible`).first().click();
+  const receipt=async()=>{if(await p.evaluate(()=>page==='done')){
+    assert(await p.locator('.receipt-paper').isVisible(),'Receipt preview opens directly after sale');
+  }else await act('receipt');};
   await p.goto(url+'?fresh=1&seed=1&kept=sample&screen=pay');await act('kept-checkout');
   assert.match(await p.locator('h1').innerText(),/Use kept change/);
   await p.locator('#kept-use').fill('1.00');await p.locator('#kept-cash').fill('2.50');
@@ -25,7 +28,7 @@ const assert=require('node:assert/strict');
   await act('kept-save-sale');
   assert.deepEqual(await p.evaluate(()=>({cash:s.cash,sales:s.sales,balance:s.kept.contacts[0].balance})),
     {cash:7300,sales:9000,balance:50});
-  await act('receipt');assert.match(await p.locator('#screen').innerText(),/Kept change used/);
+  await receipt();assert.match(await p.locator('#screen').innerText(),/Kept change used/);
   await p.goto(url+'?fresh=1&kept=sample&role=worker&screen=kept-refund');
   await p.locator('#kept-refund-amount').fill('0.50');await act('kept-review-refund');
   assert(await p.locator('[data-action="kept-save-refund"]').isDisabled());

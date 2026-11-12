@@ -29,7 +29,8 @@ const onboarding=['welcome','setup','first-product','join','join-review','join-s
    await p.locator(`body[data-catalog-ready="base-${scene}"]`).waitFor();
    const actual=await p.evaluate(()=>page);
    assert.equal(await p.locator('.appbar').isVisible(),roots.includes(actual),scene+' header policy');
-   if(!roots.includes(actual)&&!onboarding.includes(actual))assert(await p.locator('.task-identity').count(),scene+' signed-in role');
+   if(!roots.includes(actual)&&!onboarding.includes(actual)&&!['done','receipt'].includes(actual))
+    assert(await p.locator('.task-identity').count(),scene+' signed-in role');
    const dimensions=await p.evaluate(()=>({
     overflow:[...document.querySelectorAll('main,#dock,.app')].some(el=>el.scrollWidth>el.clientWidth+1),
     mainTop:Math.round(document.querySelector('main').getBoundingClientRect().top),
@@ -38,7 +39,7 @@ const onboarding=['welcome','setup','first-product','join','join-review','join-s
    audit.push({screen:scene,actual,header:roots.includes(actual)?'Shop identity':'Task identity',...dimensions});
   }
   fs.writeFileSync(path.join(__dirname,'-cdx-workspace-audit.json'),JSON.stringify({
-   date:'2026-11-11',scope:'Browser design review at 1024 × 768; not physical-device verification',screens:audit
+   date:'2026-11-12',scope:'Browser design review at 1024 × 768; not physical-device verification',screens:audit
   },null,2)+'\n');
   let layouts=0;
   for(const [width,height] of [[320,740],[768,1024],[1024,768],[1440,900]]){

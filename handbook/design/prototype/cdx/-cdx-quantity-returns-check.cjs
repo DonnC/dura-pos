@@ -13,7 +13,18 @@ const assert=require('node:assert/strict');
  try{
   const p=await b.newPage({viewport:{width:390,height:844}});p.setDefaultTimeout(10000);
   const url=pathToFileURL(path.join(__dirname,'-cdx-counter.html')).href;
-  const act=a=>p.locator(`[data-action="${a}"]:visible`).first().click();
+  const act=async a=>{
+    if(a==='return-items'&&!await p.locator('[data-action="return-items"]:visible').count()){
+      const id=await p.evaluate(()=>lastSale.id);
+      if(await p.evaluate(()=>page==='receipt'))await p.locator('.back[data-action="history"]').click();
+      else{await p.locator('nav [data-action="money"]').click();await p.locator('[data-action="history"]:visible').click();}
+      await p.locator(`[data-action="return-from-history"][data-id="${id}"]`).click();return;
+    }
+    await p.locator(`[data-action="${a}"]:visible`).first().click();
+  };
+  const receipt=async()=>{if(await p.evaluate(()=>page==='done')){
+    assert(await p.locator('.receipt-paper').isVisible(),'Receipt preview opens directly after sale');
+  }else await act('receipt');};
   await p.goto(url+'?fresh=1&measure=sample&screen=quantity');
   await p.locator('#quantity-value').fill('0.0005');
   assert(await p.locator('[data-action="quantity-save"]').isDisabled());
@@ -24,14 +35,14 @@ const assert=require('node:assert/strict');
   await act('quantity-save');assert.equal(await p.locator('.total').innerText(),'USD 0.90');
   await act('pay');await p.locator('#received').fill('1.00');await act('complete');
   assert.equal(await p.evaluate(()=>s.products.find(p=>p.id==='rice').stock),24625);
-  await act('receipt');await act('return-items');
+  await receipt();await act('return-items');
   await p.locator('#return-qty-0').fill('0.125');await p.locator('#return-restock-0').check();
   await p.locator('#partial-reason').selectOption('wrong');await act('return-review');
   await p.locator('#approval-pin').fill('123456');await act('return-save');
   assert.equal(await p.evaluate(()=>s.cash),7110);
   assert.equal(await p.evaluate(()=>s.sales),8710);
   assert.equal(await p.evaluate(()=>s.products.find(p=>p.id==='rice').stock),24750);
-  await act('receipt');await act('return-items');
+  await receipt();await act('return-items');
   await p.locator('#return-qty-0').fill('0.300');
   assert.match(await p.locator('#partial-error').innerText(),/0.25 kg/);
   await p.locator('#return-qty-0').fill('0.250');await p.locator('#partial-reason').selectOption('damaged');
@@ -40,9 +51,9 @@ const assert=require('node:assert/strict');
   assert.equal(await p.evaluate(()=>s.sales),8650);
   assert.equal(await p.evaluate(()=>s.products.find(p=>p.id==='rice').stock),24750);
   assert.equal(await p.evaluate(()=>s.last.items[0].qty),375,'Original receipt unchanged');
-  await act('receipt');assert.equal(await p.locator('[data-action="return-items"]').count(),0);
+  await receipt();assert.equal(await p.locator('[data-action="return-items"]').count(),0);
   await p.goto(url+'?fresh=1&seed=1&kept=sample&screen=kept-checkout');
-  await act('kept-save-sale');await act('receipt');await act('return-items');
+  await act('kept-save-sale');await receipt();await act('return-items');
   await p.locator('#return-qty-0').fill('1');await p.locator('#return-restock-0').check();
   await p.locator('#partial-reason').selectOption('wrong');
   await p.setViewportSize({width:1024,height:768});
@@ -58,7 +69,7 @@ const assert=require('node:assert/strict');
   assert.equal(await p.evaluate(()=>s.cash),7193);
   assert.equal(await p.evaluate(()=>s.kept.contacts[0].balance),43);
   await p.evaluate(()=>actions['return-save']());assert.equal(await p.evaluate(()=>s.cash),7193);
-  await act('receipt');await act('return-items');
+  await receipt();await act('return-items');
   await p.locator('#return-qty-0').fill('1');await p.locator('#return-qty-1').fill('1');
   await p.locator('#partial-reason').selectOption('wrong');await act('return-review');
   await p.locator('#approval-pin').fill('123456');await act('return-save');
@@ -67,7 +78,7 @@ const assert=require('node:assert/strict');
   await p.goto(url+'?fresh=1&seed=1&kept=sample&screen=pay&cash=500');
   await act('kept-keep');await p.locator('#kept-customer').selectOption('kuda');
   await p.locator('#kept-consent').check();await act('kept-save-keep');
-  await act('receipt');await act('return-items');
+  await receipt();await act('return-items');
   await p.locator('#return-qty-0').fill('1');await p.locator('#partial-reason').selectOption('wrong');
   await act('return-review');await p.locator('#approval-pin').fill('123456');await act('return-save');
   assert.equal(await p.evaluate(()=>s.kept.contacts[1].balance),200,'Original change remains owed');

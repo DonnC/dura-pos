@@ -42,6 +42,7 @@ function returnPlan(r){
     error='The original kept-change balance is unavailable here. Keep the receipt and ask the owner.';
   }else if(cash>s.cash)error=`Only ${money(s.cash)} is expected in this till. Keep this draft and return when cash is available.`;
   if(!lines.length&&!error)error='Enter the quantities that came back. Leave other items at zero.';
+  if(d.reason==='other'&&(!d.other||d.other.trim().length<3))error='Explain the other reason for this return.';
   return {d,prior,lines,amount,cash,kept,customer:c,error};
 }
 function returnPaymentRows(plan){return (plan.kept?line('Refund total',money(plan.amount)):'')+

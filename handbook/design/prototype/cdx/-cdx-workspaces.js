@@ -19,9 +19,9 @@ function applyScreenLayout(){
   const root=screen.querySelector('.page-content')||screen;
   if(['money','shop'].includes(page))splitWorkspace(root,root.querySelector(':scope>.hero'));
   if(page==='invoice-items')splitWorkspace(root,root.querySelector(':scope>[data-action="invoice-add"]'));
-  if(page==='receipt')splitWorkspace(root,root.querySelector(':scope>.receipt-paper'));
   if(page==='pending')splitWorkspace(root,root.querySelector(':scope>.empty'));
-  if(['expense-review','discount-review','count-review'].includes(page)){
+  if(page==='count-stock-review')splitWorkspace(root,root.querySelector(':scope>#take-review-pagination'));
+  if(['expense-review','discount-review','count-review','money-in-review'].includes(page)){
     const field=root.querySelector(':scope>.form-label');splitWorkspace(root,field?.previousElementSibling);
   }
   const body=document.querySelector('#owner-report-body');

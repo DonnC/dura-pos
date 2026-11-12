@@ -37,15 +37,17 @@ screens['return-items']=()=>{
     select('partial-reason','Reason',option('','Choose a reason',!d.reason)+
       option('wrong','Wrong item / amount',d.reason==='wrong')+option('damaged','Damaged product',d.reason==='damaged')+
       option('other','Other',d.reason==='other'))+
+    '<div id="partial-other-wrap">'+field('partial-other','Explain the other reason',d.other||'','maxlength="120"')+'</div>'+
     '<p class="error" id="partial-error" role="alert"></p>'+
     note('Original receipt prices apply. Nothing changes until the owner approves the review.')+'</section></div>';
   primary('return-review','Review return',true);drawPartialReturn();
 };
 function drawPartialReturn(){
   const p=returnPlan(lastSale);
+  document.querySelector('#partial-other-wrap').hidden=p.d.reason!=='other';
   document.querySelector('#partial-summary').innerHTML=returnPaymentRows(p);
   document.querySelector('#partial-error').textContent=p.error;
-  enable('return-review',!p.error&&!!p.d.reason);
+  enable('return-review',!p.error&&!!p.d.reason&&(p.d.reason!=='other'||p.d.other?.trim().length>=3));
   document.querySelector('[data-action="return-review"] span').textContent=
     !p.lines.length?'Enter a return quantity':!p.error&&!p.d.reason?'Choose a reason below':'Review return · '+money(p.amount);
 }
@@ -55,16 +57,17 @@ inputActions['return-items']=()=>{
     if(document.querySelector('#return-qty-'+n)){
       d.qty[n]=val('return-qty-'+n);d.restock[n]=document.querySelector('#return-restock-'+n).checked;
     }
-  });d.reason=val('partial-reason');save();drawPartialReturn();
+  });d.reason=val('partial-reason');d.other=val('partial-other');save();drawPartialReturn();
 };
-actions['return-review']=()=>{const p=returnPlan(lastSale);if(!p.error&&p.d.reason)navigate('return-review');};
+actions['return-review']=()=>{const p=returnPlan(lastSale);if(!p.error&&p.d.reason&&
+  (p.d.reason!=='other'||p.d.other?.trim().length>=3))navigate('return-review');};
 screens['return-review']=()=>{
   const r=returnReceipt();if(!r)return;const p=returnPlan(r);
   if(p.error||!p.d.reason){navigate('return-items');return;}
   screen.innerHTML=heading('Check the return.','Original prices · Owner approval','return-items')+
     '<div class="return-layout"><section><h2 class="section-title">Returning now</h2>'+p.lines.map(l=>
       line(esc(l.item.name),money(l.amount),`${esc(quantityText(l.item,l.qty))} · ${l.restock?'Back on shelf':'Keep out of stock'}`)).join('')+
-    line('Reason',esc({wrong:'Wrong item / amount',damaged:'Damaged product',other:'Other'}[p.d.reason]))+
+    line('Reason',esc(p.d.reason==='other'?p.d.other:{wrong:'Wrong item / amount',damaged:'Damaged product'}[p.d.reason]))+
     line('Original receipt',esc(r.id))+'</section><section>'+returnPaymentRows(p)+
     (p.kept?note('Restore the kept-change part to '+esc(p.customer.name)+'. Give only the cash amount shown. No extra cash replaces kept change.'):'')+
     (r.keptAdded?note('Change kept from the original sale stays owed to '+esc(r.customer)+'. This return refunds only the goods.'):'')+
@@ -91,6 +94,7 @@ actions['return-save']=()=>{
   if(p.kept){keptMove(p.customer,p.kept,'Restored after return',reference);s.features.kept=true;}
   s.cash-=p.cash;s.sales-=p.amount;
   s.partialReturns=[{sale:r.id,reference,amount:p.amount,cash:p.cash,kept:p.kept,who:s.name,
+    reason:p.d.reason==='other'?p.d.other:p.d.reason,
     lines:p.lines.map(l=>({name:l.item.name,quantity:quantityText(l.item,l.qty),restock:l.restock}))},
     ...(s.partialReturns||[])].slice(0,30);
   if(tally.qty.every((qty,n)=>qty===r.items[n].qty)){
